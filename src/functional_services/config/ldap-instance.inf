@@ -1,0 +1,20 @@
+[General]
+FullMachineName= MY_VAR_CLIENT
+SuiteSpotUserID= nobody
+SuiteSpotGroup= nobody
+ConfigDirectoryLdapURL= ldap://MY_VAR_CLIENT:MY_VAR_PORT/o=NetscapeRoot
+ConfigDirectoryAdminID= admin
+ConfigDirectoryAdminPwd= Secret123
+AdminDomain= example.com
+
+[slapd]
+ServerIdentifier= instance1
+ServerPort= MY_VAR_PORT
+Suffix= o=sasl.com
+RootDN= cn=Directory Manager
+RootDNPwd= Secret123
+
+[admin]
+ServerAdminID= admin
+ServerAdminPwd= Secret123
+SysUser= nobody

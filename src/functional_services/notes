@@ -1,0 +1,346 @@
+###############################################################################
+###############################################################################
+#### http tests
+
+yum -y install httpd
+
+# add_http_user
+echo Secret123 | kinit admin
+echo 123passworD | ipa user-add --first=httpuser1 --last=httpuser1 --password httpuser1
+echo -e '123passworD\nSecret123\nSecret123' | kinit httpuser1
+kdestroy -A
+echo Secret123 | kinit admin
+
+# add_http_service
+ipa service-add HTTP/$CLIENT
+
+# get_http_keytab
+ipa-getkeytab -s $MASTER -k /etc/httpd/conf/func-services.keytab -p HTTP/$CLIENT
+chown apache.apache /etc/httpd/conf/func-services.keytab
+
+# setup_http_config
+rm -rf /etc/httpd/conf.d/http-krb.conf
+cp config/http-krb.conf /etc/httpd/conf.d/
+sed -i "s/MY_VAR_REALM/$RELM/g" /etc/httpd/conf.d/http-krb.conf
+service httpd start
+
+# add_ca_cert_to_http
+wget -qO /etc/httpd/alias/ca.crt http://$MASTER/ipa/config/ca.crt
+certutil -A -d /etc/httpd/alias -n 'IPA CA' -t CT,, -a < /etc/httpd/alias/ca.crt
+certutil -L -d /etc/httpd/alias -n 'IPA CA'
+
+# get_cert_for_http
+SUFFIX=$(ipa config-show | grep "Certificate Subject base" | awk '{print $4}')
+certutil -R -s "CN=$CLIENT,$SUFFIX" -d /etc/httpd/alias -a -z /etc/group > /tmp/http-func-services.csr
+scp /tmp/http-func-services.csr admin@$MASTER:/tmp/http-func-services.csr
+ipa cert-request --principal=HTTP/$CLIENT /tmp/http-func-services.csr
+ipa service-show HTTP/$CLIENT --out=/tmp/http-func-services.crt
+certutil -A -n $CLIENT -d /etc/httpd/alias -t u,u,u -a -i /tmp/http-func-services.crt
+certutil -V -u V -d /etc/httpd/alias -n $CLIENT > /tmp/certvalid.out
+grep "certificate is valid" /tmp/certvalid.out
+
+# setup_https_config
+cp /etc/httpd/conf.d/nss.conf /etc/httpd/conf.d/nss.conf.orig
+sed -i -e "s/Server-Cert/$CLIENT/g" /etc/httpd/conf.d/nss.conf
+service httpd restart
+
+###############################################################################
+#### Access HTTP service with valid credentials
+kdestroy -A
+echo Secret123 | kinit httpuser1
+curl -v --negotiate -u: http://$CLIENT/ipatest/  > /tmp/curl_001.out 2>&1
+grep "404 Not Found" /tmp/curl_001.out
+
+###############################################################################
+#### Access HTTP service with out credentials
+kdestroy -A
+curl -v --negotiate -u: http://$CLIENT/ipatest/ > /tmp/curl_002.out 2>&1
+egrep "401 Unauthorized|401 Authorization Required" /tmp/curl_002.out
+
+###############################################################################
+#### Access HTTPS service with valid credentials
+kdestroy -A
+echo Secret123 | kinit httpuser1
+curl -v --negotiate --cacert /etc/ipa/ca.crt -u: https://$CLIENT:8443/ipatest/ \
+    > /tmp/curl_003.out 2>&1
+grep "404 Not Found" /tmp/curl_003.out
+
+###############################################################################
+#### Access HTTPS service with out credentials
+kdestroy -A
+curl -v --negotiate --cacert /etc/ipa/ca.crt -u: https://$CLIENT:8443/ipatest/ \
+    > /tmp/curl_004.out 2>&1
+egrep "401 Unauthorized|401 Authorization Required" /tmp/curl_002.out
+
+
+###############################################################################
+# -#############################################################################
+#### ldap tests
+
+
+# add_ldap_user
+kdestroy -A
+echo Secret123|kinit admin
+echo 123passworD | ipa user-add --first=ldapuser1 --last=ldapuser1 --password ldapuser1
+echo -e '123passworD\nSecret123\nSecret123'|kinit ldapuser1
+kdestroy -A
+echo Secret123|kinit admin
+
+# add_ldap_service
+ipa service-add ldap/$CLIENT
+semanage port -a -t ldap_port_t -p tcp 6636
+
+# get_ldap_keytab
+ipa-getkeytab -s $MASTER -k /etc/dirsrv/ldap_service.keytab  -p ldap/$CLIENT
+chown nobody:nobody /etc/dirsrv/ldap_service.keytab
+chmod 0400 /etc/dirsrv/ldap_service.keytab
+
+# setup_ldap_instance
+cat > /tmp/instance.inf <<EOF
+[General]
+FullMachineName= $CLIENT
+SuiteSpotUserID= nobody
+SuiteSpotGroup= nobody
+ConfigDirectoryLdapURL= ldap://$CLIENT:3389/o=NetscapeRoot
+ConfigDirectoryAdminID= admin
+ConfigDirectoryAdminPwd= Secret123
+AdminDomain= example.com
+
+[slapd]
+ServerIdentifier= instance1
+ServerPort= 3389
+Suffix= o=sasl.com
+RootDN= cn=Directory Manager
+RootDNPwd= Secret123
+
+[admin]
+ServerAdminID= admin
+ServerAdminPwd= Secret123
+SysUser= nobody
+EOF
+
+/usr/sbin/setup-ds.pl --silent --file=/tmp/instance.inf
+
+#
+ldapsearch -x -h $CLIENT -p 3389 -D "cn=Directory Manager" -w Secret123 -b o=sasl.com
+
+cat > /tmp/sasl.ldif <<EOF
+dn: cn=Kerberos uid mapping,cn=mapping,cn=sasl,cn=config
+changetype: modify
+replace: nsSaslMapBaseDNTemplate
+nsSaslMapBaseDNTemplate: o=sasl.com
+
+dn: cn=rfc 2829 dn syntax,cn=mapping,cn=sasl,cn=config
+changetype: modify
+replace: nsSaslMapBaseDNTemplate
+nsSaslMapBaseDNTemplate: o=sasl.com
+
+dn: cn=rfc 2829 u syntax,cn=mapping,cn=sasl,cn=config
+changetype: modify
+replace: nsSaslMapBaseDNTemplate
+nsSaslMapBaseDNTemplate: o=sasl.com
+
+dn: cn=uid mapping,cn=mapping,cn=sasl,cn=config
+changetype: modify
+replace: nsSaslMapBaseDNTemplate
+nsSaslMapBaseDNTemplate: o=sasl.com
+EOF
+
+/usr/bin/ldapmodify -a -x -h $CLIENT -p 3389 -D "cn=Directory Manager" -w Secret123 -c -f /tmp/sasl.ldif
+
+cat > /tmp/pwscheme.ldif <<EOF
+dn: cn=config
+changetype: modify
+replace: passwordstoragescheme
+passwordstoragescheme: clear
+EOF
+
+/usr/bin/ldapmodify -a -x -h $CLIENT -p 3389 -D "cn=Directory Manager" -w Secret123 -c -f /tmp/pwscheme.ldif
+
+# check if RHEL7 or check KRB version.  IF RHEL7 or higher:
+cat >> /etc/sysconfig/dirsrv <<EOF
+KRB5_KTNAME=/etc/dirsrv/ldap_service.keytab ; export KRB5_KTNAME
+EOF
+
+service dirsrv restart
+
+cat > /tmp/user.ldif <<EOF
+dn: uid=ldapuser1,o=sasl.com
+userPassword: Secret123
+objectClass: top
+objectClass: person
+objectClass: inetorgperson
+uid: ldapuser1
+cn: LDAP User1
+sn: user1
+EOF
+
+/usr/bin/ldapmodify -a -x -h $CLIENT -p 3389 -D "cn=Directory Manager" -w Secret123 \
+    -c -f /tmp/user.ldif
+
+echo "kjasero;uae8905t76V)e6v7q4wy58w4a5;7t90r798bv2[578rbvr7b90w7rbaw0 brwb7yfbz7rv6vawp9" > /tmp/noise.txt
+echo "Secret123" > /tmp/pwdfile.txt
+cd /etc/dirsrv/slapd-instance1
+certutil -d /etc/dirsrv/slapd-instance1 -N -f /tmp/pwdfile.txt
+wget -qO /etc/dirsrv/slapd-instance1/ca.crt http://$MASTER/ipa/config/ca.crt
+certutil -A -d /etc/dirsrv/slapd-instance1 -n 'IPA CA' -t CT,, \
+    -a < /etc/dirsrv/slapd-instance1/ca.crt
+certutil -L -d /etc/dirsrv/slapd-instance1 -n 'IPA CA'
+
+kdestroy -A
+echo Secret123 | kinit admin
+
+ipa config-show| grep "Certificate Subject base" | cut -d ":" -f2
+certutil -R -d /etc/dirsrv/slapd-instance1 -s "CN=$CLIENT,O=$RELM" \
+    -a -z /tmp/noise.txt -f /tmp/pwdfile.txt > /tmp/$CLIENT.csr
+ipa cert-request --principal=ldap/$CLIENT /tmp/$CLIENT.csr
+ipa service-show ldap/$CLIENT --out=/tmp/$CLIENT.crt
+certutil -A -d /etc/dirsrv/slapd-instance1 -n $CLIENT \
+    -t u,u,u -a -f /tmp/pwdfile.txt < /tmp/$CLIENT.crt
+certutil -V -d /etc/dirsrv/slapd-instance1 -n $CLIENT -u V > /tmp/certvalid.out 2>&1
+grep "certificate is valid" /tmp/certvalid.out
+
+cat > /tmp/enablessl.ldif <<EOF
+dn: cn=config
+changetype: modify
+replace: nsslapd-security
+nsslapd-security: on
+-
+replace: nsslapd-securePort
+nsslapd-secureport: 6636
+
+dn: cn=encryption,cn=config
+changetype: modify
+replace: nsssl3
+nsssl3: on
+-
+replace: nsssl3ciphers
+nsssl3ciphers: -rsa_null_md5,+rsa_fips_3des_sha,+rsa_fips_des_sha,+rsa_3des_sha,+rsa_rc4_128_md5,+rsa_des_sha,+rsa_rc2_40_md5,+rsa_rc4_40_md5
+-
+replace: nssslclientauth
+nssslclientauth: allowed
+
+dn: cn=RSA,cn=encryption,cn=config
+changetype: add
+objectclass: top
+objectclass: nsEncryptionModule
+cn: RSA
+nsssltoken: internal (software)
+nssslpersonalityssl: $CLIENT
+nssslactivation: on
+EOF
+/usr/bin/ldapmodify -a -x -h $CLIENT -p 3389 -D "cn=Directory Manager" -w Secret123 \
+    -c -f /tmp/enablessl.ldif
+
+echo "Internal (Software) Token:Secret123" > /etc/dirsrv/slapd-instance1/pin.txt
+
+service dirsrv restart
+
+###############################################################################
+#### Access LDAP service with credentials
+kdestroy -A
+echo Secret123 | kinit ldapuser1
+ldapsearch -d1 -h $CLIENT -p 3389 -Y GSSAPI -s sub -b "uid=ldapuser1,o=sasl.com" "(uid=*)" dn
+
+
+###############################################################################
+#### Access LDAP service without credentials
+kdestroy -A
+ldapsearch -d1 -h $CLIENT -p 3389 -Y GSSAPI -s sub -b "uid=ldapuser1,o=sasl.com" "(uid=*)" dn \
+    > /tmp/ldapsearch_002.out 2>&1
+if [ $? -eq 254 ]; then echo PASS; else echo FAIL; fi
+egrep "No Kerberos credentials|Credentials cache file.*not found|Invalid credentials" \
+    /tmp/ldapsearch_002.out
+
+###############################################################################
+#### Access LDAPS service with credentials
+kdestroy -A
+echo Secret123 | kinit ldapuser1
+ldapsearch -d1 -H ldaps://$CLIENT:6636 -Y GSSAPI -s sub -b "uid=ldapuser1,o=sasl.com" "(uid=*)" dn
+
+###############################################################################
+#### Access LDAPS service without credentials
+kdestroy -A
+ldapsearch -d1 -H ldaps://$CLIENT:6636 -Y GSSAPI -s sub -b "uid=ldapuser1,o=sasl.com" "(uid=*)" dn \
+    > /tmp/ldapsearch_004.out 2>&1
+egrep "No Kerberos credentials|Credentials cache file.*not found|Invalid credentials" \
+    /tmp/ldapsearch_004.out
+
+###############################################################################
+#### LDAPS simple bind
+kdestroy -A
+ldapsearch -x -H ldaps://$CLIENT:6636 -D "cn=Directory Manager" -w Secret123 -b "o=sasl.com"
+
+###############################################################################
+##### Revoke Certificate
+kdestroy -A
+echo Secret123 | kinit admin
+SERIALNO=$(ipa service-show --all --raw ldap/$CLIENT | grep serial_number: | awk '{print $2}')
+ipa cert-revoke $SERIALNO
+/usr/lib64/nss/unsupported-tools/ocspclnt -S "$CLIENT" -d /etc/dirsrv/slapd-instance1 > /tmp/ocsp.out 2>&1
+grep -i "Certificate has been revoked" /tmp/ocsp.out
+
+###############################################################################
+###### Verify Cert still revoked while master down # RHEL7 only
+kdestroy -A
+echo Secret123 | kinit admin
+ssh $MASTER "ipactl stop"
+/usr/lib64/nss/unsupported-tools/ocspclnt -S "$CLIENT" -d /etc/dirsrv/slapd-instance1 > /tmp/ocsp.out 2>&1
+grep -i "Certificate has been revoked" /tmp/ocsp.out
+ssh $MASTER "ipactl start"
+/usr/lib64/nss/unsupported-tools/ocspclnt -S "$CLIENT" -d /etc/dirsrv/slapd-instance1 > /tmp/ocsp.out 2>&1
+grep -i "Certificate has been revoked" /tmp/ocsp.out
+
+
+###############################################################################
+###### Verify Cert still revoked while replica down # RHEL7 only
+kdestroy -A
+echo Secret123 | kinit admin
+ssh $REPLICA "ipactl stop"
+/usr/lib64/nss/unsupported-tools/ocspclnt -S "$CLIENT" -d /etc/dirsrv/slapd-instance1 > /tmp/ocsp.out 2>&1
+grep -i "Certificate has been revoked" /tmp/ocsp.out
+ssh $REPLICA "ipactl start"
+/usr/lib64/nss/unsupported-tools/ocspclnt -S "$CLIENT" -d /etc/dirsrv/slapd-instance1 > /tmp/ocsp.out 2>&1
+grep -i "Certificate has been revoked" /tmp/ocsp.out
+
+###############################################################################
+###### Verify OCSP URI of new cert # RHEL7 only
+kdestroy -A
+echo Secret123 | kinit admin
+
+cat > /tmp/$MASTER-cert-req.conf <<EOF
+[ req ]
+default_bits = 2048
+default_keyfile = /tmp/$MASTER.key
+distinguished_name = test_key_file
+prompt = no
+output_password = ..
+
+[ test_key_file ]
+C = US
+ST = CA
+L = SFO
+O = RedHat Technology
+OU = RedHat IT
+CN = $MASTER
+EOF
+
+openssl req -new -config /tmp/$MASTER-cert-req.conf -out /tmp/$MASTER-cert-req.csr
+ipa cert-request --add --principal=EXAMPLE/$MASTER /tmp/$MASTER-cert-req.csr
+SERIALNO=$(ipa service-show --all --raw EXAMPLE/$MASTER | grep "serial_number:" | awk '{print $2}')
+ipa cert-show $SERIALNO --out=/tmp/MASTER.cert
+openssl x509 -text -in /tmp/MASTER.cert | grep "URI" | grep -v "OCSP" | \
+    grep "http://ipa-ca.*/ipa/crl/MasterCRL.bin"
+openssl ocsp -issuer /etc/ipa/ca.crt -nonce -CAfile /etc/pki/tls/certs/ca-bundle.crt \
+    -url http://ipa-ca.$DOMAIN:80/ca/ocsp -serial $SERIALNO | grep "$SERIALNO: good"
+
+###############################################################################
+###### Verify OCSP URI of revoked cert # RHEL7 only
+
+SERIALNO=$(ipa service-show --all --raw EXAMPLE/$MASTER | grep "serial_number:" | awk '{print $2}')
+ipa cert-revoke $SERIALNO
+ipa cert-show $SERIALNO --out=/tmp/MASTER.cert
+openssl x509 -text -in /tmp/MASTER.cert | grep "URI" | grep -v "OCSP" | \
+    grep "http://ipa-ca.*/ipa/crl/MasterCRL.bin"
+openssl ocsp -issuer /etc/ipa/ca.crt -nonce -CAfile /etc/pki/tls/certs/ca-bundle.crt \
+    -url http://ipa-ca.$DOMAIN:80/ca/ocsp -serial $SERIALNO | grep "$SERIALNO: revoked"

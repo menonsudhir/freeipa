@@ -1,0 +1,19 @@
+dn: cn=Kerberos uid mapping,cn=mapping,cn=sasl,cn=config
+changetype: modify
+replace: nsSaslMapBaseDNTemplate
+nsSaslMapBaseDNTemplate: o=sasl.com
+
+dn: cn=rfc 2829 dn syntax,cn=mapping,cn=sasl,cn=config
+changetype: modify
+replace: nsSaslMapBaseDNTemplate
+nsSaslMapBaseDNTemplate: o=sasl.com
+
+dn: cn=rfc 2829 u syntax,cn=mapping,cn=sasl,cn=config
+changetype: modify
+replace: nsSaslMapBaseDNTemplate
+nsSaslMapBaseDNTemplate: o=sasl.com
+
+dn: cn=uid mapping,cn=mapping,cn=sasl,cn=config
+changetype: modify
+replace: nsSaslMapBaseDNTemplate
+nsSaslMapBaseDNTemplate: o=sasl.com

@@ -1,0 +1,8 @@
+dn: uid=ldapuser1,o=sasl.com
+userPassword: Secret123
+objectClass: top
+objectClass: person
+objectClass: inetorgperson
+uid: ldapuser1
+cn: LDAP User1
+sn: user1

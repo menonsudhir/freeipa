@@ -1,0 +1,8 @@
+mh_cfg_<codes>.yaml
+
+where codes are:
+m = master
+r = replica
+c = client
+o = other
+
