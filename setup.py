@@ -21,6 +21,12 @@ setup(name='ipa_pytests',
                     'src/functional_services/config/ldap-sasl.ldif',
                     'src/functional_services/config/ldap-user.ldif',
                    ]
+                  ),
+                  ('/root/multihost_tests',
+                   ['config/multihost_tests/env.sh',
+                    'config/multihost_tests/.coveragerc',
+                    'config/multihost_tests/sitecustomize-add.py'
+                   ]
                   )
                  ]
      )
