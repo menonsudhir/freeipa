@@ -50,7 +50,7 @@ def set_resolv_conf_to_master(host, master):
 def set_rngd(host):
     """ install and configure rngd if virt """
     cpuinfo = host.get_file_contents('/proc/cpuinfo')
-    if 'QEMU' not in cpuinfo:
+    if 'QEMU' not in cpuinfo and 'hypervisor' not in cpuinfo:
         print "Not a known Virt...not installing RNGD"
         return
     host.run_command(['yum', '-y', '--nogpgcheck', 'install', 'rng-tools'])
@@ -61,13 +61,17 @@ def set_rngd(host):
     elif host.transport.file_exists('/usr/lib/systemd/system/rngd.service'):
         rng_cfg = '[Service]\nExecStart=\nExecStart=/sbin/rngd -f -r /dev/urandom\n'
         cfg_file = '/etc/systemd/system/rngd.service.d/entropy-source.conf'
-        host.transport.make_recursive('/etc/systemd/system/rngd.service.d')
+        host.transport.mkdir_recursive('/etc/systemd/system/rngd.service.d')
     else:
         print "Not a known service system type...skipping service start"
         return
     host.put_file_contents(cfg_file, rng_cfg)
+    time.sleep(3)
     host.run_command(['service', 'rngd', 'start'])
     host.run_command(['chkconfig', 'rngd', 'on'])
+    cmd = host.run_command(['ps', '-ef'])
+    if 'rngd' not in cmd.stdout_text:
+        print "WARNING: rngd did not start properly...tests may run slow"
 
 
 def setup_master(master):
@@ -81,10 +85,12 @@ def setup_master(master):
     set_hostname(master)
     set_rngd(master)
 
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = master.run_command(['yum', '-y', '--nogpgcheck', 'install', 'ipa-server', 'bind-dyndb-ldap'])
     print cmd.stdout_text
     print cmd.stderr_text
 
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = master.run_command(['ipa-server-install',
                               '--setup-dns',
                               '--forwarder', master.config.dns_forwarder,
@@ -99,6 +105,7 @@ def setup_master(master):
 
     print "STDOUT:", cmd.stdout_text
     print "STDERR:", cmd.stderr_text
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     if cmd.returncode != 0:
         raise ValueError("ipa-server-install failed with error code=%s" % cmd.returncode)
 
@@ -118,11 +125,13 @@ def setup_replica(replica, master):
     set_hostname(replica)
     set_rngd(replica)
 
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = replica.run_command(['yum', '-y', '--nogpgcheck', 'install', 'ipa-server',
                                'bind-dyndb-ldap'])
     print cmd.stdout_text
     print cmd.stderr_text
 
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = master.run_command(['ipa-replica-prepare',
                               '-p', master.config.admin_pw,
                               '--ip-address', replica.ip,
@@ -131,6 +140,7 @@ def setup_replica(replica, master):
 
     print "STDOUT:", cmd.stdout_text
     print "STDERR:", cmd.stderr_text
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     if cmd.returncode != 0:
         raise ValueError("ipa-replica-prepare failed with error code=%s" % cmd.returncode)
 
@@ -141,6 +151,7 @@ def setup_replica(replica, master):
     time.sleep(5)
     set_resolv_conf_to_master(replica, master)
 
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = replica.run_command(['ipa-replica-install',
                                '--setup-dns',
                                '--forwarder', master.config.dns_forwarder,
@@ -151,6 +162,7 @@ def setup_replica(replica, master):
 
     print "STDOUT:", cmd.stdout_text
     print "STDERR:", cmd.stderr_text
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     if cmd.returncode != 0:
         raise ValueError("ipa-replica-install failed with error code=%s" % cmd.returncode)
 
@@ -161,6 +173,7 @@ def setup_client(client, master):
     will install an IPA client using autodiscovery.
     """
 
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = client.run_command(['yum', '-y', '--nogpgcheck', 'install', 'ipa-client'])
     print cmd.stdout_text
     print cmd.stderr_text
@@ -171,6 +184,7 @@ def setup_client(client, master):
     time.sleep(5)
     set_resolv_conf_to_master(client, master)
 
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = client.run_command(['ipa-client-install',
                               '--principal', 'admin',
                               '--password', master.config.admin_pw,
@@ -178,6 +192,7 @@ def setup_client(client, master):
 
     print "STDOUT:", cmd.stdout_text
     print "STDERR:", cmd.stderr_text
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     if cmd.returncode != 0:
         raise ValueError("ipa-client-install failed with error code=%s" % cmd.returncode)
 
