@@ -70,8 +70,11 @@ def set_rngd(host):
     host.run_command(['service', 'rngd', 'start'])
     host.run_command(['chkconfig', 'rngd', 'on'])
     cmd = host.run_command(['ps', '-ef'])
+    svccmd = host.run_command(['service', 'rngd', 'status'])
     if 'rngd' not in cmd.stdout_text:
         print "WARNING: rngd did not start properly...tests may run slow"
+        print "STDOUT: ", cmd.stdout_text
+        print "SVCOUT: ", svccmd.stdout_text
 
 
 def setup_master(master):
