@@ -16,7 +16,7 @@ class TestSetupLdap(object):
     """ FS Setup LDAP class """
     def class_setup(self, multihost):
         """ class setup """
-        multihost.client.run_command(['yum', '-y', 'install', '389-ds-base'])
+        multihost.client.run_command(['yum', '-y', '--nogpgcheck', 'install', '389-ds-base'])
 
     @pytest.mark.tier1
     def test_0001_add_ldap_user(self, multihost):

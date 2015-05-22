@@ -13,7 +13,7 @@ class TestSetupHttp(object):
     """ FS HTTP setup Class """
     def class_setup(self, multihost):
         """ class setup """
-        multihost.client.run_command(['yum', '-y', 'install', 'httpd', 'mod_nss', 'mod_auth_kerb'])
+        multihost.client.run_command(['yum', '-y', '--nogpgcheck', 'install', 'httpd', 'mod_nss', 'mod_auth_kerb'])
         revip = multihost.client.ip.split('.')[3]
         revnet = multihost.client.ip.split('.')[2] + '.' + \
             multihost.client.ip.split('.')[1] + '.' + \

@@ -58,17 +58,21 @@ def set_rngd(host):
         # rng_cfg = 'EXTRAOPTIONS="-r /dev/urandom -t 5"\n'
         rng_cfg = 'EXTRAOPTIONS="-r /dev/urandom"\n'
         cfg_file = '/etc/sysconfig/rngd'
+        host.put_file_contents(cfg_file, rng_cfg)
     elif host.transport.file_exists('/usr/lib/systemd/system/rngd.service'):
-        rng_cfg = '[Service]\nExecStart=\nExecStart=/sbin/rngd -f -r /dev/urandom\n'
-        cfg_file = '/etc/systemd/system/rngd.service.d/entropy-source.conf'
-        host.transport.mkdir_recursive('/etc/systemd/system/rngd.service.d')
+        cfg_file = '/usr/lib/systemd/system/rngd.service'
+        rng_cmd = 'ExecStart=/sbin/rngd -f -r /dev/urandom\n'
+        rng_cfg = host.get_file_contents(cfg_file)
+        new_cfg = re.sub(r'ExecStart=.*\n', rng_cmd, rng_cfg)
+        host.put_file_contents(cfg_file, new_cfg)
+        host.run_command(['systemctl', 'daemon-reload'])
     else:
         print "Not a known service system type...skipping service start"
         return
-    host.put_file_contents(cfg_file, rng_cfg)
     time.sleep(3)
-    host.run_command(['service', 'rngd', 'start'])
     host.run_command(['chkconfig', 'rngd', 'on'])
+    host.run_command(['service', 'rngd', 'stop'], raiseonerr=False)
+    host.run_command(['service', 'rngd', 'start'])
     cmd = host.run_command(['ps', '-ef'])
     svccmd = host.run_command(['service', 'rngd', 'status'])
     if 'rngd' not in cmd.stdout_text:
