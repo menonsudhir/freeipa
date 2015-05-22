@@ -15,11 +15,7 @@ class TestHttpTests(object):
     """ FS HTTP Test access class """
     def class_setup(self, multihost):
         """ class setup """
-        print "\nClass Setup"
-        print "MASTER: ", multihost.master.hostname
-        print "REPLICA: ", multihost.replica.hostname
-        print "CLIENT: ", multihost.client.hostname
-        print "DNSFORWARD: ", multihost.config.dns_forwarder
+        pass
 
     @pytest.mark.tier1
     def test_0001_access_http_with_valid_creds(self, multihost):
@@ -59,8 +55,4 @@ class TestHttpTests(object):
 
     def class_teardown(self, multihost):
         """ class teardown """
-        print "CLASS_TEARDOWN"
-        print "MASTER: ", multihost.master.hostname
-        print "REPLICA: ", multihost.replica.hostname
-        print "CLIENT: ", multihost.client.hostname
-        print "DNSFORWARD: ", multihost.config.dns_forwarder
+        pass

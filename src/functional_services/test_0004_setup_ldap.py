@@ -6,6 +6,7 @@ import pytest
 import re
 import requests
 import socket
+import time
 from ipa_pytests.shared.utils import ldapmodify
 from ipa_pytests.shared.utils import add_ipa_user
 from ipa_pytests.shared.qe_certutils import certutil
@@ -15,7 +16,7 @@ class TestSetupLdap(object):
     """ FS Setup LDAP class """
     def class_setup(self, multihost):
         """ class setup """
-        pass
+        multihost.client.run_command(['yum', '-y', 'install', '389-ds-base'])
 
     @pytest.mark.tier1
     def test_0001_add_ldap_user(self, multihost):
@@ -52,6 +53,7 @@ class TestSetupLdap(object):
         multihost.client.put_file_contents(cfgput, ldapcfg)
         multihost.client.run_command(['/usr/sbin/setup-ds.pl', '--silent',
                                       '--file=' + cfgput])
+        time.sleep(5)
 
     @pytest.mark.tier1
     def test_0005_set_ldap_password_scheme(self, multihost):
@@ -77,9 +79,13 @@ class TestSetupLdap(object):
         cfgget = '/etc/sysconfig/dirsrv'
         cfgput = '/etc/sysconfig/dirsrv'
         ldapcfg = multihost.client.get_file_contents(cfgget)
-        ldapcfg = ldapcfg + '\nKRB5_KTNAME=/etc/dirsrv/ldap_service.keytab ; export KRB5_KTNAME\n'
+        if multihost.client.transport.file_exists('/usr/lib/systemd/system/dirsrv@.service'):
+            ldapcfg = ldapcfg + '\nKRB5_KTNAME=/etc/dirsrv/ldap_service.keytab\n'
+        else:
+            ldapcfg = ldapcfg + '\nKRB5_KTNAME=/etc/dirsrv/ldap_service.keytab ; export KRB5_KTNAME\n'
         multihost.client.put_file_contents(cfgput, ldapcfg)
-        multihost.client.run_command(['service', 'dirsrv', 'restart'])
+        multihost.client.run_command(['service', 'dirsrv@instance1', 'restart'])
+        time.sleep(5)
 
     @pytest.mark.tier1
     def test_0008_add_user_to_ldap(self, multihost):
@@ -106,21 +112,14 @@ class TestSetupLdap(object):
     @pytest.mark.tier1
     def test_0010_get_cert_for_ldap_service(self, multihost):
         """ Create certificate for ldap service """
-        suffix = ""
-        multihost.master.kinit_as_admin()
-        cmd = multihost.master.run_command(['ipa', 'config-show', '--raw'])
-        for line in cmd.stdout_text.split('\n'):
-            if "ipacertificatesubjectbase" in line:
-                suffix = line.split()[1]
-        if suffix == "":
-            suffix = "O=" + multihost.master.domain.realm
-        subject = "CN=" + multihost.client.hostname + "," + suffix
         ldap_cert_db = "/etc/dirsrv/slapd-instance1"
         nick = multihost.client.hostname
         trust = "u,u,u"
         csr_file = "/tmp/ldap-func-services.csr"
         crt_file = "/tmp/ldap-func-services.crt"
         mycerts = certutil(multihost.client, ldap_cert_db)
+        subject_base = mycerts.get_ipa_subject_base(multihost.master)
+        subject = "CN=" + multihost.client.hostname + "," + subject_base
         mycerts.request_cert(subject, csr_file)
         multihost.client.run_command(['ipa', 'cert-request',
                                       '--principal=ldap/' + multihost.client.hostname,
@@ -151,7 +150,8 @@ class TestSetupLdap(object):
         multihost.client.put_file_contents(pin_file, pin)
         multihost.client.run_command(['semanage', 'port', '-a', '-t', 'ldap_port_t',
                                       '-p', 'tcp', '6636'], raiseonerr=False)
-        multihost.client.run_command(['service', 'dirsrv', 'restart'])
+        multihost.client.run_command(['service', 'dirsrv@instance1', 'restart'])
+        time.sleep(5)
 
     def class_teardown(self, multihost):
         """ class teardown """

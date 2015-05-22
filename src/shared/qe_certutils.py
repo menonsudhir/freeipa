@@ -87,3 +87,15 @@ class certutil(object):
                                      '--nsCertType', 'sslCA,smimeCA,objectSigningCA',
                                      '-f', self.password_file], stdin_text='y\n10\ny\n')
         return cmd.stdout_text, cmd.stderr_text
+
+    def get_ipa_subject_base(self, master):
+        """ Get IPA Subject Base from IPA Master """
+        suffix = ""
+        master.kinit_as_admin()
+        cmd = master.run_command(['ipa', 'config-show', '--raw'])
+        for line in cmd.stdout_text.split('\n'):
+            if "ipacertificatesubjectbase" in line:
+                suffix = line.split()[1]
+        if suffix == "":
+            suffix = "O=" + master.domain.realm
+        return suffix

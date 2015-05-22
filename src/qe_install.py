@@ -153,6 +153,7 @@ def setup_replica(replica, master):
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = replica.run_command(['ipa-replica-install',
+                               '--setup-ca',
                                '--setup-dns',
                                '--forwarder', master.config.dns_forwarder,
                                '--admin-password', master.config.admin_pw,

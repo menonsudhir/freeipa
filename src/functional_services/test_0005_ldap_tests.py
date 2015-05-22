@@ -29,6 +29,7 @@ def ldap_sasl_check_negative(uri, expected_message):
         ldapobj.sasl_interactive_bind_s('ldapuser1', auth)
     except ldap.LOCAL_ERROR, errval:
         if not re.search(expected_message, errval.args[0]['info']):
+            print "ERROR: ", errval.args[0]['info']
             raise ValueError('[Fail]: sasl bind did not fail as expected')
     else:
         raise ValueError('[Fail]: sasl bind passed when it should fail')
@@ -88,7 +89,7 @@ class TestLdap(object):
         myself = multihost.config.host_by_name(socket.gethostname())
         myself.run_command(['kdestroy', '-A'])
         ldap_sasl_check_negative('ldap://' + multihost.client.hostname + ':3389',
-                                 'Credentials cache file.*not found')
+                                 'Credentials cache file.*not found|No Kerberos credentials available')
 
     @pytest.mark.tier1
     def test_0003_access_ldaps_with_creds(self, multihost):
@@ -103,7 +104,7 @@ class TestLdap(object):
         myself = multihost.config.host_by_name(socket.gethostname())
         myself.run_command(['kdestroy', '-A'])
         ldap_sasl_check_negative('ldaps://' + multihost.client.hostname + ':6636',
-                                 'Credentials cache file.*not found')
+                                 'Credentials cache file.*not found|No Kerberos credentials available')
 
     @pytest.mark.tier1
     def test_0005_access_ldaps_with_simple_bind(self, multihost):

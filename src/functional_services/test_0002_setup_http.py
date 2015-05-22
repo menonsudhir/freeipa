@@ -13,11 +13,16 @@ class TestSetupHttp(object):
     """ FS HTTP setup Class """
     def class_setup(self, multihost):
         """ class setup """
-        print "\nClass Setup"
-        print "MASTER: ", multihost.master.hostname
-        print "REPLICA: ", multihost.replica.hostname
-        print "CLIENT: ", multihost.client.hostname
-        print "DNSFORWARD: ", multihost.config.dns_forwarder
+        multihost.client.run_command(['yum', '-y', 'install', 'httpd', 'mod_nss', 'mod_auth_kerb'])
+        revip = multihost.client.ip.split('.')[3]
+        revnet = multihost.client.ip.split('.')[2] + '.' + \
+            multihost.client.ip.split('.')[1] + '.' + \
+            multihost.client.ip.split('.')[0] + '.in-addr.arpa.'
+        cmd = multihost.client.run_command(['dig', '+short', '-x', multihost.client.ip])
+        if multihost.client.hostname not in cmd.stdout_text:
+            multihost.master.kinit_as_admin()
+            cmd = multihost.master.run_command(['ipa', 'dnsrecord-add', revnet, revip,
+                                                '--ptr-rec=%s.' % multihost.client.hostname])
 
     @pytest.mark.tier1
     def test_0001_add_http_user(self, multihost):
@@ -73,21 +78,14 @@ class TestSetupHttp(object):
     @pytest.mark.tier1
     def test_0006_get_cert_for_http_service(self, multihost):
         """ Create Certficate for http service """
-        suffix = ""
-        multihost.master.kinit_as_admin()
-        cmd = multihost.master.run_command(['ipa', 'config-show', '--raw'])
-        for line in cmd.stdout_text.split('\n'):
-            if "ipacertificatesubjectbase" in line:
-                suffix = line.split()[1]
-        if suffix == "":
-            suffix = "O=" + multihost.master.domain.realm
-        subject = "CN=" + multihost.client.hostname + "," + suffix
         http_cert_db = "/etc/httpd/alias"
         nick = multihost.client.hostname
         trust = "u,u,u"
         csr_file = "/tmp/http-func-services.csr"
         crt_file = "/tmp/http-func-services.crt"
         mycerts = certutil(multihost.client, http_cert_db)
+        subject_base = mycerts.get_ipa_subject_base(multihost.master)
+        subject = "CN=" + multihost.client.hostname + "," + subject_base
         mycerts.request_cert(subject, csr_file)
         multihost.client.run_command(['ipa', 'cert-request',
                                       '--principal=HTTP/' + multihost.client.hostname,
@@ -101,8 +99,4 @@ class TestSetupHttp(object):
 
     def class_teardown(self, multihost):
         """ class teardown """
-        print "CLASS_TEARDOWN"
-        print "MASTER: ", multihost.master.hostname
-        print "REPLICA: ", multihost.replica.hostname
-        print "CLIENT: ", multihost.client.hostname
-        print "DNSFORWARD: ", multihost.config.dns_forwarder
+        pass
