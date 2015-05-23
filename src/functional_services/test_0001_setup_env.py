@@ -17,6 +17,7 @@ class TestSetupIpaEnv(object):
     def test_0001_setup_master(self, multihost):
         """ Install IPA Master """
         setup_master(multihost.master)
+        set_resolv_conf_add_server(multihost.master, multihost.replica.ip)
 
     @pytest.mark.tier1
     def test_0002_setup_replica(self, multihost):
