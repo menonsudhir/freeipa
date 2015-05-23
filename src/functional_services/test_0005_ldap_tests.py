@@ -46,17 +46,23 @@ def ldap_simple_bind_check_positve(uri, username, password):
 
 def check_revoked(host, cert_dir):
     """ support function to check if certificate is revoked """
+    max_checks = 5
     if host.transport.file_exists('/usr/lib64/nss/unsupported-tools/ocspclnt'):
         ocspcmd = '/usr/lib64/nss/unsupported-tools/ocspclnt'
     else:
         ocspcmd = '/usr/lib/nss/unsupported-tools/ocspclnt'
-    cmd = host.run_command([ocspcmd, '-S', host.hostname, '-d', cert_dir])
-    if 'Certificate has been revoked' in cmd.stdout_text:
-        pass
-    else:
-        print "stdout: %s" % cmd.stdout_text
-        print "stderr: %s" % cmd.stderr_text
-        raise ValueError('Certificate not revoked or unable to check')
+
+    for _ in range(max_checks):
+        cmd = host.run_command([ocspcmd, '-S', host.hostname, '-d', cert_dir])
+        if 'Certificate has been revoked' in cmd.stdout_text:
+            print "stdout: %s" % cmd.stdout_text
+            return
+        else:
+            print "There was an error.   Checking again to be sure"
+            print "stdout: %s" % cmd.stdout_text
+            print "stderr: %s" % cmd.stderr_text
+
+    raise ValueError('Certificate not revoked or unable to check')
 
 
 def is_redundant_ca_dns_supported(host, service):

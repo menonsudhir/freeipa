@@ -54,11 +54,6 @@ class TestSetupHttp(object):
         httpcfg = multihost.client.get_file_contents(cfgget)
         httpcfg = re.sub('MY_VAR_REALM', multihost.client.domain.realm, httpcfg)
         multihost.client.put_file_contents(cfgput, httpcfg)
-
-        nss_cfg_file = "/etc/httpd/conf.d/nss.conf"
-        nsscfg = multihost.client.get_file_contents(nss_cfg_file)
-        nsscfg = re.sub('Server-Cert', multihost.client.hostname, nsscfg)
-        multihost.client.put_file_contents(nss_cfg_file, nsscfg)
         multihost.client.run_command(['service', 'httpd', 'start'])
 
     @pytest.mark.tier1
@@ -95,6 +90,11 @@ class TestSetupHttp(object):
                                       '--out=' + crt_file])
         mycerts.add_cert(crt_file, nick, trust)
         mycerts.verify_cert(nick)
+
+        nss_cfg_file = "/etc/httpd/conf.d/nss.conf"
+        nsscfg = multihost.client.get_file_contents(nss_cfg_file)
+        nsscfg = re.sub('Server-Cert', multihost.client.hostname, nsscfg)
+        multihost.client.put_file_contents(nss_cfg_file, nsscfg)
         multihost.client.run_command(['service', 'httpd', 'restart'])
 
     def class_teardown(self, multihost):

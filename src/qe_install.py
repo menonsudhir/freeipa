@@ -47,6 +47,13 @@ def set_resolv_conf_to_master(host, master):
     print cmd.stdout_text
 
 
+def set_resolv_conf_add_server(host, server_ip):
+    """ Add a nameserver to resolv.conf """
+    cfg = host.get_file_contents('/etc/resolv.conf')
+    cfg = cfg + "\nnameserver " + server_ip
+    host.put_file_contents('/etc/resolv.conf', cfg)
+
+
 def set_rngd(host):
     """ install and configure rngd if virt """
     cpuinfo = host.get_file_contents('/proc/cpuinfo')
@@ -182,7 +189,7 @@ def setup_client(client, master):
     """
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
-    cmd = client.run_command(['yum', '-y', '--nogpgcheck', 'install', 'ipa-client'])
+    cmd = client.run_command(['yum', '-y', '--nogpgcheck', 'install', 'ipa-client', 'ipa-admintools'])
     print cmd.stdout_text
     print cmd.stderr_text
 
