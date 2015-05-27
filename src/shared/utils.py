@@ -9,6 +9,7 @@ Major shared support utility functions
 """
 import time
 import pytest
+import re
 
 
 def add_ipa_user(host, user, passwd=None, first=None, last=None):
@@ -110,3 +111,25 @@ def ldapmodify(uri, username, password, ldif_file):
         last_dn = dn
     lfile.close()
     ldapobj.unbind()
+
+
+def service_control(host, service, function):
+    """ wrapper to handle different service management systems """
+    if '@' in service:
+        service_file = service.split('@')[0] + '@'
+    else:
+        service_file = service
+
+    if host.transport.file_exists('/usr/lib/systemd/system/' + service_file + '.service'):
+        if function is 'on' or function is 'off':
+            function = re.sub('off', 'disable', function)
+            function = re.sub('on', 'enable', function)
+        service_cmd = ['systemctl', function, service]
+    else:
+        if 'off' in function or 'on' in function:
+            service_cmd = ['chkconfig', service, function]
+        else:
+            service_cmd = ['service', service, function]
+
+    cmd = host.run_command(service_cmd, raiseonerr=False)
+    return cmd

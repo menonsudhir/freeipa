@@ -6,21 +6,22 @@ This provides the necessary functions to setup IPA Servers and Clients.
 
 import time
 import re
+from ipa_pytests.shared.utils import service_control
 
 
 def disable_firewall(host):
     """ Disable firewalld or iptables """
     if host.transport.file_exists('/etc/init.d/iptables'):
-        host.run_command(['service', 'iptables', 'stop'])
-        host.run_command(['chkconfig', 'iptables', 'off'])
+        service_control(host, 'iptables', 'stop')
+        service_control(host, 'iptables', 'off')
 
     if host.transport.file_exists('/etc/init.d/ip6tables'):
-        host.run_command(['service', 'ip6tables', 'stop'])
-        host.run_command(['chkconfig', 'ip6tables', 'off'])
+        service_control(host, 'ip6tables', 'stop')
+        service_control(host, 'ip6tables', 'off')
 
     if host.transport.file_exists('/usr/lib/systemd/system/firewalld.service'):
-        host.run_command(['systemctl', 'stop', 'firewalld.service'])
-        host.run_command(['systemctl', 'disable', 'firewalld.service'])
+        service_control(host, 'firewalld', 'stop')
+        service_control(host, 'firewalld', 'off')
 
 
 def set_hostname(host):
@@ -77,15 +78,13 @@ def set_rngd(host):
         print "Not a known service system type...skipping service start"
         return
     time.sleep(3)
-    host.run_command(['chkconfig', 'rngd', 'on'])
-    host.run_command(['service', 'rngd', 'stop'], raiseonerr=False)
-    host.run_command(['service', 'rngd', 'start'])
-    cmd = host.run_command(['ps', '-ef'])
-    svccmd = host.run_command(['service', 'rngd', 'status'])
-    if 'rngd' not in cmd.stdout_text:
+    service_control(host, 'rngd', 'on')
+    service_control(host, 'rngd', 'stop')
+    service_control(host, 'rngd', 'start')
+    cmd = service_control(host, 'rngd', 'status')
+    if cmd.returncode != 0:
         print "WARNING: rngd did not start properly...tests may run slow"
         print "STDOUT: ", cmd.stdout_text
-        print "SVCOUT: ", svccmd.stdout_text
 
 
 def setup_master(master):
