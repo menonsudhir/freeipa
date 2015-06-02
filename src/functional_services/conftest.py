@@ -8,6 +8,9 @@ conftest to setup required fixtures needed by tests:
 import pytest
 from pytest_multihost import make_multihost_fixture
 from ipa_pytests import qe_class
+from ipa_pytests.functional_services.setup_lib import setup_ipa_env
+from ipa_pytests.functional_services.setup_lib import setup_http_service
+from ipa_pytests.functional_services.setup_lib import setup_ldap_service
 
 
 @pytest.fixture(scope="session")
@@ -67,7 +70,15 @@ class TestPrep(object):
         - Add code here that you want run before all modules in test suite.
         - This should be teardown/cleanup code only, not test code.
         """
-        pass
+
+        fin = '/tmp/ipa_func_svcs_setup_done'
+        if not self.multihost.client.transport.file_exists(fin):
+            setup_ipa_env(self.multihost)
+            setup_http_service(self.multihost)
+            setup_ldap_service(self.multihost)
+            self.multihost.client.put_file_contents(fin, 'x')
+        else:
+            print "Setup has already run.  Skipping"
 
     def teardown(self):
         """

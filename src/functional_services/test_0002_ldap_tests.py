@@ -83,14 +83,14 @@ def is_redundant_ca_dns_supported(host, service):
 class TestLdap(object):
     """ FS LDAP Tests class """
     @pytest.mark.tier1
-    def test_0001_access_ldap_with_creds(self, multihost):
+    def ipa_func_svcs_0001_access_ldap_with_creds(self, multihost):
         """ Access ldap with valid credentials """
         myself = multihost.config.host_by_name(socket.gethostname())
         myself.kinit_as_user('ldapuser1', 'Secret123')
         ldap_sasl_check_positive('ldap://' + multihost.client.hostname + ':3389')
 
     @pytest.mark.tier1
-    def test_0002_deny_ldap_without_creds(self, multihost):
+    def ipa_func_svcs_0002_deny_ldap_without_creds(self, multihost):
         """ deny access to ldap without valid credentials """
         myself = multihost.config.host_by_name(socket.gethostname())
         myself.run_command(['kdestroy', '-A'])
@@ -98,14 +98,14 @@ class TestLdap(object):
                                  'Credentials cache file.*not found|No Kerberos credentials available')
 
     @pytest.mark.tier1
-    def test_0003_access_ldaps_with_creds(self, multihost):
+    def ipa_func_svcs_0003_access_ldaps_with_creds(self, multihost):
         """ Access ldaps with valid credentials """
         myself = multihost.config.host_by_name(socket.gethostname())
         myself.kinit_as_user('ldapuser1', 'Secret123')
         ldap_sasl_check_positive('ldaps://' + multihost.client.hostname + ':6636')
 
     @pytest.mark.tier1
-    def test_0004_deny_ldaps_without_creds(self, multihost):
+    def ipa_func_svcs_0004_deny_ldaps_without_creds(self, multihost):
         """ deny access to ldaps without valid credentials """
         myself = multihost.config.host_by_name(socket.gethostname())
         myself.run_command(['kdestroy', '-A'])
@@ -113,7 +113,7 @@ class TestLdap(object):
                                  'Credentials cache file.*not found|No Kerberos credentials available')
 
     @pytest.mark.tier1
-    def test_0005_access_ldaps_with_simple_bind(self, multihost):
+    def ipa_func_svcs_0005_access_ldaps_with_simple_bind(self, multihost):
         """ Access ldap with simple bind """
         myself = multihost.config.host_by_name(socket.gethostname())
         myself.run_command(['kdestroy', '-A'])
@@ -121,7 +121,7 @@ class TestLdap(object):
                                        'cn=Directory Manager', 'Secret123')
 
     @pytest.mark.tier1
-    def test_0006_revoke_ldap_certificate(self, multihost):
+    def ipa_func_svcs_0006_revoke_ldap_certificate(self, multihost):
         """ Revoke ldap certificate """
         myself = multihost.config.host_by_name(socket.gethostname())
         myself.kinit_as_admin()
@@ -132,7 +132,7 @@ class TestLdap(object):
         check_revoked(multihost.client, '/etc/dirsrv/slapd-instance1')
 
     @pytest.mark.tier2
-    def test_0007_verify_cert_revoked_with_master_down(self, multihost):
+    def ipa_func_svcs_0007_verify_cert_revoked_with_master_down(self, multihost):
         """ Verify certificate is revoked when master is down """
         if not is_redundant_ca_dns_supported(multihost.client, 'ldap/' + multihost.client.hostname):
             pytest.skip('test requires Redundant ipa-ca dns name')
@@ -143,7 +143,7 @@ class TestLdap(object):
         check_revoked(multihost.client, '/etc/dirsrv/slapd-instance1')
 
     @pytest.mark.tier2
-    def test_0008_verify_cert_revoked_with_replica_down(self, multihost):
+    def ipa_func_svcs_0008_verify_cert_revoked_with_replica_down(self, multihost):
         """ Verify certificate is revoked when replica is down """
         if not is_redundant_ca_dns_supported(multihost.client, 'ldap/' + multihost.client.hostname):
             pytest.skip('test requires Redundant ipa-ca dns name')
@@ -154,7 +154,7 @@ class TestLdap(object):
         check_revoked(multihost.client, '/etc/dirsrv/slapd-instance1')
 
     @pytest.mark.tier2
-    def test_0009_verify_ocsp_uri(self, multihost):
+    def ipa_func_svcs_0009_verify_ocsp_uri(self, multihost):
         """ Verify OCSP URI has redundant DNS name """
         if not is_redundant_ca_dns_supported(multihost.client, 'ldap/' + multihost.client.hostname):
             pytest.skip('test requires Redundant ipa-ca dns name')
