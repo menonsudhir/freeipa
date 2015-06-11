@@ -1,7 +1,7 @@
 QE Class
 ========
 
-This is the extension to the multihost plugin for IdM QE tests.  It provides
+This is the extension to the multihost plugin for IPA PyTest.  It provides
 additional variables and functions used by IdM QE IPA Tests.
 
 QeConfig
