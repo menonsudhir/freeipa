@@ -1,5 +1,6 @@
 [run]
 branch = True
+parallel = True
 source = /root/ipa-pytests/src,SITEPACKAGES/ipaclient,SITEPACKAGES/ipalib,SITEPACKAGES/ipapython,SITEPACKAGES/ipaserver
 
 data_file = /root/multihost_tests/ipa-pytests-coverage-data
