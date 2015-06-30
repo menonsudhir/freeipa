@@ -133,3 +133,10 @@ def service_control(host, service, function):
 
     cmd = host.run_command(service_cmd, raiseonerr=False)
     return cmd
+
+
+def list_rpms(host):
+    """ list installed rpms """
+    cmd = host.run_command(['rpm', '-qa', '--last'])
+    print cmd.stdout_text
+    print cmd.stderr_text

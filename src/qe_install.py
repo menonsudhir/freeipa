@@ -7,7 +7,7 @@ This provides the necessary functions to setup IPA Servers and Clients.
 import time
 import re
 from ipa_pytests.shared.utils import service_control
-
+from ipa_pytests.shared.utils import list_rpms
 
 def disable_firewall(host):
     """ Disable firewalld or iptables """
@@ -42,6 +42,7 @@ def set_hostname(host):
 def set_resolv_conf_to_master(host, master):
     """ Set resolv.conf nameserver to point to master ip address """
     host.run_command(['cp', '-af', '/etc/resolv.conf', '/etc/resolv.conf.qebackup'])
+    host.run_command(['chattr', '-i', '/etc/resolv.conf'])
     host.put_file_contents('/etc/resolv.conf', 'nameserver ' + master.ip)
     cmd = host.run_command('cat /etc/resolv.conf')
     print "resolv.conf:"
@@ -94,6 +95,7 @@ def setup_master(master):
     will be set differently than the real DNS domain.
     """
 
+    list_rpms(master)
     disable_firewall(master)
     set_hostname(master)
     set_rngd(master)
@@ -134,6 +136,7 @@ def setup_replica(replica, master):
         replica.ip.split('.')[1] + '.' + \
         replica.ip.split('.')[0] + '.in-addr.arpa.'
 
+    list_rpms(replica)
     disable_firewall(replica)
     set_hostname(replica)
     set_rngd(replica)
@@ -192,6 +195,7 @@ def setup_client(client, master):
     print cmd.stdout_text
     print cmd.stderr_text
 
+    list_rpms(client)
     disable_firewall(client)
     set_hostname(client)
     set_rngd(client)
@@ -216,12 +220,14 @@ def uninstall_server(host):
     This is the default uninstall for a master or replica.  It merely runs
     the standard server uninstall command.
     """
-    cmd = host.run_command(['ipa-server-install', '--uninstall', '-U'], raiseonerr=False)
-
-    print "STDOUT:", cmd.stdout_text
-    print "STDERR:", cmd.stderr_text
-    if cmd.returncode != 0:
-        raise ValueError("ipa-server-install --uninstall failed with error code=%s" % cmd.returncode)
+    if host.transport.file_exists('/etc/ipa/default.conf'):
+        cmd = host.run_command(['ipa-server-install', '--uninstall', '-U'], raiseonerr=False)
+        print "STDOUT:", cmd.stdout_text
+        print "STDERR:", cmd.stderr_text
+        if cmd.returncode != 0:
+            raise ValueError("ipa-server-install --uninstall failed with error code=%s" % cmd.returncode)
+    else:
+        print "/etc/ipa/default.conf not found...skipped --uninstall"
 
 
 def uninstall_client(host):
@@ -229,11 +235,13 @@ def uninstall_client(host):
     This is the default uninstall for a client.  It runs the standard client
     uninstall command.
     """
-    cmd = host.run_command(['ipa-client-install', '--uninstall', '-U'], raiseonerr=False)
-
-    print "STDOUT:", cmd.stdout_text
-    print "STDERR:", cmd.stderr_text
-    if cmd.returncode == 2:
-        print "Client not installed"
-    elif cmd.returncode != 0:
-        raise ValueError("ipa-client-install --uninstall failed with error code=%s" % cmd.returncode)
+    if host.transport.file_exists('/etc/ipa/default.conf'):
+        cmd = host.run_command(['ipa-client-install', '--uninstall', '-U'], raiseonerr=False)
+        print "STDOUT:", cmd.stdout_text
+        print "STDERR:", cmd.stderr_text
+        if cmd.returncode == 2:
+            print "Client not installed"
+        elif cmd.returncode != 0:
+            raise ValueError("ipa-client-install --uninstall failed with error code=%s" % cmd.returncode)
+    else:
+        print "/etc/ipa/default.conf not found...skipped --uninstall"
