@@ -13,6 +13,7 @@ ServerPort= MY_VAR_PORT
 Suffix= o=sasl.com
 RootDN= cn=Directory Manager
 RootDNPwd= Secret123
+ConfigFile= /opt/ipa_pytests/functional_services/ldap-loglevel.ldif
 
 [admin]
 ServerAdminID= admin

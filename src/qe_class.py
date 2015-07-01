@@ -111,19 +111,23 @@ class QeHost(pytest_multihost.host.Host):
                  [<exp_output=<string to check from output>]
         - function to run a command and check return code and output
         """
+        print "QERUN: %s" % " ".join(command)
         cmd = self.run_command(command, stdin_text, raiseonerr=False)
+        print "------------------- QERUN_STDOUT:\n %s" % cmd.stdout_text
+        print "------------------- QERUN_STDERR:\n %s" % cmd.stderr_text
+
         if cmd.returncode != exp_returncode:
-            pytest.xfail("returncode mismatch.")
             print "GOT: ", cmd.returncode
             print "EXPECTED: ", exp_returncode
+            pytest.xfail("returncode mismatch.")
 
         if exp_output is None:
             print "Not checking expected output"
 
         elif cmd.stdout_text.find(exp_output) == 0:
-            pytest.xfail("expected output not found")
             print "GOT: ", cmd.stdout_text
             print "EXPECTED: ", exp_output
+            pytest.xfail("expected output not found")
 
         print "COMMAND SUCCEEDED!"
 

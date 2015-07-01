@@ -8,14 +8,14 @@ conftest to setup required fixtures needed by tests:
 import pytest
 from pytest_multihost import make_multihost_fixture
 from ipa_pytests import qe_class
-from ipa_pytests.functional_services.setup_lib import setup_ipa_env
-from ipa_pytests.functional_services.setup_lib import setup_http_service
-from ipa_pytests.functional_services.setup_lib import setup_ldap_service
+from ipa_pytests.shared.logger import log
+from ipa_pytests.functional_services import setup_lib
 
 
-@pytest.fixture(scope="session")
-def session_multihost(request):
+@pytest.fixture(scope="session", autouse=True)
+def multihost(request):
     """ Mulithost plugin fixture for session scope """
+    print request.node
     mh = make_multihost_fixture(
         request,
         descriptions=[
@@ -37,20 +37,25 @@ def session_multihost(request):
     return mh
 
 
-@pytest.fixture(scope='class')
-def multihost(session_multihost, request):
-    """ multihost plugin fixture for class scope """
+@pytest.fixture(scope='class', autouse=True)
+def setup_class(request, multihost):
+    """ define fixture to run class_setup and teardown"""
     if hasattr(request.cls(), 'class_setup'):
-        request.cls().class_setup(session_multihost)
-        request.addfinalizer(lambda: request.cls().class_teardown(session_multihost))
-    return session_multihost
+        try:
+            request.cls().class_setup(multihost)
+        except StandardError:
+            pytest.skip("class_setup_failed")
+        request.addfinalizer(lambda: request.cls().class_teardown(multihost))
 
 
 @pytest.fixture(scope="session", autouse=True)
-def setup_session(request, session_multihost):
+def setup_session(request, multihost):
     """ define fixture for session level setup """
-    tp = TestPrep(session_multihost)
-    tp.setup()
+    tp = setup_lib.TestPrep(multihost)
+    try:
+        tp.setup()
+    except StandardError:
+        pytest.skip("setup_session_skip")
 
     def teardown_session():
         """ define fixture for session level teardown """
@@ -58,32 +63,14 @@ def setup_session(request, session_multihost):
     request.addfinalizer(teardown_session)
 
 
-class TestPrep(object):
-    """ Session level setup/teardown class """
-    def __init__(self, multihost):
+@pytest.fixture(scope="function", autouse=True)
+def mark_test_start(request):
+    """ define fixture to log start of tests """
+    logmsg = "MARK_TEST_START: " + request.function.__name__
+    log.critical(logmsg)
 
-        self.multihost = multihost
-
-    def setup(self):
-        """
-        Session level setup.
-        - Add code here that you want run before all modules in test suite.
-        - This should be teardown/cleanup code only, not test code.
-        """
-
-        fin = '/tmp/ipa_func_svcs_setup_done'
-        if not self.multihost.client.transport.file_exists(fin):
-            setup_ipa_env(self.multihost)
-            setup_http_service(self.multihost)
-            setup_ldap_service(self.multihost)
-            self.multihost.client.put_file_contents(fin, 'x')
-        else:
-            print "Setup has already run.  Skipping"
-
-    def teardown(self):
-        """
-        Session level teardown
-        - Add code here that you want run after all modules in test suite.
-        - This should be teardown/cleanup code only, not test code.
-        """
-        pass
+    def mark_test_stop():
+        """ define fixture to log end of tests """
+        logmsg = "MARK_TEST_STOP: " + request.function.__name__
+        log.critical(logmsg)
+    request.addfinalizer(mark_test_stop)

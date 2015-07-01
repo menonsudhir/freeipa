@@ -87,13 +87,22 @@ def qe_http_krb_get(host, url, user, passwd):
     return requests.get(url, headers=headers).status_code
 
 
-def ldapmodify(uri, username, password, ldif_file):
+def ldapmodify_cmd(host, uri, username, password, ldif_file):
+    """ ldapmodify command to support changes via ldif files """
+    # host.qerun(['ldapmodify', '-H', uri, '-D', username, '-w', password, '-f', ldif_file])
+    host.qerun(['yum', '--nogpgcheck', '-y', 'install', 'strace'])
+    host.qerun(['strace', '-vtfo', '/tmp/ldapmodify.strace', 'ldapmodify', '-H', uri,
+                '-D', username, '-w', password, '-f', ldif_file])
+
+
+def ldapmodify_py(uri, username, password, ldif_file):
     """ ldapmodify command to support changes via ldif files """
     import ldif
     import ldap
     import ldap.modlist as modlist
     ldapobj = ldap.initialize(uri)
-    ldapobj.bind_s(username, password)
+    ldapobj.simple_bind_s(username, password)
+    time.sleep(5)
     lfile = open(ldif_file)
     last_dn = ''
     parser = ldif.LDIFRecordList(lfile)

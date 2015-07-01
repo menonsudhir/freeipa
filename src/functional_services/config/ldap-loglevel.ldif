@@ -1,0 +1,4 @@
+dn: cn=config
+changetype: modify
+replace: nsslapd-errorlog-level
+nsslapd-errorlog-level: 16415
