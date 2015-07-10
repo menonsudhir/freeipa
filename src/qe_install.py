@@ -9,6 +9,7 @@ import re
 from ipa_pytests.shared.utils import service_control
 from ipa_pytests.shared.utils import list_rpms
 
+
 def disable_firewall(host):
     """ Disable firewalld or iptables """
     if host.transport.file_exists('/etc/init.d/iptables'):
@@ -101,7 +102,8 @@ def setup_master(master):
     set_rngd(master)
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
-    cmd = master.run_command(['yum', '-y', '--nogpgcheck', 'install', 'ipa-server', 'bind-dyndb-ldap'])
+    cmd = master.run_command(['yum', '-y', '--nogpgcheck', 'install', 'ipa-server',
+                              'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
     print cmd.stdout_text
     print cmd.stderr_text
 
@@ -143,7 +145,7 @@ def setup_replica(replica, master):
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = replica.run_command(['yum', '-y', '--nogpgcheck', 'install', 'ipa-server',
-                               'bind-dyndb-ldap'])
+                               'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
     print cmd.stdout_text
     print cmd.stderr_text
 
