@@ -63,7 +63,7 @@ def set_rngd(host):
     if 'QEMU' not in cpuinfo and 'hypervisor' not in cpuinfo:
         print "Not a known Virt...not installing RNGD"
         return
-    host.run_command(['yum', '-y', '--nogpgcheck', 'install', 'rng-tools'])
+    host.yum_install(['rng-tools'])
     if host.transport.file_exists('/etc/rc.d/init.d/rngd'):
         # rng_cfg = 'EXTRAOPTIONS="-r /dev/urandom -t 5"\n'
         rng_cfg = 'EXTRAOPTIONS="-r /dev/urandom"\n'
@@ -102,10 +102,7 @@ def setup_master(master):
     set_rngd(master)
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
-    cmd = master.run_command(['yum', '-y', '--nogpgcheck', 'install', 'ipa-server',
-                              'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
-    print cmd.stdout_text
-    print cmd.stderr_text
+    master.yum_install(['ipa-server', 'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = master.run_command(['ipa-server-install',
@@ -144,10 +141,7 @@ def setup_replica(replica, master):
     set_rngd(replica)
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
-    cmd = replica.run_command(['yum', '-y', '--nogpgcheck', 'install', 'ipa-server',
-                               'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
-    print cmd.stdout_text
-    print cmd.stderr_text
+    replica.yum_install(['ipa-server', 'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = master.run_command(['ipa-replica-prepare',
@@ -193,9 +187,7 @@ def setup_client(client, master):
     """
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
-    cmd = client.run_command(['yum', '-y', '--nogpgcheck', 'install', 'ipa-client', 'ipa-admintools'])
-    print cmd.stdout_text
-    print cmd.stderr_text
+    client.yum_install(['ipa-client', 'ipa-admintools'])
 
     list_rpms(client)
     disable_firewall(client)

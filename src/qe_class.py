@@ -126,3 +126,15 @@ class QeHost(pytest_multihost.host.Host):
             print "EXPECTED: ", exp_output
 
         print "COMMAND SUCCEEDED!"
+
+    def yum_install(self, packages):
+        """
+        yum_install :: <packages>
+        - installs package list passed in
+        """
+        yum_command = ['yum', '-y', '--nogpgcheck', 'install'] + packages
+        cmd = self.run_command(yum_command, raiseonerr=False)
+        print "STDOUT: ", cmd.stdout_text
+        print "STDERR: ", cmd.stderr_text
+        if cmd.returncode != 0:
+            raise ValueError("yum install failed with error code=%s" % cmd.returncode)
