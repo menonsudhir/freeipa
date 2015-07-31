@@ -74,6 +74,7 @@ for ts in tree.iter('testsuite'):
         # print my_method.__doc__
 
         tc.attrib['name'] = team + "-TC: " + suite_nat + ": " + my_method.__doc__.strip()
+        tc.attrib['classname'] = ""
 
 tree.write(output_file)
 
