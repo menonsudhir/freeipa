@@ -102,7 +102,7 @@ def setup_master(master):
     set_rngd(master)
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
-    master.yum_install(['ipa-server', 'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
+    master.yum_install(['ipa-server', 'ipa-server-dns', 'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = master.run_command(['ipa-server-install',
@@ -141,7 +141,7 @@ def setup_replica(replica, master):
     set_rngd(replica)
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
-    replica.yum_install(['ipa-server', 'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
+    replica.yum_install(['ipa-server', 'ipa-server-dns', 'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = master.run_command(['ipa-replica-prepare',

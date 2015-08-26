@@ -1,4 +1,5 @@
 dn: uid=ldapuser1,o=sasl.com
+changetype: add
 userPassword: Secret123
 objectClass: top
 objectClass: person
