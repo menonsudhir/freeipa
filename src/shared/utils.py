@@ -147,5 +147,7 @@ def service_control(host, service, function):
 def list_rpms(host):
     """ list installed rpms """
     cmd = host.run_command(['rpm', '-qa', '--last'])
+    rpmlog_file = "/var/log/rpm.list." + time.strftime('%H%M%S', time.localtime())
     print cmd.stdout_text
     print cmd.stderr_text
+    host.put_file_contents(rpmlog_file, cmd.stdout_text)
