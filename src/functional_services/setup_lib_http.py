@@ -1,6 +1,5 @@
 """ Functional Services Setup for HTTP """
 import re
-import requests
 from ipa_pytests.shared.utils import add_ipa_user
 from ipa_pytests.shared.qe_certutils import certutil
 
@@ -56,12 +55,12 @@ def _http_setup_config(multihost):
 
 def _http_add_ipa_ca_cert(multihost):
     """ Add IPA CA certificate to http server """
-    crtget = "http://" + multihost.master.hostname + "/ipa/config/ca.crt"
+    crtget = "/etc/ipa/ca.crt"
     crtput = "/etc/httpd/alias/ca.crt"
     http_cert_db = "/etc/httpd/alias"
     nick = "IPA CA"
     trust = "CT,,"
-    crtdata = requests.get(crtget).text
+    crtdata = multihost.master.get_file_contents(crtget)
     multihost.client.put_file_contents(crtput, crtdata)
     mycerts = certutil(multihost.client, http_cert_db)
     mycerts.add_cert(crtput, nick, trust)

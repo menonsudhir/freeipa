@@ -3,8 +3,6 @@ import re
 import ldap
 import ldap.sasl
 import time
-import subprocess
-from subprocess import Popen, PIPE
 
 
 def curl_check(host, url):
@@ -13,16 +11,15 @@ def curl_check(host, url):
     return cmd.stdout_text
 
 
-def ldap_sasl_check_positive(uri):
+def ldap_sasl_check_positive(host, uri):
     """ support function to check ldap access for success """
     search = ['ldapsearch', '-H', uri, '-Y', 'GSSAPI', '-s', 'sub', '-b',
               'uid=ldapuser1,o=sasl.com', '(uid=*)', 'dn']
-    subprocess.call(search)
+    host.run_command(search)
 
 
 def ldap_sasl_check_positive_py(uri):
     """ support function to check ldap access for success native python """
-    # ldapobj = ldap.initialize(uri)
     ldapobj = ldap.ldapobject.ReconnectLDAPObject(uri, trace_level=1,
                                                   trace_stack_limit=10,
                                                   retry_max=10)
@@ -34,12 +31,13 @@ def ldap_sasl_check_positive_py(uri):
         raise ValueError('[Fail]: sasl bind failed')
 
 
-def ldap_sasl_check_negative(uri, expected_message):
+def ldap_sasl_check_negative(host, uri, expected_message):
     """ support function to check ldap access for denial """
     search = ['ldapsearch', '-H', uri, '-Y', 'GSSAPI', '-s', 'sub', '-b',
               'uid=ldapuser1,o=sasl.com', '(uid=*)', 'dn']
-    result = Popen(search, stderr=PIPE)
-    output = result.stderr.read()
+    cmd = host.run_command(search, raiseonerr=False)
+    output = cmd.stdout_text
+    output += cmd.stderr_text
     if not re.search(expected_message, output):
         raise ValueError('[Fail]: sasl bind did not fail as expected')
     else:
@@ -64,11 +62,11 @@ def ldap_sasl_check_negative_py(uri, expected_message):
         raise ValueError('[Fail]: sasl bind passed when it should fail')
 
 
-def ldap_simple_bind_check_positve(uri, username, password):
+def ldap_simple_bind_check_positve(host, uri, username, password):
     """ support function to check simple ldap bind """
     search = ['ldapsearch', '-x', '-H', uri, '-D', username, '-w', password, '-b',
               'uid=ldapuser1,o=sasl.com', '(uid=*)', 'dn']
-    subprocess.call(search)
+    host.run_command(search)
 
 
 def ldap_simple_bind_check_py(uri, username, password):

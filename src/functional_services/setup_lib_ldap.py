@@ -1,6 +1,5 @@
 """ Functional Services Setup for LDAP """
 import re
-import requests
 import socket
 import time
 from .support import wait_for_ldap
@@ -109,12 +108,12 @@ def _ldap_add_user_to_directory(multihost):
 
 def _ldap_add_ipa_ca_cert(multihost):
     """ Add IPA CA certificate to ldap """
-    crtget = "http://" + multihost.master.hostname + "/ipa/config/ca.crt"
+    crtget = "/etc/ipa/ca.crt"
     crtput = "/etc/dirsrv/slapd-instance1/ca.crt"
     ldap_cert_db = "/etc/dirsrv/slapd-instance1"
     nick = "IPA CA"
     trust = "CT,,"
-    crtdata = requests.get(crtget).text
+    crtdata = multihost.master.get_file_contents(crtget)
     multihost.client.put_file_contents(crtput, crtdata)
     mycerts = certutil(multihost.client, ldap_cert_db)
     mycerts.add_cert(crtput, nick, trust)
@@ -143,17 +142,16 @@ def _ldap_get_cert_for_service(multihost):
 
 def _ldap_cfg_ssl_with_cert(multihost):
     """ Configure ldap to enable ssl """
-    myself = multihost.config.host_by_name(socket.gethostname())
     uri = 'ldap://' + multihost.client.hostname + ':3389'
     username = 'cn=Directory Manager'
     password = 'Secret123'
     ldif_get = '/opt/ipa_pytests/functional_services/ldap-enablessl.ldif'
     ldif_put = '/tmp/mytest-ldap-enablessl.ldif'
-    ldapcfg = myself.get_file_contents(ldif_get)
+    ldapcfg = multihost.master.get_file_contents(ldif_get)
     ldapcfg = re.sub('MY_VAR_CLIENT', multihost.client.hostname, ldapcfg)
     ldapcfg = re.sub('MY_VAR_SECURE_PORT', '6636', ldapcfg)
     # must put to master here because that's where ldapmodify is run from
-    myself.put_file_contents(ldif_put, ldapcfg)
+    multihost.master.put_file_contents(ldif_put, ldapcfg)
     ldapmodify_cmd(multihost.master, uri, username, password, ldif_put)
     pin = "Internal (Software) Token:Secret123"
     pin_file = "/etc/dirsrv/slapd-instance1/pin.txt"

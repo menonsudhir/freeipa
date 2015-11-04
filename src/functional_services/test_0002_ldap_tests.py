@@ -27,50 +27,45 @@ class TestLdap(object):
     @pytest.mark.tier1
     def ipa_func_svcs_0001_access_ldap_with_creds(self, multihost):
         """ Access ldap with valid credentials """
-        myself = multihost.config.host_by_name(socket.gethostname())
-        myself.kinit_as_user('ldapuser1', 'Secret123')
-        ldap_sasl_check_positive('ldap://' + multihost.client.hostname + ':3389')
+        multihost.master.kinit_as_user('ldapuser1', 'Secret123')
+        ldap_sasl_check_positive(multihost.master, 'ldap://' + multihost.client.hostname + ':3389')
 
     @pytest.mark.tier1
     def ipa_func_svcs_0002_deny_ldap_without_creds(self, multihost):
         """ deny access to ldap without valid credentials """
-        myself = multihost.config.host_by_name(socket.gethostname())
-        myself.qerun(['kdestroy', '-A'])
-        ldap_sasl_check_negative('ldap://' + multihost.client.hostname + ':3389',
+        multihost.master.qerun(['kdestroy', '-A'])
+        ldap_sasl_check_negative(multihost.master, 'ldap://' + multihost.client.hostname + ':3389',
                                  'Credentials cache file.*not found|No Kerberos credentials available')
 
     @pytest.mark.tier1
     def ipa_func_svcs_0003_access_ldaps_with_creds(self, multihost):
         """ Access ldaps with valid credentials """
-        myself = multihost.config.host_by_name(socket.gethostname())
-        myself.kinit_as_user('ldapuser1', 'Secret123')
-        ldap_sasl_check_positive('ldaps://' + multihost.client.hostname + ':6636')
+        multihost.master.kinit_as_user('ldapuser1', 'Secret123')
+        ldap_sasl_check_positive(multihost.master, 'ldaps://' + multihost.client.hostname + ':6636')
 
     @pytest.mark.tier1
     def ipa_func_svcs_0004_deny_ldaps_without_creds(self, multihost):
         """ deny access to ldaps without valid credentials """
-        myself = multihost.config.host_by_name(socket.gethostname())
-        myself.qerun(['kdestroy', '-A'])
-        ldap_sasl_check_negative('ldaps://' + multihost.client.hostname + ':6636',
+        multihost.master.qerun(['kdestroy', '-A'])
+        ldap_sasl_check_negative(multihost.master, 'ldaps://' + multihost.client.hostname + ':6636',
                                  'Credentials cache file.*not found|No Kerberos credentials available')
 
     @pytest.mark.tier1
     def ipa_func_svcs_0005_access_ldaps_with_simple_bind(self, multihost):
         """ Access ldap with simple bind """
-        myself = multihost.config.host_by_name(socket.gethostname())
-        myself.qerun(['kdestroy', '-A'])
-        ldap_simple_bind_check_positve('ldaps://' + multihost.client.hostname + ':6636',
+        multihost.master.qerun(['kdestroy', '-A'])
+        ldap_simple_bind_check_positve(multihost.master,
+                                       'ldaps://' + multihost.client.hostname + ':6636',
                                        'cn=Directory Manager', 'Secret123')
 
     @pytest.mark.tier1
     def ipa_func_svcs_0006_revoke_ldap_certificate(self, multihost):
         """ Revoke ldap certificate """
-        myself = multihost.config.host_by_name(socket.gethostname())
-        myself.kinit_as_admin()
-        cmd = myself.run_command(['ipa', 'service-show', '--all', '--raw',
-                                  'ldap/' + multihost.client.hostname])
+        multihost.master.kinit_as_admin()
+        cmd = multihost.master.run_command(['ipa', 'service-show', '--all', '--raw',
+                                            'ldap/' + multihost.client.hostname])
         serial_number = re.search('serial_number: (.+?)\n', cmd.stdout_text).group(1)
-        myself.qerun(['ipa', 'cert-revoke', serial_number])
+        multihost.master.qerun(['ipa', 'cert-revoke', serial_number])
         check_revoked(multihost.client, '/etc/dirsrv/slapd-instance1')
 
     @pytest.mark.tier2

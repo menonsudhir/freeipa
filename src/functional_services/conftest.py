@@ -43,7 +43,8 @@ def setup_class(request, multihost):
     if hasattr(request.cls(), 'class_setup'):
         try:
             request.cls().class_setup(multihost)
-        except StandardError:
+        except StandardError, errval:
+            print str(errval.args[0])
             pytest.skip("class_setup_failed")
         request.addfinalizer(lambda: request.cls().class_teardown(multihost))
 
