@@ -1,6 +1,5 @@
 """ Functional Services Setup for LDAP """
 import re
-import socket
 import time
 from .support import wait_for_ldap
 from ipa_pytests.shared.utils import add_ipa_user

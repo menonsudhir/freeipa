@@ -5,6 +5,8 @@ qe_class provides the expansion to the multihost plugin for IPA testing
 import pytest
 import pytest_multihost.config
 import pytest_multihost.host
+from pytest_multihost import make_multihost_fixture
+from ipa_pytests.shared.logger import log
 
 
 class QeConfig(pytest_multihost.config.Config):
@@ -142,3 +144,65 @@ class QeHost(pytest_multihost.host.Host):
         print "STDERR: ", cmd.stderr_text
         if cmd.returncode != 0:
             raise ValueError("yum install failed with error code=%s" % cmd.returncode)
+
+
+@pytest.yield_fixture(scope="session", autouse=True)
+def multihost(request):
+    """ Mulithost plugin fixture for session scope """
+    mh = make_multihost_fixture(
+        request,
+        descriptions=[
+            {
+                'type': 'ipa',
+                'hosts': {
+                    'master': 1,
+                    'replica': pytest.num_replicas,
+                    'client': pytest.num_clients,
+                    'other': pytest.num_others,
+                },
+            },
+        ],
+        config_class=QeConfig,
+    )
+    mh.domain = mh.config.domains[0]
+    [mh.master] = mh.domain.hosts_by_role('master')
+    mh.replicas = mh.domain.hosts_by_role('replica')
+    mh.clients = mh.domain.hosts_by_role('client')
+    mh.others = mh.domain.hosts_by_role('other')
+    mh.replica = mh.replicas[0]
+    mh.client = mh.clients[0]
+
+    yield mh
+
+
+@pytest.fixture(scope="class", autouse=True)
+def qe_use_class_setup(request, multihost):
+    def qe_newline():
+        print
+
+    if hasattr(request.cls(), 'class_setup'):
+        try:
+            request.cls().class_setup(multihost)
+        except Exception, errval:
+            print str(errval.args[0])
+            pytest.skip("class_setup_failed")
+        request.addfinalizer(lambda: request.cls().class_teardown(multihost))
+        request.addfinalizer(lambda: qe_newline())
+
+
+@pytest.fixture(scope="function")
+def qe_extra_print(request):
+    print
+
+
+@pytest.fixture(scope="function", autouse=True)
+def mark_test_start(request):
+    """ define fixture to log start of tests """
+    logmsg = "MARK_TEST_START: " + request.function.__name__
+    log.critical(logmsg)
+
+    def mark_test_stop():
+        """ define fixture to log end of tests """
+        logmsg = "MARK_TEST_STOP: " + request.function.__name__
+        log.critical(logmsg)
+    request.addfinalizer(mark_test_stop)

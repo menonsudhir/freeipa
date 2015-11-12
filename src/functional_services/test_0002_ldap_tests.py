@@ -4,7 +4,6 @@ Functional Services LDAP Access Tests
 
 import pytest
 import re
-import socket
 from .setup_lib_ldap import setup_ldap_service
 from .support import ldap_sasl_check_positive
 from .support import ldap_sasl_check_negative
