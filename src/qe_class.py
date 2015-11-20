@@ -169,8 +169,6 @@ def multihost(request):
     mh.replicas = mh.domain.hosts_by_role('replica')
     mh.clients = mh.domain.hosts_by_role('client')
     mh.others = mh.domain.hosts_by_role('other')
-    mh.replica = mh.replicas[0]
-    mh.client = mh.clients[0]
 
     yield mh
 
