@@ -18,21 +18,21 @@ class TestHttpTests(object):
             print "setup_http_service has already run...skipping"
 
     @pytest.mark.tier1
-    def ipa_func_svcs_0001_access_http_with_valid_creds(self, multihost):
+    def test_0001_access_http_with_valid_creds(self, multihost):
         """ Access http server with valid credentials """
         url = "http://" + multihost.client.hostname + "/ipatest/"
         multihost.client.kinit_as_user('httpuser1', 'Secret123')
         multihost.client.qerun(['curl', '-v', '--negotiate', '-u:', url], exp_output='404')
 
     @pytest.mark.tier1
-    def ipa_func_svcs_0002_access_http_without_valid_creds(self, multihost):
+    def test_0002_access_http_without_valid_creds(self, multihost):
         """ Access http server without valid credentials """
         url = "http://" + multihost.client.hostname + "/ipatest/"
         multihost.client.qerun(['kdestroy', '-A'])
         multihost.client.qerun(['curl', '-v', '--negotiate', '-u:', url], exp_output='401')
 
     @pytest.mark.tier2
-    def ipa_func_svcs_0003_access_https_with_valid_creds(self, multihost):
+    def test_0003_access_https_with_valid_creds(self, multihost):
         """ Access https server with valid credentials """
         ipa_cert = "/etc/ipa/ca.crt"
         url = "https://" + multihost.client.hostname + ":8443/ipatest/"
@@ -41,7 +41,7 @@ class TestHttpTests(object):
                                exp_output='404')
 
     @pytest.mark.tier2
-    def ipa_func_svcs_0004_access_https_without_valid_creds(self, multihost):
+    def test_0004_access_https_without_valid_creds(self, multihost):
         """ Access https server without valid credentials """
         ipa_cert = "/etc/ipa/ca.crt"
         url = "https://" + multihost.client.hostname + ":8443/ipatest/"
