@@ -15,7 +15,7 @@ from .support import check_revoked
 class TestLdap(object):
     """ FS LDAP Tests class """
     def class_setup(self, multihost):
-        """ Setup LDAP Service software and requirements for test """
+        """ IPA-TC: Functional Services: Setup LDAP Service software and requirements for test """
         fin = '/tmp/ipa_func_svcs_setup_ldap_service_done'
         if not multihost.client.transport.file_exists(fin):
             setup_ldap_service(multihost)
@@ -25,33 +25,33 @@ class TestLdap(object):
 
     @pytest.mark.tier1
     def test_0001_access_ldap_with_creds(self, multihost):
-        """ Access ldap with valid credentials """
+        """ IPA-TC: Functional Services: Access ldap with valid credentials """
         multihost.master.kinit_as_user('ldapuser1', 'Secret123')
         ldap_sasl_check_positive(multihost.master, 'ldap://' + multihost.client.hostname + ':3389')
 
     @pytest.mark.tier1
     def test_0002_deny_ldap_without_creds(self, multihost):
-        """ deny access to ldap without valid credentials """
+        """ IPA-TC: Functional Services: deny access to ldap without valid credentials """
         multihost.master.qerun(['kdestroy', '-A'])
         ldap_sasl_check_negative(multihost.master, 'ldap://' + multihost.client.hostname + ':3389',
                                  'Credentials cache file.*not found|No Kerberos credentials available')
 
     @pytest.mark.tier1
     def test_0003_access_ldaps_with_creds(self, multihost):
-        """ Access ldaps with valid credentials """
+        """ IPA-TC: Functional Services: Access ldaps with valid credentials """
         multihost.master.kinit_as_user('ldapuser1', 'Secret123')
         ldap_sasl_check_positive(multihost.master, 'ldaps://' + multihost.client.hostname + ':6636')
 
     @pytest.mark.tier1
     def test_0004_deny_ldaps_without_creds(self, multihost):
-        """ deny access to ldaps without valid credentials """
+        """ IPA-TC: Functional Services: deny access to ldaps without valid credentials """
         multihost.master.qerun(['kdestroy', '-A'])
         ldap_sasl_check_negative(multihost.master, 'ldaps://' + multihost.client.hostname + ':6636',
                                  'Credentials cache file.*not found|No Kerberos credentials available')
 
     @pytest.mark.tier1
     def test_0005_access_ldaps_with_simple_bind(self, multihost):
-        """ Access ldap with simple bind """
+        """ IPA-TC: Functional Services: Access ldap with simple bind """
         multihost.master.qerun(['kdestroy', '-A'])
         ldap_simple_bind_check_positve(multihost.master,
                                        'ldaps://' + multihost.client.hostname + ':6636',
@@ -59,7 +59,7 @@ class TestLdap(object):
 
     @pytest.mark.tier1
     def test_0006_revoke_ldap_certificate(self, multihost):
-        """ Revoke ldap certificate """
+        """ IPA-TC: Functional Services: Revoke ldap certificate """
         multihost.master.kinit_as_admin()
         cmd = multihost.master.run_command(['ipa', 'service-show', '--all', '--raw',
                                             'ldap/' + multihost.client.hostname])
@@ -69,7 +69,7 @@ class TestLdap(object):
 
     @pytest.mark.tier2
     def test_0007_verify_cert_revoked_with_master_down(self, multihost):
-        """ Verify certificate is revoked when master is down """
+        """ IPA-TC: Functional Services: Verify certificate is revoked when master is down """
         if not is_redundant_ca_dns_supported(multihost.client, 'ldap/' + multihost.client.hostname):
             pytest.skip('test requires Redundant ipa-ca dns name')
         multihost.master.kinit_as_admin()
@@ -86,7 +86,7 @@ class TestLdap(object):
 
     @pytest.mark.tier2
     def test_0008_verify_cert_revoked_with_replica_down(self, multihost):
-        """ Verify certificate is revoked when replica is down """
+        """ IPA-TC: Functional Services: Verify certificate is revoked when replica is down """
         if not is_redundant_ca_dns_supported(multihost.client, 'ldap/' + multihost.client.hostname):
             pytest.skip('test requires Redundant ipa-ca dns name')
         multihost.replica.kinit_as_admin()
@@ -103,7 +103,7 @@ class TestLdap(object):
 
     @pytest.mark.tier2
     def test_0009_verify_ocsp_uri(self, multihost):
-        """ Verify OCSP URI has redundant DNS name """
+        """ IPA-TC: Functional Services: Verify OCSP URI has redundant DNS name """
         if not is_redundant_ca_dns_supported(multihost.client, 'ldap/' + multihost.client.hostname):
             pytest.skip('test requires Redundant ipa-ca dns name')
         multihost.client.kinit_as_admin()
@@ -116,5 +116,5 @@ class TestLdap(object):
                                             '-url', url, '-serial', serial_number])
 
     def class_teardown(self, multihost):
-        """ Teardown LDAP Service software and requirements from test """
+        """ IPA-TC: Functional Services: Teardown LDAP Service software and requirements from test """
         pass

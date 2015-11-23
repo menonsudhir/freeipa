@@ -204,3 +204,17 @@ def mark_test_start(request):
         logmsg = "MARK_TEST_STOP: " + request.function.__name__
         log.critical(logmsg)
     request.addfinalizer(mark_test_stop)
+
+
+@pytest.mark.tryfirst
+def pytest_runtest_makereport(item, call, __multicall__):
+    # execute all other hooks to obtain the report object
+    rep = __multicall__.execute()
+    if rep.when == "call":
+        tc_name = item._obj.__doc__.strip().split('\n')[0]
+        for line in item._obj.__doc__.strip().split('\n'):
+            if "@Test:" in line:
+                tc_name = line.strip().replace("@Test: ", "", 1)
+                break
+        rep.nodeid =  tc_name
+    return rep
