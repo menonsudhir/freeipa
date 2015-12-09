@@ -7,6 +7,15 @@ import pytest_multihost.config
 import pytest_multihost.host
 from pytest_multihost import make_multihost_fixture
 from ipa_pytests.shared.logger import log
+import logging
+import yaml
+try:
+    import logstash
+    LOGSTASH_INSTALLED = True
+except ImportError:
+    LOGSTASH_INSTALLED = False
+
+LOGSTASHCFG = '/opt/ipa_pytests/ipa_pytests_logstash_cfg.yaml'
 
 
 class QeConfig(pytest_multihost.config.Config):
@@ -175,22 +184,23 @@ def multihost(request):
 
 @pytest.fixture(scope="class", autouse=True)
 def qe_use_class_setup(request, multihost):
+    """ fixture to add specific class setup method name """
     def qe_newline():
+        """ extra print after finalizer to cleanup output format """
         print
 
     if hasattr(request.cls(), 'class_setup'):
         try:
             request.cls().class_setup(multihost)
-        except Exception, errval:
-            print str(errval.args[0])
+        # disabling pylint warning on too general exception because we
+        # want to catch all Exceptions from a class_setup failure
+        # pylint: disable=W0703
+        except Exception as errval:
+            print str(errval)
             pytest.skip("class_setup_failed")
         request.addfinalizer(lambda: request.cls().class_teardown(multihost))
+        # pylint: disable=W0108
         request.addfinalizer(lambda: qe_newline())
-
-
-@pytest.fixture(scope="function")
-def qe_extra_print(request):
-    print
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -207,14 +217,73 @@ def mark_test_start(request):
 
 
 @pytest.mark.tryfirst
+# pylint: disable=W0613
 def pytest_runtest_makereport(item, call, __multicall__):
+    """
+    define pytest runtest_makereport to format test case name as it
+    is reported in output and junit.   Also, we add an additional log
+    entry to report skip on call phase when setup returns skip.
+    """
+
     # execute all other hooks to obtain the report object
     rep = __multicall__.execute()
+
+    if LOGSTASH_INSTALLED:
+        # Write log entry for test case phase results.  This
+        log_test_phase_results(rep)
+
+        # Additional check and log here to write a "fake" log entry
+        # This is done so we can see the call itself for reporting
+        # purposes.  So we copy rep and change when and log new result.
+        if rep.when == "setup" and rep.outcome == "skipped":
+            newrep = rep
+            newrep.when = "call"
+            log_test_phase_results(newrep)
+
     if rep.when == "call":
+        # pylint: disable=W0212
         tc_name = item._obj.__doc__.strip().split('\n')[0]
         for line in item._obj.__doc__.strip().split('\n'):
             if "@Test:" in line:
                 tc_name = line.strip().replace("@Test: ", "", 1)
                 break
-        rep.nodeid =  tc_name
+        rep.nodeid = tc_name
+
     return rep
+
+
+def log_test_phase_results(report):
+    """ function to write test results to logstash """
+    test_nodeid = report.nodeid
+    test_case_when = report.when
+    result = report.outcome
+
+    with open(LOGSTASHCFG) as ymlfile:
+        cfg = yaml.load(ymlfile)
+
+    host = cfg['logstash']['host']
+    port = cfg['logstash']['port']
+
+    test_logger = logging.getLogger('python-logstash-logger')
+    test_logger.setLevel(logging.INFO)
+    test_logger.addHandler(logstash.LogstashHandler(host, port, version=1))
+
+    test_class = ""
+    next_field = 2
+    if test_nodeid.split('::')[2] == "()":
+        test_class = test_nodeid.split('::')[1]
+        next_field = 3
+    test_case = test_nodeid.split('::')[next_field]
+
+    extra = {
+        'test_nodeid': test_nodeid,
+        'test_suite': test_nodeid.split('::')[0].split('/')[1],
+        'test_module': test_nodeid.split('::')[0].split('/')[2],
+        'test_class': test_class,
+        'test_case': test_case,
+        'test_case_when': test_case_when,
+        'test_case_result': result
+    }
+
+    test_logger.info('python-logstash: test extra fields', extra=extra)
+    test_logger.handlers = []

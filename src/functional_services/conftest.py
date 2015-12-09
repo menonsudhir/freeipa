@@ -1,4 +1,4 @@
-# pylint: disable=R0801
+# pylint: disable=R0801,W0611
 """ Functional Services Conftest
 conftest to setup required fixtures needed by tests:
 - config for multihost plugin
@@ -7,7 +7,6 @@ conftest to setup required fixtures needed by tests:
 
 import pytest
 from ipa_pytests.qe_class import multihost
-from ipa_pytests.qe_class import qe_extra_print
 from ipa_pytests.qe_class import qe_use_class_setup
 from ipa_pytests.functional_services import setup_lib
 
@@ -16,8 +15,7 @@ def pytest_namespace():
     """ Define the number of test host roles using namespace hook """
     return {'num_replicas': 1,
             'num_clients': 1,
-            'num_others': 0,
-           }
+            'num_others': 0}
 
 
 @pytest.fixture(scope="session", autouse=True)

@@ -8,11 +8,12 @@ setup(name='ipa_pytests',
       author_email='spoore@redhat.com',
       license='GPL',
       package_dir = {'ipa_pytests': 'src'},
-      packages=['ipa_pytests', 
+      packages=['ipa_pytests',
                 'ipa_pytests.quicktest',
                 'ipa_pytests.functional_services',
                 'ipa_pytests.shared',
-                'ipa_pytests.scripts'],
+                'ipa_pytests.scripts',
+               ],
       data_files=[('/opt/ipa_pytests/functional_services',
                    ['src/functional_services/config/http-krb.conf',
                     'src/functional_services/config/ldap-enablessl.ldif',
@@ -23,12 +24,15 @@ setup(name='ipa_pytests',
                     'src/functional_services/config/ldap-user.ldif',
                    ]
                   ),
+                  ('/opt/ipa_pytests/',
+                   ['config/ipa_pytests_logstash_cfg.yaml',
+                   ]
+                  ),
                   ('/root/multihost_tests',
                    ['config/multihost_tests/env.sh',
                     'config/multihost_tests/.coveragerc',
                     'config/multihost_tests/sitecustomize-add.py'
                    ]
-                  )
+                  ),
                  ]
      )
-    

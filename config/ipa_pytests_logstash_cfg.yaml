@@ -1,0 +1,3 @@
+logstash:
+    host: ops-qe-logstash-2.rhev-ci-vms.eng.rdu2.redhat.com
+    port: 9912
