@@ -16,13 +16,13 @@ Package
 - ipa-pytests/config/mh_cfg_<topo_code>.yaml
     - example multihost configs
 - ipa-pytests/config/multihost_tests/
-    - base multihost_tests dir to be installed in /root for pytest-multihost 
-      plugin.  
+    - base multihost_tests dir to be installed in /root for pytest-multihost
+      plugin.
     - includes python-coverage configuration files
 - ipa-pytests/setup.py
     - main package setup file
 - ipa-pytests/src/
-    - This is the main root directory for the project.  It contains all 
+    - This is the main root directory for the project.  It contains all
       test suites and necessary support libraries
 
 Root
@@ -30,7 +30,7 @@ Root
 
 - qe_class.py
     - This is the main framework interface class.  It provides an extension
-      of the pytest multihost plugin.  This extension provides additional 
+      of the pytest multihost plugin.  This extension provides additional
       variables and functions used by test suites.
     - More information on qe_class can be found here:
       :doc:`qeclass`
@@ -67,9 +67,6 @@ Test Dir
     - This also includes any required session scoped setup/teardown fixtures.
     - more information can be found here:
       :doc:`conftest`
-- pytest.ini
-    - This is the default config per test for running pytest command.
-    - This helps with running individual tests if different args required
 - test_<case or casegroup>.py
-    - this is the test case module.  It can include either a single case or 
+    - this is the test case module.  It can include either a single case or
       multiple via a group of test cases.

@@ -43,9 +43,12 @@ so that they can be executed independently.  However, some cases are
 difficult to do that as they rely on previous cases.  So, it may be
 that some require running a sub-suite or full suite to execute properly.
 
+Note that if you are running in an isolated environment, you may not be
+able to use /root/multihost_tests/ on the test Runner.
+
 - Run test suite::
 
-    cd ~/ipa-pytests
+    cd ipa-pytests
     py.test --junit-xml=/root/multihost_tests/junit.xml \
             --multihost-config=mh_cfg.yaml -v \
             src/<test_suite_dir>

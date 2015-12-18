@@ -2,9 +2,12 @@ Installing
 ==========
 
 This guide steps through installing ipa_pytests and prerequisites.  Steps
-below indicate where to run commands as well as what.  This is for running on
-hosts that will be a part of the IPA tests.  So, some hosts may be referred to
-as Master, Replica, or Clients.  This refers to server role in IPA.
+below indicate where to run commands as well as what.  The instructions here
+typically describe installation on a centrally used "Test Runner" host.  The
+purpose of running the test suites on a system not under test is to keep test
+suite dependencies from being installed on the actual "Systems Under Test".
+Regardless, these directions should also work for installation on an IPA
+Master as well.  Or, really any node in the test environment.
 
 Prerequisites
 -------------
@@ -14,16 +17,31 @@ Prerequisites
     wget -O /etc/yum.repos.d/idmqe-extras-rhel.repo \
         <url to repo>/idmqe-extras-rhel.repo
 
+- Alternatively, you may prefer instead to use EPEL, especially if installing on
+  a central server like a Jenkins Slave::
+
+    yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+    yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+
 - On all hosts, add necessary Python tools/software/plugins::
 
     yum -y install \
+        git \
+        pylint \
+        python-pip \
+        python-ldap \
         PyYAML pytest \
         python-paramiko \
+        python-coverage \
+        python-requests \
         python-pytest-beakerlib \
         python-pytest-multihost \
         python-pytest-sourceorder
 
-- On Master (or main host that will execute tests), setup ssh keys::
+    pip install python-logstash
+
+- On Test Runner (or IPA Master that will execute tests), setup ssh keys::
 
     export MASTER=<Master_FQDN>
     export REPLICA=<Replica_FQDN>
@@ -40,12 +58,9 @@ Prerequisites
 Clone and Install
 -----------------
 
-- On Master, download project code::
+- On Runner and all nodes under test install the project code::
 
     git clone <URL>
-
-- On Master, install locally (Optional)::
-
     cd ipa-pytests
     python setup.py install
 
@@ -63,7 +78,7 @@ you can do so like this:
 
     cd /root/multihost_tests
     sed -i "s:SITEPACKAGES:/usr/lib/python<YOUR_VERSION_HERE>/site-packages:g" .coveragerc
- 
+
 - Add code coverage to run for all python by adding to site customize::
 
     cd /root/multihost_tests

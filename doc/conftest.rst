@@ -4,72 +4,35 @@ Conftest
 This doc describes the pytest conftest file used to configure fixtures
 for using the pytest-multihost plugin.
 
-Session Scoped Multihost Fixture
---------------------------------
+Define required fixtures and libraries
+--------------------------------------
 
-This function defines the session_multihost session fixture that defines
-the config for the multihost object.  This includes the hosts needed for
-the test.  This will need to change depending on how many hosts are
-needed for which roles.
+The imports in the conftest.py file at the beginning must include specific
+fixtures in order to work properly with this framework.
 
 - Example::
 
-    @pytest.fixture(scope="session")
-    def session_multihost(request):
-        """ Mulithost plugin fixture for session scope """
-        mh = make_multihost_fixture(
-            request,
-            descriptions=[
-                {
-                    'type': 'ipa',
-                    'hosts': {
-                        'master': 1,
-                        'replica': 1,
-                        'client': 1,
-                    },
-                },
-            ],
-            config_class=qe_class.QeConfig
-        )
-        mh.domain = mh.config.domains[0]
-        [mh.master] = mh.domain.hosts_by_role('master')
-        [mh.replica] = mh.domain.hosts_by_role('replica')
-        [mh.client] = mh.domain.hosts_by_role('client')
-        return mh
+    import pytest
+    from ipa_pytests.qe_class import multihost
+    from ipa_pytests.qe_class import test_count
+    from ipa_pytests.qe_class import mark_test_start
+    from ipa_pytests.qe_class import qe_use_class_setup
+    from ipa_pytests.qe_class import pytest_runtest_makereport
+    from ipa_pytests.shared.utils import add_ipa_user
 
-- Change hosts dictionary to match what is needed for the test suite.
+Set number of host types
+------------------------
 
-- If test suite needs only 1 master, change to::
-
-                    'hosts': {
-                        'master': 1,
-                    },
-
-- If test suite needs 1 master and 4 replicas, change to::
-
-                    'hosts': {
-                        'master': 1,
-                        'replica': 4,
-                    },
-
-Class Scoped Multihost Fixture
-------------------------------
-
-This function defines the multihost class fixture that will be used
-by the majority of tests.  This defines the class level setup and 
-teardown method names as class_setup and class teardown respectively.
+In conftest.py, you need to set some global variables in the pytest
+namespace.  Set the number of replicas, clients, and others in the
+pytest_namespace hook.
 
 - Example::
 
-    @pytest.fixture(scope='class')
-    def multihost(session_multihost, request):
-        """ multihost plugin fixture for class scope """
-        if hasattr(request.cls(), 'class_setup'):
-            request.cls().class_setup(session_multihost)
-            request.addfinalizer(lambda: request.cls().class_teardown(session_multihost))
-        return session_multihost
-
-- This should not normally require any changes.
+    def pytest_namespace():
+        return {'num_replicas': 1,
+                'num_clients': 1,
+                'num_others': 0}
 
 Session Scoped Setup and Teardown Fixtures
 ------------------------------------------
@@ -81,73 +44,25 @@ for each function provided later in this file.
 - Example::
 
     @pytest.fixture(scope="session", autouse=True)
-    def setup_session(request, session_multihost):
-        """ define fixture for session level setup """
-        tp = TestPrep(session_multihost)
-        tp.setup()
+    def setup_session(request, multihost):
+        multihost.replica = multihost.replicas[0]
+        multihost.client = multihost.clients[0]
+
+        try:
+            setup_master(multihost.master)
+            setup_replica(multihost.replica, multihost.master)
+            setup_client(multihost.client, multihost.master)
+        except StandardError as errval:
+            print str(errval.args[0])
+            pytest.skip("setup_session_skip")
 
         def teardown_session():
             """ define fixture for session level teardown """
-            tp.teardown()
+            pass
         request.addfinalizer(teardown_session)
-
-- This should not normally require any changes.
-
-- This is needed for test suites that have setup/teardown needs by test
-  cases where cases are defined as separate modules.
-
-TestPrep Session Scoped Setup and Teardown Class
-------------------------------------------------
-
-This class provides the setup and teardown methods for the whole test
-suite.  This is needed by test suites that separate cases into separate
-modules but, require common setup/teardown steps.  This would be used 
-to add IPA env setup calls for a test suite if not defined in the test
-suite itself.
-
-- Example::
-
-    class TestPrep(object):
-        """ Session level setup/teardown class """
-        def __init__(self, multihost):
-
-            self.multihost = multihost
-
-        def setup(self):
-            """
-            Session level setup.
-            - Add code here that you want run before all modules in test suite.
-            - This should be teardown/cleanup code only, not test code.
-            """
-            pass
-
-        def teardown(self):
-            """
-            Session level teardown
-            - Add code here that you want run after all modules in test suite.
-            - This should be teardown/cleanup code only, not test code.
-            """
-            pass
-
-
-- Use case would be to have setup run the IPA server setup function::
-
-    class TestPrep(object):
-            """ Session level setup/teardown class """
-    def __init__(self, multihost):
-
-        self.multihost = multihost
-
-    def setup(self):
-        """
-        Session level setup.
-        - Add code here that you want run before all modules in test suite.
-        - This should be teardown/cleanup code only, not test code.
-        """
-        ipa_pytests.qe_install.setup_master(self.multihost.master) 
 
 - This is useful for normal test suites to setup env.  It is run by pytest
   for any level of test execution--test suite, sub-suite, or test case.
 
-- This could also pre-create users/groups/hosts/etc used by any/all test 
+- This could also pre-create users/groups/hosts/etc used by any/all test
   cases if there are multiple sub-suite test modules.

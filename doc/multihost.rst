@@ -98,7 +98,7 @@ There are some typical uses that are described here.
             multihost.master.qerun(['ipa', 'user-find', 'admin'],
                                     exp_returncode=0,
                                     exp_output=expected_out)
-    
+
 - Check if file exists on remote host::
 
     class TestClass:
