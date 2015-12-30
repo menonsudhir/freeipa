@@ -28,18 +28,24 @@ class QeConfig(pytest_multihost.config.Config):
                        'dirman_id': '',
                        'dirman_pw': '',
                        'base_dn': '',
-                       'dns_forwarder': ''}
+                       'dns_forwarder': '',
+                       'chrome_browser': '',
+                       'browser': '',
+                       'virtualdisplay': 0}
 
     def __init__(self, **kwargs):
         """
         initialize additional variables to class support for testing.
         """
         super(QeConfig, self).__init__(**kwargs)
-        self.admin_id = kwargs.get('admin_id') or 'admin'
-        self.admin_pw = kwargs.get('admin_pw') or 'Secret123'
-        self.dirman_id = kwargs.get('dirman_id') or '"cn=Directory Manager"'
-        self.dirman_pw = kwargs.get('dirman_pw') or 'Secret123'
-        self.dns_forwarder = kwargs.get('dns_forwarder') or '8.8.8.8'
+        self.admin_id = kwargs.get('admin_id', 'admin')
+        self.admin_pw = kwargs.get('admin_pw', 'Secret123')
+        self.dirman_id = kwargs.get('dirman_id', '"cn=Directory Manager"')
+        self.dirman_pw = kwargs.get('dirman_pw', 'Secret123')
+        self.dns_forwarder = kwargs.get('dns_forwarder', '8.8.8.8')
+        self.chrome_browser = kwargs.get('chrome_browser', '/usr/bin/google-chrome')
+        self.browser = kwargs.get('browser', 'firefox')
+        self.virtualdisplay = kwargs.get('virtualdisplay', 0)
 
     def get_domain_class(self):
         """

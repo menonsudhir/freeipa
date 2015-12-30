@@ -1,0 +1,8 @@
+EasyProcess>=0.2.1
+ipa-pytests>=0.1
+py>=1.4.31
+pytest>=2.8.5
+pytest-multihost>=0.9
+PyVirtualDisplay>=0.1.5
+PyYAML>=3.11
+selenium>=2.48.0
