@@ -199,6 +199,8 @@ def setup_client(client, master):
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     cmd = client.run_command(['ipa-client-install',
                               '--principal', 'admin',
+                              '--server', master.hostname,
+                              '--domain', master.domain.name,
                               '--password', master.config.admin_pw,
                               '-U'], raiseonerr=False)
 
