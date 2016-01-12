@@ -41,6 +41,10 @@ Prerequisites
 
     pip install python-logstash
 
+- Note: if using your own laptop/system as the Test Runner system, backup
+  your existing user SSH keys first because the following would overwrite
+  them.
+
 - On Test Runner (or IPA Master that will execute tests), setup ssh keys::
 
     export MASTER=<Master_FQDN>
@@ -52,6 +56,7 @@ Prerequisites
     ssh-keyscan $MASTER >> ~/.ssh/known_hosts
     ssh-keyscan $REPLICA >> ~/.ssh/known_hosts
     ssh-keyscan $CLIENT >> ~/.ssh/known_hosts
+    ssh-copy-id -i ~/.ssh/id_rsa $MASTER
     ssh-copy-id -i ~/.ssh/id_rsa $REPLICA
     ssh-copy-id -i ~/.ssh/id_rsa $CLIENT
 
