@@ -180,7 +180,7 @@ def setup_replica(replica, master):
         raise ValueError("ipa-replica-install failed with error code=%s" % cmd.returncode)
 
 
-def setup_client(client, master):
+def setup_client(client, master, server=None, domain=None):
     """
     This is the default testing setup for an IPA Client.  This setup routine
     will install an IPA client using autodiscovery.
@@ -197,13 +197,18 @@ def setup_client(client, master):
     set_resolv_conf_to_master(client, master)
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
-    cmd = client.run_command(['ipa-client-install',
-                              '--principal', 'admin',
-                              '--server', master.hostname,
-                              '--domain', master.domain.name,
-                              '--password', master.config.admin_pw,
-                              '-U'], raiseonerr=False)
-
+    if server and domain:
+        cmd = client.run_command(['ipa-client-install',
+                                  '--principal', 'admin',
+                                  '--server', master.hostname,
+                                  '--domain', master.domain.name,
+                                  '--password', master.config.admin_pw,
+                                  '-U'], raiseonerr=False)
+    else:
+        cmd = client.run_command(['ipa-client-install',
+                                  '--principal', 'admin',
+                                  '--password', master.config.admin_pw,
+                                  '-U'], raiseonerr=False)
     print "STDOUT:", cmd.stdout_text
     print "STDERR:", cmd.stderr_text
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
