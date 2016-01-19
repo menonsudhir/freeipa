@@ -7,7 +7,6 @@ conftest to setup required fixtures needed by tests:
 import pytest
 from ipa_pytests.qe_install import setup_client, setup_replica, setup_master
 from ipa_pytests.qe_class import multihost
-from ipa_pytests.qe_class import qe_extra_print
 from ipa_pytests.qe_class import qe_use_class_setup
 
 
