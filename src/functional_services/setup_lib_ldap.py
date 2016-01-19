@@ -59,7 +59,7 @@ def _ldap_initialize_instance(multihost):
     ldapcfg = re.sub('MY_VAR_CLIENT', multihost.client.hostname, ldapcfg)
     ldapcfg = re.sub('MY_VAR_PORT', '3389', ldapcfg)
     multihost.client.put_file_contents(cfgput, ldapcfg)
-    multihost.client.qerun(['/usr/sbin/setup-ds.pl', '-dddddd', '--silent', '--file=' + cfgput])
+    multihost.client.qerun(['/usr/sbin/setup-ds.pl', '--silent', '--file=' + cfgput])
     time.sleep(60)
 
 

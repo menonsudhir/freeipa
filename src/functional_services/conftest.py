@@ -31,7 +31,7 @@ def setup_session(request, multihost):
     tp = setup_lib.TestPrep(multihost)
     try:
         tp.setup()
-    except StandardError, errval:
+    except StandardError as errval:
         print str(errval.args[0])
         pytest.skip("setup_session_skip")
 
