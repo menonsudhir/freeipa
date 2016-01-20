@@ -2,11 +2,14 @@
 conftest to setup required fixtures needed by tests:
 - config for multihost plugin
 - setup session scoped setup and teardown
+- must include import for multihost fixture if using multihost plugin
+- must include import for qe_use_class_setup fixture if test class will have
+  class_setup and class_teardown methods.
 """
 
 import pytest
-from ipa_pytests.qe_class import multihost
-from ipa_pytests.qe_class import qe_use_class_setup
+from ipa_pytests.qe_class import multihost # pylint: disable=unused-import
+from ipa_pytests.qe_class import qe_use_class_setup # pylint: disable=unused-import
 from ipa_pytests.functional_services import setup_lib
 
 

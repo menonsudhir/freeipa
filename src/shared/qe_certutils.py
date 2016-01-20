@@ -57,7 +57,7 @@ class certutil(object):
     def verify_cert(self, nick):
         """ certutil verify (-V) command """
         cmd = self.host.run_command(['certutil', '-d', self.db_dir, '-V', '-n', nick, '-u', 'ALV'])
-        return cmd.stdout_text.find("certificate is valid"):
+        return cmd.stdout_text.find("certificate is valid")
 
     def request_cert(self, subject, outfile=None):
         """ certutil request (-R) command """

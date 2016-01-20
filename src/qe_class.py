@@ -195,7 +195,7 @@ def qe_use_class_setup(request, multihost):
         # disabling Pylint warning on too general exception because we
         # want to catch all Exceptions from a class_setup failure
         # Pylint: disable=W0703
-        except Exception as errval:
+        except StandardError as errval:
             print str(errval)
             pytest.skip("class_setup_failed")
         request.addfinalizer(lambda: request.cls().class_teardown(multihost))
