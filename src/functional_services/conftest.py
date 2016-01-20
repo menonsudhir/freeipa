@@ -8,8 +8,8 @@ conftest to setup required fixtures needed by tests:
 """
 
 import pytest
-from ipa_pytests.qe_class import multihost # pylint: disable=unused-import
-from ipa_pytests.qe_class import qe_use_class_setup # pylint: disable=unused-import
+from ipa_pytests.qe_class import multihost  # pylint: disable=unused-import
+from ipa_pytests.qe_class import qe_use_class_setup  # pylint: disable=unused-import
 from ipa_pytests.functional_services import setup_lib
 
 

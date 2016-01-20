@@ -192,15 +192,12 @@ def qe_use_class_setup(request, multihost):
     if hasattr(request.cls(), 'class_setup'):
         try:
             request.cls().class_setup(multihost)
-        # disabling Pylint warning on too general exception because we
-        # want to catch all Exceptions from a class_setup failure
-        # Pylint: disable=W0703
         except StandardError as errval:
             print str(errval)
             pytest.skip("class_setup_failed")
         request.addfinalizer(lambda: request.cls().class_teardown(multihost))
         # Pylint: disable=W0108
-        request.addfinalizer(lambda: qe_newline())
+        request.addfinalizer(lambda: qe_newline())  # pylint: disable=unnecessary-lambda
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -218,7 +215,7 @@ def mark_test_start(request):
 
 @pytest.mark.tryfirst
 # Pylint: disable=W0613
-def pytest_runtest_makereport(item, call, __multicall__):
+def pytest_runtest_makereport(item, call, __multicall__):  # pylint: disable=unused-argument
     """
     define pytest runtest_makereport to format test case name as it
     is reported in output and junit.   Also, we add an additional log
@@ -242,8 +239,8 @@ def pytest_runtest_makereport(item, call, __multicall__):
 
     if rep.when == "call":
         # Pylint: disable=W0212
-        tc_name = item._obj.__doc__.strip().split('\n')[0]
-        for line in item._obj.__doc__.strip().split('\n'):
+        tc_name = item._obj.__doc__.strip().split('\n')[0]  # pylint: disable=protected-access
+        for line in item._obj.__doc__.strip().split('\n'):  # pylint: disable=protected-access
             if "@Test:" in line:
                 tc_name = line.strip().replace("@Test: ", "", 1)
                 break
