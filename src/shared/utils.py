@@ -8,8 +8,8 @@ Major shared support utility functions
 - ldapmodify - ldapmodify command
 """
 import time
-import pytest
 import re
+import pytest
 
 
 def add_ipa_user(host, user, passwd=None, first=None, last=None):

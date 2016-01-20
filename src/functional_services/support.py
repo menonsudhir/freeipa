@@ -1,8 +1,8 @@
 """ Functional Services Support Functions """
 import re
+import time
 import ldap
 import ldap.sasl
-import time
 
 
 def curl_check(host, url):

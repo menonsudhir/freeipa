@@ -3,10 +3,10 @@ Certmonger query tests.
 This is example code to build CA Certificate Renewal code
 """
 
-import pytest
 import time
 import sys
 import ast
+import pytest
 from ipa_pytests.shared.qe_certs import QE_IPA_Certs
 
 scripts_dir = "/usr/lib/python%s/site-packages/ipa_pytests/scripts" % sys.version[:3]

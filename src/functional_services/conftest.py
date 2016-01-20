@@ -1,4 +1,3 @@
-# pylint: disable=R0801,W0611
 """ Functional Services Conftest
 conftest to setup required fixtures needed by tests:
 - config for multihost plugin

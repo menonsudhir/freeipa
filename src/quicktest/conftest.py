@@ -1,12 +1,11 @@
-# pylint: disable=R0801
 """ Quicktest Conftest
 conftest to setup required fixtures needed by tests:
 - config for multihost plugin
 - setup session scoped setup and teardown
 """
 
-import pytest
 from pytest_multihost import make_multihost_fixture
+import pytest
 from ipa_pytests import qe_class
 
 

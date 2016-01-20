@@ -2,13 +2,13 @@
 qe_class provides the expansion to the multihost plugin for IPA testing
 """
 
-import pytest
+import logging
+import yaml
 import pytest_multihost.config
 import pytest_multihost.host
 from pytest_multihost import make_multihost_fixture
+import pytest
 from ipa_pytests.shared.logger import log
-import logging
-import yaml
 try:
     import logstash
     LOGSTASH_INSTALLED = True
