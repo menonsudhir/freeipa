@@ -192,14 +192,14 @@ def qe_use_class_setup(request, multihost):
     if hasattr(request.cls(), 'class_setup'):
         try:
             request.cls().class_setup(multihost)
-        # disabling pylint warning on too general exception because we
+        # disabling Pylint warning on too general exception because we
         # want to catch all Exceptions from a class_setup failure
-        # pylint: disable=W0703
+        # Pylint: disable=W0703
         except Exception as errval:
             print str(errval)
             pytest.skip("class_setup_failed")
         request.addfinalizer(lambda: request.cls().class_teardown(multihost))
-        # pylint: disable=W0108
+        # Pylint: disable=W0108
         request.addfinalizer(lambda: qe_newline())
 
 
@@ -217,7 +217,7 @@ def mark_test_start(request):
 
 
 @pytest.mark.tryfirst
-# pylint: disable=W0613
+# Pylint: disable=W0613
 def pytest_runtest_makereport(item, call, __multicall__):
     """
     define pytest runtest_makereport to format test case name as it
@@ -241,7 +241,7 @@ def pytest_runtest_makereport(item, call, __multicall__):
             log_test_phase_results(newrep)
 
     if rep.when == "call":
-        # pylint: disable=W0212
+        # Pylint: disable=W0212
         tc_name = item._obj.__doc__.strip().split('\n')[0]
         for line in item._obj.__doc__.strip().split('\n'):
             if "@Test:" in line:
