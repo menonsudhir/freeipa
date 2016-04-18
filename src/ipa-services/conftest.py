@@ -6,6 +6,7 @@ conftest to setup required fixtures needed by tests:
 
 import pytest
 from ipa_pytests.qe_install import setup_client, setup_master
+from ipa_pytests.qe_class import qe_use_class_setup
 
 
 def pytest_namespace():
@@ -14,6 +15,7 @@ def pytest_namespace():
             'num_clients': 1,
             'num_others': 0
             }
+
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_session(request, multihost):
@@ -29,4 +31,3 @@ def setup_session(request, multihost):
         """ define fixture for session level teardown """
         pass
     request.addfinalizer(teardown_session)
-
