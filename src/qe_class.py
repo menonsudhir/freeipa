@@ -9,6 +9,7 @@ import pytest_multihost.host
 from pytest_multihost import make_multihost_fixture
 import pytest
 from ipa_pytests.shared.logger import log
+import re
 try:
     import logstash
     LOGSTASH_INSTALLED = True
@@ -121,17 +122,30 @@ class QeHost(pytest_multihost.host.Host):
         """
         self.kinit_as_user(self.config.admin_id, self.config.admin_pw)
 
-    def qerun(self, command, stdin_text=None, exp_returncode=0, exp_output=None):
+    def qerun(self, command, stdin_text=None, exp_returncode=0, exp_output=None, user=None):
         """
         qerun :: <command> [stdin_text=<string to pass as stdin>]
                  [exp_returncode=<retcode>]
-                 [<exp_output=<string to check from output>]
+                 [exp_output=<string to check from output>]
+                 [user=<user to run command>]
         - function to run a command and check return code and output
+        - if user arg is set, will run command as this user via su
         """
-        print "QERUN: %s" % " ".join(command)
-        cmd = self.run_command(command, stdin_text, raiseonerr=False)
-        print "------------------- QERUN_STDOUT:\n %s" % cmd.stdout_text
-        print "------------------- QERUN_STDERR:\n %s" % cmd.stderr_text
+        if type(command) is list:
+            print "\nQERUN COMMAND: %s" % " ".join(command)
+            su_command = ['su', '-', user, '-c', " ".join(command)]
+        else:
+            print "\nQERUN COMMAND: %s" % command
+            su_command = 'su - %s -c "%s"' % (user, command)
+
+        if user is None:
+            cmd = self.run_command(command, stdin_text, raiseonerr=False)
+        else:
+            cmd = self.run_command(su_command, stdin_text, raiseonerr=False)
+
+        all_output = cmd.stdout_text + cmd.stderr_text
+        print "QERUN ALL OUTPUT:"
+        print all_output
 
         if cmd.returncode != exp_returncode:
             print "GOT: ", cmd.returncode
@@ -140,13 +154,14 @@ class QeHost(pytest_multihost.host.Host):
 
         if exp_output is None:
             print "Not checking expected output"
-
-        elif cmd.stdout_text.find(exp_output) == 0:
-            print "GOT: ", cmd.stdout_text
+        elif not re.search(exp_output, all_output):
+            print "GOT: ", all_output
             print "EXPECTED: ", exp_output
-            pytest.xfail("expected output not found")
+            pytest.fail("expected output not found")
+        else:
+            print "GOT: %s" % exp_output
 
-        print "COMMAND SUCCEEDED!"
+        print "QERUN COMMAND SUCCEEDED!"
 
     def yum_install(self, packages):
         """
@@ -159,6 +174,15 @@ class QeHost(pytest_multihost.host.Host):
         print "STDERR: ", cmd.stderr_text
         if cmd.returncode != 0:
             raise ValueError("yum install failed with error code=%s" % cmd.returncode)
+
+
+@pytest.fixture(scope="function", autouse=True)
+def test_count(request):
+    try:
+        pytest.count += 1
+    except:
+        pytest.count = 0
+    request.function.func_globals['TEST_COUNT'] = pytest.count
 
 
 @pytest.yield_fixture(scope="session", autouse=True)
