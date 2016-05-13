@@ -1,10 +1,10 @@
 """
 OTP testcases
 """
-
 from ipa_pytests.shared.utils import (kinit_as_user)
-from .lib import (add_otp_user, mod_otp_user, add_otptoken,
-                  delete_otptoken, delete_otp_user)
+import ipa_pytests.shared.utils as shared_utils
+from .lib import (add_user, mod_otp_user, add_otptoken,
+                  delete_otptoken)
 
 
 class TestOTPfunction(object):
@@ -17,16 +17,9 @@ class TestOTPfunction(object):
         # Common username and password for required testcases
         multihost.testuser = "mytestuser"
         multihost.password = "Secret123"
-        chpass = "Passw0rd1"
         multihost.token = "deftoken"
-        multihost.chpasswd = "%s\n%s\n%s\n" % (multihost.password,
-                                               chpass,
-                                               chpass)
-        multihost.repasswd = "%s\n%s\n%s\n" % (chpass,
-                                               multihost.password,
-                                               multihost.password)
 
-    def test_0002_without_enable_fast(self, multihost):
+    def test_otp_0002(self, multihost):
         """
        IDM-IPA-TC: OTP: Add otptoken to new user and test without enable FAST
          https://fedorahosted.org/freeipa/ticket/4411
@@ -35,7 +28,7 @@ class TestOTPfunction(object):
         multihost.token = 'token0002'
 
         # add otp user
-        add_otp_user(multihost)
+        add_user(multihost)
 
         #   modify otp user as admin
         mod_otp_user(multihost)
@@ -50,23 +43,25 @@ class TestOTPfunction(object):
                 '{}'.format(
                     multihost.testuser)],
             exp_returncode=1,
-            exp_output='kinit: Generic preauthentication')
+            exp_output='kinit: Generic preauthentication '
+                       'failure while getting initial credentials')
 
         #   delete otp user
-        delete_otp_user(multihost)
+        shared_utils.delete_user(multihost)
 
         #   delete otptoken
         delete_otptoken(multihost)
 
-    def test_0007_otp_login_with_onlypassword(self, multihost):
+    def test_otp_0007(self, multihost):
         """
-        IDM-IPA-TC: OTP: Log-in with Password only when authenticating type is OTP
+        IDM-IPA-TC: OTP: Log-in with Password
+         only when authenticating type is OTP
         """
         multihost.testuser = 'otpuser0007'
         multihost.token = 'token0007'
 
         #   add otp user
-        add_otp_user(multihost)
+        add_user(multihost)
 
         #   modify otp user as admin
         mod_otp_user(multihost)
@@ -92,12 +87,12 @@ class TestOTPfunction(object):
             exp_output='kinit: Preauthentication failed')
 
         #   delete otp user
-        delete_otp_user(multihost)
+        shared_utils.delete_user(multihost)
 
         #   delete otptoken
         delete_otptoken(multihost)
 
-    def test_0010_otp_assign_new_token_to_nonexisting_user(self, multihost):
+    def test_otp_0010(self, multihost):
         """
         IDM-IPA-TC: OTP: Assign token to non-existing user
         """
@@ -112,7 +107,7 @@ class TestOTPfunction(object):
                                exp_output='ipa: ERROR: otpuser0010: '
                                           'user not found')
 
-    def test_0013_otp_reassign_token_to_nonexisting_user(self, multihost):
+    def test_otp_0013(self, multihost):
         """
         IDM-IPA-TC: OTP: Re-assign token to non-existing user(ipa otptoken-mod).
         """
@@ -121,7 +116,7 @@ class TestOTPfunction(object):
         multihost.xtrauser = 'otpuser0013a'
 
         #   add otp user
-        add_otp_user(multihost)
+        add_user(multihost)
 
         #   modify otp user as admin
         mod_otp_user(multihost)
@@ -135,22 +130,22 @@ class TestOTPfunction(object):
                                 '%s' % multihost.token],
                                exp_returncode=2,
                                exp_output='ipa: ERROR: otpuser0013a:'
-                                          'user not found')
+                                          ' user not found')
 
         #   delete otp user
-        delete_otp_user(multihost)
+        shared_utils.delete_user(multihost)
 
         #   delete otptoken
         delete_otptoken(multihost)
 
-    def test_0015_otp_add_multiple_type_of_token(self, multihost):
+    def test_otp_0015(self, multihost):
         """
         IDM-IPA-TC: OTP: Add multiple type of tokens for same user
         """
         multihost.testuser = 'otpuser0015'
 
         #   add otp user
-        add_otp_user(multihost)
+        add_user(multihost)
 
         #   modify otp user as admin
         mod_otp_user(multihost)
@@ -171,16 +166,16 @@ class TestOTPfunction(object):
         print "\n*****    HOTP token also added successfully    *****\n"
 
         #   delete otp user
-        delete_otp_user(multihost)
+        shared_utils.delete_user(multihost)
 
-    def test_0020_otp_delete_token(self, multihost):
+    def test_otp_0020(self, multihost):
         """
         IDM-IPA-TC: OTP: Delete token
         """
         multihost.testuser = 'otpuser0020'
 
         #   add otp user
-        add_otp_user(multihost)
+        add_user(multihost)
 
         #   Add otptoken as admin
         add_otptoken(multihost)
@@ -190,9 +185,9 @@ class TestOTPfunction(object):
         print "\n*****   Token deleted successfully   *****\n"
 
         #   delete otp user
-        delete_otp_user(multihost)
+        shared_utils.delete_user(multihost)
 
-    def test_0021_otp_find_token_as_user(self, multihost):
+    def test_otp_0021(self, multihost):
         """
         IDM-IPA-TC: OTP: Find token as user
         """
@@ -200,7 +195,7 @@ class TestOTPfunction(object):
         multihost.token = 'token0021'
 
         #   add otp user
-        add_otp_user(multihost)
+        add_user(multihost)
 
         #   Add otptoken as admin
         add_otptoken(multihost)
@@ -214,9 +209,9 @@ class TestOTPfunction(object):
                                exp_output='Number of entries returned 1')
 
         #   delete otp user
-        delete_otp_user(multihost)
+        shared_utils.delete_user(multihost)
 
-    def test_0022_otp_find_token_as_admin(self, multihost):
+    def test_otp_0022(self, multihost):
         """
         IDM-IPA-TC: OTP: Find token as admin
         """
@@ -228,7 +223,7 @@ class TestOTPfunction(object):
                                exp_returncode=0,
                                exp_output='Number of entries returned')
 
-    def test_0023_otp_show_token_as_user(self, multihost):
+    def test_otp_0023(self, multihost):
         """
         IDM-IPA-TC: OTP: Show token as user
         """
@@ -236,7 +231,7 @@ class TestOTPfunction(object):
         multihost.token = 'token0023'
 
         #   add otp user
-        add_otp_user(multihost)
+        add_user(multihost)
 
         #   Add otptoken as admin
         add_otptoken(multihost)
@@ -251,9 +246,9 @@ class TestOTPfunction(object):
                                exp_output='Unique ID: %s' % multihost.token)
 
         #   delete otp user
-        delete_otp_user(multihost)
+        shared_utils.delete_user(multihost)
 
-    def test_0024_otp_show_token_as_admin(self, multihost):
+    def test_otp_0024(self, multihost):
         """
         IDM-IPA-TC: OTP: Show token as admin
         """
@@ -261,7 +256,7 @@ class TestOTPfunction(object):
         multihost.token = 'token0024'
 
         #   add otp user
-        add_otp_user(multihost)
+        add_user(multihost)
 
         #   Add otptoken as admin
         add_otptoken(multihost)
@@ -277,16 +272,16 @@ class TestOTPfunction(object):
                                exp_output='Unique ID: %s' % multihost.token)
 
         #   delete otp user
-        delete_otp_user(multihost)
+        shared_utils.delete_user(multihost)
 
-    def test_0025_otp_assign_invalid_token_type(self, multihost):
+    def test_otp_0025(self, multihost):
         """
         IDM-IPA-TC: OTP: Assign invalid token type
         """
         multihost.testuser = 'otpuser0025'
 
         #   add otp user
-        add_otp_user(multihost)
+        add_user(multihost)
 
         #   Add otptoken as admin
         multihost.master.qerun(['ipa', 'otptoken-add',
@@ -296,9 +291,9 @@ class TestOTPfunction(object):
                                exp_output="ipa: ERROR: invalid 'type':")
 
         #   delete otp user
-        delete_otp_user(multihost)
+        shared_utils.delete_user(multihost)
 
-    def test_0027_otp_add_same_token_id_to_another_user(self, multihost):
+    def test_otp_0027(self, multihost):
         """
         IDM-IPA-TC: OTP: Add Same token ID to another user
         """
@@ -306,7 +301,7 @@ class TestOTPfunction(object):
         multihost.token = 'token0027'
 
         #   add otp user
-        add_otp_user(multihost)
+        add_user(multihost)
 
         # kinit as admin
         multihost.master.kinit_as_admin()
@@ -330,10 +325,341 @@ class TestOTPfunction(object):
             multihost.token)
 
         #   delete otp user
-        delete_otp_user(multihost)
+        shared_utils.delete_user(multihost)
 
         #   delete otptoken
         delete_otptoken(multihost)
+
+    def test_otp_0034(self, multihost):
+        """
+        IDM-IPA-TC: OTP: Change authentication
+        window to 2147483650 seconds_bz1200867
+        """
+
+        #   log-in as admin
+        multihost.master.kinit_as_admin()
+
+        # check otp configuration
+        multihost.master.qerun(
+            [
+                'ipa',
+                'otpconfig-show'],
+            exp_returncode=0,
+            exp_output='TOTP authentication Window: 300'
+        )
+
+        # change authentication window time to 2147483650 seconds
+        multihost.master.qerun(['ipa',
+                                'otpconfig-mod',
+                                '--totp-auth-window=2147483650'],
+                               exp_returncode=1,
+                               exp_output='ipa: ERROR: invalid'
+                               " 'totp_auth_window'"
+                               ''
+                               ': can be at most 2147483647')
+
+    def test_otp_0035(self, multihost):
+        """
+        IDM-IPA-TC: OTP: Change authentication window to 0 seconds_bz1200867
+        """
+
+        #   log-in as admin
+        multihost.master.kinit_as_admin()
+
+        # check otp configuration
+        multihost.master.qerun(
+            [
+                'ipa',
+                'otpconfig-show'],
+            exp_returncode=0,
+            exp_output='TOTP authentication Window: 300'
+        )
+
+        # change authentication window time to 0 seconds
+        multihost.master.qerun(['ipa',
+                                'otpconfig-mod',
+                                '--totp-auth-window=0'],
+                               exp_returncode=1,
+                               exp_output='ipa: ERROR: invalid'
+                               " 'totp_auth_window'"
+                               ''
+                               ': must be at least 5')
+
+    def test_otp_0036(self, multihost):
+        """
+        IDM-IPA-TC: OTP: Change authentication window to -5 seconds_bz1200867
+        """
+
+        #   log-in as admin
+        multihost.master.kinit_as_admin()
+
+        # check otp configuration
+        multihost.master.qerun(
+            [
+                'ipa',
+                'otpconfig-show'],
+            exp_returncode=0,
+            exp_output='TOTP authentication Window: 300'
+        )
+
+        # change authentication window time to -5 seconds
+        multihost.master.qerun(['ipa',
+                                'otpconfig-mod',
+                                '--totp-auth-window=-5'],
+                               exp_returncode=1,
+                               exp_output='ipa: ERROR: invalid'
+                               " 'totp_auth_window'"
+                               ''
+                               ': must be at least 5')
+
+    def test_otp_0037(self, multihost):
+        """
+        IDM-IPA-TC: OTP: Change authentication
+        window to non numaric value_bz1200867
+        """
+
+        #   log-in as admin
+        multihost.master.kinit_as_admin()
+
+        # check otp configuration
+        multihost.master.qerun(
+            [
+                'ipa',
+                'otpconfig-show'],
+            exp_returncode=0,
+            exp_output='TOTP authentication Window: 300'
+        )
+
+        # change authentication window time to @asd
+        multihost.master.qerun(['ipa',
+                                'otpconfig-mod',
+                                '--totp-auth-window=@asd'],
+                               exp_returncode=1,
+                               exp_output='ipa: ERROR: invalid'
+                               " 'totp_auth_window'"
+                               ''
+                               ': must be an integer')
+
+    def test_otp_0038(self, multihost):
+        """
+        IDM-IPA-TC: OTP: Change authentication window with blank space_bz1200867
+        """
+
+        #   log-in as admin
+        multihost.master.kinit_as_admin()
+
+        # check otp configuration
+        multihost.master.qerun(
+            [
+                'ipa',
+                'otpconfig-show'],
+            exp_returncode=0,
+            exp_output='TOTP authentication Window: 300'
+        )
+
+        # change authentication window time with blank space
+        multihost.master.qerun(['ipa',
+                                'otpconfig-mod',
+                                '--totp-auth-window='],
+                               exp_returncode=1,
+                               exp_output='ipa: ERROR:'
+                               " 'totp_auth_window'"
+                               ''
+                               ' is required')
+
+    def test_otp_0039(self, multihost):
+        """
+        IDM-IPA-TC: OTP: Change authentication
+         window with leading space_bz1200867
+        """
+
+        #   log-in as admin
+        multihost.master.kinit_as_admin()
+
+        # check otp configuration
+        multihost.master.qerun(
+            [
+                'ipa',
+                'otpconfig-show'],
+            exp_returncode=0,
+            exp_output='TOTP authentication Window: 300'
+        )
+
+        # change authentication window time with leading space
+        multihost.master.qerun(['ipa',
+                                'otpconfig-mod',
+                                '--totp-auth-window=', ' 123'],
+                               exp_returncode=1,
+                               exp_output='ipa: ERROR:'
+                               " command 'otpconfig_mod'"
+                               ''
+                               ' takes no argument')
+
+    def test_otp_0042(self, multihost):
+        """
+        IDM-IPA-TC: OTP: Change authentication
+         window to 2147483650 seconds_bz1200867
+        """
+
+        #   log-in as admin
+        multihost.master.kinit_as_admin()
+
+        # check otp configuration
+        multihost.master.qerun(
+            [
+                'ipa',
+                'otpconfig-show'],
+            exp_returncode=0,
+            exp_output='TOTP Synchronization Window: 86400'
+        )
+
+        # change synchronization window time to 2147483650 seconds
+        multihost.master.qerun(['ipa',
+                                'otpconfig-mod',
+                                '--totp-sync-window=2147483650'],
+                               exp_returncode=1,
+                               exp_output='ipa: ERROR: invalid'
+                               " 'totp_sync_window'"
+                               ''
+                               ': can be at most 2147483647')
+
+    def test_otp_0043(self, multihost):
+        """
+        IDM-IPA-TC: OTP: Change synchronization window to 0 seconds_bz1200867
+        """
+
+        #   log-in as admin
+        multihost.master.kinit_as_admin()
+
+        # check otp configuration
+        multihost.master.qerun(
+            [
+                'ipa',
+                'otpconfig-show'],
+            exp_returncode=0,
+            exp_output='TOTP Synchronization Window: 86400'
+        )
+
+        # change synchronization window time to 0 seconds
+        multihost.master.qerun(['ipa',
+                                'otpconfig-mod',
+                                '--totp-sync-window=0'],
+                               exp_returncode=1,
+                               exp_output='ipa: ERROR: invalid'
+                               " 'totp_sync_window'"
+                               ''
+                               ': must be at least 5')
+
+    def test_otp_0044(self, multihost):
+        """
+        IDM-IPA-TC: OTP: Change synchronization window to -5 seconds_bz1200867
+        """
+
+        #   log-in as admin
+        multihost.master.kinit_as_admin()
+
+        # check otp configuration
+        multihost.master.qerun(
+            [
+                'ipa',
+                'otpconfig-show'],
+            exp_returncode=0,
+            exp_output='TOTP Synchronization Window: 86400'
+        )
+
+        # change synchronization window time to -5 seconds
+        multihost.master.qerun(['ipa',
+                                'otpconfig-mod',
+                                '--totp-sync-window=-5'],
+                               exp_returncode=1,
+                               exp_output='ipa: ERROR: invalid'
+                               " 'totp_sync_window'"
+                               ''
+                               ': must be at least 5')
+
+    def test_otp_0045(self, multihost):
+        """
+        IDM-IPA-TC: OTP: Change synchronization
+         window to non numaric value_bz1200867
+        """
+
+        #   log-in as admin
+        multihost.master.kinit_as_admin()
+
+        # check otp configuration
+        multihost.master.qerun(
+            [
+                'ipa',
+                'otpconfig-show'],
+            exp_returncode=0,
+            exp_output='TOTP Synchronization Window: 86400'
+        )
+
+        # change synchronization window time to @asd
+        multihost.master.qerun(['ipa',
+                                'otpconfig-mod',
+                                '--totp-sync-window=@asd'],
+                               exp_returncode=1,
+                               exp_output='ipa: ERROR: invalid'
+                               " 'totp_sync_window'"
+                               ''
+                               ': must be an integer')
+
+    def test_otp_0046(self, multihost):
+        """
+        IDM-IPA-TC: OTP: Change synchronization
+         window with blank space_bz1200867
+        """
+
+        #   log-in as admin
+        multihost.master.kinit_as_admin()
+
+        # check otp configuration
+        multihost.master.qerun(
+            [
+                'ipa',
+                'otpconfig-show'],
+            exp_returncode=0,
+            exp_output='TOTP Synchronization Window: 86400'
+        )
+
+        # change synchronization window time with blank space
+        multihost.master.qerun(['ipa',
+                                'otpconfig-mod',
+                                '--totp-sync-window='],
+                               exp_returncode=1,
+                               exp_output='ipa: ERROR:'
+                               " 'totp_sync_window'"
+                               ''
+                               ' is required')
+
+    def test_otp_0047(self, multihost):
+        """
+        IDM-IPA-TC: OTP: Change synchronization
+         window with leading space_bz1200867
+        """
+
+        #   log-in as admin
+        multihost.master.kinit_as_admin()
+
+        # check otp configuration
+        multihost.master.qerun(
+            [
+                'ipa',
+                'otpconfig-show'],
+            exp_returncode=0,
+            exp_output='TOTP Synchronization Window: 86400'
+        )
+
+        # change synchronization window time with leading space
+        multihost.master.qerun(['ipa',
+                                'otpconfig-mod',
+                                '--totp-sync-window=', ' 123'],
+                               exp_returncode=1,
+                               exp_output='ipa: ERROR:'
+                               " command 'otpconfig_mod'"
+                               ''
+                               ' takes no argument')
 
     def class_teardown(self, multihost):
         """ Teardown for class """

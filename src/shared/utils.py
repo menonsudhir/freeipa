@@ -156,3 +156,14 @@ def list_rpms(host):
     print cmd.stdout_text
     print cmd.stderr_text
     host.put_file_contents(rpmlog_file, cmd.stdout_text)
+
+def delete_user(multihost):
+    """
+    Kinit As admin and deleting user
+    """
+    multihost.master.kinit_as_admin()
+    multihost.master.qerun(['ipa',
+                            'user-del',
+                            multihost.testuser],
+                           exp_returncode=0,
+                           exp_output='Deleted user "%s"' % multihost.testuser)

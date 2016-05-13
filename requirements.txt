@@ -6,3 +6,4 @@ pytest-multihost>=0.9
 PyVirtualDisplay>=0.1.5
 PyYAML>=3.11
 selenium>=2.48.0
+pexpect>=4.0.1
