@@ -253,7 +253,7 @@ def bz1183116_check(host):
     This testcase checks if ipa-server have dependency on subscription-manager
     Automation for #bz1183116
     """
-    cmd = host.run_command(['rpm', '-qR', 'ipa-server', '|', 'grep', 'subscription-manager'], raiseonerr=False)
+    cmd = host.run_command('rpm -qR ipa-server | grep subscription-manager', raiseonerr=False)
     if cmd.returncode != 1:
         raise ValueError("ipa-server has dependency=%s" %cmd.returncode)
     else:
