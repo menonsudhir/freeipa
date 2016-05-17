@@ -26,11 +26,13 @@ class TestIPv6Tests(object):
             multihost.replica.run_command(['ipa-server-install', '--uninstall', '-U'])
         multihost.client.run_command(['ipa-client-install', '-uninstall', '-U'], raiseonerr=False)
 
-        hosts = { multihost.master : master_ip_six, multihost.replica : replica_ip_six, multihost.client : client_ip_six}
+        hosts = {multihost.master: master_ip_six,
+                 multihost.replica: replica_ip_six,
+                 multihost.client: client_ip_six}
         for host in hosts.keys():
             get_dev_names = host.run_command(['ls', '/sys/class/net'], raiseonerr=False)
             dev_names = get_dev_names.stdout_text.split('\n')
-            
+
             for dev_name in dev_names:
                 if dev_name not in ['lo', '']:
                     print "ipv6 to " + host + " : " + dev_name
@@ -42,7 +44,7 @@ class TestIPv6Tests(object):
 
         """ Backup and set up new hosts file on master """
         del hosts
-        hosts = { mulithost.master, multihost.replica, multihost.client }
+        hosts = {mulithost.master, multihost.replica, multihost.client}
         for host in hosts:
             backup_hosts_cmp = host.run_command(['cp', '-p', file_hosts, file_hosts_backup])
 
@@ -51,9 +53,9 @@ class TestIPv6Tests(object):
             client_ip_six + ' ' + multihost.client.hostname + '\n' + \
             '::1 ' + 'localhost'
 
-        multihost.master.transport.put_file_contents(file_hosts,file_hosts_content)
-        multihost.replica.transport.put_file_contents(file_hosts,file_hosts_content)
-        multihost.client.transport.put_file_contents(file_hosts,file_hosts_content)
+        multihost.master.transport.put_file_contents(file_hosts, file_hosts_content)
+        multihost.replica.transport.put_file_contents(file_hosts, file_hosts_content)
+        multihost.client.transport.put_file_contents(file_hosts, file_hosts_content)
 
         """ resolv.conf on replica and client to point on master """
         if multihost.replica.transport.file_exists(file_resolv):
@@ -62,8 +64,8 @@ class TestIPv6Tests(object):
             multihost.client.run_command(['cp', '-p', file_resolv, file_resolv_backup])
 
         file_resolv_client_content = 'nameserver ' + master_ip_six
-        multihost.replica.transport.put_file_contents(file_resolv,file_resolv_client_content)
-        multihost.client.transport.put_file_contents(file_resolv,file_resolv_client_content)
+        multihost.replica.transport.put_file_contents(file_resolv, file_resolv_client_content)
+        multihost.client.transport.put_file_contents(file_resolv, file_resolv_client_content)
 
         """ add ipv6 to monitor """
         get_dev_names = check_output(['ls', '/sys/class/net'])
@@ -94,11 +96,11 @@ class TestIPv6Tests(object):
 
         """ Remove IPV4 from machines """
         print "removing ipv4"
-        hosts = { multihost.master, multihost.replica, multihost.client }
+        hosts = {multihost.master, multihost.replica, multihost.client}
         for host in hosts:
             get_dev_names = host.run_command(['ls', '/sys/class/net'], raiseonerr=False)
             dev_names = get_dev_names.stdout_text.split('\n')
-            
+
             for dev_name in dev_names:
                 if dev_name not in ['lo', '']:
                     print "ipv6 to " + host + " : " + dev_name
@@ -114,14 +116,20 @@ class TestIPv6Tests(object):
         """
         print "Install ipa-server"
         cmd = multihost.master.run_command(['ipa-server-install', '--setup-dns',
-            '--no-forwarders',
-            '--domain', multihost.master.domain.name,
-            '--realm', multihost.master.domain.realm,
-            '--hostname', multihost.master.hostname,
-            '--ip-address', multihost.master.ip,
-            '--admin-password', multihost.master.config.admin_pw,
-            '--ds-password', multihost.master.config.dirman_pw,
-            '-U'])
+                                            '--no-forwarders',
+                                            '--domain',
+                                            multihost.master.domain.name,
+                                            '--realm',
+                                            multihost.master.domain.realm,
+                                            '--hostname',
+                                            multihost.master.hostname,
+                                            '--ip-address',
+                                            multihost.master.ip,
+                                            '--admin-password',
+                                            multihost.master.config.admin_pw,
+                                            '--ds-password',
+                                            multihost.master.config.dirman_pw,
+                                            '-U'])
 
     def test_ipv6_0002(self, multihost):
         """
@@ -129,20 +137,26 @@ class TestIPv6Tests(object):
         """
         print "Prepare replica file"
         prepare = multihost.master.run_command(['ipa-replica-prepare',
-            '--ip-address=' + multihost.replica.ip,
-            '--password', multihost.master.config.dirman_pw,
-            multihost.replica.hostname],raiseonerr=False)
+                                                '--ip-address=' + multihost.replica.ip,
+                                                '--password',
+                                                multihost.master.config.dirman_pw,
+                                                multihost.replica.hostname
+                                                ],
+                                               raiseonerr=False)
         prepfile = '/var/lib/ipa/replica-info-' + multihost.replica.hostname + '.gpg'
         localfile = '/tmp/replica.file.tmp'
-        multihost.master.transport.get_file(prepfile, localfile )
+        multihost.master.transport.get_file(prepfile, localfile)
         multihost.replica.transport.put_file(localfile, prepfile)
         print "Install replica with file"
         cmd = multihost.replica.run_command(['ipa-replica-install',
-             '--setup-dns',
-             '--no-forwarders',
-             '--admin-password', multihost.master.config.admin_pw,
-             '--password', multihost.master.config.dirman_pw,
-             '-U', prepfile])
+                                             '--setup-dns',
+                                             '--no-forwarders',
+                                             '--admin-password',
+                                             multihost.master.config.admin_pw,
+                                             '--password',
+                                             multihost.master.config.dirman_pw,
+                                             '-U',
+                                             prepfile])
 
     def test_ipv6_0003(self, multihost):
         """
@@ -150,14 +164,20 @@ class TestIPv6Tests(object):
         """
         print "Install ipa-client and join"
         cmd = multihost.client.run_command(['ipa-client-install',
-            '--domain', multihost.master.domain.name,
-            '--realm', multihost.master.domain.realm,
-            '--server', multihost.master.hostname,
-            '--principal', multihost.master.config.admin_id,
-            '--password', multihost.master.config.admin_pw,
-            '--hostname', multihost.client.hostname,
-            '--force-join',
-            '-U'],raiseonerr=False)
+                                            '--domain',
+                                            multihost.master.domain.name,
+                                            '--realm',
+                                            multihost.master.domain.realm,
+                                            '--server',
+                                            multihost.master.hostname,
+                                            '--principal',
+                                            multihost.master.config.admin_id,
+                                            '--password',
+                                            multihost.master.config.admin_pw,
+                                            '--hostname',
+                                            multihost.client.hostname,
+                                            '--force-join', '-U'],
+                                           raiseonerr=False)
 
     def test_ipv6_0004(self, multihost):
         """
@@ -166,18 +186,17 @@ class TestIPv6Tests(object):
         print "Create user on master"
         multihost.master.kinit_as_admin()
         cmd_prepare = multihost.master.run_command(['ipa', 'user-add',
-            '--first', 'Test',
-            '--last', 'User',
-            'tuser'])
+                                                    '--first', 'Test',
+                                                    '--last', 'User',
+                                                    'tuser'])
 
         print "Edit user on replica"
         multihost.replica.kinit_as_admin()
         cmd = multihost.replica.run_command(['ipa', 'user-mod',
-            '--password', 'tuser'],
-            stdin_text='Password123')
+                                             '--password', 'tuser'],
+                                            stdin_text='Password123')
         print "Login with test user from client"
         cmd = multihost.client.qe_run(['kinit', 'tuser'], stdin_text=tuser)
-
 
     def test_ipv6_0005(self, multihost):
         """
@@ -195,32 +214,36 @@ class TestIPv6Tests(object):
                                                       '--uninstall', '-U'])
         print "REinstall client"
         cmd_install = multihost.client.run_command(['ipa-client-install',
-            '--domain', multihost.master.domain.name,
-            '--realm', multihost.master.domain.realm,
-            '--server', multihost.master.hostname,
-            '--principal', multihost.master.config.admin_id,
-            '--password', multihost.master.config.admin_pw,
-            '--hostname', multihost.client.hostname,
-            '--force-join',
-            '-U'],raiseonerr=False)
-
+                                                    '--domain',
+                                                    multihost.master.domain.name,
+                                                    '--realm',
+                                                    multihost.master.domain.realm,
+                                                    '--server',
+                                                    multihost.master.hostname,
+                                                    '--principal',
+                                                    multihost.master.config.admin_id,
+                                                    '--password',
+                                                    multihost.master.config.admin_pw,
+                                                    '--hostname',
+                                                    multihost.client.hostname,
+                                                    '--force-join',
+                                                    '-U'], raiseonerr=False)
 
     def class_teardown(self, multihost):
         """ Uninstall if ipa installed """
-        install_check_m = multihost.master.run_command(['ipactl', 'status'],raiseonerr=False)
-        if install_check_m.returncode == 0 :
+        install_check_m = multihost.master.run_command(['ipactl', 'status'], raiseonerr=False)
+        if install_check_m.returncode == 0:
             multihost.master.run_command(['ipa-server-install', '--uninstall', '-U'])
-        install_check_r = multihost.replica.run_command(['ipactl', 'status'],raiseonerr=False)
-        if install_check_r.returncode == 0 :
+        install_check_r = multihost.replica.run_command(['ipactl', 'status'], raiseonerr=False)
+        if install_check_r.returncode == 0:
             multihost.replica.run_command(['ipa-server-install', '--uninstall', '-U'])
-        multihost.client.run_command(['ipa-client-install', '-uninstall', '-U'],raiseonerr=False)
+        multihost.client.run_command(['ipa-client-install', '-uninstall', '-U'], raiseonerr=False)
         """ restore resolv file """
         if multihost.replica.transport.file_exists(file_resolv_backup):
             multihost.replica.run_command(['cp', '-p', file_resolv_backup, file_resolv])
         if multihost.client.transport.file_exists(file_resolv):
             multihost.client.run_command(['cp', '-p', file_resolv_backup, file_resolv])
         """ restore hosts file """
-        hosts = { mulithost.master, multihost.replica, multihost.client }
+        hosts = {mulithost.master, multihost.replica, multihost.client}
         for host in hosts:
             backup_hosts_cmp = host.run_command(['cp', '-p', file_hosts_backup, file_hosts])
-
