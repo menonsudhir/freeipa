@@ -1,5 +1,16 @@
 """ Setup File for installing IPA tests """
 from distutils.core import setup
+import os
+import re
+
+pkgList = []
+for dirName, subdirList, fileList in os.walk('src'):
+    if '__init__.py' in fileList:
+        pkgName = re.sub('src', 'ipa_pytests', dirName)
+        pkgName = re.sub('/', '.', pkgName)
+        pkgList.append(pkgName)
+
+
 setup(name='ipa_pytests',
       version='0.1',
       description='IPA Python Tests by IdM QE',
@@ -8,14 +19,7 @@ setup(name='ipa_pytests',
       author_email='spoore@redhat.com',
       license='GPL',
       package_dir={'ipa_pytests': 'src'},
-      packages=['ipa_pytests',
-                'ipa_pytests.quicktest',
-                'ipa_pytests.functional_services',
-                'ipa_pytests.kdcproxy',
-                'ipa_pytests.test_webui',
-                'ipa_pytests.shared',
-                'ipa_pytests.scripts',
-                'ipa_pytests.ipa-services'],
+      packages=pkgList,
       data_files=[('/opt/ipa_pytests/functional_services',
                    ['src/functional_services/config/http-krb.conf',
                     'src/functional_services/config/ldap-enablessl.ldif',
