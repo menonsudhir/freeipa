@@ -1,5 +1,5 @@
 """ qe_class library:
-qe_class provides the expansion to the multihost plugin for IPA testing
+qe_class provides the expansion to the multihost plugin for IPA testing.
 """
 
 import logging
