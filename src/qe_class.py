@@ -233,6 +233,19 @@ class QeHost(pytest_multihost.host.Host):
         print "----expect output end----"
         return cmd
 
+    def rpm_install_check(self, package):
+        """
+        rpm_install_check :: package
+        - check if package is installed or not
+        """
+        rpm_command = ['rpm', '-q', package]
+        cmd = self.run_command(rpm_command, raiseonerr=False)
+        if cmd.returncode == 0:
+            return 0
+        else:
+            print("Package [%s] is not installed" % (package))
+            return 1
+
 
 @pytest.fixture(scope="function", autouse=True)
 def test_count(request):

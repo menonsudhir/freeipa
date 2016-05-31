@@ -179,10 +179,19 @@ def disable_dnssec(host):
 
 def dnsforwardzone_add(host, forwardzone, forwarder):
     """Add forwardzone for AD domain"""
-    host.run_command('ipa dnsforwardzone-add ' + forwardzone +
-                     ' --forwarder=' + forwarder +
-                     ' --forward-policy=only', raiseonerr=False)
+    cmd = host.run_command('ipa dnsforwardzone-add ' + forwardzone +
+                           ' --forwarder=' + forwarder +
+                           ' --forward-policy=only',
+                           raiseonerr=False)
     service_control(host, 'named-pkcs11', 'restart')
+    if 'Active zone: TRUE' in cmd.stdout_text:
+        print("DNS Forwardzone has been added sucessfully on IPA "
+              "Master [%s]" % (host.hostname))
+    elif 'already exists' in cmd.stderr_text:
+        print("DNS Forward Zone already exists")
+    else:
+        pytest.fail("Failed to add DNS Forward Zone on "
+                    "IPA master [%s]" % (host.hostname))
 
 
 def add_dnsforwarder(host, domain, ip):
