@@ -97,7 +97,6 @@ def setup_master(master):
     """
 
     list_rpms(master)
-    bz1183116_check(master)
     disable_firewall(master)
     set_hostname(master)
     set_rngd(master)
@@ -247,18 +246,6 @@ def uninstall_client(host):
             raise ValueError("ipa-client-install --uninstall failed with error code=%s" % cmd.returncode)
     else:
         print "/etc/ipa/default.conf not found...skipped --uninstall"
-
-
-def bz1183116_check(host):
-    """
-    This testcase checks if ipa-server have dependency on subscription-manager
-    Automation for #bz1183116
-    """
-    cmd = host.run_command('rpm -qR ipa-server | grep subscription-manager', raiseonerr=False)
-    if cmd.returncode != 1:
-        raise ValueError("ipa-server has dependency=%s" % cmd.returncode)
-    else:
-        print "ipa-server rpm has no dependency on subscription-manager rpm"
 
 
 def adtrust_install(host):

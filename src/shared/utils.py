@@ -1,15 +1,23 @@
 """
 Major shared support utility functions
 - add_ipa_user - add user and set password
+- del_ipa_user - Delete IPA user
 - kinit_as_uesr - kinit as user with password
 - qerun - utility function to run command on host and check output
 - qe_http_get - experimental function to get web page
 - qe_http_krb_get - experimental function to get web page with kerb ticket
 - ldapmodify - ldapmodify command
+- run_certutil - Helper function to run certutil
+- run_pk12util - Helper function to run pk12util
+- create_noise_file - Helper function to create randomness in a file
 """
 import time
 import re
 import pytest
+import os
+import tempfile
+import paths
+import array
 
 
 def add_ipa_user(host, user, passwd=None, first=None, last=None):
@@ -89,10 +97,12 @@ def qe_http_krb_get(host, url, user, passwd):
 
 def ldapmodify_cmd(host, uri, username, password, ldif_file):
     """ ldapmodify command to support changes via ldif files """
-    # host.qerun(['ldapmodify', '-H', uri, '-D', username, '-w', password, '-f', ldif_file])
+    # host.qerun(['ldapmodify', '-H', uri, '-D', username, '-w',
+    #              password, '-f', ldif_file])
     host.qerun(['yum', '--nogpgcheck', '-y', 'install', 'strace'])
-    host.qerun(['strace', '-vtfo', '/tmp/ldapmodify.strace', 'ldapmodify', '-H', uri,
-                '-D', username, '-w', password, '-f', ldif_file])
+    host.qerun(['strace', '-vtfo', '/tmp/ldapmodify.strace',
+                'ldapmodify', '-H', uri, '-D', username, '-w', password,
+                '-f', ldif_file])
 
 
 def ldapmodify_py(uri, username, password, ldif_file):
@@ -112,7 +122,8 @@ def ldapmodify_py(uri, username, password, ldif_file):
         if dn is None:
             dn = last_dn
         if 'replace' in entry.keys():
-            ml = [(ldap.MOD_REPLACE, entry['replace'][0], entry[entry['replace'][0]])]
+            ml = [(ldap.MOD_REPLACE, entry['replace'][0],
+                   entry[entry['replace'][0]])]
             ldapobj.modify_s(dn, ml)
         else:
             ml = modlist.addModlist(entry)
@@ -129,7 +140,8 @@ def service_control(host, service, function):
     else:
         service_file = service
 
-    if host.transport.file_exists('/usr/lib/systemd/system/' + service_file + '.service'):
+    if host.transport.file_exists(paths.SYSTEMD_DIR + service_file +
+                                  '.service'):
         if function is 'on' or function is 'off':
             function = re.sub('off', 'disable', function)
             function = re.sub('on', 'enable', function)
@@ -151,30 +163,45 @@ def service_control(host, service, function):
 
 def list_rpms(host):
     """ list installed rpms """
-    cmd = host.run_command(['rpm', '-qa', '--last'])
-    rpmlog_file = "/var/log/rpm.list." + time.strftime('%H%M%S', time.localtime())
+    cmd = host.run_command([paths.RPM, '-qa', '--last'])
+    rpmlog_file = "/var/log/rpm.list." + time.strftime('%H%M%S',
+                                                       time.localtime())
     print cmd.stdout_text
     print cmd.stderr_text
     host.put_file_contents(rpmlog_file, cmd.stdout_text)
 
 
-def delete_user(multihost):
+def run_pk12util(host, args):
     """
-    Kinit As admin and deleting user
+    Helper function to run pk12util
     """
-    multihost.master.kinit_as_admin()
-    multihost.master.qerun(['ipa',
-                            'user-del',
-                            multihost.testuser],
-                           exp_returncode=0,
-                           exp_output='Deleted user "%s"' % multihost.testuser)
+    new_args = [paths.PK12UTIL]
+    args = new_args + args
+    args = " ".join(args)
+    print("Running pk12util command : %s " % args)
+    return host.run_command(args, raiseonerr=False)
+
+
+def create_noise_file():
+    """
+    Helper function to create a file with random content.
+    This file is required for functions like certutil and pk12util
+    """
+    # Create noise
+    noise = array.array('B', os.urandom(128))
+    (noise_fd, noise_name) = tempfile.mkstemp()
+    os.write(noise_fd, noise)
+    os.close(noise_fd)
+    return noise_name
 
 
 def disable_dnssec(host):
     """Disable's DNSSEC and restart named-pkcs11 service"""
     namedcfg = '/etc/named.conf'
     namedtxt = host.get_file_contents(namedcfg)
-    namedtxt = re.sub('dnssec-validation yes', 'dnssec-validation no', namedtxt)
+    namedtxt = re.sub('dnssec-validation yes',
+                      'dnssec-validation no',
+                      namedtxt)
     host.put_file_contents(namedcfg, namedtxt)
     service_control(host, 'named-pkcs11', 'restart')
 
@@ -198,3 +225,22 @@ def add_dnsforwarder(host, domain, ip):
                            raiseonerr=False)
     cmd = host.run_command('ipconfig /flushdns', raiseonerr=False)
     cmd = host.run_command('dnscmd /clearcache', raiseonerr=False)
+
+
+def del_ipa_user(host, username, preserve=False, skip_err=False):
+    """
+    Helper function to delete IPA user
+    """
+    host.kinit_as_admin()
+    args = []
+    if preserve:
+        args.append('--preserve')
+    if skip_err:
+        args.append('--continue')
+    cmdstr = [paths.IPA, 'user-del', username] + args
+    cmdstr = " ".join(cmdstr)
+    cmd = host.run_command(cmdstr, raiseonerr=False)
+    if cmd.returncode != 0:
+        print("Failed to delete IPA user %s" % username)
+    else:
+        print("Successfully deleted IPA user %s" % username)

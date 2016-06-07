@@ -1,9 +1,11 @@
+""" Conftest for server install """
 import pytest
 from ipa_pytests.qe_install import setup_master, uninstall_server
 
+
 def pytest_namespace():
     """ Define the number of test host roles using namespace hook """
-    return {'num_replicas': 0,
+    return {'num_replicas': 1,
             'num_clients': 0,
             'num_others': 0
             }

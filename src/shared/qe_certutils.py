@@ -30,59 +30,97 @@ class certutil(object):
             self.host.transport.mkdir_recursive(self.db_dir)
 
         if not self.host.transport.file_exists(self.password_file):
-            self.db_password = ''.join([random.choice(string.ascii_letters + string.digits)
+            self.db_password = ''.join([random.choice(string.ascii_letters +
+                                                      string.digits)
                                         for _ in xrange(32)])
             self.host.put_file_contents(self.password_file, self.db_password)
 
         if not self.host.transport.file_exists(self.noise_file):
-            self.db_noise = ''.join([random.choice(string.ascii_letters + string.digits)
+            self.db_noise = ''.join([random.choice(string.ascii_letters +
+                                                   string.digits)
                                      for _ in xrange(32)])
             self.host.put_file_contents(self.noise_file, self.db_noise)
 
-        self.host.run_command(['certutil', '-d', self.db_dir, '-N', '-f', self.password_file])
+        self.host.run_command(['certutil',
+                               '-d', self.db_dir,
+                               '-N',
+                               '-f', self.password_file])
 
     def add_cert(self, cert_file, nick, trust):
         """ certutil add (-A) command """
-        self.host.run_command(['certutil', '-d', self.db_dir, '-A', '-n', nick, '-t', trust,
-                               '-a', '-i', cert_file])
+        self.host.run_command(['certutil',
+                               '-d', self.db_dir,
+                               '-A',
+                               '-n', nick,
+                               '-t', trust,
+                               '-a',
+                               '-i', cert_file])
 
     def list_certs(self, nick=None):
         """ certutil list (-L) command """
-        if nick is None:
-            cmd = self.host.run_command(['certutil', '-d', self.db_dir, '-L'])
-        else:
-            cmd = self.host.run_command(['certutil', '-d', self.db_dir, '-L', '-n', nick])
+        cmdstr = ['certutil', '-d', self.db_dir, '-L']
+        if nick:
+            cmdstr = cmdstr + ['-n', nick]
+        cmd = self.host.run_command(cmdstr)
         return cmd.stdout_text, cmd.stderr_text
 
     def verify_cert(self, nick):
         """ certutil verify (-V) command """
-        cmd = self.host.run_command(['certutil', '-d', self.db_dir, '-V', '-n', nick, '-u', 'ALV'])
+        cmdstr = ['certutil', '-d', self.db_dir, '-V', '-n', nick, '-u', 'ALV']
+        cmd = self.host.run_command(cmdstr)
         return cmd.stdout_text.find("certificate is valid")
 
     def request_cert(self, subject, outfile=None):
         """ certutil request (-R) command """
-        if outfile is None:
-            cmd = self.host.run_command(['certutil', '-d', self.db_dir, '-R', '-s', subject,
-                                         '-a', '-z', self.noise_file])
-        else:
-            cmd = self.host.run_command(['certutil', '-d', self.db_dir, '-R', '-s', subject,
-                                         '-a', '-z', self.noise_file, '-o', outfile])
+        cmdstr = ['certutil', '-d', self.db_dir, '-R', '-s', subject,
+                  '-a', '-z', self.noise_file]
+        if outfile:
+            cmdstr = cmdstr + ['-o', outfile]
+
+        cmd = self.host.run_command(cmdstr)
         return cmd.stdout_text, cmd.stderr_text
 
-    def selfsign_cert(self, subject, nick):
+    def selfsign_cert(self, subject, nick, options=None):
         """ certutil create self-signed cert and add to nssdb (-S) command """
-        cmd = self.host.run_command(['certutil', '-d', self.db_dir, '-S',
-                                     '-n', nick,
-                                     '-s', subject,
-                                     '-x',
-                                     '-t', 'CTu,CTu,CTu',
-                                     '-g', '2048',
-                                     '-v', '60',
-                                     '-z', self.noise_file,
-                                     '-2',
-                                     '--keyUsage', 'certSigning,digitalSignature,nonRepudiation',
-                                     '--nsCertType', 'sslCA,smimeCA,objectSigningCA',
-                                     '-f', self.password_file], stdin_text='y\n10\ny\n')
+        cmdstr = ['certutil',
+                  '-d', self.db_dir,
+                  '-S',
+                  '-n', nick,
+                  '-s', subject,
+                  '-x',
+                  '-t', 'CTu,Cu,Cu',
+                  '-g', '2048',
+                  '-v', '60',
+                  '-z', self.noise_file,
+                  '-2',
+                  '--keyUsage', 'certSigning,digitalSignature,nonRepudiation',
+                  '--nsCertType', 'sslCA,smimeCA,objectSigningCA',
+                  '-f', self.password_file]
+        if options:
+            cmdstr = cmdstr + options
+
+        print("\nRunning command : %s" % " ".join(cmdstr))
+        cmd = self.host.run_command(cmdstr, stdin_text='y\n10\ny\n', raiseonerr=False)
+        return cmd.stdout_text, cmd.stderr_text
+
+    def create_server_cert(self, subject, nick, ca_nick='ca', options=None):
+        """ certutil create CA-signed server cert
+        and add to nssdb (-S) command """
+        cmdstr = ['certutil',
+                  '-d', self.db_dir,
+                  '-S',
+                  '-n', nick,
+                  '-s', subject,
+                  '-t', ',,',
+                  '-z', self.noise_file,
+                  '-c', ca_nick,
+                  '-f', self.password_file]
+
+        if options:
+            cmdstr = cmdstr + options
+
+        print("\nRunning command : %s" % " ".join(cmdstr))
+        cmd = self.host.run_command(cmdstr, stdin_text='n\n0\ny\n', raiseonerr=False)
         return cmd.stdout_text, cmd.stderr_text
 
     def get_ipa_subject_base(self, master):
@@ -96,3 +134,15 @@ class certutil(object):
         if suffix == "":
             suffix = "O=" + master.domain.realm
         return suffix
+
+    def export_cert(self, nick, outfile=None):
+        """ certutil export command """
+        cmdstr = ['certutil',
+                  '-d', self.db_dir,
+                  '-L',
+                  '-n', nick,
+                  '-a']
+        if outfile:
+            cmdstr = cmdstr + ['-o', outfile]
+        cmd = self.host.run_command(cmdstr)
+        return cmd.stdout_text, cmd.stderr_text
