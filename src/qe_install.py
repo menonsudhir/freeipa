@@ -248,6 +248,7 @@ def uninstall_client(host):
     else:
         print "/etc/ipa/default.conf not found...skipped --uninstall"
 
+
 def bz1183116_check(host):
     """
     This testcase checks if ipa-server have dependency on subscription-manager
@@ -255,6 +256,6 @@ def bz1183116_check(host):
     """
     cmd = host.run_command(['rpm', '-qR', 'ipa-server', '|', 'grep', 'subscription-manager'], raiseonerr=False)
     if cmd.returncode != 1:
-        raise ValueError("ipa-server has dependency=%s" %cmd.returncode)
+        raise ValueError("ipa-server has dependency=%s" % cmd.returncode)
     else:
         print "ipa-server rpm has no dependency on subscription-manager rpm"
