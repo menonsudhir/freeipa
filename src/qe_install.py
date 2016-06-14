@@ -259,3 +259,23 @@ def bz1183116_check(host):
         raise ValueError("ipa-server has dependency=%s" % cmd.returncode)
     else:
         print "ipa-server rpm has no dependency on subscription-manager rpm"
+
+
+def adtrust_install(host):
+    """ Prepare an IPA server to establish trust relationships with AD """
+    cmd = host.run_command('rpm -q ipa-server-trust-ad', raiseonerr=False)
+    print cmd.stdout_text, cmd.stderr_text
+    if 'package ipa-server-trust-ad is not installed' in cmd.stderr_text:
+        cmd = host.run_command('yum install -y ipa-server-trust-ad', raiseonerr=False)
+        if cmd.returncode != 0:
+            pytest.fail("Unable to install ipa-server-trust-ad rpm on master")
+    else:
+        netbios = (host.domain.realm).split(".")[0]
+        print netbios
+        cmd = host.run_command('ipa-adtrust-install '
+                               '--netbios-name=' + netbios +
+                               ' -a ' + host.config.admin_pw +
+                               ' -U', raiseonerr=False)
+        print cmd.stdout_text, cmd.stderr_text
+        if cmd.returncode != 0:
+            pytest.fail("IPA ad trust install failed")

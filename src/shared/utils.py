@@ -157,6 +157,7 @@ def list_rpms(host):
     print cmd.stderr_text
     host.put_file_contents(rpmlog_file, cmd.stdout_text)
 
+
 def delete_user(multihost):
     """
     Kinit As admin and deleting user
@@ -167,3 +168,33 @@ def delete_user(multihost):
                             multihost.testuser],
                            exp_returncode=0,
                            exp_output='Deleted user "%s"' % multihost.testuser)
+
+
+def disable_dnssec(host):
+    """Disable's DNSSEC and restart named-pkcs11 service"""
+    namedcfg = '/etc/named.conf'
+    namedtxt = host.get_file_contents(namedcfg)
+    namedtxt = re.sub('dnssec-validation yes', 'dnssec-validation no', namedtxt)
+    host.put_file_contents(namedcfg, namedtxt)
+    service_control(host, 'named-pkcs11', 'restart')
+
+
+def dnsforwardzone_add(host, forwardzone, forwarder):
+    """Add forwardzone for AD domain"""
+    host.run_command('ipa dnsforwardzone-add ' + forwardzone +
+                     ' --forwarder=' + forwarder +
+                     ' --forward-policy=only', raiseonerr=False)
+    service_control(host, 'named-pkcs11', 'restart')
+
+
+def add_dnsforwarder(host, domain, ip):
+    """Add DNS forwarder on AD machine for IPA domain"""
+
+    cmd = host.run_command('dnscmd /ZoneInfo ' + domain, raiseonerr=False)
+    if cmd.returncode == 1:
+        cmd = host.run_command(['dnscmd', '/ZoneDelete', domain],
+                               stdin_text='y', raiseonerr=False)
+    cmd = host.run_command('dnscmd /zoneadd ' + domain + ' /forwarder ' + ip,
+                           raiseonerr=False)
+    cmd = host.run_command('ipconfig /flushdns', raiseonerr=False)
+    cmd = host.run_command('dnscmd /clearcache', raiseonerr=False)

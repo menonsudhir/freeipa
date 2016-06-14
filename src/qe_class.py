@@ -188,26 +188,54 @@ def test_count(request):
 @pytest.yield_fixture(scope="session", autouse=True)
 def multihost(request):
     """ Mulithost plugin fixture for session scope """
-    mh = make_multihost_fixture(
-        request,
-        descriptions=[
-            {
-                'type': 'ipa',
-                'hosts': {
-                    'master': 1,
-                    'replica': pytest.num_replicas,
-                    'client': pytest.num_clients,
-                    'other': pytest.num_others,
+    if pytest.num_ads != 0:
+        mh = make_multihost_fixture(
+            request,
+            descriptions=[
+                {
+                    'type': 'ipa',
+                    'hosts': {
+                        'master': 1,
+                        'replica': pytest.num_replicas,
+                        'client': pytest.num_clients,
+                        'other': pytest.num_others,
+                    },
                 },
-            },
-        ],
-        config_class=QeConfig,
-    )
-    mh.domain = mh.config.domains[0]
-    [mh.master] = mh.domain.hosts_by_role('master')
-    mh.replicas = mh.domain.hosts_by_role('replica')
-    mh.clients = mh.domain.hosts_by_role('client')
-    mh.others = mh.domain.hosts_by_role('other')
+                {
+                    'type': 'ad',
+                    'hosts': {
+                        'ad': pytest.num_ads,
+                    },
+                },
+            ],
+            config_class=QeConfig,
+        )
+    else:
+        mh = make_multihost_fixture(
+            request,
+            descriptions=[
+                {
+                    'type': 'ipa',
+                    'hosts': {
+                        'master': 1,
+                        'replica': pytest.num_replicas,
+                        'client': pytest.num_clients,
+                        'other': pytest.num_others,
+                    },
+                },
+            ],
+            config_class=QeConfig,
+        )
+
+    mh.domain_ipa = mh.config.domains[0]
+    [mh.master] = mh.domain_ipa.hosts_by_role('master')
+    mh.replicas = mh.domain_ipa.hosts_by_role('replica')
+    mh.clients = mh.domain_ipa.hosts_by_role('client')
+    mh.others = mh.domain_ipa.hosts_by_role('other')
+
+    if pytest.num_ads != 0:
+        mh.domain_ad = mh.config.domains[1]
+        mh.ads = mh.domain_ad.hosts_by_role('ad')
 
     yield mh
 
