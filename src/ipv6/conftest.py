@@ -4,7 +4,8 @@
 
 import pytest
 from ipa_pytests.qe_class import multihost
-from ipa_pytests.functional_services import setup_lib 
+from ipa_pytests.functional_services import setup_lib
+from ipa_pytests.qe_class import qe_use_class_setup
 
 def pytest_namespace():
     """ Define the number of test host roles using namespace hook """
@@ -16,4 +17,5 @@ def pytest_namespace():
 @pytest.fixture(scope="session", autouse=True)
 def setup_session(request, multihost):
     """ define fixture for session level setup """
-    pass
+    multihost.replica = multihost.replicas[0]
+    multihost.client = multihost.clients[0]

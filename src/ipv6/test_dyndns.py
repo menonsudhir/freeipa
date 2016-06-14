@@ -66,7 +66,7 @@ class TestSSSDTests(object):
             '--admin-password', multihost.master.config.admin_pw,
             '--ds-password', multihost.master.config.dirman_pw,
             '-U'])
-        print "Prepare replica"""
+        print "Prepare replica"
         cmd2 = multihost.master.run_command([
             'ipa-replica-prepare',
             '--ip-address=' + multihost.replica.ip,
