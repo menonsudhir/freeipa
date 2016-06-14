@@ -124,12 +124,15 @@ def setup_master(master):
         raise ValueError("ipa-server-install failed with error code=%s" % cmd.returncode)
 
 
-def setup_replica(replica, master):
+def setup_replica(replica, master, setup_dns=True, setup_ca=True):
     """
     This is the default testing setup for an IPA Replica.  This setup routine
     will install an IPA Replica with DNS and a forwarder.  The domain and realm
     will be set differently than the real DNS domain.  Also, it does setup the
     replica as a CA.
+    :type setup_ca: True or False
+    :type setup_dns: True or False
+
     """
     revnet = replica.ip.split('.')[2] + '.' + \
         replica.ip.split('.')[1] + '.' + \
@@ -162,16 +165,21 @@ def setup_replica(replica, master):
 
     time.sleep(5)
     set_resolv_conf_to_master(replica, master)
+    params = ['ipa-replica-install']
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
-    cmd = replica.run_command(['ipa-replica-install',
-                               '--setup-ca',
-                               '--setup-dns',
-                               '--forwarder', master.config.dns_forwarder,
-                               '--admin-password', master.config.admin_pw,
-                               '--password', master.config.dirman_pw,
-                               # '--mkhomedir',
-                               '-U', prepfile], raiseonerr=False)
+
+    if setup_dns:
+        params.extend(['--setup-dns',
+                       '--forwarder', master.config.dns_forwarder])
+
+    if setup_ca:
+        params.append('--setup-ca')
+
+    params.extend(['--admin-password', master.config.admin_pw])
+    params.extend(['--password', master.config.dirman_pw])
+    params.extend(['-U', prepfile])
+    cmd = replica.run_command(params, raiseonerr=False)
 
     print "STDOUT:", cmd.stdout_text
     print "STDERR:", cmd.stderr_text

@@ -6,7 +6,8 @@ def pytest_namespace():
     """ Define the number of test host roles using namespace hook """
     return {'num_replicas': 1,
             'num_clients': 0,
-            'num_others': 0
+            'num_others': 0,
+            'num_ads': 0
             }
 
 

@@ -1,9 +1,10 @@
 """
 Overview:
 IPA replica install bzs automation
+#1283890
+#1242036
 SetUp Requirements:
--Latest version of RHEL OS
--Need to test for Replica
+-Master and Replica on latest version of RHEL OS
 -The test use dummy data which is not used in actual installation.
 """
 
@@ -11,30 +12,19 @@ import pytest
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_class import qe_use_class_setup
 from ipa_pytests.shared import paths
+from ipa_pytests.qe_install import setup_master, setup_replica
+from ipa_pytests.shared.utils import check_rpm
 
 
-class Testmaster(object):
+class TestBugCheck(object):
     """ Test Class """
     def class_setup(self, multihost):
         """ Setup for class """
         print("\nClass Setup")
-        print"REPLICA: ", multihost.replica.hostname
+        print("REPLICA: ", multihost.replica.hostname)
         print("\nChecking IPA server package whether installed on REPLICA")
-        output2 = multihost.replica.run_command([paths.RPM, '-q',
-                                                 'ipa-server'],
-                                                set_env=False,
-                                                raiseonerr=False)
-        if output2.returncode != 0:
-            print("IPA server package not found on REPLICA, thus installing")
-            install1 = multihost.replica.run_command([paths.YUM, 'install',
-                                                      '-y', 'ipa-server*'])
-            if install1.returncode == 0:
-                print("IPA server package installed.")
-            else:
-                pytest.xfail("IPA server package installation failed, "
-                             "check repo links for further debugging")
-        else:
-            print("\n IPA server package found on REPLICA, running tests")
+        rpm_list = ['ipa-server']
+        check_rpm(multihost.replica, rpm_list)
 
     def test_0001_bz1283890(self, multihost):
         """
@@ -54,6 +44,19 @@ class Testmaster(object):
         multihost.replica.qerun(['ipa-replica-install'],
                                 exp_returncode=2,
                                 exp_output=exp_output)
+
+    def test_0003_bz_1242036(self, multihost):
+        """Master is configured using '--setup-dns'
+        *.gpg file is installed on replica without using '--setup-dns'
+        both master and replica give same output for 'dnsrecord-find testrelm.test' """
+        setup_master(multihost.master)
+        setup_replica(multihost.replica, multihost.master, False, False)
+        multihost.master.kinit_as_admin()
+        multihost.replica.kinit_as_admin()
+        master_op = multihost.master.run_command(['ipa', 'dnsrecord-find', multihost.master.domain.name])
+        multihost.replica.qerun(['ipa', 'dnsrecord-find', multihost.replica.domain.name],
+                                exp_returncode=0,
+                                exp_output=master_op.stdout_text)
 
     def class_teardown(self, multihost):
         """ Full suite teardown """
