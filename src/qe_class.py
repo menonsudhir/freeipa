@@ -188,7 +188,7 @@ def test_count(request):
 @pytest.yield_fixture(scope="session", autouse=True)
 def multihost(request):
     """ Mulithost plugin fixture for session scope """
-    if pytest.num_ads != 0:
+    if pytest.num_ads > 0:
         mh = make_multihost_fixture(
             request,
             descriptions=[
@@ -233,7 +233,7 @@ def multihost(request):
     mh.clients = mh.domain_ipa.hosts_by_role('client')
     mh.others = mh.domain_ipa.hosts_by_role('other')
 
-    if pytest.num_ads != 0:
+    if pytest.num_ads > 0:
         mh.domain_ad = mh.config.domains[1]
         mh.ads = mh.domain_ad.hosts_by_role('ad')
 

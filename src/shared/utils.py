@@ -248,9 +248,11 @@ def del_ipa_user(host, username, preserve=False, skip_err=False):
 
 def check_rpm(host, rpm_list):
     """
-    Checks if packages belonging to specified in list 'rpm' exists. If not, then installs it.
+    Checks if packages belonging to specified in list 'rpm' exists.
+    If not, then installs it.
     """
-    print("\nChecking whether " + "".join(rpm_list) + " package installed on " + host.hostname)
+    print("\nChecking whether " + "".join(rpm_list) +
+          " package installed on " + host.hostname)
     cmd_list = [paths.RPM, '-q']
     cmd_list.extend(rpm_list)
     print(cmd_list)
@@ -258,7 +260,8 @@ def check_rpm(host, rpm_list):
                                set_env=True,
                                raiseonerr=False)
     if output2.returncode != 0:
-        print(" ".join(rpm_list) + " package not found on " + host.hostname + ", thus installing")
+        print(" ".join(rpm_list) + " package not found on " +
+              host.hostname + ", thus installing")
         yum_install = [paths.YUM, 'install', '-y']
         yum_install.extend(rpm_list)
         print(yum_install)
@@ -268,7 +271,27 @@ def check_rpm(host, rpm_list):
         if install1.returncode == 0:
             print(" ".join(rpm_list) + " package installed.")
         else:
-            pytest.xfail(" ".join(rpm_list) + " package installation failed, "
-                                              "check repo links for further debugging")
+            pytest.xfail(" ".join(rpm_list) + " package installation"
+                         " failed, check repo links for further debugging")
     else:
-        print("\n" + " ".join(rpm_list) + " package found on " + host.hostname + ", running tests")
+        print("\n" + " ".join(rpm_list) + " package found on " +
+              host.hostname + ", running tests")
+
+
+def ipa_config_mod(multihost, opts=None):
+    """
+    Helper function to modify ipa config
+    """
+    if opts and isinstance(opts, list):
+        cmd = multihost.master.run_command(['ipa', 'config-mod'] + opts,
+                                           raiseonerr=False)
+        if cmd.returncode != 0:
+            if 'no modifications to be performed' in cmd.stdout_text:
+                return 1
+            else:
+                return 0
+        else:
+            return 0
+    else:
+        print("No operation performed")
+        return 2
