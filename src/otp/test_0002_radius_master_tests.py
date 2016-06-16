@@ -16,7 +16,8 @@ class TestRadiusfunction(object):
     def class_setup(self, multihost):
         """ Setup for class """
 
-        list_of_packages = ['freeradius', 'freeradius-ldap', 'freeradius-utils']
+        list_of_packages = ['freeradius', 'freeradius-ldap',
+                            'freeradius-utils']
 
         multihost.master.yum_install(list_of_packages)
 
@@ -25,8 +26,8 @@ class TestRadiusfunction(object):
         multihost.secret = 'Secret123'
         multihost.log = "/tmp/log_radius"
         raddb_bkp = multihost.master.get_file_contents('/etc/raddb/users')
-        multihost.master.put_file_contents\
-            ('/etc/raddb/users_automation_bkp', raddb_bkp)
+        raddb_bkp_file = '/etc/raddb/users_automation_bkp'
+        multihost.master.put_file_contents(raddb_bkp_file, raddb_bkp)
 
     def test_radius_0001(self, multihost):
         """
@@ -57,7 +58,7 @@ class TestRadiusfunction(object):
         verify_user_login(multihost)
 
         # cleanup
-        shared_utils.delete_user(multihost)
+        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
         delete_radiusproxy(multihost)
 
         # Stoping radius server
@@ -88,7 +89,7 @@ class TestRadiusfunction(object):
         user_failed_login(multihost)
 
         # cleanup
-        shared_utils.delete_user(multihost)
+        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
         delete_radiusproxy(multihost)
 
     def test_radius_0003(self, multihost):
@@ -133,7 +134,7 @@ class TestRadiusfunction(object):
         proc.close()
 
         # cleanup
-        shared_utils.delete_user(multihost)
+        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
         delete_radiusproxy(multihost)
 
         # Stoping radius server
@@ -177,7 +178,7 @@ class TestRadiusfunction(object):
         print "\n########### radius Proxy not deleted ###########\n"
 
         # cleanup
-        shared_utils.delete_user(multihost)
+        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
         delete_radiusproxy(multihost)
 
         # Stoping radius server
@@ -304,14 +305,14 @@ class TestRadiusfunction(object):
 
         # Aadd radius proxy
         add_radiusproxy(multihost)
+        exp_output = 'ipa: ERROR: invalid \'retries\': can be at most 10'
+
         multihost.master.qerun(['ipa',
                                 'radiusproxy-mod',
                                 '%s' % multihost.radiusproxy,
                                 '--retries=100'],
                                exp_returncode=1,
-                               exp_output='ipa: ERROR: invalid '
-                               'retries'
-                               ': can be at most 10')
+                               exp_output=exp_output)
         # cleanup
         delete_radiusproxy(multihost)
 
@@ -323,14 +324,13 @@ class TestRadiusfunction(object):
 
         # Add radius proxy
         add_radiusproxy(multihost)
+        exp_out = 'ipa: ERROR: invalid \'timeout\': can be at most 2147483647'
         multihost.master.qerun(['ipa',
                                 'radiusproxy-mod',
                                 '%s' % multihost.radiusproxy,
                                 '--timeout=2147483650'],
                                exp_returncode=1,
-                               exp_output='ipa: ERROR: invalid '
-                               'timeout'
-                               ': can be at most 2147483647')
+                               exp_output=exp_out)
         # cleanup
         delete_radiusproxy(multihost)
 
@@ -343,10 +343,11 @@ class TestRadiusfunction(object):
         # Aadd radius proxy
         add_radiusproxy(multihost)
         # Find radius proxy
+        exp_output = "RADIUS proxy server name: %s" % multihost.radiusproxy
         multihost.master.qerun(['ipa',
                                 'radiusproxy-find'],
                                exp_returncode=0,
-                               exp_output='RADIUS proxy servers matched')
+                               exp_output=exp_output)
         # cleanup
         delete_radiusproxy(multihost)
 
@@ -359,15 +360,11 @@ class TestRadiusfunction(object):
         # Add radius proxy
         add_radiusproxy(multihost)
         # show radius proxy
-        multihost.master.qerun(
-            [
-                'ipa',
-                'radiusproxy-show',
-                '%s' %
-                multihost.radiusproxy],
-            exp_returncode=0,
-            exp_output='RADIUS proxy server name: "%s"' %
-            multihost.radiusproxy)
+        exp_output = 'RADIUS proxy server name: %s' % multihost.radiusproxy
+        multihost.master.qerun(['ipa', 'radiusproxy-show',
+                                multihost.radiusproxy],
+                               exp_returncode=0,
+                               exp_output=exp_output)
         # cleanup
         delete_radiusproxy(multihost)
 
@@ -410,7 +407,7 @@ class TestRadiusfunction(object):
             exp_output='ipa: ERROR: %s: RADIUS proxy server not found' %
             multihost.radiusproxy)
         # cleanup
-        shared_utils.delete_user(multihost)
+        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
         delete_radiusproxy(multihost)
 
         # Stoping radius server
@@ -451,7 +448,7 @@ class TestRadiusfunction(object):
                                exp_returncode=1,
                                exp_output='0 RADIUS proxy servers matched')
         # cleanup
-        shared_utils.delete_user(multihost)
+        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
         delete_radiusproxy(multihost)
 
         # Stoping radius server

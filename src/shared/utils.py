@@ -7,7 +7,6 @@ Major shared support utility functions
 - qe_http_get - experimental function to get web page
 - qe_http_krb_get - experimental function to get web page with kerb ticket
 - ldapmodify - ldapmodify command
-- run_certutil - Helper function to run certutil
 - run_pk12util - Helper function to run pk12util
 - create_noise_file - Helper function to create randomness in a file
 """
