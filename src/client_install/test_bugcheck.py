@@ -1,37 +1,34 @@
-"""
-Test Automation for bugs:
-#1196656
-#1215197
-#1215200
-#1284025
-#1211708
-"""
+from __future__ import print_function
+
 import pytest
 from ipa_pytests.qe_install import uninstall_server, setup_client, uninstall_client
 from ipa_pytests.qe_class import multihost
+from ipa_pytests.shared.utils import check_rpm
 
 
-class Testmaster(object):
+class TestBugCheck(object):
     """ Test Class """
     def class_setup(self, multihost):
         """ Setup for class """
         print("\nClass Setup")
-        print"MASTER: ", multihost.master.hostname
-        print"CLIENT: ", multihost.client.hostname
+        print("MASTER: ", multihost.master.hostname)
+        print("CLIENT: ", multihost.client.hostname)
         print("\nChecking IPA server whether installed on MASTER")
-        output1 = multihost.master.run_command(['rpm', '-q', 'ipa-server'],
-                                               set_env=False, raiseonerr=False)
-        if output1.returncode == 0:
-            print("IPA server package found on MASTER")
-            install1 = multihost.master.run_command('ipactl status | grep RUNNING')
-            if install1.returncode == 0:
-                print("IPA server service is RUNNING.")
-            else:
-                pytest.fail('IPA server not running, kindly debug')
-        else:
-            print("\n IPA server package not found on MASTER, thus installing")
-            multihost.master.run_command('yum install -y ipa-server*')
-            setup_master(multihost.master)
+        check_rpm(multihost.master, ['ipa-server'])
+
+    def test_0002_bz1209476(self, multihost):
+        """
+        Bugzilla automation to check that ipa-client package is removed when dbus-python
+        is removed since ipa-client is dependent on dbus-python
+        """
+        # uninstall_client(multihost.client)
+        check_rpm(multihost.client, ['ipa-client'])
+        dbus_remove_cmd = multihost.client.run_command(['yum', 'remove', 'dbus-python', '-y'])
+        print ("STDOUT:", dbus_remove_cmd.stdout_text)
+        print ("STDERR:", dbus_remove_cmd.stderr_text)
+        if "ipa-client" in dbus_remove_cmd.stdout_text:
+            multihost.client.qerun(['ipa-client-install'], exp_returncode=127)
+            multihost.client.qerun(['rpm', '-q', 'ipa-client'], exp_returncode=1)
 
     def test_0001_bz1196656_bz1284025(self, multihost):
         """ Bugzilla verification to enable debugging for spawned commands.
@@ -74,8 +71,8 @@ class Testmaster(object):
                                             '--ds-password', multihost.master.config.dirman_pw,
                                             '--no-ntp',
                                             '-U'], raiseonerr=False)
-        print "STDOUT:", cmd.stdout_text
-        print "STDERR:", cmd.stderr_text
+        print ("STDOUT:", cmd.stdout_text)
+        print ("STDERR:", cmd.stderr_text)
         if cmd.returncode != 0:
             raise ValueError("ipa-server-install failed with error code=%s" % cmd.returncode)
         check5 = multihost.master.run_command('ipactl status | grep RUNNING')
@@ -103,8 +100,8 @@ class Testmaster(object):
                                             '--ntp-server', '1.rhel.pool.ntp.org',
                                             '--force-ntpd',
                                             '-U'], raiseonerr=False)
-        print "STDOUT:", cmd.stdout_text
-        print "STDERR:", cmd.stderr_text
+        print ("STDOUT:", cmd.stdout_text)
+        print ("STDERR:", cmd.stderr_text)
         if cmd.returncode != 0:
             raise ValueError("ipa-client-install failed with error code=%s" % cmd.returncode)
         check7 = multihost.client.run_command('grep rhel.pool.ntp.org /etc/ntp.conf')

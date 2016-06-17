@@ -295,3 +295,22 @@ def ipa_config_mod(multihost, opts=None):
     else:
         print("No operation performed")
         return 2
+
+
+def remove_rpm(host, rpm_list):
+    """
+    Removes the packages specified in rpm_list
+    :param rpm_list:  list of packages to removed
+    :return: None
+    """
+    print("Removing " + "".join(rpm_list) + "from " + host.hostname)
+    cmd_list = [paths.RPM, '-e']
+    cmd_list.extend(rpm_list)
+    print (cmd_list)
+    output = host.run_command(cmd_list,
+                              set_env=True,
+                              raiseonerr=False)
+    if output.returncode != 0:
+        print ("Error in removing packages - " + "".join(cmd_list))
+    else:
+        print ("Packages " + "".join(rpm_list) + "has been removed")
