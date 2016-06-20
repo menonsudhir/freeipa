@@ -36,18 +36,19 @@ def mod_radius_user(multihost):
     #   log-in as admin
     multihost.master.kinit_as_admin()
     #   modify new user's authentication type and assign proxy
+    exp_output = 'Modified user "%s"' % multihost.testuser
     multihost.master.qerun(['ipa',
                             'user-mod',
                             '--user-auth-type=radius',
                             multihost.testuser],
                            exp_returncode=0,
-                           exp_output='Modified user "%s"' % multihost.testuser)
+                           exp_output=exp_output)
     multihost.master.qerun(['ipa',
                             'user-mod',
                             '--radius=%s' % multihost.radiusproxy,
                             multihost.testuser],
                            exp_returncode=0,
-                           exp_output='Modified user "%s"' % multihost.testuser)
+                           exp_output=exp_output)
 
 
 def add_info(multihost):
@@ -181,7 +182,7 @@ def delete_radiusproxy(multihost):
         exp_returncode=0,
         exp_output='Deleted RADIUS proxy server "%s"' %
         multihost.radiusproxy)
-    raddb_restore = multihost.master.get_file_contents\
-        ('/etc/raddb/users_automation_bkp')
-    multihost.master.put_file_contents('/etc/raddb/users', raddb_restore)
 
+    raddb_bk_file = '/etc/raddb/users_automation_bkp'
+    raddb_restore = multihost.master.get_file_contents(raddb_bk_file)
+    multihost.master.put_file_contents('/etc/raddb/users', raddb_restore)

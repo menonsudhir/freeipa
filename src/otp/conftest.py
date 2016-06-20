@@ -6,9 +6,8 @@ conftest to setup required fixtures needed by tests:
 
 from __future__ import print_function
 import pytest
-from ipa_pytests.qe_install import setup_client, setup_replica, setup_master  # pylint: disable=unused-import
+from ipa_pytests.qe_install import setup_master
 from ipa_pytests.qe_class import multihost  # pylint: disable=unused-import
-from ipa_pytests.qe_class import qe_use_class_setup  # pylint: disable=unused-import
 
 
 def pytest_namespace():
