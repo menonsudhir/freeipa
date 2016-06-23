@@ -4,6 +4,7 @@ qe_class provides the expansion to the multihost plugin for IPA testing.
 
 import logging
 import yaml
+import random
 import pytest_multihost.config
 import pytest_multihost.host
 from pytest_multihost import make_multihost_fixture
@@ -174,6 +175,33 @@ class QeHost(pytest_multihost.host.Host):
         print "STDERR: ", cmd.stderr_text
         if cmd.returncode != 0:
             raise ValueError("yum install failed with error code=%s" % cmd.returncode)
+
+    def expect(self, expect_script):
+        """
+        expect :: <expect_script>
+        - expect_script passed in as a string for file contents.  Not a path to
+        an expect file.
+        - runs expect remotely with script passed in.
+        """
+
+        # First put script string to file on remote host
+        rand_tag = ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
+                           for _ in range(10))
+        exp_file = "/tmp/qe_pytest_expect_file" + rand_tag
+        self.put_file_contents(exp_file, expect_script)
+
+        print "----expect script start----"
+        print expect_script
+        print "----expect script end----"
+        print "remote side expect script filename: " + exp_file
+
+        # Next run expect
+        cmd = self.run_command(['expect', '-f', exp_file], raiseonerr=False)
+        print "----expect output start----"
+        print cmd.stdout_text
+        print cmd.stderr_text
+        print "----expect output end----"
+        return cmd.returncode
 
 
 @pytest.fixture(scope="function", autouse=True)
