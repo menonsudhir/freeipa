@@ -21,6 +21,10 @@ def pytest_namespace():
 @pytest.fixture(scope="session", autouse=True)
 def setup_session(request, multihost):
     """ Setup session """
+    # Defining convenience variables for multihost fixture
+    # for single replica and client
+    multihost.replica = multihost.replicas[0]
+    multihost.client = multihost.clients[0]
     try:
         setup_master(multihost.master)
         setup_replica(multihost.replica, multihost.master)
