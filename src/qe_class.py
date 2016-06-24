@@ -215,45 +215,41 @@ def test_count(request):
 
 @pytest.yield_fixture(scope="session", autouse=True)
 def multihost(request):
-    """ Mulithost plugin fixture for session scope """
-    if pytest.num_ads > 0:
-        mh = make_multihost_fixture(
-            request,
-            descriptions=[
-                {
-                    'type': 'ipa',
-                    'hosts': {
-                        'master': 1,
-                        'replica': pytest.num_replicas,
-                        'client': pytest.num_clients,
-                        'other': pytest.num_others,
-                    },
+    """ Multihost plugin fixture for session scope """
+    # Default values for SUTs
+    num_masters = 1
+    num_replicas = getattr(pytest, 'num_replicas', 0)
+    num_clients = getattr(pytest, 'num_clients', 0)
+    num_others = getattr(pytest, 'num_others', 0)
+    num_ads = getattr(pytest, 'num_ads', 0)
+
+    desc = [
+        {
+            'type': 'ipa',
+            'hosts': {
+                'master': num_masters,
+                'replica': num_replicas,
+                'client': num_clients,
+                'other': num_others,
+            },
+        }
+    ]
+
+    if num_ads > 0:
+        desc.extend([
+            {
+                'type': 'ad',
+                'hosts': {
+                    'ad': num_ads,
                 },
-                {
-                    'type': 'ad',
-                    'hosts': {
-                        'ad': pytest.num_ads,
-                    },
-                },
-            ],
-            config_class=QeConfig,
-        )
-    else:
-        mh = make_multihost_fixture(
-            request,
-            descriptions=[
-                {
-                    'type': 'ipa',
-                    'hosts': {
-                        'master': 1,
-                        'replica': pytest.num_replicas,
-                        'client': pytest.num_clients,
-                        'other': pytest.num_others,
-                    },
-                },
-            ],
-            config_class=QeConfig,
-        )
+            }
+        ])
+
+    mh = make_multihost_fixture(
+        request,
+        descriptions=desc,
+        config_class=QeConfig,
+    )
 
     mh.domain_ipa = mh.config.domains[0]
     [mh.master] = mh.domain_ipa.hosts_by_role('master')
@@ -261,7 +257,7 @@ def multihost(request):
     mh.clients = mh.domain_ipa.hosts_by_role('client')
     mh.others = mh.domain_ipa.hosts_by_role('other')
 
-    if pytest.num_ads > 0:
+    if num_ads > 0:
         mh.domain_ad = mh.config.domains[1]
         mh.ads = mh.domain_ad.hosts_by_role('ad')
 
