@@ -10,6 +10,8 @@ import pytest_multihost.host
 from pytest_multihost import make_multihost_fixture
 import pytest
 from ipa_pytests.shared.logger import log
+from ipa_pytests.shared import paths
+import time
 import re
 try:
     import logstash
@@ -169,10 +171,18 @@ class QeHost(pytest_multihost.host.Host):
         yum_install :: <packages>
         - installs package list passed in
         """
-        yum_command = ['yum', '-y', '--nogpgcheck', 'install'] + packages
+        timestamp = time.strftime('%Y%m%d%H%M%S', time.localtime())
+        yum_output = '/tmp/qe_pytest_yum_output.{}'.format(timestamp)
+        yum_command = [paths.YUM, '-y', '--nogpgcheck', 'install'] + packages
         cmd = self.run_command(yum_command, raiseonerr=False)
-        print "STDOUT: ", cmd.stdout_text
-        print "STDERR: ", cmd.stderr_text
+
+        print "yum install output in {}".format(yum_output)
+
+        with open(yum_output, 'w') as yum_out:
+            yum_out.write('YUMCMD: {}'.format(''.join(yum_command)))
+            yum_out.write('STDOUT: {}'.format(cmd.stdout_text))
+            yum_out.write('STDERR: {}'.format(cmd.stderr_text))
+
         if cmd.returncode != 0:
             raise ValueError("yum install failed with error code=%s" % cmd.returncode)
 
