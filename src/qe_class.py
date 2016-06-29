@@ -179,7 +179,7 @@ class QeHost(pytest_multihost.host.Host):
         print "yum install output in {}".format(yum_output)
 
         with open(yum_output, 'w') as yum_out:
-            yum_out.write('YUMCMD: {}'.format(''.join(yum_command)))
+            yum_out.write('YUMCMD: {}'.format(' '.join(yum_command)))
             yum_out.write('STDOUT: {}'.format(cmd.stdout_text))
             yum_out.write('STDERR: {}'.format(cmd.stderr_text))
 

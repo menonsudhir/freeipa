@@ -4,10 +4,13 @@
 This provides the necessary functions to setup IPA Servers and Clients.
 """
 
+import pytest
 import time
 import re
 from ipa_pytests.shared.utils import service_control
 from ipa_pytests.shared.utils import list_rpms
+from ipa_pytests.shared.utils import setenforce
+from ipa_pytests.shared.utils import get_domain_level
 
 
 def disable_firewall(host):
@@ -30,6 +33,7 @@ def set_hostname(host):
     if host.transport.file_exists('/etc/hostname'):
         host.run_command(['cp', '-af', '/etc/hostname', '/etc/hostname.qebackup'])
         host.put_file_contents('/etc/hostname', host.hostname)
+        host.run_command(['hostnamectl'])
     else:
         host.run_command(['cp', '-af', '/etc/sysconfig/network',
                           '/etc/sysconfig/network.qebackup'])
@@ -95,33 +99,62 @@ def setup_master(master):
     will install an IPA Master with DNS and a forwarder.  The domain and realm
     will be set differently than the real DNS domain.
     """
+    revnet = master.ip.split('.')[2] + '.' + \
+        master.ip.split('.')[1] + '.' + \
+        master.ip.split('.')[0] + '.in-addr.arpa.'
 
     list_rpms(master)
     disable_firewall(master)
     set_hostname(master)
     set_rngd(master)
+    setenforce(master, '0')
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     master.yum_install(['ipa-server', 'ipa-server-dns', 'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
-    cmd = master.run_command(['ipa-server-install',
-                              '--setup-dns',
-                              '--forwarder', master.config.dns_forwarder,
-                              '--domain', master.domain.name,
-                              '--realm', master.domain.realm,
-                              '--hostname', master.hostname,
-                              '--ip-address', master.ip,
-                              '--admin-password', master.config.admin_pw,
-                              '--ds-password', master.config.dirman_pw,
-                              # '--mkhomedir',
-                              '-U'], raiseonerr=False)
+    runcmd = ['ipa-server-install',
+              '--setup-dns',
+              '--forwarder', master.config.dns_forwarder,
+              '--reverse-zone', revnet,
+              '--allow-zone-overlap',
+              '--domain', master.domain.name,
+              '--realm', master.domain.realm,
+              '--hostname', master.hostname,
+              '--ip-address', master.ip,
+              '--admin-password', master.config.admin_pw,
+              '--ds-password', master.config.dirman_pw,
+              # '--mkhomedir',
+              '-U']
+    print "RUNCMD:", ' '.join(runcmd)
+    cmd = master.run_command(runcmd, raiseonerr=False)
 
     print "STDOUT:", cmd.stdout_text
     print "STDERR:", cmd.stderr_text
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     if cmd.returncode != 0:
         raise ValueError("ipa-server-install failed with error code=%s" % cmd.returncode)
+
+
+def setup_replica_prepare_file(replica, master):
+    """ create the replica prepare file for Domain Level 0 environments """
+    runcmd = ['ipa-replica-prepare',
+              '-p', master.config.admin_pw,
+              '--ip-address', replica.ip,
+              '--reverse-zone', replica.revnet,
+              replica.hostname]
+    print "RUNCMD:", ' '.join(runcmd)
+    cmd = master.run_command(runcmd, raiseonerr=False)
+
+    print "STDOUT:", cmd.stdout_text
+    print "STDERR:", cmd.stderr_text
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
+    if cmd.returncode != 0:
+        raise ValueError("ipa-replica-prepare failed with error code=%s" % cmd.returncode)
+
+    prepfile = '/var/lib/ipa/replica-info-' + replica.hostname + '.gpg'
+    prep_content = master.get_file_contents(prepfile)
+    replica.put_file_contents(prepfile, prep_content)
 
 
 def setup_replica(replica, master, setup_dns=True, setup_ca=True):
@@ -134,38 +167,43 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True):
     :type setup_dns: True or False
 
     """
-    revnet = replica.ip.split('.')[2] + '.' + \
+    replica.revnet = replica.ip.split('.')[2] + '.' + \
         replica.ip.split('.')[1] + '.' + \
         replica.ip.split('.')[0] + '.in-addr.arpa.'
+    master.revnet = master.ip.split('.')[2] + '.' + \
+        master.ip.split('.')[1] + '.' + \
+        master.ip.split('.')[0] + '.in-addr.arpa.'
+
+    if replica.revnet != master.revnet:
+        setup_dns_revnet = True
+    else:
+        setup_dns_revnet = False
+    print "SETUPDNSREVNET = %s" % setup_dns_revnet
 
     list_rpms(replica)
     disable_firewall(replica)
     set_hostname(replica)
     set_rngd(replica)
+    if setup_dns:
+        set_resolv_conf_to_master(replica, master)
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
-    replica.yum_install(['ipa-server', 'ipa-server-dns', 'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
+    replica.yum_install(['ipa-server', 'ipa-server-dns', 'bind-dyndb-ldap',
+                         'bind-pkcs11', 'bind-pkcs11-utils'])
 
-    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
-    cmd = master.run_command(['ipa-replica-prepare',
-                              '-p', master.config.admin_pw,
-                              '--ip-address', replica.ip,
-                              '--reverse-zone', revnet,
-                              replica.hostname], raiseonerr=False)
+    domain_level = get_domain_level(master)
 
-    print "STDOUT:", cmd.stdout_text
-    print "STDERR:", cmd.stderr_text
-    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
-    if cmd.returncode != 0:
-        raise ValueError("ipa-replica-prepare failed with error code=%s" % cmd.returncode)
-
-    prepfile = '/var/lib/ipa/replica-info-' + replica.hostname + '.gpg'
-    prep_content = master.get_file_contents(prepfile)
-    replica.put_file_contents(prepfile, prep_content)
+    if domain_level == 0:
+        print "Domain Level is 0 so we have to use prepare files"
+        print "TIME:", time.strftime('%H:%M:%S', time.localtime())
+        setup_replica_prepare_file(replica, master)
+    else:
+        print "Domain Level is 1 so we do not need a prep file"
 
     time.sleep(5)
-    set_resolv_conf_to_master(replica, master)
-    params = ['ipa-replica-install']
+
+    setenforce(replica, '0')
+    params = ['ipa-replica-install', '-U']
 
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
 
@@ -173,12 +211,24 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True):
         params.extend(['--setup-dns',
                        '--forwarder', master.config.dns_forwarder])
 
+    if setup_dns and setup_dns_revnet:
+        params.extend(['--reverse-zone', replica.revnet])
+        params.extend(['--allow-zone-overlap'])
+
     if setup_ca:
         params.append('--setup-ca')
 
+    params.extend(['--ip-address', replica.ip])
     params.extend(['--admin-password', master.config.admin_pw])
-    params.extend(['--password', master.config.dirman_pw])
-    params.extend(['-U', prepfile])
+
+    if domain_level == 0:
+        prepfile = '/var/lib/ipa/replica-info-' + replica.hostname + '.gpg'
+        params.extend(['--password', master.config.dirman_pw])
+        params.extend([prepfile])
+    else:
+        params.extend(['--principal', master.config.admin_id])
+
+    print "RUNCMD:", ' '.join(params)
     cmd = replica.run_command(params, raiseonerr=False)
 
     print "STDOUT:", cmd.stdout_text
@@ -204,19 +254,19 @@ def setup_client(client, master, server=None, domain=None):
     time.sleep(5)
     set_resolv_conf_to_master(client, master)
 
+    setenforce(client, '0')
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
+    runcmd = ['ipa-client-install', '-U',
+              '--principal', 'admin',
+              '--password', master.config.admin_pw]
+
     if server and domain:
-        cmd = client.run_command(['ipa-client-install',
-                                  '--principal', 'admin',
-                                  '--server', master.hostname,
-                                  '--domain', master.domain.name,
-                                  '--password', master.config.admin_pw,
-                                  '-U'], raiseonerr=False)
-    else:
-        cmd = client.run_command(['ipa-client-install',
-                                  '--principal', 'admin',
-                                  '--password', master.config.admin_pw,
-                                  '-U'], raiseonerr=False)
+        runcmd.extend(['--server', master.hostname])
+        runcmd.extend(['--domain', master.domain.name])
+
+    print "RUNCMD:", ' '.join(runcmd)
+    cmd = client.run_command(runcmd, raiseonerr=False)
+
     print "STDOUT:", cmd.stdout_text
     print "STDERR:", cmd.stderr_text
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())

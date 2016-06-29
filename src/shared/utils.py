@@ -166,8 +166,8 @@ def list_rpms(host):
     cmd = host.run_command([paths.RPM, '-qa', '--last'])
     rpmlog_file = "/var/log/rpm.list." + time.strftime('%H%M%S',
                                                        time.localtime())
-    print(cmd.stdout_text)
-    print(cmd.stderr_text)
+    # print(cmd.stdout_text)
+    # print(cmd.stderr_text)
     host.put_file_contents(rpmlog_file, cmd.stdout_text)
 
 
@@ -314,3 +314,24 @@ def remove_rpm(host, rpm_list):
         print ("Error in removing packages - " + "".join(cmd_list))
     else:
         print ("Packages " + "".join(rpm_list) + "has been removed")
+
+
+def setenforce(host, value):
+    """ selinux setenforce command """
+    host.run_command(['setenforce', value])
+
+
+def get_domain_level(host):
+    """
+    Get the IPA Domain Level
+    """
+    try:
+        host.kinit_as_admin()
+        cmd = host.run_command(['ipa', 'domainlevel-get'], raiseonerr=False)
+        found = re.search('Current domain level: (?P<level>.+)\n',
+                          cmd.stdout_text, re.MULTILINE)
+        domain_level = found.group('level')
+    except StandardError as errval:
+        print "Unable to run domainlevel-get command: %s" % errval
+        domain_level = 0
+    return int(domain_level)
