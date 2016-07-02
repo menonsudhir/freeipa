@@ -47,7 +47,7 @@ class TestHttpTests(object):
         url = "https://" + multihost.client.hostname + ":8443/ipatest/"
         multihost.client.qerun(['kdestroy', '-A'])
         multihost.client.qerun(['curl', '-v', '--negotiate', '--cacert', ipa_cert, '-u:', url],
-                               exp_output='404')
+                               exp_output='401')
 
     def class_teardown(self, multihost):
         """ IPA-TC: Functional Services: Teardown HTTP Service software and requirements from test """

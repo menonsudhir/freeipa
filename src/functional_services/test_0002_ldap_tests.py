@@ -110,7 +110,7 @@ class TestLdap(object):
         cmd = multihost.client.run_command(['ipa', 'service-show', '--all', '--raw',
                                             'ldap/' + multihost.client.hostname])
         serial_number = re.search('serial_number: (.+?)\n', cmd.stdout_text).group(1)
-        url = 'http://ipa-ca.' + multihost.domain.name + ':80/ca/ocsp'
+        url = 'http://ipa-ca.' + multihost.master.domain.name + ':80/ca/ocsp'
         cmd = multihost.client.run_command(['openssl', 'ocsp', '-issuer', '/etc/ipa/ca.crt',
                                             '-nonce', '-CAfile', '/etc/pki/tls/certs/ca-bundle.crt',
                                             '-url', url, '-serial', serial_number])
