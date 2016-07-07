@@ -10,9 +10,14 @@ from ipa_pytests.qe_class import multihost  # pylint: disable=unused-import
 from ipa_pytests.qe_class import test_count  # pylint: disable=unused-import
 from ipa_pytests.qe_class import mark_test_start  # pylint: disable=unused-import
 from ipa_pytests.qe_class import qe_use_class_setup  # pylint: disable=unused-import
-from ipa_pytests.shared.utils import add_ipa_user
+from ipa_pytests.shared.utils import add_ipa_user  # pylint: disable=unused-import
+from ipa_pytests.shared.utils import del_ipa_user  # pylint: disable=unused-import
+from ipa_pytests.shared.keys import openssl_genrsa
 from .lib import delete_all_vaults
 from .lib import delete_all_vault_containers
+from .lib import safe_setup_master
+from .lib import safe_setup_replica
+from .lib import safe_setup_master_kra
 import data  # pylint: disable=relative-import
 
 # Leaving this import commented until we resolve xml formatting
@@ -49,37 +54,31 @@ def setup_session(request, multihost):  # pylint: disable=W0621
     """ define fixture for session level setup """
     print "\nSETUP_SESSION RUNNING....\n"
     multihost.replica = multihost.replicas[0]
+
+    safe_setup_master(multihost.master)
+    safe_setup_replica(multihost.replica, multihost.master)
+    safe_setup_master_kra(multihost.master)
+
     data.init(multihost, 'test')
-    add_ipa_user(multihost.master, data.USER1, data.PASSWORD)
-    multihost.master.qerun(['ipa', 'service-add', data.SERVICE1 + "/" + multihost.master.hostname])
 
-    if not multihost.master.transport.file_exists(data.PRVKEY_FILE):
-        multihost.master.qerun(['openssl', 'genrsa', '-out', data.PRVKEY_FILE, '2048'])
-    if not multihost.master.transport.file_exists(data.PUBKEY_FILE):
-        multihost.master.qerun(['openssl', 'rsa', '-in', data.PRVKEY_FILE, '-out', data.PUBKEY_FILE,
-                                '-pubout'])
+    chk = multihost.master.run_command(['ipa', 'user-show', data.USER1],
+                                       raiseonerr=False)
+    if chk.returncode != 0:
+        add_ipa_user(multihost.master, data.USER1, data.PASSWORD)
 
-    if not multihost.master.transport.file_exists(data.NEW_PRVKEY_FILE):
-        multihost.master.qerun(['openssl', 'genrsa', '-out', data.NEW_PRVKEY_FILE, '2048'])
-    if not multihost.master.transport.file_exists(data.NEW_PUBKEY_FILE):
-        multihost.master.qerun(['openssl', 'rsa', '-in', data.NEW_PRVKEY_FILE, '-out',
-                                data.NEW_PUBKEY_FILE, '-pubout'])
+    chk = multihost.master.run_command(['ipa', 'service-show', data.SERVICE1],
+                                       raiseonerr=False)
+    if chk.returncode != 0:
+        print "Adding service...{}".format(chk.returncode)
+        multihost.master.qerun(['ipa', 'service-add', data.SERVICE1])
 
-    if not multihost.master.transport.file_exists(data.PASS_FILE):
-        multihost.master.transport.put_file_contents(data.PASS_FILE, data.PASSWORD)
-    if not multihost.master.transport.file_exists(data.SECRET_FILE):
-        multihost.master.transport.put_file_contents(data.SECRET_FILE, data.SECRET_VALUE)
-    if not multihost.master.transport.file_exists(data.LARGE_FILE):
-        multihost.master.qerun(['dd', 'if=/dev/zero', 'of=' + data.LARGE_FILE, 'bs=1024',
-                                'count=4096'])
-    if multihost.master.transport.file_exists(data.DNE_FILE):
-        multihost.master.qerun(['rm', '-f', data.DNE_FILE])
-
-    try:
-        multihost.master.run_command(['ipa-kra-install', '-U',
-                                      '-p', multihost.master.config.dirman_pw], raiseonerror=False)
-    except StandardError:
-        print "IPA KRA Install Failed"
+    openssl_genrsa(multihost.master, data.PRVKEY_FILE, data.PUBKEY_FILE)
+    openssl_genrsa(multihost.master, data.NEW_PRVKEY_FILE, data.NEW_PUBKEY_FILE)
+    multihost.master.transport.put_file_contents(data.PASS_FILE, data.PASSWORD)
+    multihost.master.transport.put_file_contents(data.SECRET_FILE, data.SECRET_VALUE)
+    multihost.master.qerun(['dd', 'if=/dev/zero', 'of=' + data.LARGE_FILE, 'bs=1024',
+                            'count=4096'])
+    multihost.master.qerun(['rm', '-f', data.DNE_FILE])
 
     def teardown_session():
         """ define fixture for session level teardown """
@@ -87,9 +86,5 @@ def setup_session(request, multihost):  # pylint: disable=W0621
         delete_all_vaults(multihost.master)
         delete_all_vault_containers(multihost.master)
         multihost.master.qerun(['ipa', 'user-del', data.USER1])
-        multihost.master.qerun(['ipa', 'service-del', data.SERVICE1 + "/" + multihost.master.hostname])
-        # if multihost.master.transport.file_exists(data.PRVKEY_FILE):
-        #     multihost.master.qerun(['rm', '-f', data.PRVKEY_FILE])
-        # if not multihost.master.transport.file_exists(data.PUBKEY_FILE):
-        #     multihost.master.qerun(['rm', '-f', data.PRVKEY_FILE])
+        multihost.master.qerun(['ipa', 'service-del', data.SERVICE1])
     request.addfinalizer(teardown_session)

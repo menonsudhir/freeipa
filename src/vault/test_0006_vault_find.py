@@ -23,7 +23,7 @@ class TestVaultFind(object):
             multihost.master.qerun(['ipa', 'vault-add', '--type=standard', data.PREFIX + '_vault_shared_' + idx,
                                     '--shared'])
             multihost.master.qerun(['ipa', 'vault-add', '--type=standard', data.PREFIX + '_vault_service_' + idx,
-                                    '--service=' + data.SERVICE1 + '/' + multihost.master.hostname])
+                                    '--service=' + data.SERVICE1])
 
         # Create 4 more service vaults for http/master
         for num in range(4, 8):
@@ -72,7 +72,7 @@ class TestVaultFind(object):
         """
         IDM-IPA-TC: Vault: Successfully find all service vaults for service
         """
-        runcmd = ['ipa', 'vault-find', '--service=' + data.SERVICE1 + '/' + multihost.master.hostname]
+        runcmd = ['ipa', 'vault-find', '--service=' + data.SERVICE1]
         multihost.master.qerun(runcmd)
         cmd = multihost.master.run_command(runcmd)
         assert data.PREFIX + '_vault_service_0' in cmd.stdout_text
@@ -104,7 +104,7 @@ class TestVaultFind(object):
         IDM-IPA-TC: Vault: Successfully find service vault by name
         """
         runcmd = ['ipa', 'vault-find', data.PREFIX + '_vault_service_0',
-                  '--service=' + data.SERVICE1 + '/' + multihost.master.hostname]
+                  '--service=' + data.SERVICE1]
         cmd = multihost.master.run_command(runcmd)
         assert data.PREFIX + '_vault_service_0' in cmd.stdout_text
         assert 'entries returned 1' in cmd.stdout_text
@@ -196,7 +196,7 @@ class TestVaultFind(object):
         IDM-IPA-TC: Vault: Fail to find user vault with service option
         """
         runcmd = ['ipa', 'vault-find', data.PREFIX + '_vault_user_0',
-                  '--service=' + data.SERVICE1 + '/' + multihost.master.hostname]
+                  '--service=' + data.SERVICE1]
         cmd = multihost.master.run_command(runcmd, raiseonerr=False)
         assert 'entries returned 0' in cmd.stdout_text
         assert cmd.returncode is 1

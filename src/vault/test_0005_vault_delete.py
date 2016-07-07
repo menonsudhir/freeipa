@@ -21,13 +21,13 @@ class TestVaultDelete(object):
         multihost.master.qerun(['ipa', 'vault-add', '--type=standard', data.PREFIX + '_vault_shared',
                                 '--shared'])
         multihost.master.qerun(['ipa', 'vault-add', '--type=standard', data.PREFIX + '_vault_service',
-                                '--service=' + data.SERVICE1 + '/' + multihost.master.hostname])
+                                '--service=' + data.SERVICE1])
         multihost.master.qerun(['ipa', 'vault-add', '--type=standard', data.PREFIX + '_user_vault_fail',
                                 '--user=' + data.USER1])
         multihost.master.qerun(['ipa', 'vault-add', '--type=standard', data.PREFIX + '_shared_vault_fail',
                                 '--shared'])
         multihost.master.qerun(['ipa', 'vault-add', '--type=standard', data.PREFIX + '_service_vault_fail',
-                                '--service=' + data.SERVICE1 + '/' + multihost.master.hostname])
+                                '--service=' + data.SERVICE1])
 
     def class_teardown(self, multihost):
         """ Class Teardown """
@@ -36,7 +36,7 @@ class TestVaultDelete(object):
         multihost.master.qerun(['ipa', 'vault-del', data.PREFIX + '_shared_vault_fail',
                                 '--shared'])
         multihost.master.qerun(['ipa', 'vault-del', data.PREFIX + '_service_vault_fail',
-                                '--service=' + data.SERVICE1 + '/' + multihost.master.hostname])
+                                '--service=' + data.SERVICE1])
 
     def test_0001_successfully_delete_vault(self, multihost):
         """
@@ -64,7 +64,7 @@ class TestVaultDelete(object):
         IDM-IPA-TC: Vault: Successfully delete service vault
         """
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_vault_service',
-                  '--service=' + data.SERVICE1 + '/' + multihost.master.hostname]
+                  '--service=' + data.SERVICE1]
         multihost.master.qerun(runcmd)
 
     def test_0005_successfully_continue_on_delete_vault_failure(self, multihost):
@@ -101,7 +101,7 @@ class TestVaultDelete(object):
         IDM-IPA-TC: Vault: Fail to delete shared fault with service option
         """
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_shared_vault_fail',
-                  '--service=' + data.SERVICE1 + '/' + multihost.master.hostname]
+                  '--service=' + data.SERVICE1]
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0010_fail_to_delete_user_vault_with_wrong_user(self, multihost):

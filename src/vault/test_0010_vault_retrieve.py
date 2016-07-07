@@ -121,7 +121,7 @@ class TestVaultRetrieve(object):
         IDM-IPA-TC: Vault: Fail to retrieve secret from user vault without lock with service option
         """
         runcmd = ['ipa', 'vault-retrieve', data.PREFIX + '_vault_user',
-                  '--service=' + data.SERVICE1 + '/' + multihost.master.hostname]
+                  '--service=' + data.SERVICE1]
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0011_fail_to_retrieve_secret_from_shared_vault_without_lock_with_user_option(self, multihost):

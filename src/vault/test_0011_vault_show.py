@@ -63,7 +63,7 @@ class TestVaultShow(object):
         IDM-IPA-TC: Vault: Fail to show user vault with service option
         """
         runcmd = ['ipa', 'vault-show', data.PREFIX + '_vault_user',
-                  '--service=' + data.SERVICE1 + '/' + multihost.master.hostname]
+                  '--service=' + data.SERVICE1]
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0007_fail_to_show_shared_vault_with_user_option(self, multihost):

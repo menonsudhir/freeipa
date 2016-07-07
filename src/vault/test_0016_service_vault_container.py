@@ -25,7 +25,7 @@ class TestServiceVaultContainerAddOwner(object):
         global CONTAINER_1
         global CONTAINER_DNE_INVALID_SERVICE
 
-        CONTAINER_1 = '--service=' + data.SERVICE1 + '/' + multihost.master.hostname
+        CONTAINER_1 = '--service=' + data.SERVICE1
         CONTAINER_DNE_INVALID_SERVICE = '--service=dne'
 
     def class_teardown(self, multihost):
@@ -114,7 +114,7 @@ class TestServiceVaultContainerRemoveOwner(object):
 
         global CONTAINER_1
         global CONTAINER_DNE_INVALID_SERVICE
-        CONTAINER_1 = '--service=' + data.SERVICE1 + '/' + multihost.master.hostname
+        CONTAINER_1 = '--service=' + data.SERVICE1
         CONTAINER_DNE_INVALID_SERVICE = '--service=dne/' + multihost.master.hostname
 
         runcmd = ['ipa', 'vaultcontainer-add-owner', CONTAINER_1,
@@ -224,7 +224,7 @@ class TestServiceVaultContainerOwnerShow(object):
         global CONTAINER_1
         global CONTAINER_DNE_INVALID_SERVICE
         global CONTAINER_DNE_VALID_SERVICE
-        CONTAINER_1 = '--service=' + data.SERVICE1 + '/' + multihost.master.hostname
+        CONTAINER_1 = '--service=' + data.SERVICE1
         CONTAINER_DNE_INVALID_SERVICE = '--service=dne/' + multihost.master.hostname
         CONTAINER_DNE_VALID_SERVICE = '--user=' + data.PREFIX + '_service1' + multihost.master.hostname
 

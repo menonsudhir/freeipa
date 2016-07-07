@@ -25,7 +25,7 @@ class TestVaultModify(object):
                                 '--shared'])
 
         multihost.master.qerun(['ipa', 'vault-add', '--type=standard', data.PREFIX + '_vault_service', '--desc=desc',
-                                '--service=' + data.SERVICE1 + '/' + multihost.master.hostname])
+                                '--service=' + data.SERVICE1])
 
         multihost.master.qerun(['ipa', 'vault-add', '--type=standard', data.PREFIX + '_vault_priv_std_to_sym'])
         multihost.master.qerun(['ipa', 'vault-archive', data.PREFIX + '_vault_priv_std_to_sym',
@@ -186,7 +186,7 @@ class TestVaultModify(object):
         IDM-IPA-TC: Vault: Successfully change service vault description
         """
         runcmd = ['ipa', 'vault-mod', data.PREFIX + '_vault_service',
-                  '--service=' + data.SERVICE1 + '/' + multihost.master.hostname, '--desc=new_description']
+                  '--service=' + data.SERVICE1, '--desc=new_description']
         multihost.master.qerun(runcmd)
 
     def test_0010_fail_to_change_vault_description_to_same_description(self, multihost):

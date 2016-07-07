@@ -29,7 +29,7 @@ class TestVaultAdd(object):
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--type=standard', vault_name]
-        multihost.master.qerun(runcmd)
+        multihost.master.qerun(runcmd, exp_returncode=1, exp_output="testingnow")
 
     def test_0002_successfully_add_symmetric_private_vault_password(self, multihost):
         """

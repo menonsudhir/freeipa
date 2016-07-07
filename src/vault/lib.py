@@ -2,6 +2,8 @@
 Vault tests library
 """
 
+from ipa_pytests.qe_install import setup_master  # pylint: disable=unused-import
+from ipa_pytests.qe_install import setup_replica  # pylint: disable=unused-import
 from ipa_pytests.shared.utils import add_ipa_user
 import data  # pylint: disable=relative-import
 import re
@@ -13,7 +15,7 @@ def setup_test_prereqs(multihost, prefix="test"):
     user_vault = [prefix + '_vault_user', '--user=' + data.USER1]
     shared_vault = [prefix + '_vault_shared', '--shared']
     service_vault = [prefix + '_vault_service',
-                     '--service=' + data.SERVICE1 + '/' + multihost.master.hostname]
+                     '--service=' + data.SERVICE1]
 
     multihost.master.kinit_as_admin()
     # Create users:
@@ -60,7 +62,7 @@ def teardown_test_prereqs(multihost, prefix="test"):
     user_vault = [prefix + '_vault_user', '--user=' + data.USER1]
     shared_vault = [prefix + '_vault_shared', '--shared']
     service_vault = [prefix + '_vault_service',
-                     '--service=' + data.SERVICE1 + '/' + multihost.master.hostname]
+                     '--service=' + data.SERVICE1]
 
     multihost.master.kinit_as_admin()
     # delete users:
@@ -128,9 +130,13 @@ def find_vault_containers(host, vault_type='users'):
     """ function to find all containers based on type """
     instance = "-".join(host.domain.realm.split('.'))
     uri = 'ldapi://%2fvar%2frun%2fslapd-' + instance + '.socket'
-    search_base = 'cn=' + vault_type + ',cn=vaults,cn=kra,' + host.config.base_dn
+    search_base = 'cn=' + vault_type + ',cn=vaults,cn=kra,' + host.domain.basedn
     search = ['ldapsearch', '-o', 'ldif-wrap=no', '-LLQ', '-H', uri, '-b', search_base, 'cn']
-    cmd = host.run_command(search)
+    cmd = host.run_command(search, raiseonerr=False)
+
+    if cmd.returncode != 0:
+        print "WARNING: ldapsearch failed...returning empty list"
+        return []
 
     output = cmd.stdout_text.split('\n')
     output = [line for line in output if not re.search('^$', line)]
@@ -153,3 +159,33 @@ def delete_all_vault_containers(host):
     for uvc in user_vault_containers:
         runcmd = ['ipa', 'vaultcontainer-del', '--user=' + uvc]
         host.qerun(runcmd)
+
+
+def safe_setup_master(master):
+    """ helper function to conditionally setup master """
+    fin = '/tmp/ipa_pytests_setup_master_done'
+    if not master.transport.file_exists(fin):
+        setup_master(master)
+        master.put_file_contents(fin, 'x')
+    else:
+        print "IPA Master Setup has already run.  Skipping"
+
+
+def safe_setup_replica(replica, master):
+    """ helper function to conditionally setup replica """
+    fin = '/tmp/ipa_pytests_setup_replica_done'
+    if not replica.transport.file_exists(fin):
+        setup_replica(replica, master)
+        replica.put_file_contents(fin, 'x')
+    else:
+        print "IPA Replica Setup has already run.  Skipping"
+
+
+def safe_setup_master_kra(master):
+    """ helper function to conditionally setup kra on master """
+    fin = '/tmp/ipa_pytests_setup_master_kra_done'
+    if not master.transport.file_exists(fin):
+        master.qerun(['ipa-kra-install', '-U', '-p', master.config.dirman_pw])
+        master.put_file_contents(fin, 'x')
+    else:
+        print "IPA Master KRA Setup has already run.  Skipping"
