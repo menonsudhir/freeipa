@@ -4,9 +4,6 @@ import pytest
 from ipa_pytests.qe_install import uninstall_server, \
     set_resolv_conf_to_master, uninstall_client, \
     set_resolv_conf_add_server
-import logging
-logging.basicConfig()
-from ipa_pytests.functional_services import setup_lib
 
 monitor_ip_six = '2002::1'
 master_ip_six = '2002::3'
@@ -16,8 +13,8 @@ client_ip_six_two = '2002::50'
 file_hosts = "/etc/hosts"
 file_hosts_backup = "/etc/hosts.backup"
 client_ip2 = "10.0.0.40"
-sssd_conf_file = '/etc/sssd/sssd.conf'
-sssd_local_file = '/tmp/sssd.conf'
+sssd_conf_file = "/etc/sssd/sssd.conf"
+sssd_local_file = "/tmp/sssd.conf"
 
 
 class TestSSSDTests(object):
@@ -25,12 +22,9 @@ class TestSSSDTests(object):
     def class_setup(self, multihost):
         """ Test sssd dynamic update with ipv4 2 addresses """
         """ 1st time setup """
-        tp = setup_lib.TestPrep(multihost)
-        try:
-            tp.setup()
-        except StandardError, errval:
-            print str(errval.args[0])
-            pytest.skip("setup_session_skip")
+        multihost.master.yum_install(['ipa-server', 'ipa-server-dns'])
+        multihost.replica.yum_install(['ipa-server', 'ipa-server-dns'])
+        multihost.client.yum_install(['ipa-client'])
 
         """ Uninstall if ipa installed """
         uninstall_server(multihost.master)
@@ -106,7 +100,8 @@ class TestSSSDTests(object):
         with open(sssd_local_file, 'r') as fin:
             for line in fin:
                 sssd_conf_var += str(line)
-                if line == '[sssd]\n':
+                domain_line = '[domain/' + multihost.master.domain.name + ']\n'
+                if line == domain_line:
                     sssd_conf_var += str('dyndns_update = True\n')
                     sssd_conf_var += str('dyndns_iface = *\n')
         with open(sssd_local_file, 'w') as fout:
