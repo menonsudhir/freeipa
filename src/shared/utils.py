@@ -18,6 +18,7 @@ import os
 import tempfile
 import paths
 import array
+from distutils.version import StrictVersion
 
 
 def add_ipa_user(host, user, passwd=None, first=None, last=None):
@@ -335,3 +336,17 @@ def get_domain_level(host):
         print "Unable to run domainlevel-get command: %s" % errval
         domain_level = 0
     return int(domain_level)
+
+
+def ipa_version_gte(master, version):
+    """
+    Get IPA Version from Master and compare to version passed
+    - if version passed is greater than or equal, True
+    - if version passed is less than, False
+    """
+    cmd = master.run_command(['ipa-server-install', '--version'])
+    ipa_version = cmd.stdout_text
+    if StrictVersion(ipa_version) >= StrictVersion(version):
+        return True
+    else:
+        return False

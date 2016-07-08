@@ -11,6 +11,7 @@ from ipa_pytests.shared.utils import service_control
 from ipa_pytests.shared.utils import list_rpms
 from ipa_pytests.shared.utils import setenforce
 from ipa_pytests.shared.utils import get_domain_level
+from ipa_pytests.shared.utils import ipa_version_gte
 
 
 def disable_firewall(host):
@@ -117,7 +118,6 @@ def setup_master(master):
               '--setup-dns',
               '--forwarder', master.config.dns_forwarder,
               '--reverse-zone', revnet,
-              '--allow-zone-overlap',
               '--domain', master.domain.name,
               '--realm', master.domain.realm,
               '--hostname', master.hostname,
@@ -126,6 +126,11 @@ def setup_master(master):
               '--ds-password', master.config.dirman_pw,
               # '--mkhomedir',
               '-U']
+
+    # only add allow-zone-overlap if IPA >= 4.4.0
+    if ipa_version_gte(master, '4.4.0'):
+        runcmd.extend(['--allow-zone-overlap'])
+
     print "RUNCMD:", ' '.join(runcmd)
     cmd = master.run_command(runcmd, raiseonerr=False)
 
@@ -213,7 +218,9 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True):
 
     if setup_dns and setup_dns_revnet:
         params.extend(['--reverse-zone', replica.revnet])
-        params.extend(['--allow-zone-overlap'])
+        # only add allow-zone-overlap if IPA >= 4.4.0
+        if ipa_version_gte(master, '4.4.0'):
+            params.extend(['--allow-zone-overlap'])
 
     if setup_ca:
         params.append('--setup-ca')
