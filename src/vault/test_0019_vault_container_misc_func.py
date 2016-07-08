@@ -4,7 +4,7 @@ Vault Container Miscellaneous Functional tests
 
 # pylint: disable=too-many-public-methods,no-self-use,global-statement,too-many-statements
 
-from ipa_pytests.shared.utils import add_ipa_user
+from ipa_pytests.shared.user_utils import add_ipa_user
 from .lib import setup_test_prereqs, teardown_test_prereqs
 import data  # pylint: disable=relative-import
 

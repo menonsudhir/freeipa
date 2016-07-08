@@ -5,8 +5,11 @@ Test suite to verify hbac options
 
 import pytest
 from ipa_pytests.qe_class import multihost
-from ipa_pytests.shared.utils import add_ipa_user, kinit_as_user
-from ipa_pytests.shared.hbac_utils import hbacrule_add, hbacrule_del, hbacrule_find
+from ipa_pytests.shared.user_utils import add_ipa_user
+from ipa_pytests.shared.utils import kinit_as_user
+from ipa_pytests.shared.hbac_utils import hbacrule_add
+from ipa_pytests.shared.hbac_utils import hbacrule_del
+from ipa_pytests.shared.hbac_utils import hbacrule_find
 
 fakeuser = "testuser1"
 fakepassword = "Secret123"

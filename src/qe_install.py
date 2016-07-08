@@ -8,7 +8,7 @@ import pytest
 import time
 import re
 from ipa_pytests.shared.utils import service_control
-from ipa_pytests.shared.utils import list_rpms
+from ipa_pytests.shared.rpm_utils import list_rpms
 from ipa_pytests.shared.utils import get_domain_level
 from ipa_pytests.shared.utils import ipa_version_gte
 

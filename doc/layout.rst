@@ -51,9 +51,11 @@ Root
     - This is a generic library of shared functions to perform various tasks
       that may be used by many test suites.
     - examples:
-        - add_ipa_user - add an ipa user and set password
         - ldapmodify - modify ldap entry based on ldif provided
         - service_control - manage OS system services (service, systemctl)
+-shared/user_utils.py
+    -This is a library which contains "ipa user" functionalities
+        - add_ipa_user - add an ipa user and set password
 - <test_suite>/
     - dir for each test suite
 

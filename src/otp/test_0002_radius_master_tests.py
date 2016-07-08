@@ -5,7 +5,7 @@ from .lib import (add_user, add_radiusproxy,
                   mod_radius_user, add_info, user_login,
                   verify_user_login, delete_radiusproxy,
                   user_failed_login, print_output)
-import ipa_pytests.shared.utils as shared_utils
+from ipa_pytests.shared.user_utils import del_ipa_user
 import os
 import pexpect
 
@@ -58,7 +58,7 @@ class TestRadiusfunction(object):
         verify_user_login(multihost)
 
         # cleanup
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
         delete_radiusproxy(multihost)
 
         # Stoping radius server
@@ -89,7 +89,7 @@ class TestRadiusfunction(object):
         user_failed_login(multihost)
 
         # cleanup
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
         delete_radiusproxy(multihost)
 
     def test_radius_0003(self, multihost):
@@ -134,7 +134,7 @@ class TestRadiusfunction(object):
         proc.close()
 
         # cleanup
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
         delete_radiusproxy(multihost)
 
         # Stoping radius server
@@ -178,7 +178,7 @@ class TestRadiusfunction(object):
         print "\n########### radius Proxy not deleted ###########\n"
 
         # cleanup
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
         delete_radiusproxy(multihost)
 
         # Stoping radius server
@@ -407,7 +407,7 @@ class TestRadiusfunction(object):
             exp_output='ipa: ERROR: %s: RADIUS proxy server not found' %
             multihost.radiusproxy)
         # cleanup
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
         delete_radiusproxy(multihost)
 
         # Stoping radius server
@@ -448,7 +448,7 @@ class TestRadiusfunction(object):
                                exp_returncode=1,
                                exp_output='0 RADIUS proxy servers matched')
         # cleanup
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
         delete_radiusproxy(multihost)
 
         # Stoping radius server

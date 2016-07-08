@@ -2,9 +2,10 @@
 OTP testcases
 """
 from ipa_pytests.shared.utils import (kinit_as_user)
-import ipa_pytests.shared.utils as shared_utils
+from ipa_pytests.shared.user_utils import del_ipa_user
 from .lib import (add_user, mod_otp_user, add_otptoken,
                   delete_otptoken)
+import pytest
 
 
 class TestOTPfunction(object):
@@ -47,7 +48,7 @@ class TestOTPfunction(object):
                        'failure while getting initial credentials')
 
         #   delete otp user
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
 
         #   delete otptoken
         delete_otptoken(multihost)
@@ -84,7 +85,7 @@ class TestOTPfunction(object):
         if exp_output not in cmd.stderr_text:
             pytest.fail("Failed to verify")
         #   delete otp user
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
 
         #   delete otptoken
         delete_otptoken(multihost)
@@ -131,7 +132,7 @@ class TestOTPfunction(object):
                                           ' user not found')
 
         #   delete otp user
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
 
         #   delete otptoken
         delete_otptoken(multihost)
@@ -164,7 +165,7 @@ class TestOTPfunction(object):
         print "\n*****    HOTP token also added successfully    *****\n"
 
         #   delete otp user
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
 
     def test_otp_0020(self, multihost):
         """
@@ -183,7 +184,7 @@ class TestOTPfunction(object):
         print "\n*****   Token deleted successfully   *****\n"
 
         #   delete otp user
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
 
     def test_otp_0021(self, multihost):
         """
@@ -207,7 +208,7 @@ class TestOTPfunction(object):
                                exp_output='Number of entries returned 1')
 
         #   delete otp user
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
 
     def test_otp_0022(self, multihost):
         """
@@ -244,7 +245,7 @@ class TestOTPfunction(object):
                                exp_output='Unique ID: %s' % multihost.token)
 
         #   delete otp user
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
 
     def test_otp_0024(self, multihost):
         """
@@ -270,7 +271,7 @@ class TestOTPfunction(object):
                                exp_output='Unique ID: %s' % multihost.token)
 
         #   delete otp user
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
 
     def test_otp_0025(self, multihost):
         """
@@ -289,7 +290,7 @@ class TestOTPfunction(object):
                                exp_output="ipa: ERROR: invalid 'type':")
 
         #   delete otp user
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
 
     def test_otp_0027(self, multihost):
         """
@@ -323,7 +324,7 @@ class TestOTPfunction(object):
             multihost.token)
 
         #   delete otp user
-        shared_utils.del_ipa_user(multihost.master, multihost.testuser)
+        del_ipa_user(multihost.master, multihost.testuser)
 
         #   delete otptoken
         delete_otptoken(multihost)

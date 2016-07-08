@@ -1,6 +1,6 @@
 """ Functional Services Setup for HTTP """
 import re
-from ipa_pytests.shared.utils import add_ipa_user
+from ipa_pytests.shared.user_utils import add_ipa_user
 from ipa_pytests.shared.qe_certutils import certutil
 
 

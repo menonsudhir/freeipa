@@ -10,8 +10,8 @@ from ipa_pytests.qe_class import multihost  # pylint: disable=unused-import
 from ipa_pytests.qe_class import test_count  # pylint: disable=unused-import
 from ipa_pytests.qe_class import mark_test_start  # pylint: disable=unused-import
 from ipa_pytests.qe_class import qe_use_class_setup  # pylint: disable=unused-import
-from ipa_pytests.shared.utils import add_ipa_user  # pylint: disable=unused-import
-from ipa_pytests.shared.utils import del_ipa_user  # pylint: disable=unused-import
+from ipa_pytests.shared.user_utils import add_ipa_user  # pylint: disable=unused-import
+from ipa_pytests.shared.user_utils import del_ipa_user  # pylint: disable=unused-import
 from ipa_pytests.shared.keys import openssl_genrsa
 from .lib import delete_all_vaults
 from .lib import delete_all_vault_containers

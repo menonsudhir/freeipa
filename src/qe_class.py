@@ -213,7 +213,7 @@ class QeHost(pytest_multihost.host.Host):
         print cmd.stdout_text
         print cmd.stderr_text
         print "----expect output end----"
-        return cmd.returncode
+        return cmd
 
 
 @pytest.fixture(scope="function", autouse=True)

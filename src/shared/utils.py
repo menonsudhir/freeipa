@@ -1,7 +1,5 @@
 """
 Major shared support utility functions
-- add_ipa_user - add user and set password
-- del_ipa_user - Delete IPA user
 - kinit_as_uesr - kinit as user with password
 - qerun - utility function to run command on host and check output
 - qe_http_get - experimental function to get web page
@@ -9,7 +7,6 @@ Major shared support utility functions
 - ldapmodify - ldapmodify command
 - run_pk12util - Helper function to run pk12util
 - create_noise_file - Helper function to create randomness in a file
-- check_rpm - Helper function to check if packages are installed
 """
 import time
 import re
@@ -21,33 +18,12 @@ import array
 from distutils.version import StrictVersion
 
 
-def add_ipa_user(host, user, passwd=None, first=None, last=None):
-    """ Add an IPA user and set password """
-    if passwd is None:
-        passwd = "Secret123"
-    if first is None:
-        first = user
-    if last is None:
-        last = user
-    chpass = 'Passw0rd1\n%s\n%s\n' % (passwd, passwd)
-    print chpass
-    host.kinit_as_admin()
-    host.run_command(['ipa', 'user-add', "--first", first, "--last", last,
-                      "--password", user], stdin_text="Passw0rd1")
-    host.run_command(['kdestroy', '-A'])
-    time.sleep(2)
-    cmd = host.run_command(['kinit', user], stdin_text=chpass)
-    print "PASSOUT: %s" % cmd.stdout_text
-    print "PASSERR: %s" % cmd.stderr_text
-    host.kinit_as_admin()
-
-
 def kinit_as_user(host, user, passwd):
     """ Kinit as user with password """
     host.run_command('kdestroy -A')
     host.run_command(['kinit', user], stdin_text=passwd)
     cmd = host.run_command('klist')
-    print cmd.stdout_text
+    print (cmd.stdout_text)
 
 
 def qerun(host, command, stdin_text=None, exp_returncode=0, exp_output=None):
@@ -55,21 +31,21 @@ def qerun(host, command, stdin_text=None, exp_returncode=0, exp_output=None):
     cmd = host.run_command(command, stdin_text, raiseonerr=False)
     cmd.stdout_text.rstrip()
 
-    print "RETURNCODE:----"
-    print "GOT: ", cmd.returncode
-    print "EXPECTED: ", exp_returncode
+    print ("RETURNCODE:----")
+    print ("GOT: ", cmd.returncode)
+    print ("EXPECTED: ", exp_returncode)
     if cmd.returncode != exp_returncode:
         pytest.xfail("returncode mismatch.")
 
-    print "OUTPUT:--------"
-    print "GOT: ", cmd.stdout_text
-    print "EXPECTED: ", exp_output
+    print ("OUTPUT:--------")
+    print ("GOT: ", cmd.stdout_text)
+    print ("EXPECTED: ", exp_output)
     if exp_output is None:
-        print "Not checking expected output"
+        print ("Not checking expected output")
     elif exp_output not in cmd.stdout_text:
         pytest.xfail("expected output not found")
 
-    print "COMMAND SUCCEEDED!"
+    print ("COMMAND SUCCEEDED!")
 
 
 def qe_http_get(url):
@@ -162,16 +138,6 @@ def service_control(host, service, function):
     return cmd
 
 
-def list_rpms(host):
-    """ list installed rpms """
-    cmd = host.run_command([paths.RPM, '-qa', '--last'])
-    rpmlog_file = "/var/log/rpm.list." + time.strftime('%H%M%S',
-                                                       time.localtime())
-    # print(cmd.stdout_text)
-    # print(cmd.stderr_text)
-    host.put_file_contents(rpmlog_file, cmd.stdout_text)
-
-
 def run_pk12util(host, args):
     """
     Helper function to run pk12util
@@ -228,57 +194,6 @@ def add_dnsforwarder(host, domain, ip):
     cmd = host.run_command('dnscmd /clearcache', raiseonerr=False)
 
 
-def del_ipa_user(host, username, preserve=False, skip_err=False):
-    """
-    Helper function to delete IPA user
-    """
-    host.kinit_as_admin()
-    args = []
-    if preserve:
-        args.append('--preserve')
-    if skip_err:
-        args.append('--continue')
-    cmdstr = [paths.IPA, 'user-del', username] + args
-    cmdstr = " ".join(cmdstr)
-    cmd = host.run_command(cmdstr, raiseonerr=False)
-    if cmd.returncode != 0:
-        print("Failed to delete IPA user %s" % username)
-    else:
-        print("Successfully deleted IPA user %s" % username)
-
-
-def check_rpm(host, rpm_list):
-    """
-    Checks if packages belonging to specified in list 'rpm' exists.
-    If not, then installs it.
-    """
-    print("\nChecking whether " + "".join(rpm_list) +
-          " package installed on " + host.hostname)
-    cmd_list = [paths.RPM, '-q']
-    cmd_list.extend(rpm_list)
-    print(cmd_list)
-    output2 = host.run_command(cmd_list,
-                               set_env=True,
-                               raiseonerr=False)
-    if output2.returncode != 0:
-        print(" ".join(rpm_list) + " package not found on " +
-              host.hostname + ", thus installing")
-        yum_install = [paths.YUM, 'install', '-y']
-        yum_install.extend(rpm_list)
-        print(yum_install)
-        install1 = host.run_command(yum_install,
-                                    set_env=True,
-                                    raiseonerr=False)
-        if install1.returncode == 0:
-            print(" ".join(rpm_list) + " package installed.")
-        else:
-            pytest.xfail(" ".join(rpm_list) + " package installation"
-                         " failed, check repo links for further debugging")
-    else:
-        print("\n" + " ".join(rpm_list) + " package found on " +
-              host.hostname + ", running tests")
-
-
 def ipa_config_mod(multihost, opts=None):
     """
     Helper function to modify ipa config
@@ -298,25 +213,6 @@ def ipa_config_mod(multihost, opts=None):
         return 2
 
 
-def remove_rpm(host, rpm_list):
-    """
-    Removes the packages specified in rpm_list
-    :param rpm_list:  list of packages to removed
-    :return: None
-    """
-    print("Removing " + "".join(rpm_list) + "from " + host.hostname)
-    cmd_list = [paths.RPM, '-e']
-    cmd_list.extend(rpm_list)
-    print (cmd_list)
-    output = host.run_command(cmd_list,
-                              set_env=True,
-                              raiseonerr=False)
-    if output.returncode != 0:
-        print ("Error in removing packages - " + "".join(cmd_list))
-    else:
-        print ("Packages " + "".join(rpm_list) + "has been removed")
-
-
 def setenforce(host, value):
     """ selinux setenforce command """
     host.run_command(['setenforce', value])
@@ -333,7 +229,7 @@ def get_domain_level(host):
                           cmd.stdout_text, re.MULTILINE)
         domain_level = found.group('level')
     except StandardError as errval:
-        print "Unable to run domainlevel-get command: %s" % errval
+        print ("Unable to run domainlevel-get command: %s" % errval)
         domain_level = 0
     return int(domain_level)
 
@@ -350,3 +246,15 @@ def ipa_version_gte(master, version):
         return True
     else:
         return False
+
+
+def sssd_cache_reset(host):
+    """
+    Helper function to reset the sssd cache
+    :param host: hostname
+    :return:
+    """
+    service_control(host, 'sssd', 'stop')
+    host.run_command('rm -rf /var/lib/sss/db/*', set_env=True)
+    host.run_command('rm -rf /var/lib/sss/mc/*', set_env=True)
+    service_control(host, 'sssd', 'start')

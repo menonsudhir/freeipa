@@ -3,7 +3,8 @@ This is a quick test for KDCProxy
 """
 import pytest
 from ipa_pytests.qe_class import multihost
-from ipa_pytests.shared.utils import add_ipa_user, service_control
+from ipa_pytests.shared.user_utils import add_ipa_user
+from ipa_pytests.shared.utils import service_control
 from lib import (update_krbv_conf, revert_krbv_conf,
                  change_user_passwd, pwpolicy_mod)
 

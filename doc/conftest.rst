@@ -18,7 +18,7 @@ fixtures in order to work properly with this framework.
     from ipa_pytests.qe_class import mark_test_start
     from ipa_pytests.qe_class import qe_use_class_setup
     from ipa_pytests.qe_class import pytest_runtest_makereport
-    from ipa_pytests.shared.utils import add_ipa_user
+    from ipa_pytests.shared.user_utils import add_ipa_user
 
 Set number of host types
 ------------------------

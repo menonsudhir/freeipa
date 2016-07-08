@@ -6,7 +6,7 @@ from __future__ import print_function
 from ipa_pytests.qe_install import uninstall_server, setup_client
 from ipa_pytests.qe_install import uninstall_client
 from ipa_pytests.qe_class import multihost
-from ipa_pytests.shared.utils import check_rpm
+from ipa_pytests.shared.rpm_utils import check_rpm
 
 
 class TestBugCheck(object):

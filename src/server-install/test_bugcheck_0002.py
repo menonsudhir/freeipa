@@ -6,7 +6,8 @@ import time
 import pytest
 from ipa_pytests.qe_install import setup_master, uninstall_server
 from ipa_pytests.qe_class import multihost
-from ipa_pytests.shared.utils import add_ipa_user, ipa_config_mod
+from ipa_pytests.shared.utils import ipa_config_mod
+from ipa_pytests.shared.user_utils import add_ipa_user
 from ipa_pytests.shared.utils import ldapmodify_cmd, service_control
 from ipa_pytests.qe_class import qe_use_class_setup
 

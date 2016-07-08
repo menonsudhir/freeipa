@@ -2,7 +2,7 @@
 import re
 import time
 from .support import wait_for_ldap
-from ipa_pytests.shared.utils import add_ipa_user
+from ipa_pytests.shared.user_utils import add_ipa_user
 from ipa_pytests.shared.utils import ldapmodify_cmd
 from ipa_pytests.shared.utils import service_control
 from ipa_pytests.shared.qe_certutils import certutil

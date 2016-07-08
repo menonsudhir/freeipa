@@ -1,11 +1,11 @@
 """
 Overview:
-Test to verify #1248524 - User can't find any hosts using "ipa host-find $HOSTNAME"
+Test Suite to verify bugs related to "ipa host" functionalities
 Setup Requirements:
-IPA Server configured on RHEL7.2
+IPA Server configured on latest RHEL os
 """
 
-from ipa_pytests.shared.utils import add_ipa_user
+from ipa_pytests.shared.user_utils import add_ipa_user
 import pytest
 # noinspection PyUnresolvedReferences
 from ipa_pytests.qe_class import multihost

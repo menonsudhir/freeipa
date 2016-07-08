@@ -14,7 +14,8 @@ from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_class import qe_use_class_setup
 from ipa_pytests.shared import paths
 from ipa_pytests.shared.qe_certutils import certutil
-from ipa_pytests.shared.utils import run_pk12util, add_ipa_user, del_ipa_user
+from ipa_pytests.shared.utils import run_pk12util
+from ipa_pytests.shared.user_utils import add_ipa_user, del_ipa_user
 
 
 class Testmaster(object):

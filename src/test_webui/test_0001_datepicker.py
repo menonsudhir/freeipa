@@ -3,7 +3,8 @@ This is a testsuite for Datepicker ref
 """
 import pytest
 from ipa_pytests.qe_class import multihost
-from ipa_pytests.shared.utils import add_ipa_user, service_control
+from ipa_pytests.shared.user_utils import add_ipa_user
+from ipa_pytests.shared.utils import service_control
 from ui_lib import ui_driver
 import data_user as user
 

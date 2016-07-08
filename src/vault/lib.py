@@ -4,7 +4,7 @@ Vault tests library
 
 from ipa_pytests.qe_install import setup_master  # pylint: disable=unused-import
 from ipa_pytests.qe_install import setup_replica  # pylint: disable=unused-import
-from ipa_pytests.shared.utils import add_ipa_user
+from ipa_pytests.shared.user_utils import add_ipa_user
 import data  # pylint: disable=relative-import
 import re
 
