@@ -8,9 +8,11 @@ SetUp Requirements:
 """
 
 import pytest
+from ipa_pytests.qe_install import setup_master
+from ipa_pytests.qe_install import uninstall_server
 
 
-class Testmaster(object):
+class TestBugCheck(object):
     """ Test Class """
     def class_setup(self, multihost):
         """ Setup for class """
@@ -121,6 +123,48 @@ class Testmaster(object):
         master1.qerun(cmdstr,
                       exp_returncode=0,
                       exp_output='Deleted record "%s"' % new_name)
+
+    def test_0004_bz1184065(self, multihost):
+        """
+        Verification of bz1184065 - PTR record synchronization for A/AAAA record tuple can fail mysteriously
+        :param multihost:
+        :return:None
+        """
+        uninstall_server(multihost.master)
+        setup_master(multihost.master, setup_reverse=False)
+        multihost.master.kinit_as_admin()
+        dnszone_add = ['ipa', 'dnszone-add']
+        name_server = '--name-server=' + multihost.master.hostname + '.'
+        zone_name = 'newzone'
+        zone_name_dot = zone_name + '.'
+        ns_add = dnszone_add + [name_server, zone_name]
+        multihost.master.run_command(ns_add)
+        print ("New zone added successfully")
+
+        multihost.master.kinit_as_admin()
+        # arecord add
+        multihost.master.run_command(['ipa', 'dnsrecord-add', zone_name, 'arecord', '--a-rec=1.2.3.4'])
+        # aaaa record add
+        multihost.master.run_command(['ipa', 'dnsrecord-add',
+                                     zone_name, 'aaaa', "--aaaa-rec=fec0:0:a10:6000:10:16ff:fe98:193"])
+        # dynamic_update enable
+        multihost.master.run_command(['ipa', 'dnszone-mod', zone_name_dot, '--dynamic-update=TRUE'])
+        # update_policy
+        multihost.master.run_command('ipa dnszone-mod ' + zone_name_dot + ' --update-policy="grant * wildcard *;"')
+        # enable sync_ptr
+        multihost.master.run_command(['ipa', 'dnszone-mod', zone_name_dot, '--allow-sync-ptr=TRUE'])
+        # activate keytab
+        multihost.master.run_command(['kinit', '-k', '-t', '/etc/krb5.keytab', 'host/' + multihost.master.hostname])
+        print("Adding aaaa records to " + zone_name)
+        filedata = "update add newzone 666 IN AAAA ::2\nupdate add newzone 666 IN AAAA ::23\n" \
+                   "update add newzone 666 IN AAAA ::43\nsend\nquit"
+        multihost.master.put_file_contents("/tmp/test_0004_bz1184065.txt", filedata)
+        # perform nsupdate
+        multihost.master.run_command('nsupdate -g /tmp/test_0004_bz1184065.txt')
+        multihost.master.kinit_as_admin()
+        multihost.master.qerun(['ipa', 'dnsrecord-find', zone_name],
+                               exp_returncode=0,
+                               exp_output=r'(.*)AAAA record: ::23, ::2, ::43(.*)')
 
     def class_teardown(self, multihost):
         """ Full suite teardown """

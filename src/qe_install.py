@@ -94,7 +94,7 @@ def set_rngd(host):
         print "STDOUT: ", cmd.stdout_text
 
 
-def setup_master(master):
+def setup_master(master, setup_reverse=True):
     """
     This is the default testing setup for an IPA Master.  This setup routine
     will install an IPA Master with DNS and a forwarder.  The domain and realm
@@ -110,14 +110,14 @@ def setup_master(master):
     set_rngd(master)
     setenforce(master, '0')
 
-    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
+    print ("TIME:", time.strftime('%H:%M:%S', time.localtime()))
     master.yum_install(['ipa-server', 'ipa-server-dns', 'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
 
-    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
+    print ("TIME:", time.strftime('%H:%M:%S', time.localtime()))
+
     runcmd = ['ipa-server-install',
               '--setup-dns',
               '--forwarder', master.config.dns_forwarder,
-              '--reverse-zone', revnet,
               '--domain', master.domain.name,
               '--realm', master.domain.realm,
               '--hostname', master.hostname,
@@ -126,17 +126,20 @@ def setup_master(master):
               '--ds-password', master.config.dirman_pw,
               # '--mkhomedir',
               '-U']
+    if not setup_reverse:
+        runcmd.append('--no-reverse')
+    else:
+        runcmd.extend(['--reverse-zone', revnet])
+        # only add allow-zone-overlap if IPA >= 4.4.0
+        if ipa_version_gte(master, '4.4.0'):
+            runcmd.extend(['--allow-zone-overlap'])
 
-    # only add allow-zone-overlap if IPA >= 4.4.0
-    if ipa_version_gte(master, '4.4.0'):
-        runcmd.extend(['--allow-zone-overlap'])
-
-    print "RUNCMD:", ' '.join(runcmd)
+    print ("RUNCMD:", ' '.join(runcmd))
     cmd = master.run_command(runcmd, raiseonerr=False)
 
-    print "STDOUT:", cmd.stdout_text
-    print "STDERR:", cmd.stderr_text
-    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
+    print ("STDOUT:", cmd.stdout_text)
+    print ("STDERR:", cmd.stderr_text)
+    print ("TIME:", time.strftime('%H:%M:%S', time.localtime()))
     if cmd.returncode != 0:
         raise ValueError("ipa-server-install failed with error code=%s" % cmd.returncode)
 
@@ -148,12 +151,12 @@ def setup_replica_prepare_file(replica, master):
               '--ip-address', replica.ip,
               '--reverse-zone', replica.revnet,
               replica.hostname]
-    print "RUNCMD:", ' '.join(runcmd)
+    print ("RUNCMD:", ' '.join(runcmd))
     cmd = master.run_command(runcmd, raiseonerr=False)
 
-    print "STDOUT:", cmd.stdout_text
-    print "STDERR:", cmd.stderr_text
-    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
+    print ("STDOUT:", cmd.stdout_text)
+    print ("STDERR:", cmd.stderr_text)
+    print ("TIME:", time.strftime('%H:%M:%S', time.localtime()))
     if cmd.returncode != 0:
         raise ValueError("ipa-replica-prepare failed with error code=%s" % cmd.returncode)
 
@@ -162,7 +165,7 @@ def setup_replica_prepare_file(replica, master):
     replica.put_file_contents(prepfile, prep_content)
 
 
-def setup_replica(replica, master, setup_dns=True, setup_ca=True):
+def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=True):
     """
     This is the default testing setup for an IPA Replica.  This setup routine
     will install an IPA Replica with DNS and a forwarder.  The domain and realm
@@ -170,7 +173,7 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True):
     replica as a CA.
     :type setup_ca: True or False
     :type setup_dns: True or False
-
+    :type setup_reverse: True or False
     """
     replica.revnet = replica.ip.split('.')[2] + '.' + \
         replica.ip.split('.')[1] + '.' + \
@@ -183,7 +186,7 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True):
         setup_dns_revnet = True
     else:
         setup_dns_revnet = False
-    print "SETUPDNSREVNET = %s" % setup_dns_revnet
+    print ("SETUPDNSREVNET = %s" % setup_dns_revnet)
 
     list_rpms(replica)
     disable_firewall(replica)
@@ -192,35 +195,37 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True):
     if setup_dns:
         set_resolv_conf_to_master(replica, master)
 
-    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
+    print ("TIME:", time.strftime('%H:%M:%S', time.localtime()))
     replica.yum_install(['ipa-server', 'ipa-server-dns', 'bind-dyndb-ldap',
                          'bind-pkcs11', 'bind-pkcs11-utils'])
 
     domain_level = get_domain_level(master)
 
     if domain_level == 0:
-        print "Domain Level is 0 so we have to use prepare files"
-        print "TIME:", time.strftime('%H:%M:%S', time.localtime())
+        print ("Domain Level is 0 so we have to use prepare files")
+        print ("TIME:", time.strftime('%H:%M:%S', time.localtime()))
         setup_replica_prepare_file(replica, master)
     else:
-        print "Domain Level is 1 so we do not need a prep file"
+        print ("Domain Level is 1 so we do not need a prep file")
 
     time.sleep(5)
 
     setenforce(replica, '0')
     params = ['ipa-replica-install', '-U']
 
-    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
+    print ("TIME:", time.strftime('%H:%M:%S', time.localtime()))
 
     if setup_dns:
         params.extend(['--setup-dns',
                        '--forwarder', master.config.dns_forwarder])
+        if setup_reverse and setup_dns_revnet:
+            params.extend(['--reverse-zone', replica.revnet])
+            # only add allow-zone-overlap if IPA >= 4.4.0
+            if ipa_version_gte(master, '4.4.0'):
+                params.extend(['--allow-zone-overlap'])
 
-    if setup_dns and setup_dns_revnet:
-        params.extend(['--reverse-zone', replica.revnet])
-        # only add allow-zone-overlap if IPA >= 4.4.0
-        if ipa_version_gte(master, '4.4.0'):
-            params.extend(['--allow-zone-overlap'])
+    if not setup_reverse:
+        params.append('--no-reverse')
 
     if setup_ca:
         params.append('--setup-ca')
@@ -235,12 +240,12 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True):
     else:
         params.extend(['--principal', master.config.admin_id])
 
-    print "RUNCMD:", ' '.join(params)
+    print ("RUNCMD:", ' '.join(params))
     cmd = replica.run_command(params, raiseonerr=False)
 
-    print "STDOUT:", cmd.stdout_text
-    print "STDERR:", cmd.stderr_text
-    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
+    print ("STDOUT:", cmd.stdout_text)
+    print ("STDERR:", cmd.stderr_text)
+    print ("TIME:", time.strftime('%H:%M:%S', time.localtime()))
     if cmd.returncode != 0:
         raise ValueError("ipa-replica-install failed with error code=%s" % cmd.returncode)
 
