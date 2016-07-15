@@ -1,7 +1,9 @@
 """
-TestCase related to IPA Migration DS
+More bug checks for server install
+This can include any variety of test cases
 """
 
+import re
 import time
 import pytest
 from ipa_pytests.qe_install import setup_master, uninstall_server
@@ -12,8 +14,8 @@ from ipa_pytests.shared.utils import ldapmodify_cmd, service_control
 from ipa_pytests.qe_class import qe_use_class_setup
 
 
-class TestMigration(object):
-    """ Test Class """
+class TestBugChecks2(object):
+    """ More bug checks for server install """
     def class_setup(self, multihost):
         """ Setup for class """
         print("\nClass Setup")
@@ -27,6 +29,7 @@ class TestMigration(object):
     def test_0001_bz1205264(self, multihost):
         """
         Testcase to verify bz1205264
+        TestCase related to IPA Migration DS
         """
         master1 = multihost.master
         other1 = multihost.others[0]
@@ -153,6 +156,56 @@ class TestMigration(object):
         uri = 'ldap://' + other1.hostname + ':389'
         username = 'cn=Directory Manager'
         ldapmodify_cmd(master1, uri, username, password, ldif_on_file)
+
+    def test_0002_bz1319912(self, multihost):
+        """
+        IDM-IPA-TC: server-install: installer changes hostname
+        This is to verify fix from bz1319912
+        """
+        master = multihost.master
+        # uninstall master to start clean
+        uninstall_server(master)
+        # backup /etc/hosts
+        etc_hosts = master.get_file_contents('/etc/hosts')
+        master.put_file_contents('/etc/hosts.bz1319912.backup', etc_hosts)
+        # create clean /etc/hosts with localhost and master only
+        found = re.search('(?P<localhost>127.*localhost.*\n::1.*localhost.*\n)',
+                          etc_hosts, re.MULTILINE)
+        etc_hosts = found.group('localhost')
+        etc_hosts += '{} {}'.format(master.ip, master.hostname)
+        master.put_file_contents('/etc/hosts', etc_hosts)
+        # backup /etc/hostname
+        etc_hostname = master.get_file_contents('/etc/hostname')
+        master.put_file_contents('/etc/hostname.bz1319912.backup', etc_hostname)
+        # create clean /etc/hostname with different name
+        if master.external_hostname is master.hostname:
+            tmp_name = "bz1319912.fakedomain.test"
+        else:
+            tmp_name = master.external_hostname
+        master.put_file_contents('/etc/hostname', tmp_name)
+        master.qerun('hostnamectl')
+        # run ipa-server-install with hostname/ip specified
+        master.qerun(['ipa-server-install', '-U',
+                      '--setup-dns',
+                      '--forwarder', master.config.dns_forwarder,
+                      '--domain', master.domain.name,
+                      '--realm', master.domain.realm,
+                      '--hostname', master.hostname,
+                      '--ip-address', master.ip,
+                      '--admin-password', master.config.admin_pw,
+                      '--ds-password', master.config.dirman_pw])
+        # make sure no error in log.
+        # grep used instead of get_file_contents due to size of file
+        master.qerun(['grep', r'ERROR.*named-pkcs11',
+                      '/var/log/ipaserver-install.log'],
+                     exp_returncode=1)
+        # uninstall master to start clean
+        uninstall_server(master)
+        # restore /etc/hosts
+        etc_hosts = master.get_file_contents('/etc/hosts.bz1319912.backup')
+        master.put_file_contents('/etc/hosts', etc_hosts)
+        # restore /etc/hosts
+        etc_hostname = master.get_file_contents('/etc/hostname.bz1319912.backup')
 
     def class_teardown(self, multihost):
         """ Full suite teardown """
