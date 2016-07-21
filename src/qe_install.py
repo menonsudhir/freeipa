@@ -9,7 +9,6 @@ import time
 import re
 from ipa_pytests.shared.utils import service_control
 from ipa_pytests.shared.utils import list_rpms
-from ipa_pytests.shared.utils import setenforce
 from ipa_pytests.shared.utils import get_domain_level
 from ipa_pytests.shared.utils import ipa_version_gte
 
@@ -108,7 +107,6 @@ def setup_master(master, setup_reverse=True):
     disable_firewall(master)
     set_hostname(master)
     set_rngd(master)
-    setenforce(master, '0')
 
     print ("TIME:", time.strftime('%H:%M:%S', time.localtime()))
     master.yum_install(['ipa-server', 'ipa-server-dns', 'bind-dyndb-ldap', 'bind-pkcs11', 'bind-pkcs11-utils'])
@@ -210,7 +208,6 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
 
     time.sleep(5)
 
-    setenforce(replica, '0')
     params = ['ipa-replica-install', '-U']
 
     print ("TIME:", time.strftime('%H:%M:%S', time.localtime()))
@@ -266,7 +263,6 @@ def setup_client(client, master, server=None, domain=None):
     time.sleep(5)
     set_resolv_conf_to_master(client, master)
 
-    setenforce(client, '0')
     print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     runcmd = ['ipa-client-install', '-U',
               '--principal', 'admin',
