@@ -151,7 +151,7 @@ class QeHost(pytest_multihost.host.Host):
         print all_output
 
         if cmd.returncode != exp_returncode:
-            msg += "\n> returncode mismatch."
+            msg = "\n> returncode mismatch."
             msg += "\n> GOT: {}".format(cmd.returncode)
             msg += "\n> EXPECTED: {}".format(exp_returncode)
             pytest.fail(msg, pytrace=False)
@@ -159,7 +159,7 @@ class QeHost(pytest_multihost.host.Host):
         if exp_output is None:
             print "Not checking expected output"
         elif not re.search(exp_output, all_output):
-            msg += "\n> expected output not found."
+            msg = "\n> expected output not found."
             msg += "\n> GOT: {}".format(all_output.rstrip('\n'))
             msg += "\n> EXPECTED: {}".format(exp_output)
             pytest.fail(msg, pytrace=False)
