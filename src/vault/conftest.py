@@ -59,6 +59,9 @@ def setup_session(request, multihost):  # pylint: disable=W0621
     safe_setup_replica(multihost.replica, multihost.master)
     safe_setup_master_kra(multihost.master)
 
+    multihost.master.yum_install(['expect'])
+    multihost.replica.yum_install(['expect'])
+
     data.init(multihost, 'test')
 
     chk = multihost.master.run_command(['ipa', 'user-show', data.USER1],
