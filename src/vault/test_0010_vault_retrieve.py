@@ -7,6 +7,7 @@ Vault Retrieve tests
 from .lib import setup_test_prereqs, teardown_test_prereqs
 import data  # pylint: disable=relative-import
 import base64
+import pytest
 
 PRIV_VAULT_W_PASSWORD = []
 PRIV_VAULT_W_KEY = []

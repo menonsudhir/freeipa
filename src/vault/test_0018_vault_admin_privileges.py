@@ -6,6 +6,7 @@ Vault Admin Privilege tests
 
 from .lib import setup_test_prereqs, teardown_test_prereqs
 import data  # pylint: disable=relative-import
+import pytest
 
 VADMIN = ''
 NONVADMIN = ''
