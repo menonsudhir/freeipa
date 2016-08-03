@@ -23,7 +23,7 @@ class TestVaultKRAInstall(object):
         """ Class Teardown """
         pass
 
-    @pytest.mark.skip("Skipping due to bz1302127")
+    @pytest.mark.skip(reason="Skipping due to bz1302127")
     def test_0001_successfully_install_kra_on_master(self, multihost):
         """
         IDM-IPA-TC: Vault: Successfully install KRA on Master
@@ -31,7 +31,7 @@ class TestVaultKRAInstall(object):
         runcmd = ['ipa-kra-install', '-p', multihost.master.config.dirman_pw, '-U']
         multihost.master.qerun(runcmd)
 
-    @pytest.mark.skip("Skipping due to bz1302127")
+    @pytest.mark.skip(reason="Skipping due to bz1302127")
     def test_0002_successfully_uninstall_kra_from_master(self, multihost):
         """
         IDM-IPA-TC: Vault: Successfully uninstall KRA from master
@@ -39,7 +39,7 @@ class TestVaultKRAInstall(object):
         runcmd = ['ipa-kra-install', '--uninstall']
         multihost.master.qerun(runcmd)
 
-    @pytest.mark.skip("Skipping due to bz1302127")
+    @pytest.mark.skip(reason="Skipping due to bz1302127")
     def test_0003_successfully_install_first_kra_on_replica(self, multihost):
         """
         IDM-IPA-TC: Vault: Successfully install first KRA on Replica
@@ -47,7 +47,7 @@ class TestVaultKRAInstall(object):
         runcmd = ['ipa-kra-install', '-p', multihost.replica.config.dirman_pw, '-U']
         multihost.replica.qerun(runcmd)
 
-    @pytest.mark.skip("Skipping due to bz1302127")
+    @pytest.mark.skip(reason="Skipping due to bz1302127")
     def test_0004_successfully_uninstall_kra_from_replica(self, multihost):
         """
         IDM-IPA-TC: Vault: Successfully uninstall first KRA from replica
@@ -55,7 +55,7 @@ class TestVaultKRAInstall(object):
         runcmd = ['ipa-kra-install', '--uninstall']
         multihost.replica.qerun(runcmd)
 
-    @pytest.mark.skip("Skipping due to bz1302127")
+    @pytest.mark.skip(reason="Skipping due to bz1302127")
     def test_0005_successfully_install_second_kra_on_replica(self, multihost):
         """
         IDM-IPA-TC: Vault: Successfully install second KRA on Replica
@@ -66,25 +66,25 @@ class TestVaultKRAInstall(object):
         runcmd = ['ipa-kra-install', '-p', multihost.master.config.dirman_pw, '-U', replica_file]
         multihost.replica.qerun(runcmd)
 
-    @pytest.mark.skip("Skipping due to bz1302127")
+    @pytest.mark.skip(reason="Skipping due to bz1302127")
     def test_0006_successfully_install_second_kra_on_master(self, multihost):
         """
         IDM-IPA-TC: Vault: Successfully install second KRA on Master
         """
 
-    @pytest.mark.skip("Skipping due to bz1302127")
+    @pytest.mark.skip(reason="Skipping due to bz1302127")
     def test_0007_fail_to_install_on_replica_without_replica_file(self, multihost):
         """
         IDM-IPA-TC: Vault: Fail to install on Replica without replica file
         """
 
-    @pytest.mark.skip("Skipping due to bz1302127")
+    @pytest.mark.skip(reason="Skipping due to bz1302127")
     def test_0008_renew_kra_agent_cert(self, multihost):
         """
         IDM-IPA-TC: Vault: Renew KRA agent cert
         """
 
-    @pytest.mark.skip("Skipping due to bz1302127")
+    @pytest.mark.skip(reason="Skipping due to bz1302127")
     def test_0009_install_kra_after_ipa_cert_renewed(self, multihost):
         """
         IDM-IPA-TC: Vault: Install KRA after IPA cert renewed

@@ -127,7 +127,7 @@ class TestVaultModify(object):
         secret_retrieved = multihost.master.transport.get_file_contents(out_file)
         assert secret_retrieved == data.SECRET_VALUE
 
-    @pytest.mark.skip("Skipping due to BZ1362260")
+    @pytest.mark.skip(reason="Skipping due to BZ1362260")
     def test_0005_successfully_change_vault_password_salt(self, multihost):
         """
         IDM-IPA-TC: Vault: Successfully change vault password salt
@@ -212,7 +212,7 @@ class TestVaultModify(object):
                   '--public-key-file=' + data.PUBKEY_FILE]
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output='vault not found')
 
-    @pytest.mark.skip("Skipping due to BZ1362260")
+    @pytest.mark.skip(reason="Skipping due to BZ1362260")
     def test_0013_fail_to_change_non_existent_vault_password_salt(self, multihost):
         """
         IDM-IPA-TC: Vault: Fail to change non_existent vault password salt
@@ -230,7 +230,7 @@ class TestVaultModify(object):
         multihost.master.qerun(runcmd, exp_returncode=1,
                                exp_output='no modifications to be performed')
 
-    @pytest.mark.skip("Skipping due to BZ1362260")
+    @pytest.mark.skip(reason="Skipping due to BZ1362260")
     def test_0015_fail_to_change_vault_type_from_symmetric_to_symmetric(self, multihost):
         """
         IDM-IPA-TC: Vault: Fail to change vault type from symmetric to symmetric
@@ -260,7 +260,7 @@ class TestVaultModify(object):
         runcmd = ['ipa', 'vault-mod', data.PREFIX + '_vault_priv', '--type=invalid']
         multihost.master.qerun(runcmd, exp_returncode=1, exp_output='invalid.*type')
 
-    @pytest.mark.skip("Skipping due to BZ1362260")
+    @pytest.mark.skip(reason="Skipping due to BZ1362260")
     def test_0018_fail_to_change_vault_password_salt_to_invalid_value(self, multihost):
         """
         IDM-IPA-TC: Vault: Fail to change vault password salt to invalid value
@@ -333,7 +333,7 @@ class TestVaultModify(object):
                   '--public-key-file=' + data.NEW_PUBKEY_FILE]
         multihost.master.qerun(runcmd)
 
-    @pytest.mark.skip("Skipping due to BZ1362312")
+    @pytest.mark.skip(reason="Skipping due to BZ1362312")
     def test_0025_fail_to_retrieve_vault_after_changing_keys_with_files(self, multihost):
         """
         IDM-IPA-TC: Vault: fail to retrieve vault after changing keys with files
@@ -401,7 +401,7 @@ class TestVaultModify(object):
                   '--public-key-file=' + data.PUBKEY_FILE]
         multihost.master.qerun(runcmd)
 
-    @pytest.mark.skip("Skipping due to BZ1362312")
+    @pytest.mark.skip(reason="Skipping due to BZ1362312")
     def test_0032_fail_to_retrieve_vault_after_changing_keys_with_blobs(self, multihost):
         """
         IDM-IPA-TC: Vault: fail to retrieve vault after changing keys with blobs
