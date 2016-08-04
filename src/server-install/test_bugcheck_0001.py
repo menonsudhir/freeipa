@@ -16,6 +16,7 @@ from ipa_pytests.shared import paths
 from ipa_pytests.shared.qe_certutils import certutil
 from ipa_pytests.shared.utils import run_pk12util
 from ipa_pytests.shared.user_utils import add_ipa_user, del_ipa_user
+from ipa_pytests.shared.utils import get_domain_level
 
 
 class Testmaster(object):
@@ -279,54 +280,67 @@ class Testmaster(object):
             print("Successfully exported replica certificate from nssdb "
                   "stored at [%s]" % replica_cert_file)
 
-        # Create replica file
-        print("\n10. Creating replica file")
-        tmp_file = "/var/lib/ipa/replica-info-{}.gpg".format(replica1.hostname)
-        if master1.transport.file_exists(tmp_file):
-            print("Previously created replica GPG file exists "
-                  "on %s, deleting..." % master1.hostname)
-            master1.run_command([paths.RM, '-rf', tmp_file],
-                                raiseonerr=False)
+        domain_level = get_domain_level(master1)
 
-        reverse_zone = replica1.ip.split(".")[:-1]
-        reverse_zone.reverse()
-        replica_reverse_zone = ".".join(reverse_zone) + '.in-addr.arpa.'
-        cmdstr = "ipa-replica-prepare {} --http-cert-file={} " \
-                 "--http-pin {} " \
-                 "--dirsrv-cert-file={} --dirsrv-pin {} --ip-address {} " \
-                 "--reverse-zone {}".format(replica1.hostname,
-                                            replica_cert_file,
-                                            passwd, replica_cert_file,
-                                            passwd, replica1.ip,
-                                            replica_reverse_zone)
+        if domain_level == 0:
+            print ("Domain Level is 0 so we have to use prepare files")
 
-        print("Running command : %s" % cmdstr)
-        cmd = master1.run_command(cmdstr, stdin_text=passwd, raiseonerr=False)
-        if cmd.returncode != 0:
-            print(cmd.stdout_text, cmd.stderr_text)
-            pytest.fail("Failed to prepare replica file")
+            # Create replica file
+            print("\n10. Creating replica file")
+            tmp_file = "/var/lib/ipa/replica-info-{}.gpg".format(
+                replica1.hostname)
+            if master1.transport.file_exists(tmp_file):
+                print("Previously created replica GPG file exists "
+                      "on %s, deleting..." % master1.hostname)
+                master1.run_command([paths.RM, '-rf', tmp_file],
+                                    raiseonerr=False)
+
+            reverse_zone = replica1.ip.split(".")[:-1]
+            reverse_zone.reverse()
+            replica_reverse_zone = ".".join(reverse_zone) + '.in-addr.arpa.'
+            cmdstr = "ipa-replica-prepare {} --http-cert-file={} " \
+                     "--http-pin {} " \
+                     "--dirsrv-cert-file={} --dirsrv-pin {} --ip-address {} " \
+                     "--reverse-zone {}".format(replica1.hostname,
+                                                replica_cert_file,
+                                                passwd, replica_cert_file,
+                                                passwd, replica1.ip,
+                                                replica_reverse_zone)
+
+            print("Running command : %s" % cmdstr)
+            cmd = master1.run_command(cmdstr, stdin_text=passwd,
+                                      raiseonerr=False)
+            if cmd.returncode != 0:
+                print(cmd.stdout_text, cmd.stderr_text)
+                pytest.fail("Failed to prepare replica file")
+            else:
+                print("Successfully created replica file")
+
+            replica_prep_file = '/tmp/replica-info-{}.gpg'.format(
+                replica1.hostname)
+            print("Copying %s to %s server" %
+                  (replica_prep_file, replica1.hostname))
+            if replica1.transport.file_exists(replica_prep_file):
+                print("Previously created replica GPG file exists, deleting...")
+                replica1.run_command([paths.RM, '-rf', replica_prep_file],
+                                     raiseonerr=False)
+
+            cmdstr = 'scp {} root@{}:{}'.format(tmp_file,
+                                                replica1.hostname,
+                                                replica_prep_file)
+            print("\nRunning command %s" % cmdstr)
+            cmd = master1.run_command(cmdstr, raiseonerr=False)
+
+            if not replica1.transport.file_exists(replica_prep_file):
+                print(cmd.stdout_text, cmd.stderr_text)
+                pytest.fail("Failed to copy %s to %s "
+                            "server" % (tmp_file, replica1.hostname))
         else:
-            print("Successfully created replica file")
+            cmd = replica1.run_command(['mkdir', '-p', '/tmp/nssdb'],
+                                       raiseonerr=False)
+            replica_cert_content = master1.get_file_contents(replica_cert_file)
+            replica1.put_file_contents(replica_cert_file, replica_cert_content)
 
-        replica_prep_file = '/tmp/replica-info-{}.gpg'.format(
-            replica1.hostname)
-        print("Copying %s to %s server" %
-              (replica_prep_file, replica1.hostname))
-        if replica1.transport.file_exists(replica_prep_file):
-            print("Previously created replica GPG file exists, deleting...")
-            replica1.run_command([paths.RM, '-rf', replica_prep_file],
-                                 raiseonerr=False)
-
-        cmdstr = 'scp {} root@{}:{}'.format(tmp_file,
-                                            replica1.hostname,
-                                            replica_prep_file)
-        print("\nRunning command %s" % cmdstr)
-        cmd = master1.run_command(cmdstr, raiseonerr=False)
-
-        if not replica1.transport.file_exists(replica_prep_file):
-            print(cmd.stdout_text, cmd.stderr_text)
-            pytest.fail("Failed to copy %s to %s "
-                        "server" % (tmp_file, replica1.hostname))
         # Create IPA user
         username = 'testuser1'
         print("\n11. Adding IPA user [%s]" % username)
@@ -335,13 +349,27 @@ class Testmaster(object):
 
         # Install replica
         print("\n12. Installing replica on server [%s] " % replica1.hostname)
-        cmdstr = 'ipa-replica-install --setup-dns --no-forwarders ' \
-                 '--password={} --admin-password={} --mkhomedir ' \
-                 '--unattended {} --ip-address {}'.format(passwd, passwd,
-                                                          replica_prep_file,
-                                                          replica1.ip)
+        cmdstr = ['ipa-replica-install',
+                  '--setup-dns',
+                  '--no-forwarders',
+                  '--admin-password', passwd,
+                  '--mkhomedir']
 
-        print("\nRunning command : %s" % cmdstr)
+        if domain_level == 0:
+            cmdstr += [replica_prep_file, '--password', passwd]
+        else:
+            cmdstr += ['--server', master1.hostname,
+                       '--domain', master1.domain.realm,
+                       '--http-cert-file', replica_cert_file,
+                       '--http-pin', passwd,
+                       '--dirsrv-cert-file', replica_cert_file,
+                       '--dirsrv-pin', passwd,
+                       '--allow-zone-overlap']
+
+        cmdstr += ['--ip-address', replica1.ip,
+                   '--unattended']
+
+        print("\nRunning command : %s" % " ".join(cmdstr))
         cmd = replica1.run_command(cmdstr, raiseonerr=False)
         if cmd.returncode != 0:
             print(cmd.stdout_text, cmd.stderr_text)
