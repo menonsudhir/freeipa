@@ -12,6 +12,7 @@ def setup_session(request, multihost):
     """ Setup session """
     try:
         setup_master(multihost.master)
+        multihost.master.yum_install(['expect'])
         print ("Setup done")
 
     except StandardError as errval:

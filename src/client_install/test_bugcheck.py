@@ -1,12 +1,14 @@
 """
 Test Automation for bugs:
 """
+
 import pytest
-from __future__ import print_function
 from ipa_pytests.qe_install import uninstall_server, setup_client
 from ipa_pytests.qe_install import uninstall_client
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.rpm_utils import check_rpm
+import ipa_pytests.shared.paths as paths
+from ipa_pytests.shared.utils import service_control
 
 
 class TestBugCheck(object):
@@ -102,8 +104,7 @@ class TestBugCheck(object):
             print("IPA service is running, continuing")
             setup_client(multihost.client, multihost.master)
             check6 = multihost.client.qerun(['ls', '/etc/ipa/'],
-                                            exp_output='default.conf',
-                                            raiseonerr=False)
+                                            exp_output='default.conf')
             if check6.returncode == 0:
                 print("IPA client is installed, BZ1215200 and BZ1211708 PASSED")
             else:
