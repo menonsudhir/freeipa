@@ -234,6 +234,8 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
         params.append('--setup-ca')
 
     params.extend(['--ip-address', replica.ip])
+    params.extend(['--server', master.hostname])
+    params.extend(['--domain', master.domain.name])
     params.extend(['--admin-password', master.config.admin_pw])
 
     if domain_level == 0:
