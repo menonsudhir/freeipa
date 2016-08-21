@@ -205,6 +205,12 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
         setup_replica_prepare_file(replica, master)
     else:
         print ("Domain Level is 1 so we do not need a prep file")
+        master.kinit_as_admin()
+        cmd = master.run_command(['ipa', 'dnsrecord-add',
+                                  master.domain.name,
+                                  ''.join(replica.hostname.split('.')[:1]),
+                                  '--a-rec', replica.ip,
+                                  '--a-create-reverse'], raiseonerr=False)
 
     time.sleep(5)
 
