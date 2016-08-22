@@ -184,7 +184,7 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
         setup_dns_revnet = True
     else:
         setup_dns_revnet = False
-    print ("SETUPDNSREVNET = %s" % setup_dns_revnet)
+    print "SETUPDNSREVNET = %s" % setup_dns_revnet
 
     list_rpms(replica)
     disable_firewall(replica)
@@ -193,7 +193,7 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
     if setup_dns:
         set_resolv_conf_to_master(replica, master)
 
-    print ("TIME:", time.strftime('%H:%M:%S', time.localtime()))
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     replica.yum_install(['ipa-server', 'ipa-server-dns', 'bind-dyndb-ldap',
                          'bind-pkcs11', 'bind-pkcs11-utils'])
 
@@ -216,7 +216,7 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
 
     params = ['ipa-replica-install', '-U']
 
-    print ("TIME:", time.strftime('%H:%M:%S', time.localtime()))
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
 
     if setup_dns:
         params.extend(['--setup-dns',
@@ -243,12 +243,12 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
     else:
         params.extend(['--principal', master.config.admin_id])
 
-    print ("RUNCMD:", ' '.join(params))
+    print "RUNCMD:", ' '.join(params)
     cmd = replica.run_command(params, raiseonerr=False)
 
-    print ("STDOUT:", cmd.stdout_text)
-    print ("STDERR:", cmd.stderr_text)
-    print ("TIME:", time.strftime('%H:%M:%S', time.localtime()))
+    print "STDOUT:", cmd.stdout_text
+    print "STDERR:", cmd.stderr_text
+    print "TIME:", time.strftime('%H:%M:%S', time.localtime())
     if cmd.returncode != 0:
         raise ValueError("ipa-replica-install failed with error code=%s" % cmd.returncode)
 
