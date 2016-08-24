@@ -6,10 +6,13 @@ SetUp Requirements:
 -Need to test for Master
 """
 import pytest
+import time
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.user_utils import add_ipa_user
 from ipa_pytests.shared.ipa_cert_utils import ipa_cert_request
 from ipa_pytests.shared.openssl_utils import openssl_util
+from ipa_pytests.shared.qe_certutils import certutil
+
 
 config_file = "/tmp/openssl.conf"
 csr_file = "test.csr"
@@ -55,6 +58,70 @@ class TestBugCheck(object):
         except StandardError as errval:
             print("Error %s" % (str(errval.args[0])))
             pytest.skip("test_0001_bz1254641")
+
+    def test_0002_bz1351593(self, multihost):
+        """
+        IDM-IPA-TC: Custom permission for insufficient privileges check in cert revoke
+        """
+        test_host = 'bz1351593.' + multihost.master.domain.name
+        user = "retriever"
+        password = multihost.master.config.admin_pw
+
+        multihost.master.kinit_as_admin()
+        multihost.master.qerun(['ipa', 'host-add', '--force', test_host])
+
+        cert_db = '/tmp/' + test_host + '.db'
+        multihost.master.transport.mkdir(cert_db)
+        multihost.master.put_file_contents(cert_db + '/passwd.txt', '')
+        csr = "/tmp/" + test_host + '.csr'
+        cert = certutil(multihost.master, cert_db)
+        subject_base = cert.get_ipa_subject_base(multihost.master)
+        subject = "CN=" + test_host + "," + subject_base
+        cert.request_cert(subject, csr)
+
+        runcmd = ['ipa', 'cert-request', csr,
+                  '--principal=host/' + test_host]
+        cmd = multihost.master.run_command(runcmd)
+        for line in cmd.stdout_text.split('\n'):
+            if "number:" in line:
+                cert_serial = line.split(': ')[1]
+
+        runcmd = ['ipa', 'privilege-add', 'GoFetch',
+                  '--desc="Can only retrieve Certs"']
+        runcmd = ' '.join(runcmd)
+        multihost.master.qerun(runcmd)
+
+        runcmd = ['ipa', 'privilege-add-permission', 'GoFetch',
+                  '--permissions="Retrieve Certificates from the CA"']
+        runcmd = ' '.join(runcmd)
+        multihost.master.qerun(runcmd)
+
+        runcmd = ['ipa', 'role-add', 'ITretrievers',
+                  '--desc="Guys whose roles are to retrieve certs"']
+        runcmd = ' '.join(runcmd)
+        multihost.master.qerun(runcmd)
+
+        time.sleep(3)
+        runcmd = ['ipa', 'role-add-privilege', 'ITretrievers',
+                  '--privileges=GoFetch']
+        multihost.master.qerun(runcmd)
+
+        add_ipa_user(multihost.master, user=user)
+
+        runcmd = ['ipa', 'role-add-member', 'ITretrievers',
+                  '--users=retriever']
+        multihost.master.qerun(runcmd)
+
+        multihost.master.kinit_as_user(user, password)
+
+        runcmd = ['ipa', 'cert-revoke', cert_serial]
+        exp_output = "Insufficient access"
+        multihost.master.qerun(runcmd, exp_output=exp_output)
+
+        multihost.master.kinit_as_admin()
+        multihost.master.qerun(['ipa', 'privilege-del', 'GoFetch'])
+        multihost.master.qerun(['ipa', 'role-del', 'ITretrievers'])
+        multihost.master.qerun(['ipa', 'host-del', test_host])
 
     def class_teardown(self, multihost):
         """ Full suite teardown """
