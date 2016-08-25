@@ -8,7 +8,7 @@ Test Suite Directories
 
 - Name:
     - Use a simple name, all lower case, words separated by underscores.
-    - Name should decribe what is being tested.
+    - Name should describe what is being tested.
 
 - Contents:
     - config/ directory to contain config or data files to install in
