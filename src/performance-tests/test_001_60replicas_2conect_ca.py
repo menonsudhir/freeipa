@@ -19,7 +19,7 @@ class Testmaster(object):
         print("\nClass Setup")
         print"MASTER: ", multihost.master.hostname
         resource_count = os.getenv("RESOURCE_COUNT", 0)
-        replica_count = (resource_count - 1)
+        replica_count = (int(resource_count) - 1)
         if replica_count <= 0:
             pytest.xfail("No resources thus exiting")
         print replica_count

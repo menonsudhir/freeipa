@@ -10,7 +10,7 @@ def pytest_namespace():
         Here using variable resource_count to accept input values
         from CI job. """
     resource_count = os.getenv("RESOURCE_COUNT", 0)
-    replica_count = (resource_count - 1)
+    replica_count = (int(resource_count) - 1)
     return {'num_replicas': replica_count,
             'num_clients': 0,
             'num_others': 0,
