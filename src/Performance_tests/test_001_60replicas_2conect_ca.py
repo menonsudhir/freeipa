@@ -6,7 +6,8 @@ import time
 import timeit
 import pytest
 import os
-import user_utils, utils
+import user_utils
+import utils
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_install import setup_master, setup_replica, uninstall_server
 
@@ -17,7 +18,10 @@ class Testmaster(object):
         """ Setup for class """
         print("\nClass Setup")
         print"MASTER: ", multihost.master.hostname
-        replica_count = os.getenv("REPLICA_COUNT", 5)
+        resource_count = os.getenv("RESOURCE_COUNT", 0)
+        replica_count = (resource_count - 1)
+        if replica_count <= 0:
+            pytest.xfail("No resources thus exiting")
         print replica_count
         for i in range(replica_count):
             print"REPLICA:", multihost.replicas[i].hostname
@@ -51,8 +55,8 @@ class Testmaster(object):
             print "REPLICA: ", multihost.replicas[i].hostname
             replica = multihost.replicas[i].hostname
             print "---------------------------"
-            segment='Line1_seg_'+str(i)
-            suf='domain'
+            segment = 'Line1_seg_'+str(i)
+            suf = 'domain'
             multihost.replicas[i].kinit_as_admin()
             multihost.replicas[i].qerun(['ipa', 'topologysegment-add', '--leftnode=' + master,
                                          '--rightnode=' + replica, suf, segment])
@@ -67,8 +71,8 @@ class Testmaster(object):
             print "REPLICA: ", multihost.replicas[i].hostname
             replica = multihost.replicas[i].hostname
             print "---------------------------"
-            segment='Line2_seg_'+str(i)
-            suf='domain'
+            segment = 'Line2_seg_'+str(i)
+            suf = 'domain'
             multihost.replicas[i].kinit_as_admin()
             multihost.replicas[i].qerun(['ipa', 'topologysegment-add', '--leftnode=' + master,
                                          '--rightnode=' + replica, suf, segment])
@@ -83,8 +87,8 @@ class Testmaster(object):
         print "MASTER: ", master
         print "REPLICA: ", replica
         print "---------------------------"
-        segment='Line_seg_final'
-        suf='domain'
+        segment = 'Line_seg_final'
+        suf = 'domain'
         multihost.replicas[i].kinit_as_admin()
         multihost.replicas[i].qerun(['ipa', 'topologysegment-add', '--leftnode=' + master,
                                      '--rightnode=' + replica, suf, segment])
@@ -106,7 +110,7 @@ class Testmaster(object):
         multihost.master.run_command('easy_install pip')
         multihost.master.qerun('pip', 'install', 'pssh')
         multihost.master.kinit_as_admin()
-        multihost.master.run_command('ipa-replica-manage list | grep -v '+ multihost.master.hostname +,
+        multihost.master.run_command('ipa-replica-manage list | grep -v ' + multihost.master.hostname+,
                                      '> /tmp/list.txt')
         multihost.master.run_command('cat /tmp/list.txt | cut -d":" -f1',
                                      '> /tmp/list1.txt')
@@ -116,7 +120,7 @@ class Testmaster(object):
         print "Testing if command executes on all systems"
         print "------------------------------------------------------------"
         cmd = multihost.master.run_command('pssh -h /tmp/list2.txt -l root -A \"ipa user-find test_user3\"',
-                                           stdin_text ='Secret123',
+                                           stdin_text='Secret123',
                                            raiseonerr=False)
         print cmd.stdout_text
 

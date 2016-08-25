@@ -7,9 +7,10 @@ from ipa_pytests.qe_class import qe_use_class_setup
 
 def pytest_namespace():
     """ Define the number of test host roles using namespace hook.
-        Here using variable replica_count to accept input values
+        Here using variable resource_count to accept input values
         from CI job. """
-    replica_count = os.getenv("REPLICA_COUNT", 5)
+    resource_count = os.getenv("RESOURCE_COUNT", 0)
+    replica_count = (resource_count - 1)
     return {'num_replicas': replica_count,
             'num_clients': 0,
             'num_others': 0,
@@ -30,4 +31,3 @@ def setup_session(request, multihost):
         uninstall_server(multihost.master)
 
     request.addfinalizer(teardown_session)
-
