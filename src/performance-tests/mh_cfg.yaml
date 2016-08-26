@@ -1,0 +1,193 @@
+ssh_key_filename: ~/.ssh/id_rsa
+admin_id: admin
+admin_pw: Secret123
+dirman_id: '"cn=Directory Manager"'
+dirman_pw: Secret123
+dns_forwarder: 10.11.5.19
+domains:
+  - name: testrelm.test
+    type: ipa
+    hosts:
+      - name: master.testrelm.test
+        external_hostname: hostname1
+        role: master
+      - name: replica1.testrelm.test
+        external_hostname: hostname2
+        role: replica
+      - name: replica2.testrelm.test
+        external_hostname: hostname3
+        role: replica
+      - name: replica3.testrelm.test
+        external_hostname: hostname4
+        role: replica
+      - name: replica4.testrelm.test
+        external_hostname: hostname5
+        role: replica
+      - name: replica5.testrelm.test
+        external_hostname: hostname6
+        role: replica
+      - name: replica6.testrelm.test
+        external_hostname: hostname7
+        role: replica
+      - name: replica7.testrelm.test
+        external_hostname: hostname8
+        role: replica
+      - name: replica8.testrelm.test
+        external_hostname: hostname9
+        role: replica
+      - name: replica9.testrelm.test
+        external_hostname: hostname10
+        role: replica
+      - name: replica10.testrelm.test
+        external_hostname: hostname11
+        role: replica
+      - name: replica11.testrelm.test
+        external_hostname: hostname12
+        role: replica
+      - name: replica12.testrelm.test
+        external_hostname: hostname13
+        role: replica
+      - name: replica13.testrelm.test
+        external_hostname: hostname14
+        role: replica
+      - name: replica14.testrelm.test
+        external_hostname: hostname15
+        role: replica
+      - name: replica15.testrelm.test
+        external_hostname: hostname16
+        role: replica
+      - name: replica16.testrelm.test
+        external_hostname: hostname17
+        role: replica
+      - name: replica17.testrelm.test
+        external_hostname: hostname18
+        role: replica
+      - name: replica18.testrelm.test
+        external_hostname: hostname19
+        role: replica
+      - name: replica19.testrelm.test
+        external_hostname: hostname20
+        role: replica
+      - name: replica20.testrelm.test
+        external_hostname: hostname21
+        role: replica
+      - name: replica21.testrelm.test
+        external_hostname: hostname22
+        role: replica
+      - name: replica22.testrelm.test
+        external_hostname: hostname23
+        role: replica
+      - name: replica23.testrelm.test
+        external_hostname: hostname24
+        role: replica
+      - name: replica24.testrelm.test
+        external_hostname: hostname25
+        role: replica
+      - name: replica25.testrelm.test
+        external_hostname: hostname26
+        role: replica
+      - name: replica26.testrelm.test
+        external_hostname: hostname27
+        role: replica
+      - name: replica27.testrelm.test
+        external_hostname: hostname28
+        role: replica
+      - name: replica28.testrelm.test
+        external_hostname: hostname29
+        role: replica
+      - name: replica29.testrelm.test
+        external_hostname: hostname30
+        role: replica
+      - name: replica30.testrelm.test
+        external_hostname: hostname31
+        role: replica
+      - name: replica31.testrelm.test
+        external_hostname: hostname32
+        role: replica
+      - name: replica32.testrelm.test
+        external_hostname: hostname33
+        role: replica
+      - name: replica33.testrelm.test
+        external_hostname: hostname34
+        role: replica
+      - name: replica34.testrelm.test
+        external_hostname: hostname35
+        role: replica
+      - name: replica35.testrelm.test
+        external_hostname: hostname36
+        role: replica
+      - name: replica36.testrelm.test
+        external_hostname: hostname37
+        role: replica
+      - name: replica37.testrelm.test
+        external_hostname: hostname38
+        role: replica
+      - name: replica38.testrelm.test
+        external_hostname: hostname39
+        role: replica
+      - name: replica39.testrelm.test
+        external_hostname: hostname40
+        role: replica
+      - name: replica40.testrelm.test
+        external_hostname: hostname41
+        role: replica
+      - name: replica41.testrelm.test
+        external_hostname: hostname42
+        role: replica
+      - name: replica42.testrelm.test
+        external_hostname: hostname43
+        role: replica
+      - name: replica43.testrelm.test
+        external_hostname: hostname44
+        role: replica
+      - name: replica44.testrelm.test
+        external_hostname: hostname45
+        role: replica
+      - name: replica45.testrelm.test
+        external_hostname: hostname46
+        role: replica
+      - name: replica46.testrelm.test
+        external_hostname: hostname47
+        role: replica
+      - name: replica47.testrelm.test
+        external_hostname: hostname48
+        role: replica
+      - name: replica48.testrelm.test
+        external_hostname: hostname49
+        role: replica
+      - name: replica49.testrelm.test
+        external_hostname: hostname50
+        role: replica
+      - name: replica50.testrelm.test
+        external_hostname: hostname51
+        role: replica
+      - name: replica51.testrelm.test
+        external_hostname: hostname52
+        role: replica
+      - name: replica52.testrelm.test
+        external_hostname: hostname53
+        role: replica
+      - name: replica53.testrelm.test
+        external_hostname: hostname54
+        role: replica
+      - name: replica54.testrelm.test
+        external_hostname: hostname55
+        role: replica
+      - name: replica55.testrelm.test
+        external_hostname: hostname56
+        role: replica
+      - name: replica56.testrelm.test
+        external_hostname: hostname57
+        role: replica
+      - name: replica57.testrelm.test
+        external_hostname: hostname58
+        role: replica
+      - name: replica58.testrelm.test
+        external_hostname: hostname59
+        role: replica
+      - name: replica59.testrelm.test
+        external_hostname: hostname60
+        role: replica
+      - name: replica60.testrelm.test
+        external_hostname: hostname61
+        role: replica
