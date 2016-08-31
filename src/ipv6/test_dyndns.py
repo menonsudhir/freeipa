@@ -27,9 +27,9 @@ class TestSSSDTests(object):
         multihost.client.yum_install(['ipa-client'])
 
         """ Uninstall if ipa installed """
-        uninstall_server(multihost.master)
-        uninstall_server(multihost.replica)
         uninstall_client(multihost.client)
+        uninstall_server(multihost.replica)
+        uninstall_server(multihost.master)
         """ set up resovl.conf """
         set_resolv_conf_to_master(multihost.client, multihost.master)
         set_resolv_conf_to_master(multihost.replica, multihost.master)
@@ -51,35 +51,35 @@ class TestSSSDTests(object):
         print "Install ipa-server master"
         cmd1 = multihost.master.run_command([
             'ipa-server-install',
-            '--setup-dns',
-            '--no-forwarders',
+            '--setup-dns', '--no-forwarders',
             '--domain', multihost.master.domain.name,
             '--realm', multihost.master.domain.realm,
             '--hostname', multihost.master.hostname,
             '--ip-address', multihost.master.ip,
-            '--admin-password', multihost.master.config.admin_pw,
-            '--ds-password', multihost.master.config.dirman_pw,
+            '--auto-reverse',
+            '-p', multihost.master.config.admin_pw,
+            '-a', multihost.master.config.admin_pw,
             '-U'])
-        print "Prepare replica"
-        cmd2 = multihost.master.run_command([
-            'ipa-replica-prepare',
+        print "Prepare replica - install client"
+        multihost.master.kinit_as_admin()
+        multihost.master.run_command([
+            'ipa',
+            'dnsconfig-mod',
+            '--allow-sync-ptr=true'])
+        cmd2 = multihost.replica.run_command([
+            'ipa-client-install',
             '--ip-address=' + multihost.replica.ip,
-            '--password', multihost.master.config.dirman_pw,
-            multihost.replica.hostname])
-        prepfile = '/var/lib/ipa/replica-info-' + \
-                   multihost.replica.hostname + \
-                   '.gpg'
-        localfile = '/tmp/replica.file.tmp'
-        multihost.master.transport.get_file(prepfile, localfile)
-        multihost.replica.transport.put_file(localfile, prepfile)
-        print "Install replica with file"
+            '--principal', 'admin',
+            '--password', multihost.master.config.admin_pw,
+            '-U'])
+        print "Install replica - promote to replica"
         cmd3 = multihost.replica.run_command([
             'ipa-replica-install',
             '--setup-dns',
             '--no-forwarders',
             '--admin-password', multihost.master.config.admin_pw,
             '--password', multihost.master.config.dirman_pw,
-            '-U', prepfile])
+            '-U'])
         print "Prepare client"
         cmd4 = multihost.client.run_command([
             'ip', 'addr', 'add', client_ip2,
@@ -130,13 +130,9 @@ class TestSSSDTests(object):
         print cmd7.stdout_text
 
     def test_sssd_0002(self, multihost):
-        """ Test sssd dynamic update with 2 ipv4 and one ipv6 addr """
-        multihost.master.run_command(['ipa-server-install',
-                                      '--uninstall', '-U'])
-        multihost.replica.run_command(['ipa-server-install',
-                                       '--uninstall', '-U'])
-        multihost.client.run_command(['ipa-client-install',
-                                      '--uninstall', '-U'])
+        uninstall_client(multihost.client)
+        uninstall_server(multihost.replica)
+        uninstall_server(multihost.master)
         """ add ipv6 to test """
         hosts = {multihost.master: master_ip_six,
                  multihost.replica: replica_ip_six,
@@ -169,7 +165,6 @@ class TestSSSDTests(object):
             else:
                 continue
             break
-
         """ new hosts file """
         file_hosts_content = master_ip_six + ' ' + multihost.master.hostname + '\n' + \
             replica_ip_six + ' ' + multihost.replica.hostname + '\n' + \
@@ -190,38 +185,40 @@ class TestSSSDTests(object):
         set_resolv_conf_add_server(multihost.replica, master_ip_six)
         set_resolv_conf_add_server(multihost.client, master_ip_six)
 
-        print "Install ipa-server master + ipv6"
+        print "Install ipa-server master - multihomed"
         cmd1 = multihost.master.run_command([
-            'ipa-server-install', '--setup-dns',
-            '--no-forwarders',
+            'ipa-server-install',
+            '--setup-dns', '--no-forwarders',
             '--domain', multihost.master.domain.name,
             '--realm', multihost.master.domain.realm,
             '--hostname', multihost.master.hostname,
             '--ip-address', multihost.master.ip,
             '--ip-address', master_ip_six,
-            '--admin-password', multihost.master.config.admin_pw,
-            '--ds-password', multihost.master.config.dirman_pw,
+            '--auto-reverse',
+            '-p', multihost.master.config.admin_pw,
+            '-a', multihost.master.config.admin_pw,
             '-U'])
-        print "Prepare replica"""
-        cmd2 = multihost.master.run_command([
-            'ipa-replica-prepare',
+        print "Prepare replica - install client"
+        multihost.master.kinit_as_admin()
+        multihost.master.run_command([
+            'ipa',
+            'dnsconfig-mod',
+            '--allow-sync-ptr=true'])
+        cmd2 = multihost.replica.run_command([
+            'ipa-client-install',
             '--ip-address=' + multihost.replica.ip,
-            '--ip-address', replica_ip_six,
-            '--password', multihost.master.config.dirman_pw,
-            multihost.replica.hostname])
-        prepfile = '/var/lib/ipa/replica-info-' + \
-                   multihost.replica.hostname + '.gpg'
-        localfile = '/tmp/replica.file.tmp'
-        multihost.master.transport.get_file(prepfile, localfile)
-        multihost.replica.transport.put_file(localfile, prepfile)
-        print "Install replica with file"
+            '--ip-address=' + replica_ip_six,
+            '--principal', 'admin',
+            '--password', multihost.master.config.admin_pw,
+            '-U'])
+        print "Install replica - promote to replica"
         cmd3 = multihost.replica.run_command([
             'ipa-replica-install',
             '--setup-dns',
             '--no-forwarders',
             '--admin-password', multihost.master.config.admin_pw,
             '--password', multihost.master.config.dirman_pw,
-            '-U', prepfile])
+            '-U'])
         print "Prepare client"
         cmd4 = multihost.client.run_command([
             'ipa-client-install',
@@ -258,13 +255,10 @@ class TestSSSDTests(object):
         assert dns_result == 1
 
     def test_sssd_0003(self, multihost):
+        uninstall_client(multihost.client)
+        uninstall_server(multihost.replica)
+        uninstall_server(multihost.master)
         """ Test sssd dynamic update with 2 ipv6 addr """
-        multihost.master.run_command(['ipa-server-install',
-                                      '--uninstall', '-U'])
-        multihost.replica.run_command(['ipa-server-install',
-                                       '--uninstall', '-U'])
-        multihost.client.run_command(['ipa-client-install',
-                                      '--uninstall', '-U'])
         file_hosts_content = master_ip_six + ' ' + \
             multihost.master.hostname + '\n' + \
             replica_ip_six + ' ' + \
@@ -307,36 +301,40 @@ class TestSSSDTests(object):
                     remove_ip4_cmd = host.run_command([
                         'ip', '-4', 'addr', 'flush', 'dev', dev_name])
 
-        print "Install ipa-server master ipv6"
+        print "Install ipa-server master ipv6 only"
         cmd1 = multihost.master.run_command([
-            'ipa-server-install', '--setup-dns',
-            '--no-forwarders',
+            'ipa-server-install',
+            '--setup-dns', '--no-forwarders',
             '--domain', multihost.master.domain.name,
             '--realm', multihost.master.domain.realm,
             '--hostname', multihost.master.hostname,
             '--ip-address', master_ip_six,
-            '--admin-password', multihost.master.config.admin_pw,
-            '--ds-password', multihost.master.config.dirman_pw,
+            '--auto-reverse',
+            '-p', multihost.master.config.admin_pw,
+            '-a', multihost.master.config.admin_pw,
             '-U'])
-        print "Prepare replica"""
-        cmd2 = multihost.master.run_command([
-            'ipa-replica-prepare',
-            '--ip-address', replica_ip_six,
-            '--password', multihost.master.config.dirman_pw,
-            multihost.replica.hostname])
-        prepfile = '/var/lib/ipa/replica-info-' + \
-                   multihost.replica.hostname + '.gpg'
-        localfile = '/tmp/replica.file.tmp'
-        multihost.master.transport.get_file(prepfile, localfile)
-        multihost.replica.transport.put_file(localfile, prepfile)
-        print "Install replica with file"
+        print "Prepare replica - install client"
+        multihost.master.kinit_as_admin()
+        multihost.master.run_command([
+            'ipa',
+            'dnsconfig-mod',
+            '--allow-sync-ptr=true'])
+        cmd2 = multihost.replica.run_command([
+            'ipa-client-install',
+            '--principal', 'admin',
+            '--password', multihost.master.config.admin_pw,
+            '--force-join',
+            '--ip-address=' + replica_ip_six,
+            '-U'])
+        print "Install replica - promote to replica"
         cmd3 = multihost.replica.run_command([
             'ipa-replica-install',
             '--setup-dns',
             '--no-forwarders',
             '--admin-password', multihost.master.config.admin_pw,
             '--password', multihost.master.config.dirman_pw,
-            '-U', prepfile])
+            '-U'])
+
         print "Prepare client"
         cmd4 = multihost.client.run_command([
             'ip', 'addr', 'add', client_ip_six_two, 'dev', nic_client_device])
