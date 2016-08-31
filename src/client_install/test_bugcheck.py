@@ -103,8 +103,7 @@ class TestBugCheck(object):
         else:
             print("IPA service is running, continuing")
             setup_client(multihost.client, multihost.master)
-            check6 = multihost.client.qerun(['ls', '/etc/ipa/'],
-                                            exp_output='default.conf')
+            check6 = multihost.client.run_command(['ls', '/etc/ipa/default.conf'])
             if check6.returncode == 0:
                 print("IPA client is installed, BZ1215200 and BZ1211708 PASSED")
             else:
