@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 from subprocess import call
 import pytest
 from ipa_pytests.qe_install import uninstall_server, \
@@ -18,7 +16,7 @@ class TestIPv6Tests(object):
     def class_setup(self, multihost):
 
         print "changing variables"
-        multihost.master.ip = master_ip_six
+        multihost.master.ip = master_ip_six 
         multihost.master.external_hostname = master_ip_six
         multihost.replica.ip = replica_ip_six
         multihost.replica.external_hostname = replica_ip_six
@@ -56,25 +54,27 @@ class TestIPv6Tests(object):
         """
         IDM-IPA-TC: IPV6: Install ipa-server replica
         """
-        print "Prepare replica file"
-        prepare = multihost.master.run_command([
-            'ipa-replica-prepare',
-            '--ip-address=' + multihost.replica.ip,
-            '--password', multihost.master.config.dirman_pw,
-            multihost.replica.hostname])
-        prepfile = '/var/lib/ipa/replica-info-' + multihost.replica.hostname \
-            + '.gpg'
-        localfile = '/tmp/replica.file.tmp'
-        multihost.master.transport.get_file(prepfile, localfile)
-        multihost.replica.transport.put_file(localfile, prepfile)
-        print "Install replica with file"
-        cmd = multihost.replica.run_command([
+        print "Prepare replica - install client"
+        multihost.master.kinit_as_admin()
+        multihost.master.run_command([
+            'ipa',
+            'dnsconfig-mod',
+            '--allow-sync-ptr=true'])
+        cmd2 = multihost.replica.run_command([
+            'ipa-client-install',
+            '--principal', 'admin',
+            '--password', multihost.master.config.admin_pw,
+            '--force-join',
+            '--ip-address=' + replica_ip_six,
+            '-U'])
+        print "Install replica - promote"
+        cmd3 = multihost.replica.run_command([
             'ipa-replica-install',
             '--setup-dns',
             '--no-forwarders',
             '--admin-password', multihost.master.config.admin_pw,
             '--password', multihost.master.config.dirman_pw,
-            '-U', prepfile])
+            '-U'])
 
     def test_ipv6_0003(self, multihost):
         """
