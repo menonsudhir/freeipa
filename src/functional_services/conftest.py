@@ -11,6 +11,7 @@ import pytest
 from ipa_pytests.qe_class import multihost  # pylint: disable=unused-import
 from ipa_pytests.qe_class import qe_use_class_setup  # pylint: disable=unused-import
 from ipa_pytests.functional_services import setup_lib
+from ipa_pytests.qe_class import pytest_runtest_makereport
 
 
 def pytest_namespace():
