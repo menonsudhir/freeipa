@@ -340,11 +340,8 @@ def pytest_runtest_makereport(item, call, __multicall__):  # pylint: disable=unu
             if "@Title:" in line:
                 tc_name = line.strip().replace("@Title: ", "", 1)
                 break
-    else:
-        # if we don't have a docstring, we will default to simple name
-        # this should be the last element in the nodeid with :: as delimiter
-        tc_name = rep.nodeid.split('::')[-1]
-    rep.nodeid = tc_name
+        rep.nodeid = '::'.join(rep.nodeid.split('::')[0:-1]) + \
+                     '::' + tc_name
     return rep
 
 
