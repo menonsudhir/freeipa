@@ -23,7 +23,7 @@ def kinit_as_user(host, user, passwd):
     host.run_command('kdestroy -A')
     host.run_command(['kinit', user], stdin_text=passwd)
     cmd = host.run_command('klist')
-    print (cmd.stdout_text)
+    print(cmd.stdout_text)
 
 
 def qerun(host, command, stdin_text=None, exp_returncode=0, exp_output=None):
@@ -31,21 +31,21 @@ def qerun(host, command, stdin_text=None, exp_returncode=0, exp_output=None):
     cmd = host.run_command(command, stdin_text, raiseonerr=False)
     cmd.stdout_text.rstrip()
 
-    print ("RETURNCODE:----")
-    print ("GOT: ", cmd.returncode)
-    print ("EXPECTED: ", exp_returncode)
+    print("RETURNCODE:----")
+    print("GOT: ", cmd.returncode)
+    print("EXPECTED: ", exp_returncode)
     if cmd.returncode != exp_returncode:
         pytest.xfail("returncode mismatch.")
 
-    print ("OUTPUT:--------")
-    print ("GOT: ", cmd.stdout_text)
-    print ("EXPECTED: ", exp_output)
+    print("OUTPUT:--------")
+    print("GOT: ", cmd.stdout_text)
+    print("EXPECTED: ", exp_output)
     if exp_output is None:
-        print ("Not checking expected output")
+        print("Not checking expected output")
     elif exp_output not in cmd.stdout_text:
         pytest.xfail("expected output not found")
 
-    print ("COMMAND SUCCEEDED!")
+    print("COMMAND SUCCEEDED!")
 
 
 def qe_http_get(url):
@@ -229,7 +229,7 @@ def get_domain_level(host):
                           cmd.stdout_text, re.MULTILINE)
         domain_level = found.group('level')
     except StandardError as errval:
-        print ("Unable to run domainlevel-get command: %s" % errval)
+        print("Unable to run domainlevel-get command: %s" % errval)
         domain_level = 0
     return int(domain_level)
 
@@ -258,3 +258,25 @@ def sssd_cache_reset(host):
     host.run_command('rm -rf /var/lib/sss/db/*', set_env=True)
     host.run_command('rm -rf /var/lib/sss/mc/*', set_env=True)
     service_control(host, 'sssd', 'start')
+
+
+def start_firewalld(host):
+    """
+    Helper function to start firewalld
+    :param host: hostname
+    :return:
+    """
+    print("Starting Firewalld")
+    for i in ['enable', 'start']:
+        service_control(host, 'firewalld', i)
+
+
+def stop_firewalld(host):
+    """
+    Helper function to stop firewalld
+    :param host: hostname
+    :return:
+    """
+    print("Stopping Firewalld")
+    for i in ['disable', 'stop']:
+        service_control(host, 'firewalld', i)

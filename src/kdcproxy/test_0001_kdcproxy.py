@@ -3,10 +3,12 @@ This is a quick test for KDCProxy
 """
 import pytest
 from ipa_pytests.qe_class import multihost
-from ipa_pytests.shared.user_utils import add_ipa_user
-from ipa_pytests.shared.utils import service_control
+from ipa_pytests.shared.user_utils import add_ipa_user, del_ipa_user
+from ipa_pytests.shared.utils import (service_control, start_firewalld,
+                                      stop_firewalld)
 from lib import (update_krbv_conf, revert_krbv_conf,
                  change_user_passwd, pwpolicy_mod)
+import time
 
 
 class TestKdcproxy(object):
@@ -14,7 +16,7 @@ class TestKdcproxy(object):
     def class_setup(self, multihost):
         """ Setup for class """
         multihost.client = multihost.clients[0]
-        multihost.realm = multihost.master.domain.realm
+        multihost.realm = multihost.master.domain.name
 
         print("Using following hosts for KDCProxy testcases")
         print("*" * 80)
@@ -34,6 +36,9 @@ class TestKdcproxy(object):
                                                multihost.password,
                                                multihost.password)
         pwpolicy_mod(multihost, '--minlife=0')
+        multihost.master.kinit_as_admin()
+        # 1. Add IPA user
+        add_ipa_user(multihost.master, multihost.testuser, multihost.password)
 
     def test_0001_kdcproxy(self, multihost):
         """
@@ -41,12 +46,18 @@ class TestKdcproxy(object):
         IPA-TC: KDCProxy: Modify client krb5.conf for KDC Proxy,
                           Run kinit / kvno / kpasswd
         """
+        # stop Firewalld on both server
+        stop_firewalld(multihost.master)
+        stop_firewalld(multihost.replica)
+
         multihost.master.kinit_as_admin()
-        # 1. Add IPA user
-        add_ipa_user(multihost.master, multihost.testuser, multihost.password)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 2. Update /etc/krb5.conf with KdcProxy route
         update_krbv_conf(multihost)
+        # Automation for BZ1362537
+        proxy_file = '/etc/httpd/conf.d/ipa-kdc-proxy.conf'
+        if not multihost.master.transport.file_exists(proxy_file):
+            pytest.xfail("BZ1362537 Found")
         multihost.client.kinit_as_user(multihost.testuser, multihost.password)
         # 3. Run klist as User
         multihost.client.qerun(['klist'], exp_returncode=0)
@@ -71,6 +82,9 @@ class TestKdcproxy(object):
                           Modify client krb5.conf for KDC Proxy
                           Run kinit / kvno / kpasswd
         """
+        # 0. Pre-requisite
+        stop_firewalld(multihost.master)
+        stop_firewalld(multihost.replica)
         # 1. Disable kdcproxy on server using ipa-ldap-updater
         multihost.master.qerun(['/usr/sbin/ipa-ldap-updater',
                                 '/usr/share/ipa/kdcproxy-disable.uldif'],
@@ -124,9 +138,8 @@ class TestKdcproxy(object):
                           Run kinit / kvno / kpasswd
         """
         # 1. Enable Firewalld
-        service_control(multihost.master, 'firewalld', 'enable')
-        # 2. Start Firewalld
-        service_control(multihost.master, 'firewalld', 'start')
+        start_firewalld(multihost.master)
+        start_firewalld(multihost.replica)
         service_control(multihost.client, 'sssd', 'restart')
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 3. Run kinit
@@ -149,7 +162,8 @@ class TestKdcproxy(object):
         multihost.client.qerun(['kpasswd', multihost.testuser],
                                exp_returncode=1)
         # Clean up
-        service_control(multihost.master, 'firewalld', 'stop')
+        stop_firewalld(multihost.master)
+        stop_firewalld(multihost.replica)
 
     def test_0004_kdcproxy_multiple_replica(self, multihost):
         '''
@@ -157,6 +171,9 @@ class TestKdcproxy(object):
         IPA-TC: KDCProxy: Modify client krb5.conf with multiple kdc
                           Run kinit / kvno / kpasswd
         '''
+        # 0. Pre-requisite
+        stop_firewalld(multihost.master)
+        stop_firewalld(multihost.replica)
         # 1. Revert client krb5
         revert_krbv_conf(multihost)
         # 2. Update krb5 with multiple replica
@@ -187,13 +204,17 @@ class TestKdcproxy(object):
                           Modify client krb5.conf with multiple kdc
                           Run kinit / kvno / kpasswd
         '''
+        # 0. Pre-requisite
+        stop_firewalld(multihost.master)
+        stop_firewalld(multihost.replica)
         # 1. Revert client krb5
         revert_krbv_conf(multihost)
         # 2. Update krb5 with multiple replica
         update_krbv_conf(multihost, replica=True)
         # 3. Enable and start firewall on Master server
-        service_control(multihost.master, 'firewalld', 'enable')
-        service_control(multihost.master, 'firewalld', 'start')
+        start_firewalld(multihost.master)
+        # Sleep for 20 seconds
+        time.sleep(20)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 4. Run kinit
         multihost.client.kinit_as_user(multihost.testuser, multihost.password)
@@ -213,7 +234,7 @@ class TestKdcproxy(object):
                            multihost.testuser,
                            multihost.repasswd)
         # Cleanup
-        service_control(multihost.master, 'firewalld', 'stop')
+        stop_firewalld(multihost.master)
 
     def test_0006_kdcproxy_no_http_anchors(self, multihost):
         '''
@@ -221,6 +242,9 @@ class TestKdcproxy(object):
         IPA-TC: KDCProxy: Modify client krb5.conf with no http_anchors
                           Run kinit/kvno/kpasswd
         '''
+        # 0. Pre-requisite
+        stop_firewalld(multihost.master)
+        stop_firewalld(multihost.replica)
         # 1. Revert client krb5.conf
         revert_krbv_conf(multihost)
         # 2. Modify client krb5.conf for http_anchors
@@ -251,6 +275,9 @@ class TestKdcproxy(object):
                           And not in system store
                           Run kinit/kvno/kpasswd
         '''
+        # 0. Pre-requisite
+        stop_firewalld(multihost.master)
+        stop_firewalld(multihost.replica)
         # 1. Revert client Krb5.conf
         revert_krbv_conf(multihost)
         # 2. Remove http_anchors from system restore
@@ -288,6 +315,9 @@ class TestKdcproxy(object):
                           to PEM file, trust anchor in the system store
                           Run kinit/kvno/kpasswd
         '''
+        # 0. Pre-requisite
+        stop_firewalld(multihost.master)
+        stop_firewalld(multihost.replica)
         # 1. Revert client krb5.conf
         revert_krbv_conf(multihost)
         # 2. Update client krb5.conf using correct PEM file
@@ -319,6 +349,9 @@ class TestKdcproxy(object):
                           system store
                           Run kinit/kvno/kpasswd
         '''
+        # 0. Pre-requisite
+        stop_firewalld(multihost.master)
+        stop_firewalld(multihost.replica)
         # 1. Revert Client krb5.conf
         revert_krbv_conf(multihost)
         # 2. Modify Client krb5.conf using non-existent PEM file
@@ -352,10 +385,14 @@ class TestKdcproxy(object):
                           system store
                           Run kinit/kvno/kpasswd
         """
+        # 0. Pre-requisite
+        stop_firewalld(multihost.replica)
+        stop_firewalld(multihost.master)
         # 1. Revert Client krb5.conf
         revert_krbv_conf(multihost)
         # 2. Modify Client krb5.conf using non-existent PEM file
-        update_krbv_conf(multihost, httpanchor='FILE:/etc/pki/tls/certs/ca-bundle.crt')
+        httpanchorfile = 'FILE:/etc/pki/tls/certs/ca-bundle.crt'
+        update_krbv_conf(multihost, httpanchor=httpanchorfile)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 3. Run kinit
         cmd = multihost.client.run_command(['kinit', multihost.testuser],
@@ -391,19 +428,23 @@ class TestKdcproxy(object):
                           Modify client krb5.conf for KDC Proxy
                           Run kinit / kvno / kpasswd
         """
+        stop_firewalld(multihost.replica)
+        stop_firewalld(multihost.master)
         # 1. Revert client krb5.conf
         revert_krbv_conf(multihost)
         # 2. Modify client krb5.conf
         update_krbv_conf(multihost)
         # 3. Enable Firewalld
-        service_control(multihost.master, 'firewalld', 'enable')
+        start_firewalld(multihost.replica)
+        start_firewalld(multihost.master)
         # 4. Start Firewalld and unblock 80 and 443
-        service_control(multihost.master, 'firewalld', 'start')
         for port in ['80', '443']:
-            multihost.master.qerun(['iptables', '-I', 'INPUT',
-                                    '-p', 'tcp', '--dport', port,
-                                    '-j', 'ACCEPT'],
+            multihost.master.qerun(['firewall-cmd', '--permanent',
+                                   '--add-port=' + port + '/tcp'],
                                    exp_returncode=0)
+            multihost.master.qerun(['firewall-cmd', '--reload'],
+                                   exp_returncode=0)
+
         service_control(multihost.client, 'sssd', 'restart')
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 5. Run kinit
@@ -431,12 +472,18 @@ class TestKdcproxy(object):
                            multihost.repasswd)
         # 9. Clean up
         for port in ['80', '443']:
-            multihost.master.qerun(['iptables', '-D', 'INPUT',
-                                    '-p', 'tcp', '--dport', port,
-                                    '-j', 'ACCEPT'],
+            multihost.master.qerun(['firewall-cmd', '--permanent',
+                                   '--remove-port=' + port + '/tcp'],
                                    exp_returncode=0)
-        service_control(multihost.master, 'firewalld', 'stop')
+            multihost.master.qerun(['firewall-cmd', '--reload'],
+                                   exp_returncode=0)
+        stop_firewalld(multihost.master)
+        stop_firewalld(multihost.replica)
 
     def class_teardown(self, multihost):
         """ Teardown for class """
         print("Class teardown for KDCProxy")
+        pwpolicy_mod(multihost, '--minlife=20')
+        del_ipa_user(multihost.master, multihost.testuser)
+        cfg = '/etc/krb5.conf'
+        multihost.client.qerun(['mv', cfg + ".bak", cfg], exp_returncode=0)

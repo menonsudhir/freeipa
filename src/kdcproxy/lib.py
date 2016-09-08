@@ -23,16 +23,19 @@ def update_krbv_conf(multihost, replica=False, httpanchor=None):
     krbvcfg = re.sub('admin_server = ' + multihost.master.hostname +
                      ':749',
                      'admin_server = https://' + multihost.master.hostname +
-                     '/KdcProxy\nkpasswd_server = https://' +
-                     multihost.master.hostname + '/KdcProxy', krbvcfg)
+                     '/KdcProxy', krbvcfg)
+    krbvcfg = re.sub('kpasswd_server = ' + multihost.master.hostname +
+                     ':464',
+                     'kpasswd_server = https://' + multihost.master.hostname +
+                     '/KdcProxy', krbvcfg)
     if replica:
         krbvcfg = re.sub('default_domain = ' + multihost.realm,
-                         'kdc = https://' + multihost.replica.hostname +
-                         '/KdcProxy\nadmin_server = https://' +
+                         '\tkdc = https://' + multihost.replica.hostname +
+                         '/KdcProxy\n\tadmin_server = https://' +
                          multihost.replica.hostname + '/KdcProxy\n' +
-                         'kpasswd_server = https://' +
+                         '\tkpasswd_server = https://' +
                          multihost.replica.hostname + '/KdcProxy\n' +
-                         'default_domain = ' + multihost.realm, krbvcfg)
+                         '\tdefault_domain = ' + multihost.realm, krbvcfg)
     if httpanchor:
         krbvcfg = re.sub('default_domain = ' + multihost.realm,
                          'default_domain = ' + multihost.realm +
