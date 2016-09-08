@@ -110,12 +110,9 @@ class Testmaster(object):
         multihost.master.run_command('easy_install pip')
         multihost.master.qerun('pip', 'install', 'pssh')
         multihost.master.kinit_as_admin()
-        multihost.master.run_command('ipa-replica-manage list | grep -v ' + multihost.master.hostname+,
-                                     '> /tmp/list.txt')
-        multihost.master.run_command('cat /tmp/list.txt | cut -d":" -f1',
-                                     '> /tmp/list1.txt')
-        multihost.master.run_command('while read line; do echo "$line:22"; done < /tmp/list1.txt',
-                                     '> /tmp/list2.txt')
+        multihost.master.run_command('ipa-replica-manage list | grep -v ' + multihost.master.hostname + '> /tmp/list.txt')
+        multihost.master.run_command('cat /tmp/list.txt | cut -d":" -f1 > /tmp/list1.txt')
+        multihost.master.run_command('while read line; do echo "$line:22"; done < /tmp/list1.txt > /tmp/list2.txt')
         print "------------------------------------------------------------"
         print "Testing if command executes on all systems"
         print "------------------------------------------------------------"
