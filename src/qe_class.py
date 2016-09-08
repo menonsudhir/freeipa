@@ -334,15 +334,17 @@ def pytest_runtest_makereport(item, call, __multicall__):  # pylint: disable=unu
             newrep.when = "call"
             log_test_phase_results(newrep)
 
-    if rep.when == "call":
-        # Pylint: disable=W0212
+    if item._obj.__doc__:  # pylint: disable=protected-access
         tc_name = item._obj.__doc__.strip().split('\n')[0]  # pylint: disable=protected-access
         for line in item._obj.__doc__.strip().split('\n'):  # pylint: disable=protected-access
-            if "@Test:" in line:
-                tc_name = line.strip().replace("@Test: ", "", 1)
+            if "@Title:" in line:
+                tc_name = line.strip().replace("@Title: ", "", 1)
                 break
-        rep.nodeid = tc_name
-
+    else:
+        # if we don't have a docstring, we will default to simple name
+        # this should be the last element in the nodeid with :: as delimiter
+        tc_name = rep.nodeid.split('::')[-1]
+    rep.nodeid = tc_name
     return rep
 
 
