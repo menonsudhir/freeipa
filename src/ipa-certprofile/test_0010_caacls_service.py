@@ -176,6 +176,31 @@ class TestCaAclService(object):
         data['op'] = 'del'
         caacl_run(data)
 
+    def test_bz1366626_caacls_fail_to_add_nonexistent_service(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add non-existent service to acl
+        """
+        service = 'bz1366626/' + multihost.master.hostname + \
+                  '@' + multihost.master.domain.realm
+
+        cname = 'testacl_bz1366626'
+        data = {'host': multihost.master,
+                'op': 'add',
+                cname: '',
+                'exp_code': '0'}
+        caacl_run(data)
+
+        data['op'] = 'add-service'
+        data['services'] = service
+        data['exp_code'] = '1'
+        data['exp_output'] = service + ': no such entry'
+        caacl_run(data)
+
+        data['op'] = 'del'
+        data['exp_code'] = '0'
+        data['exp_output'] = None
+        caacl_run(data)
+
     def class_teardown(self, multihost):
         """ Class teardown for caacls service """
         multihost.master.run_command(['rm', '-rf', multihost.tempdir],
