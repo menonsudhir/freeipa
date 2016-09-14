@@ -119,7 +119,7 @@ def setup_master(master, setup_reverse=True):
                         'bind-pkcs11-utils'])
 
     print_time()
-    cmdstr = ['ipa-server-install',
+    runcmd = ['ipa-server-install',
               '--setup-dns',
               '--forwarder', master.config.dns_forwarder,
               '--domain', master.domain.name,
@@ -310,16 +310,16 @@ def uninstall_server(host):
     the standard server uninstall command.
     """
     if host.transport.file_exists('/etc/ipa/default.conf'):
-        cmdstr = ['ipa-server-install',
+        runcmd = ['ipa-server-install',
                   '--uninstall',
                   '-U']
-        cmd = host.run_command(cmdstr, raiseonerr=False)
+        cmd = host.run_command(runcmd, raiseonerr=False)
         print("Uninstalling IPA server on machine [%s]" % host.hostname)
         print("STDOUT: %s" % cmd.stdout_text)
         print("STDERR: %s" % cmd.stderr_text)
         if cmd.returncode != 0:
             raise ValueError("%s failed with error "
-                             "code=%s" % (" ".join(cmdstr), cmd.returncode))
+                             "code=%s" % (" ".join(runcmd), cmd.returncode))
     else:
         print("/etc/ipa/default.conf not found...skipped --uninstall")
 
@@ -330,40 +330,40 @@ def uninstall_client(host):
     uninstall command.
     """
     if host.transport.file_exists('/etc/ipa/default.conf'):
-        cmdstr = ['ipa-client-install', '--uninstall', '-U']
-        cmd = host.run_command(cmdstr, raiseonerr=False)
-        print("Running command: %s" % " ".join(cmdstr))
+        runcmd = ['ipa-client-install', '--uninstall', '-U']
+        cmd = host.run_command(runcmd, raiseonerr=False)
+        print("Running command: %s" % " ".join(runcmd))
         print("STDOUT: %s" % cmd.stdout_text)
         print("STDERR: %s" % cmd.stderr_text)
         if cmd.returncode == 2:
             print("Client not installed")
         elif cmd.returncode != 0:
             raise ValueError("Command [%s] failed with error "
-                             "code=%s" % (" ".join(cmdstr), cmd.returncode))
+                             "code=%s" % (" ".join(runcmd), cmd.returncode))
     else:
         print("/etc/ipa/default.conf not found...skipped --uninstall")
 
 
 def adtrust_install(host):
     """ Prepare an IPA server to establish trust relationships with AD """
-    cmdstr = 'rpm -q ipa-server-trust-ad'
-    print("Running command: %s" % cmdstr)
-    cmd = host.run_command(cmdstr, raiseonerr=False)
+    runcmd = 'rpm -q ipa-server-trust-ad'
+    print("Running command: %s" % runcmd)
+    cmd = host.run_command(runcmd, raiseonerr=False)
     print("STDOUT: %s" % cmd.stdout_text)
     print("STDERR: %s" % cmd.stderr_text)
     if 'package ipa-server-trust-ad is not installed' in cmd.stderr_text:
-        cmdstr = 'yum install -y ipa-server-trust-ad'
-        cmd = host.run_command(cmdstr, raiseonerr=False)
-        print("Running command: %s" % cmdstr)
+        runcmd = 'yum install -y ipa-server-trust-ad'
+        cmd = host.run_command(runcmd, raiseonerr=False)
+        print("Running command: %s" % runcmd)
         if cmd.returncode != 0:
             pytest.fail("Unable to install ipa-server-trust-ad RPM on master")
     else:
         netbios = (host.domain.realm).split(".")[0]
         print("NetBIOS name for master : %s " % netbios)
-        cmdstr = 'ipa-adtrust-install --netbios-name=' + netbios + \
+        runcmd = 'ipa-adtrust-install --netbios-name=' + netbios + \
                  ' -a ' + host.config.admin_pw + ' -U'
-        print("Running command: %s" % cmdstr)
-        cmd = host.run_command(cmdstr, raiseonerr=False)
+        print("Running command: %s" % runcmd)
+        cmd = host.run_command(runcmd, raiseonerr=False)
         print("STDOUT: %s" % cmd.stdout_text)
         print("STDERR: %s" % cmd.stderr_text)
         if cmd.returncode != 0:
