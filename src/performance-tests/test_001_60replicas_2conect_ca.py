@@ -6,8 +6,8 @@ import time
 import timeit
 import pytest
 import os
-import user_utils
-import utils
+import ipa_pytests.shared.user_utils
+import ipa_pytests.shared.utils
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_install import setup_master, setup_replica, uninstall_server
 
