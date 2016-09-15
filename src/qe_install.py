@@ -225,10 +225,7 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
 
     sleep(5)
     set_resolv_conf_to_master(replica, master)
-    params = ['ipa-replica-install',
-              '--admin-password', master.config.admin_pw,
-              '--password', master.config.dirman_pw,
-              '-U', prepfile]
+    params = ['ipa-replica-install', '-U']
 
     print_time()
     if setup_dns:
