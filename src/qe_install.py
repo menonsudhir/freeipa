@@ -4,6 +4,7 @@
 This provides the necessary functions to setup IPA Servers and Clients.
 """
 
+from __future__ import print_function
 import pytest
 import time
 import re
