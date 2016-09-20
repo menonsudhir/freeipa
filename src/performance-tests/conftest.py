@@ -3,7 +3,7 @@ import os
 from ipa_pytests.qe_install import setup_master, setup_replica, uninstall_server
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_class import qe_use_class_setup
-
+from ipa_pytests.shared.utils import service_control
 
 def pytest_namespace():
     """ Define the number of test host roles using namespace hook.

@@ -10,6 +10,7 @@ import ipa_pytests.shared.user_utils
 import ipa_pytests.shared.utils
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_install import setup_master, setup_replica, uninstall_server
+from ipa_pytests.shared.utils import service_control
 
 
 class Testmaster(object):
@@ -21,7 +22,7 @@ class Testmaster(object):
         resource_count = os.getenv("RESOURCE_COUNT", 5)
         replica_count = (int(resource_count) - 1)
         if replica_count <= 0:
-            pytest.xfail("No resources thus exiting")
+            pytest.xfail("Number of resources for replica is 0, thus exiting")
         print replica_count
         for i in range(replica_count):
             print"REPLICA:", multihost.replicas[i].hostname
@@ -29,7 +30,8 @@ class Testmaster(object):
     def test_user_add(self, multihost):
         for i in range(10001):
             user = 'user_'+str(i)
-            add_ipa_user(multihost.master, user, passwd=None, first='test', last=str(i))
+#            add_ipa_user(multihost.master, user, passwd=None, first='test', last=str(i))
+            multihost.master.run_command('ipa user-add'+ user +'--first=test --last=user --random', raiseonerr=False)
 
     def test_topology_two_connected_ca(self, multihost):
         """ Setup replica for two connected topology with CA, it assumes master is already installed."""
@@ -94,18 +96,6 @@ class Testmaster(object):
                                      '--rightnode=' + replica, suf, segment])
         print "Completed Final Topology for master and last replica"
 
-    def verify_replicas_connection_ca(self, mulithost):
-        multihost.master.kinit_as_admin()
-        cmd = multihost.master.run_command('ipa-replica-manage list | grep -v \"Directory\"')
-        print cmd.stdout_text
-        op1 = os.getenv("REPLICA_COUNT", 5)
-        multihost.master.kinit_as_admin()
-        op2 = multihost.master.run_command('ipa-replica-manage list | grep -v \"Directory\" | wc -l')
-        if op2 == op1:
-            print ('Connection successful')
-        else:
-            print ('Connection not successful')
-
     def test_topology_two_connected_prfm_wo_ca(self, multihost):
         multihost.master.run_command('easy_install pip')
         multihost.master.qerun('pip', 'install', 'pssh')
@@ -116,7 +106,7 @@ class Testmaster(object):
         print "------------------------------------------------------------"
         print "Testing if command executes on all systems"
         print "------------------------------------------------------------"
-        cmd = multihost.master.run_command('pssh -h /tmp/list2.txt -l root -A \"ipa user-find test_user3\"',
+        cmd = multihost.master.run_command('pssh -h /tmp/list2.txt -l root -A \"ipa user-find user_1\"',
                                            stdin_text='Secret123',
                                            raiseonerr=False)
         print cmd.stdout_text
@@ -126,6 +116,8 @@ class Testmaster(object):
         for i in range(replica_count):
             multihost.master.kinit_as_admin()
             replica = multihost.replicas[i].hostname
-            multihost.master.run_command('ipa replica-manage del', replica)
+            multihost.master.run_command('ipa replica-manage del -f', replica, raiseonerr=False)
+        for i in range(replica_count):
+            multihost.replicas[i].run_command('ipactl restart', raiseonerr=False)
             uninstall_server(multihost.replicas[i])
         pass
