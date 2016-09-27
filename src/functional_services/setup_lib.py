@@ -51,13 +51,13 @@ def setup_ipa_env(multihost):
 def _ipa_master(multihost):
     """ Install IPA Master """
     setup_master(multihost.master)
-    set_resolv_conf_add_server(multihost.master, multihost.replica.ip)
 
 
 def _ipa_replica(multihost):
     """ Install IPA Replica """
     setup_replica(multihost.replica, multihost.master)
     set_resolv_conf_add_server(multihost.replica, multihost.master.ip)
+    set_resolv_conf_add_server(multihost.master, multihost.replica.ip)
 
 
 def _ipa_client(multihost):
