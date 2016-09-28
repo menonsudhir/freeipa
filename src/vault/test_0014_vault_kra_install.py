@@ -5,6 +5,7 @@ Vault KRA Install tests
 # pylint: disable=too-many-public-methods,no-self-use,global-statement,too-many-statements
 
 import pytest
+from ipa_pytests.shared.utils import get_domain_level
 
 
 class TestVaultKRAInstall(object):
@@ -62,8 +63,10 @@ class TestVaultKRAInstall(object):
         """
         runcmd = ['ipa-kra-install', '-p', multihost.master.config.dirman_pw, '-U']
         multihost.master.qerun(runcmd)
-        replica_file = '/var/lib/ipa/replica-info-' + multihost.replica.hostname + '.gpg'
-        runcmd = ['ipa-kra-install', '-p', multihost.master.config.dirman_pw, '-U', replica_file]
+        domain_level = get_domain_level(multihost.master)
+        if domain_level == 0:
+            replica_file = '/var/lib/ipa/replica-info-' + multihost.replica.hostname + '.gpg'
+            runcmd.append(replica_file)
         multihost.replica.qerun(runcmd)
 
     @pytest.mark.skip(reason="Skipping due to bz1302127")

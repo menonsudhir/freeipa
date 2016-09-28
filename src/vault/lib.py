@@ -130,7 +130,8 @@ def find_vault_containers(host, vault_type='users'):
     """ function to find all containers based on type """
     instance = "-".join(host.domain.realm.split('.'))
     uri = 'ldapi://%2fvar%2frun%2fslapd-' + instance + '.socket'
-    search_base = 'cn=' + vault_type + ',cn=vaults,cn=kra,' + host.domain.basedn
+    search_base = 'cn=' + vault_type + ',cn=vaults,cn=kra,' + \
+                  host.domain.basedn.replace('"', '')
     search = ['ldapsearch', '-o', 'ldif-wrap=no', '-LLQ', '-H', uri, '-b', search_base, 'cn']
     cmd = host.run_command(search, raiseonerr=False)
 

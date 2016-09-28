@@ -44,13 +44,13 @@ class TestVaultMiscFunc(object):
 
         # check ldap for short service container dne
         cn = 'cn=' + service_short + ',cn=services,cn=vaults,cn=kra,' + \
-             multihost.master.domain.basedn
+             multihost.master.domain.basedn.replace('"', '')
         runcmd = ['ldapsearch', '-Y', 'GSSAPI', '-b', cn]
         multihost.master.qerun(runcmd, exp_returncode=32)
 
         # check ldap for long service container exists
         cn = 'cn=' + service_long + ',cn=services,cn=vaults,cn=kra,' + \
-             multihost.master.domain.basedn
+             multihost.master.domain.basedn.replace('"', '')
         runcmd = ['ldapsearch', '-Y', 'GSSAPI', '-b', cn]
         multihost.master.qerun(runcmd, exp_returncode=0)
 
