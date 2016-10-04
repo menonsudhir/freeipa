@@ -17,21 +17,6 @@ class Testmaster(object):
         print("\nClass Setup")
         print"MASTER: ", multihost.master.hostname
         print"CLIENT: ", multihost.client.hostname
-        contents = multihost.client.get_file_contents('/etc/sysconfig/docker')
-        multihost.client.put_file_contents('/etc/sysconfig/docker.orig',
-                                           contents)
-        multihost.client.transport.remove_file('/etc/sysconfig/docker')
-        docker_file='''# /etc/sysconfig/docker
-                    \nOPTIONS='--selinux-enabled'
-                    \nDOCKER_CERT_PATH=/etc/docker
-                    \nADD_REGISTRY='--add-registry registry.access.stage.redhat.com'
-                    \nINSECURE_REGISTRY='--insecure-registry registry.access.stage.redhat.com'
-                    \n"/etc/sysconfig/docker"'''
-        multihost.client.put_file_contents('/etc/sysconfig/docker',
-                                           docker_file)
-        cmd = multihost.client.run_command('systemctl restart docker')
-        print cmd.stdout_text
-        print cmd.stderr_text
 
     def test_0001(self, multihost):
         """Taking back up of resolv.conf in order to update it with
