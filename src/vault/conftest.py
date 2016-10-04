@@ -20,8 +20,7 @@ from .lib import safe_setup_replica
 from .lib import safe_setup_master_kra
 import data  # pylint: disable=relative-import
 
-# Leaving this import commented until we resolve xml formatting
-# from ipa_pytests.qe_class import pytest_runtest_makereport
+from ipa_pytests.qe_class import pytest_runtest_makereport
 
 
 def pytest_namespace():
