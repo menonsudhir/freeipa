@@ -17,6 +17,8 @@ from ipa_pytests.shared.qe_certutils import certutil
 from ipa_pytests.shared.utils import run_pk12util
 from ipa_pytests.shared.user_utils import add_ipa_user, del_ipa_user
 from ipa_pytests.shared.utils import get_domain_level
+from ipa_pytests.shared.utils import (start_firewalld,
+                                      stop_firewalld)
 
 
 class Testmaster(object):
@@ -171,6 +173,10 @@ class Testmaster(object):
         print("*" * 80)
         passwd = 'Secret123'
         seconds = 10
+        """Adding command to stop firewall service on master and replica"""
+        stop_firewalld(master1)
+        stop_firewalld(replica1)
+
 
         # Check IPA server rpm version
         print("\n1. checking IPA server rpm version")
