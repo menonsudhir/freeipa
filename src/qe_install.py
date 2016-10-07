@@ -8,7 +8,6 @@ from __future__ import print_function
 import pytest
 import time
 import re
-import time
 import ipa_pytests.shared.paths
 from ipa_pytests.shared.utils import service_control
 from ipa_pytests.shared.rpm_utils import list_rpms
@@ -48,6 +47,19 @@ def set_hostname(host):
         print("SYSCONFIG_NETWORK = \n%s" % contents)
         host.put_file_contents('/etc/sysconfig/network', contents)
         host.run_command(['hostname', host.hostname])
+
+
+def set_etc_hosts(host):
+    """ Set /etc/hosts entry for host.ip host.hostname """
+    etc_hosts = host.get_file_contents('/etc/hosts')
+    host.put_file_contents('/etc/hosts.set_etc_hosts.backup', etc_hosts)
+    for remove in [host.ip, host.hostname]:
+        etc_hosts = re.sub(r'^.*\b%s\n.*$' % remove,
+                           '',
+                           etc_hosts,
+                           flags=re.MULTILINE)
+    etc_hosts += '\n%s %s\n' % (host.ip, host.hostname)
+    host.put_file_contents('/etc/hosts', etc_hosts)
 
 
 def set_resolv_conf_to_master(host, master):
@@ -112,6 +124,7 @@ def setup_master(master, setup_reverse=True):
     list_rpms(master)
     disable_firewall(master)
     set_hostname(master)
+    set_etc_hosts(master)
     set_rngd(master)
 
     print_time()
@@ -201,6 +214,8 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
     disable_firewall(replica)
     print("Setting hostname")
     set_hostname(replica)
+    print("Setting /etc/hosts")
+    set_etc_hosts(replica)
     print("Setting up RNGD")
     set_rngd(replica)
     if setup_dns:
@@ -278,6 +293,7 @@ def setup_client(client, master, server=None, domain=None):
     list_rpms(client)
     disable_firewall(client)
     set_hostname(client)
+    set_etc_hosts(client)
     set_rngd(client)
     sleep(5)
     set_resolv_conf_to_master(client, master)
