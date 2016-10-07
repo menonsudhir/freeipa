@@ -138,8 +138,8 @@ def setup_master(master, setup_reverse=True):
               '--forwarder', master.config.dns_forwarder,
               '--domain', master.domain.name,
               '--realm', master.domain.realm,
-              '--hostname', master.hostname,
-              '--ip-address', master.ip,
+              # '--hostname', master.hostname,
+              # '--ip-address', master.ip,
               '--admin-password', master.config.admin_pw,
               '--ds-password', master.config.dirman_pw,
               # '--mkhomedir',
@@ -259,7 +259,7 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
     if setup_ca:
         params.append('--setup-ca')
 
-    params.extend(['--ip-address', replica.ip])
+    # params.extend(['--ip-address', replica.ip])
     params.extend(['--server', master.hostname])
     params.extend(['--domain', master.domain.name])
     params.extend(['--admin-password', master.config.admin_pw])
