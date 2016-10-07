@@ -174,9 +174,8 @@ class Testmaster(object):
         passwd = 'Secret123'
         seconds = 10
         """Adding command to stop firewall service on master and replica"""
-        stop_firewalld(master1)
-        stop_firewalld(replica1)
-
+        stop_firewalld(multihost.master)
+        stop_firewalld(multihost.replicas[0])
 
         # Check IPA server rpm version
         print("\n1. checking IPA server rpm version")
