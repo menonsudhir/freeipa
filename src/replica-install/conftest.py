@@ -1,6 +1,6 @@
 """ Conftest for replica install """
 import pytest
-
+from ipa_pytests.qe_install import setup_master, uninstall_server
 
 def pytest_namespace():
     """ Define the number of test host roles using namespace hook """
@@ -13,9 +13,15 @@ def pytest_namespace():
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_session(request, multihost):
-    multihost.replica = multihost.replicas[0]
+    try:
+        setup_master(multihost.master)
+        multihost.replica = multihost.replicas[0]
+
+    except StandardError as errval:
+        print("Error in setup_session %s" % (str(errval.args[0])))
+        pytest.skip("setup_session_skip")
 
     def teardown_session():
         """ define fixture for session level teardown """
-        pass
+        uninstall_server(multihost.master)
     request.addfinalizer(teardown_session)
