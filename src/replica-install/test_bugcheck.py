@@ -41,13 +41,10 @@ class TestBugCheck(object):
         """
         Testcase to validate IPA replica install parameters
         """
-        path = "/var/log/ipareplica-install.log"
+        cmd = "ipa-replica-install"
         string = "Configuration of client side components failed"
-        multihost.replicas[0].qerun(['ipa-replica-install'],
-                                      exp_returncode=1,
-                                      exp_output=string)
-        cmd = multihost.replicas[0].run_command(cmd, raiseonerr=False)
-        if cmd.returncode==1:
+        cmd1 = multihost.replicas[0].run_command(cmd, raiseonerr=False)
+        if cmd1.returncode==1 and string in cmd1.stderr_text:
            print "bz1283890 passed"
         else:
            print "bz1283890 failed"
