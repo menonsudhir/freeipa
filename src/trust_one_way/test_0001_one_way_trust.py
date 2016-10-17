@@ -4,7 +4,7 @@ This covers the test cases for one way trust feature
 
 from ipa_pytests.qe_class import qe_use_class_setup
 from ipa_pytests.shared.utils import (disable_dnssec, dnsforwardzone_add,
-                                      add_dnsforwarder)
+                                      add_dnsforwarder, sssd_cache_reset)
 from ipa_pytests.qe_install import adtrust_install
 import pytest
 import time
@@ -34,11 +34,12 @@ class TestOneWay(object):
 
         dnsforwardzone_add(multihost.master, forwardzone, ad1.ip)
 
-        add_dnsforwarder(ad1, domain, multihost.master.ip)
+        #add_dnsforwarder(ad1, domain, multihost.master.ip)
+        add_dnsforwarder(ad1, domain, multihost.master.external_ip)
 
         cmd = multihost.master.run_command('dig +short SRV _ldap._tcp.' +
                                            forwardzone, raiseonerr=False)
-        print cmd.stdout_text
+        print cmd.stdout_text, cmd.stderr_text
         if ad1.hostname in cmd.stdout_text:
             print("dns resolution passed for ad domain")
         else:
@@ -46,7 +47,7 @@ class TestOneWay(object):
         cmd = multihost.master.run_command('dig +short SRV @' + ad1.ip +
                                            ' _ldap._tcp.' + domain,
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print cmd.stdout_text, cmd.stderr_text
         if domain in cmd.stdout_text:
             print("dns resolution passed for ipa domain")
         else:
@@ -80,6 +81,7 @@ class TestOneWay(object):
         print cmd.stdout_text
         print "waiting for 60 seconds"
         time.sleep(60)
+        sssd_cache_reset(multihost.master)
         cmd = multihost.master.run_command(['id', aduser + '@' + forwardzone],
                                            raiseonerr=False)
         print cmd.stdout_text
