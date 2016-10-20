@@ -55,8 +55,7 @@ class TestOneWay(object):
 
     def test_001_one_way_trust_add(self, multihost):
         """
-        This test case add one way trust and checks it works
-        This also covers automation for bugzillas 1250190 and 1250135
+        @Title: IDM-IPA-TC: one way trust : one way trust addition and coverage of bzs 1250190 and 1250135
         """
         ad1 = multihost.ads[0]
         forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
@@ -223,10 +222,7 @@ class TestOneWay(object):
 
     def test_002_one_way_trust_add(self, multihost):
         """
-        This test case adds two way trust and checks it works after
-        one way has been added and removed. Also gets krb tkt for IPA
-        user from AD.
-        This also covers the bugzilla 1250135
+        @Title: IDM-IPA-TC: one way trust : two way trust addition and coverage of bz 1250135
         """
         ad1 = multihost.ads[0]
         forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
