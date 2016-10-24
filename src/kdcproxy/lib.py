@@ -29,16 +29,16 @@ def update_krbv_conf(multihost, replica=False, httpanchor=None):
                      'kpasswd_server = https://' + multihost.master.hostname +
                      '/KdcProxy', krbvcfg)
     if replica:
-        krbvcfg = re.sub('default_domain = ' + multihost.realm,
+        krbvcfg = re.sub('default_domain = ' + multihost.realm.lower(),
                          '\tkdc = https://' + multihost.replica.hostname +
                          '/KdcProxy\n\tadmin_server = https://' +
                          multihost.replica.hostname + '/KdcProxy\n' +
                          '\tkpasswd_server = https://' +
                          multihost.replica.hostname + '/KdcProxy\n' +
-                         '\tdefault_domain = ' + multihost.realm, krbvcfg)
+                         '\tdefault_domain = ' + multihost.realm.lower(), krbvcfg)
     if httpanchor:
-        krbvcfg = re.sub('default_domain = ' + multihost.realm,
-                         'default_domain = ' + multihost.realm +
+        krbvcfg = re.sub('default_domain = ' + multihost.realm.lower(),
+                         'default_domain = ' + multihost.realm.lower() +
                          '\nhttp_anchors = ' + httpanchor, krbvcfg)
 
     multihost.client.put_file_contents(cfgput, krbvcfg)

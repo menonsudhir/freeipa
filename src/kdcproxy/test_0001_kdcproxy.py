@@ -39,6 +39,7 @@ class TestKdcproxy(object):
         multihost.master.kinit_as_admin()
         # 1. Add IPA user
         add_ipa_user(multihost.master, multihost.testuser, multihost.password)
+        multihost.realm = multihost.realm.upper()
 
     def test_0001_kdcproxy(self, multihost):
         """
@@ -249,6 +250,9 @@ class TestKdcproxy(object):
         revert_krbv_conf(multihost)
         # 2. Modify client krb5.conf for http_anchors
         update_krbv_conf(multihost)
+        twentyseconds = 20
+        print("Sleeping for [{0}] seconds".format(twentyseconds))
+        time.sleep(twentyseconds)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 3. Run kinit
         multihost.client.kinit_as_user(multihost.testuser, multihost.password)
