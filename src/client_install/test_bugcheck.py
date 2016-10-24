@@ -132,6 +132,24 @@ class TestBugCheck(object):
         else:
             pytest.xfail("NTP server details not found, BZ1215197 FAILED")
 
+    def test_0005(self, multihost):
+        """Added automation for : bz1337484.
+        Bugzilla automation to verify ipa-client-install handles EOF
+        """
+        check_rpm(multihost.client, ['ipa-client'])
+        """Run ipa-client-install command with stdin as some text
+        """
+        cmd = multihost.client.run_command(['ipa-client-install'],
+                                           stdin_text='sample text',
+                                           raiseonerr=False)
+        output1 = 'EOFError: EOF when reading a line'
+        if output1 not in cmd.stdout_text:
+            print "bz1337484 doesnot exists"
+        elif output1 in cmd.stdout_text:
+            print "EOF is not handled for ipa-client-install command"
+        else:
+            pytest.xfail("FAIL")
+
     def class_teardown(self, multihost):
         """Full suite teardown """
         pass
