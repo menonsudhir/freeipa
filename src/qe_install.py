@@ -13,6 +13,7 @@ from ipa_pytests.shared.utils import service_control
 from ipa_pytests.shared.rpm_utils import list_rpms
 from ipa_pytests.shared.utils import get_domain_level
 from ipa_pytests.shared.utils import ipa_version_gte
+from ipa_pytests.shared.log_utils import backup_logs
 
 
 def disable_firewall(host):
@@ -159,6 +160,9 @@ def setup_master(master, setup_reverse=True):
     print("STDERR:", cmd.stderr_text)
     print_time()
     if cmd.returncode != 0:
+        backup_logs(master, ['/var/log/ipaserver-install.log',
+                             '/var/log/ipaclient-install.log',
+                             '/var/log/ipaupgrade.log'])
         raise ValueError("ipa-server-install failed with "
                          "error code=%s" % cmd.returncode)
 
@@ -277,6 +281,9 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
     print("STDERR: %s" % cmd.stderr_text)
     print_time()
     if cmd.returncode != 0:
+        backup_logs(replica, ['/var/log/ipareplica-install.log',
+                              '/var/log/ipaclient-install.log',
+                              '/var/log/ipareplica-conncheck.log'])
         raise ValueError("ipa-replica-install failed with "
                          "error code=%s" % cmd.returncode)
 
@@ -314,6 +321,7 @@ def setup_client(client, master, server=None, domain=None):
     print("STDERR:", cmd.stderr_text)
     print_time()
     if cmd.returncode != 0:
+        backup_logs(client, ['/var/log/ipaclient-install.log'])
         raise ValueError("ipa-client-install failed with "
                          "error code=%s" % cmd.returncode)
 
