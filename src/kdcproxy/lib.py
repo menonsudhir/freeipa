@@ -35,7 +35,8 @@ def update_krbv_conf(multihost, replica=False, httpanchor=None):
                          multihost.replica.hostname + '/KdcProxy\n' +
                          '\tkpasswd_server = https://' +
                          multihost.replica.hostname + '/KdcProxy\n' +
-                         '\tdefault_domain = ' + multihost.realm.lower(), krbvcfg)
+                         '\tdefault_domain = ' + multihost.realm.lower(),
+                         krbvcfg)
     if httpanchor:
         krbvcfg = re.sub('default_domain = ' + multihost.realm.lower(),
                          'default_domain = ' + multihost.realm.lower() +

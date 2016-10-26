@@ -16,7 +16,7 @@ class TestKdcproxy(object):
     def class_setup(self, multihost):
         """ Setup for class """
         multihost.client = multihost.clients[0]
-        multihost.realm = multihost.master.domain.name
+        multihost.realm = multihost.master.domain.realm
 
         print("Using following hosts for KDCProxy testcases")
         print("*" * 80)
@@ -39,7 +39,6 @@ class TestKdcproxy(object):
         multihost.master.kinit_as_admin()
         # 1. Add IPA user
         add_ipa_user(multihost.master, multihost.testuser, multihost.password)
-        multihost.realm = multihost.realm.upper()
 
     def test_0001_kdcproxy(self, multihost):
         """
