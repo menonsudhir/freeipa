@@ -25,3 +25,52 @@ def ipa_cert_request(host, csr_file, add=True, principal=None, profile_id=None, 
     if profile_id is not None:
         cmd_list.extend(['--profile-id', profile_id])
     host.run_command(cmd_list)
+
+
+def ipa_cert_show(host, serial, ca=None, out=None):  # pylint: disable=invalid-name
+    """
+    Show a cert in IPA.
+    :param host:  multihost host object
+    :param serial: string
+    :param ca: string
+    :param out: string
+    :return: string
+    """
+    cmd_list = ['ipa', 'cert-show', serial]
+    if ca:
+        cmd_list.extend(['--ca', ca])
+    if out:
+        cmd_list.extend(['--out', out])
+    cmd = host.run_command(cmd_list)
+    return cmd.stdout_text
+
+
+def ipa_cert_revoke(host, serial, reason=None, ca=None):  # pylint: disable=invalid-name
+    """
+    Revoke a cert in IPA.
+    :param host:  multihost host object
+    :param serial: string
+    :param reason: string
+    :param ca: string
+    :return: None
+    """
+    cmd_list = ['ipa', 'cert-revoke', serial]
+    if reason:
+        cmd_list.extend(['--revocation-reason', reason])
+    if ca:
+        cmd_list.extend(['--ca', ca])
+    host.run_command(cmd_list)
+
+
+def ipa_cert_remove_hold(host, serial, ca=None):  # pylint: disable=invalid-name
+    """
+    Remove a revoke hold on a cert in IPA.
+    :param host:  multihost host object
+    :param serial: string
+    :param ca: string
+    :return: None
+    """
+    cmd_list = ['ipa', 'cert-remove-hold', serial]
+    if ca:
+        cmd_list.extend(['--ca', ca])
+    host.run_command(cmd_list)
