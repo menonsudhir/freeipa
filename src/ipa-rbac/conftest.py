@@ -3,6 +3,7 @@ conftest to setup required fixtures needed by tests:
 - config for multihost plugin
 """
 
+from __future__ import print_function
 import pytest
 from ipa_pytests.qe_install import setup_master, uninstall_server
 
@@ -12,8 +13,10 @@ def setup_session(request, multihost):
     """ Setup session """
     try:
         setup_master(multihost.master)
-        multihost.master.yum_install(['expect'])
         print ("Setup done")
+        multihost.master.yum_install(['pexpect'])
+        multihost.master.kinit_as_admin()
+        multihost.master.qerun('ipa group-add groupone --desc=groupone', exp_returncode=0)
 
     except StandardError as errval:
         print("Error in setup_session %s" % (str(errval.args[0])))
