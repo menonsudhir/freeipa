@@ -12,12 +12,12 @@ import paths
 
 def list_rpms(host):
     """ list installed rpms """
-    cmd = host.run_command([paths.RPM, '-qa', '--last'])
-    rpmlog_file = "/var/log/rpm.list." + time.strftime('%H%M%S',
-                                                       time.localtime())
-    # print(cmd.stdout_text)
-    # print(cmd.stderr_text)
-    host.put_file_contents(rpmlog_file, cmd.stdout_text)
+    cmd = host.run_command([paths.RPM, '-qa', '--last'],
+                           raiseonerr=False)
+    if cmd.stdout_text:
+        rpmlog_file = "/var/log/rpm.list." + time.strftime('%H%M%S',
+                                                           time.localtime())
+        host.put_file_contents(rpmlog_file, cmd.stdout_text)
 
 
 def check_rpm(host, rpm_list):

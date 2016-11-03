@@ -130,10 +130,12 @@ def service_control(host, service, function):
         else:
             service_cmd = ['service', service, function]
 
-    print("service_control Running:  %s" % service_cmd)
+    print("service_control Running: [%s]" % " ".join(service_cmd))
     cmd = host.run_command(service_cmd, raiseonerr=False)
-    print("service_control STDOUT: %s " % cmd.stdout_text)
-    print("service_control STDERR: %s " % cmd.stderr_text)
+    if cmd.stdout_text:
+        print("service_control STDOUT: %s " % cmd.stdout_text)
+    if cmd.stderr_text:
+        print("service_control STDERR: %s " % cmd.stderr_text)
 
     return cmd
 
