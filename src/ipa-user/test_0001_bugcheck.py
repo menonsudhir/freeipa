@@ -8,6 +8,7 @@ IPA Client configured on RHEL7.2
 import pytest
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.user_utils import add_ipa_user, del_ipa_user, user_find
+from ipa_pytests.shared.utils import ldapmodify_cmd
 
 
 class Testipauserfind(object):
@@ -69,3 +70,50 @@ class Testipauserfind(object):
             del_ipa_user(multihost.master, testuser1)
             del_ipa_user(multihost.master, testuser2)
             pytest.fail("Failed to run user-find command")
+
+    def test_0004_bz1250110(self, multihost):
+        """
+        @Title: IDM-IPA-TC: ldap user search with denied object in filter
+        """
+        user1 = 'testuser1'
+        user2 = 'testuser2'
+        searchdn = 'cn=users,cn=accounts,' + multihost.master.domain.basedn.replace('"', '')
+        user1uid = 'uid=' + user1 + ',' + searchdn
+        userpass = 'TestP@ss123'
+        ldapadmin = 'cn=Directory Manager'
+        adminpass = multihost.master.config.dirman_pw
+        uri = 'ldap://' + multihost.master.hostname + ':389'
+        add_ipa_user(multihost.master, user1, userpass)
+        add_ipa_user(multihost.master, user2, userpass)
+        multihost.master.qerun(['ipa', 'user-mod', user2,
+                                '--phone=000-000-0000'])
+        ldif = 'dn: %s\n' \
+               'changetype: modify\n' \
+               'add: aci\n' \
+               'aci: (targetattr = "telephoneNumber")' \
+               '(version 3.0;acl "Deny TelephoneNumber";deny (read)' \
+               '(userdn = "ldap:///%s");)' % (searchdn, user1uid)
+        ldif_file = '/tmp/bz1250110.ldif'
+        multihost.master.put_file_contents(ldif_file, ldif)
+        ldapmodify_cmd(multihost.master, uri, ldapadmin, adminpass, ldif_file)
+        search_filter = '(|(cn=%s*)(telephonenumber=0*))' % user2
+        search = ['ldapsearch', '-x', '-D', user1uid, '-w', userpass,
+                  '-b', searchdn, search_filter, 'dn', 'cn', 'telephone']
+        exp_output = 'uid=%s' % user2
+        multihost.master.qerun(search, exp_output=exp_output)
+
+        del_ipa_user(multihost.master, user1)
+        del_ipa_user(multihost.master, user2)
+        ldif = 'dn: %s\n' \
+               'changetype: modify\n' \
+               'delete: aci\n' \
+               'aci: (targetattr = "telephoneNumber")' \
+               '(version 3.0;acl "Deny TelephoneNumber";deny (read)' \
+               '(userdn = "ldap:///%s");)' % (searchdn, user1uid)
+        ldif_file = '/tmp/bz1250110-del.ldif'
+        multihost.master.put_file_contents(ldif_file, ldif)
+        ldapmodify_cmd(multihost.master, uri, ldapadmin, adminpass, ldif_file)
+
+    def class_teardown(self, multihost):
+        """ Class Teardown """
+        pass
