@@ -5,6 +5,8 @@ SetUp Requirements:
 -Latest version of RHEL OS
 -Need to test for Master
 """
+
+from __future__ import print_function
 import pytest
 import time
 from ipa_pytests.qe_class import multihost
@@ -122,6 +124,37 @@ class TestBugCheck(object):
         multihost.master.qerun(['ipa', 'privilege-del', 'GoFetch'])
         multihost.master.qerun(['ipa', 'role-del', 'ITretrievers'])
         multihost.master.qerun(['ipa', 'host-del', test_host])
+
+    def test_0002_bz1366982(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Certifcates: User with retrieve perm cannot revoke
+        """
+        user = 'retrieve_cert'
+        password = 'Secret123'
+        subject = '/CN=' + user
+        csr_file = '/tmp/' + user + '.csr'
+        crt_file = '/tmp/' + user + '.crt'
+        out_file = '/tmp/' + user + '.crt'
+        add_ipa_user(multihost.master, user, password)
+        arg_list = ['req', '-subj', subject, '-nodes',
+                    '-new', '-newkey', 'rsa:2048',
+                    '-keyout', 'test.key',
+                    '-out', user + '.csr']
+        openssl_util(multihost.master, arg_list)
+        ipa_cert_request(multihost.master, csr_file, principal=user)
+        runcmd = ['ipa', 'user-show', user, '--out', crt_file]
+        multihost.master.qerun(runcmd)
+        runcmd = ['openssl', 'x509', '-serial', '-noout', '-in', crt_file]
+        cmd = multihost.master.run_command(runcmd)
+        serial = cmd.stdout_text.replace('serial=', '')
+        multihost.master.kinit_as_user(user, password)
+        ipa_cert_show(multihost.master, serial, out=out_file)
+        runcmd = ['file', out_file]
+        exp_output = "PEM certificate"
+        multihost.master.qerun(runcmd, exp_output=exp_output)
+        runcmd = ['ipa', 'cert-revoke', serial, '--revocation-reason=6']
+        exp_output = 'Insufficient access'
+        multihost.master.qerun(runcmd, exp_returncode=1 exp_output=exp_output)
 
     def class_teardown(self, multihost):
         """ Full suite teardown """
