@@ -12,6 +12,7 @@ import time
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.user_utils import add_ipa_user
 from ipa_pytests.shared.ipa_cert_utils import ipa_cert_request
+from ipa_pytests.shared.ipa_cert_utils import ipa_cert_show
 from ipa_pytests.shared.openssl_utils import openssl_util
 from ipa_pytests.shared.qe_certutils import certutil
 
@@ -154,7 +155,7 @@ class TestBugCheck(object):
         multihost.master.qerun(runcmd, exp_output=exp_output)
         runcmd = ['ipa', 'cert-revoke', serial, '--revocation-reason=6']
         exp_output = 'Insufficient access'
-        multihost.master.qerun(runcmd, exp_returncode=1 exp_output=exp_output)
+        multihost.master.qerun(runcmd, exp_returncode=1, exp_output=exp_output)
 
     def class_teardown(self, multihost):
         """ Full suite teardown """
