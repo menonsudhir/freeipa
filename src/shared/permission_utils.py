@@ -3,6 +3,8 @@ This is a support library that provides functions for IPA specific
 permissions - add, remove, search and modify permissions
 """
 
+import ipa_pytests.shared.paths as paths
+
 
 def permission_add(host, permission_name, options_list, raiseonerr=True):
     """
@@ -13,7 +15,7 @@ def permission_add(host, permission_name, options_list, raiseonerr=True):
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'permission-add', permission_name]
+    cmd_list = [paths.IPA, 'permission-add', permission_name]
     cmd_list.extend(options_list)
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
     return op
@@ -28,7 +30,7 @@ def permission_del(host, permission_name, options_list=None, raiseonerr=True):
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'permission-del']
+    cmd_list = [paths.IPA, 'permission-del']
     if permission_name:
         cmd_list.append(permission_name)
     if options_list:
@@ -47,7 +49,7 @@ def permission_show(host, permission_name, options_list=None, raiseonerr=True):
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'permission-show', permission_name]
+    cmd_list = [paths.IPA, 'permission-show', permission_name]
     if options_list:
         cmd_list.extend(options_list)
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
@@ -63,7 +65,7 @@ def permission_find(host, permission_name=None, options_list=None, raiseonerr=Tr
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'permission-find']
+    cmd_list = [paths.IPA, 'permission-find']
     if permission_name:
         cmd_list.append(permission_name)
     if options_list:
@@ -82,7 +84,7 @@ def permission_mod(host, permission_name, options_list, raiseonerr=True):
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'permission-mod', permission_name]
+    cmd_list = [paths.IPA, 'permission-mod', permission_name]
     cmd_list.extend(options_list)
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
     return op

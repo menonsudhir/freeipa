@@ -216,7 +216,8 @@ class TestBugCheck(object):
 
     def test_0011_bz816574(self, multihost):
         """
-        Test to verify Bug bz816574 - permission add should not throw internal server error when option
+        Test to verify Bug bz816574 - permission add should not throw internal server error when
+        option
         addattr or setattr is blank
         :param multihost:
         :return:
@@ -233,7 +234,6 @@ class TestBugCheck(object):
             print("Bug bz816574 Verified successfully - addattr")
         else:
             pytest.xfail("Bug bz816574 verification failed in addattr")
-
         check11a = permission_add(multihost.master, permission_name,
                                   ['--right=write',
                                    'type=hostgroup',

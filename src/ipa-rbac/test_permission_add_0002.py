@@ -101,10 +101,11 @@ class TestPermissionAddNegative(object):
         """
         multihost.master.kinit_as_admin()
         permission_name = "ManageUser5"
-        check5 = permission_add(multihost.master, permission_name, ['--right=read'
-                                                                    '--type=user',
-                                                                    '--attr=carlicense',
-                                                                    '--filter=(givenname=xyz)'],
+        check5 = permission_add(multihost.master, permission_name,
+                                ['--right=read'
+                                 '--type=user',
+                                 '--attr=carlicense',
+                                 '--filter=(givenname=xyz)'],
                                 False)
         if check5.returncode != 0:
             print("Success! permission-add with multiple targets type and filter failed")

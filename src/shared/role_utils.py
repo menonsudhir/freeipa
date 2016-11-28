@@ -3,6 +3,8 @@ This is a support library that provides functions for IPA specific
 roles - add, remove, search and modify roles
 """
 
+import ipa_pytests.shared.paths as paths
+
 
 def role_add(host, role_name, options_list=None, raiseonerr=True):
     """
@@ -13,8 +15,8 @@ def role_add(host, role_name, options_list=None, raiseonerr=True):
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'role-add', role_name]
-    if cmd_list:
+    cmd_list = [paths.IPA, 'role-add', role_name]
+    if options_list:
         cmd_list.extend(options_list)
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
     return op
@@ -28,7 +30,7 @@ def role_del(host, role_name, raiseonerr=True):
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'role-del', role_name]
+    cmd_list = [paths.IPA, 'role-del', role_name]
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
     return op
 
@@ -42,7 +44,7 @@ def role_show(host, role_name, options_list=None, raiseonerr=True):
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'role-show', role_name]
+    cmd_list = [paths.IPA, 'role-show', role_name]
     if options_list:
         cmd_list.extend(options_list)
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
@@ -58,7 +60,7 @@ def role_find(host, role_name=None, options_list=None, raiseonerr=True):
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'role-find']
+    cmd_list = [paths.IPA, 'role-find']
     if role_name:
         cmd_list.append(role_name)
     if options_list:
@@ -76,7 +78,7 @@ def role_mod(host, role_name, options_list, raiseonerr=True):
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'role-mod', role_name]
+    cmd_list = [paths.IPA, 'role-mod', role_name]
     cmd_list.extend(options_list)
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
     return op
@@ -91,7 +93,7 @@ def role_add_privilege(host, role_name, options_list, raiseonerr=True):
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'role-add-privilege', role_name]
+    cmd_list = [paths.IPA, 'role-add-privilege', role_name]
     cmd_list.extend(options_list)
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
     return op
@@ -106,7 +108,7 @@ def role_remove_privilege(host, role_name, options_list, raiseonerr=True):
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'role-remove-privilege', role_name]
+    cmd_list = [paths.IPA, 'role-remove-privilege', role_name]
     cmd_list.extend(options_list)
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
     return op
@@ -121,7 +123,7 @@ def role_add_member(host, role_name, options_list, raiseonerr=True):
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'role-add-member', role_name]
+    cmd_list = [paths.IPA, 'role-add-member', role_name]
     cmd_list.extend(options_list)
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
     return op
@@ -136,7 +138,7 @@ def role_remove_member(host, role_name, options_list, raiseonerr=True):
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
-    cmd_list = ['ipa', 'role-remove-member', role_name]
+    cmd_list = [paths.IPA, 'role-remove-member', role_name]
     cmd_list.extend(options_list)
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
     return op

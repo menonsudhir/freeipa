@@ -60,18 +60,20 @@ class TestPermissionAddPositive(object):
 
     def test_0003_multi_attr_multi_permissions_add_attr(self, multihost):
         """
-        Test to add permission for type user with multiple attr multiple permissions and add an attribute
+        Test to add permission for type user with multiple attr multiple permissions and add
+        an attribute
         :param multihost:
         :return:
         """
         permission_name = "ManageUser3"
         multihost.master.kinit_as_admin()
-        check3 = permission_add(multihost.master, permission_name, ['--addattr=description=test',
-                                                                    '--right=read',
-                                                                    '--right=write',
-                                                                    '--attr=carlicense',
-                                                                    '--attr=description',
-                                                                    '--type=user'])
+        check3 = permission_add(multihost.master, permission_name,
+                                ['--addattr=description=test',
+                                 '--right=read',
+                                 '--right=write',
+                                 '--attr=carlicense',
+                                 '--attr=description',
+                                 '--type=user'])
         if check3.returncode == 0:
             print("Permission " + permission_name + " added successfully")
             permission_del(multihost.master, permission_name)
@@ -81,7 +83,8 @@ class TestPermissionAddPositive(object):
 
     def test_0004_multi_attr_multi_permissions_set_attr(self, multihost):
         """
-        Test to add permission for type user with multiple attr multiple permissions and set an attribute
+        Test to add permission for type user with multiple attr multiple permissions and set
+        an attribute
         :param multihost:
         :return:
         """
@@ -135,7 +138,8 @@ class TestPermissionAddPositive(object):
                                 ['--attr=member',
                                  '--right=write',
                                  '--type=user',
-                                 '--filter=(&(!(objectclass=posixgroup))(objectclass=ipausergroup))'])
+                                 '--filter='
+                                 '(&(!(objectclass=posixgroup))(objectclass=ipausergroup))'])
         if check6.returncode == 0:
             print("Permission " + permission_name + " added successfully")
             permission_del(multihost.master, permission_name)

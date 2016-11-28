@@ -9,7 +9,8 @@ SetUp Requirements:
 from __future__ import print_function
 import pytest
 from ipa_pytests.qe_class import multihost  # pylint: disable=unused-import
-from ipa_pytests.shared.permission_utils import permission_add, permission_del, permission_find
+from ipa_pytests.shared.permission_utils import permission_add, permission_del
+from ipa_pytests.shared.permission_utils import permission_find
 
 
 class TestBugCheck(object):
@@ -46,7 +47,7 @@ class TestBugCheck(object):
         check12b = permission_find(multihost.master, None, ['--name=\\',
                                                             '--all'], False)
         if check12b.returncode != 0:
-            print ("Bug 785251 Verified")
+            print("Bug 785251 Verified")
         else:
             pytest.xfail("Bug verification 785251 Failed")
 
@@ -61,7 +62,7 @@ class TestBugCheck(object):
                                   options_list=['--right='+right,
                                                 '--all'], raiseonerr=False)
         if exp_output in check13.stdout_text:
-            print ("Success! Verified bz785257")
+            print("Success! Verified bz785257")
         else:
             pytest.xfail("verification of bz785257 failed")
 
@@ -80,15 +81,14 @@ class TestBugCheck(object):
                         '--subtree=cn=computers,cn=accounts,'
                         + multihost.master.domain.basedn.replace('"', ''),
                         '--memberof=groupone',
-                        '--attr=nshostlocation'
-                        ])
+                        '--attr=nshostlocation'])
         check14a = permission_find(multihost.master, permission_name=None,
-                                   options_list=['--subtree=cn=computers,cn=accounts,'
-                                                 + multihost.master.domain.basedn.replace('"', ''),
+                                   options_list=['--subtree=cn=computers,cn=accounts,' +
+                                                 multihost.master.domain.basedn.replace('"', ''),
                                                  '--all'])
         if permission_name in check14a.stdout_text and permission_name1 in check14a.stdout_text \
                 and permission_name2 in check14a.stdout_text:
-            print ("bz785254 verification successful")
+            print("bz785254 verification successful")
         else:
             pytest.xfail(permission_name + " not found, verification of bz785254 failed")
         permission_del(multihost.master, permission_name)
@@ -104,7 +104,7 @@ class TestBugCheck(object):
         check15 = permission_find(multihost.master, permission_name=None,
                                   options_list=['--targetgroup=ipausers', '--all'])
         if permission_name in check15.stdout_text:
-            print ("bz893827 verification successful")
+            print("bz893827 verification successful")
         else:
             pytest.xfail(permission_name + " not found, verification of bz893827 failed")
 
@@ -132,7 +132,7 @@ class TestBugCheck(object):
                                                  '--sizelimit=3',
                                                  '--all'])
         if "Number of entries returned 3" in check16a.stdout_text:
-            print ("bz785257 verified")
+            print("bz785257 verified")
         else:
             pytest.fail("Error in verification of bz785257")
         for perm in perm_array:
@@ -140,7 +140,7 @@ class TestBugCheck(object):
 
     def test_0017_bz785259(self, multihost):
         """
-        verify permission attrs after a find with option raw
+        Test to verify bz785259 - permission attrs after a find with option raw
         :param multihost:
         :return:
         """
@@ -155,7 +155,7 @@ class TestBugCheck(object):
         check17a = permission_find(multihost.master, permission_name=None,
                                    options_list=['--memberof=groupone', '--raw'])
         if permission_name in check17a.stdout_text:
-            print ("permissions are found for " + permission_name)
+            print("Verification of bz785259 successfull")
         else:
-            pytest.xfail("Error in permission-find verification")
+            pytest.xfail("Error in verification of bz785259")
         permission_del(multihost.master, permission_name)
