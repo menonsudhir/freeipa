@@ -3,6 +3,7 @@ This is a support library that provides functions for IPA specific
 permissions - add, remove, search and modify permissions
 """
 
+from __future__ import print_function
 import ipa_pytests.shared.paths as paths
 
 
@@ -35,7 +36,7 @@ def permission_del(host, permission_name, options_list=None, raiseonerr=True):
         cmd_list.append(permission_name)
     if options_list:
         cmd_list.extend(options_list)
-    print (" ".join(cmd_list))
+    print(" ".join(cmd_list))
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
     return op
 
@@ -70,7 +71,7 @@ def permission_find(host, permission_name=None, options_list=None, raiseonerr=Tr
         cmd_list.append(permission_name)
     if options_list:
         cmd_list.extend(options_list)
-    print (" ".join(cmd_list))
+    print(" ".join(cmd_list))
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
     return op
 

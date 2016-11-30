@@ -2,6 +2,7 @@
 "ipa user-* shared support utility functions
 """
 
+from __future__ import print_function
 import time
 import ipa_pytests.shared.paths as paths
 
