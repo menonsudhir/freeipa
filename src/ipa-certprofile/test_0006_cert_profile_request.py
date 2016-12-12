@@ -527,6 +527,120 @@ class TestCertProfileRequest(object):
                                exp_returncode=0)
         multihost.master.qerun(['ipa', 'caacl-del', cert_acl])
 
+    def test_bz1364197_request_svc_cert_as_svc(self, multihost):
+        """
+        @Title: IPA-IDM-TC: Certificate Profiles: Request service certificate as service
+        """
+        master1 = multihost.master
+        cpname = 'bz1364197_cert_profile'
+        caacl = 'bz1364197_caacl'
+        bzprofile_cfg = multihost.tempdir + 'bz1364197_profile.cfg'
+        bzhost = {}
+        domain = multihost.master.domain.name
+        openssl_file = multihost.tempdir + 'bz1364197_openssl.cfg'
+        service_csr = multihost.tempdir + 'bz1364197_openssl.csr'
+        keytab_file = multihost.tempdir + 'bz1364197_service2.keytab'
+
+        # Kinit as admin
+        master1.kinit_as_admin()
+
+        # Add reverse dnszone for test hosts
+        master1.qerun(['ipa', 'dnszone-add', '73.168.192.in-addr.arpa.',
+                       '--skip-overlap-check'])
+
+        # Add hosts 1 and 2 and services 1 and 2
+        for i in [1, 2]:
+            bzhost[i] = {'name': 'bz1364197-master{}.{}'.format(i, domain),
+                         'ip': '192.168.73.20{}'.format(i)}
+            master1.qerun(['ipa', 'host-add', bzhost[i]['name'],
+                           '--ip-address', bzhost[i]['ip']])
+            master1.qerun(['ipa', 'service-add',
+                           'svc/{}'.format(bzhost[i]['name'])])
+
+        # add host2 to manage service1
+        master1.qerun(['ipa', 'service-add-host',
+                       'svc/{}'.format(bzhost[1]['name']),
+                       '--hosts', bzhost[2]['name']])
+
+        # Get template config from default profile
+        data = {'host': master1,
+                'caIPAserviceCert': '',
+                'out': bzprofile_cfg}
+        certprofile_run(data)
+
+        # Create cert profile config file
+        cert_data = {'host': master1,
+                     'name': cpname,
+                     'desc': cpname + '_cert',
+                     'cacert': bzprofile_cfg,
+                     'opfile': bzprofile_cfg}
+        create_cert_cfg(cert_data)
+
+        # Import a newly create profile config file
+        data = {'host': master1,
+                'store': 'True',
+                cpname: '',
+                'desc': cert_data['desc'],
+                'file': bzprofile_cfg,
+                'exp_code': '0',
+                'op': 'import'}
+        certprofile_run(data)
+
+        # Create CAACL for profile
+        master1.qerun(['ipa', 'caacl-add', caacl])
+        master1.qerun(['ipa', 'caacl-add-ca', caacl,
+                       '--cas', 'ipa'])
+        master1.qerun(['ipa', 'caacl-add-profile', caacl,
+                       '--certprofiles', cpname])
+        master1.qerun(['ipa', 'caacl-add-host', caacl,
+                       '--hosts', bzhost[2]['name']])
+        master1.qerun(['ipa', 'caacl-add-service', caacl,
+                       '--services', 'svc/' + bzhost[2]['name'],
+                       '--services', 'svc/' + bzhost[1]['name']])
+
+        # Create config for cert request
+        openssl_cfg = "[req]\n" \
+                      "default_bits = 2048\n" \
+                      "distinguished_name = req_distinguished_name\n" \
+                      "req_extensions = v3_req\n" \
+                      "prompt = no\nencrypt_key = no\n" \
+                      "[req_distinguished_name]\n" \
+                      "commonName = %s\n" \
+                      "[ v3_req ]\n" \
+                      "basicConstraints = CA:FALSE\n" \
+                      "keyUsage = nonRepudiation, digitalSignature, keyEncipherment\n" \
+                      "subjectAltName = @alt_names\n" \
+                      "[alt_names]\n" \
+                      "DNS.1 = %s\n" \
+                      "DNS.2 = %s\n" % (bzhost[2]['name'],
+                                        bzhost[2]['name'],
+                                        bzhost[1]['name'])
+        master1.put_file_contents(openssl_file, openssl_cfg)
+
+        # Create CSR with openssl
+        master1.qerun(['openssl', 'req', '-out', service_csr,
+                       '-new', '-nodes', '-config', openssl_file])
+
+        # Get keytab and kinit as host2
+        master1.qerun(['ipa-getkeytab', '-p', 'host/' + bzhost[2]['name'],
+                       '-k', keytab_file])
+        master1.qerun(['kinit', '-kt', keytab_file,
+                       'host/' + bzhost[2]['name']])
+
+        # Submit CSR to IPA as service2
+        master1.qerun(['ipa', 'cert-request', service_csr,
+                       '--profile-id', cpname,
+                       '--principal', 'svc/' + bzhost[2]['name']])
+
+        master1.kinit_as_admin()
+        master1.qerun(['ipa', 'caacl-del', caacl])
+        for i in [1, 2]:
+            master1.qerun(['ipa', 'service-del', 'svc/' + bzhost[i]['name']])
+            master1.qerun(['ipa', 'host-del', bzhost[i]['name'], '--updatedns'])
+        master1.qerun(['ipa', 'dnszone-del', '73.168.192.in-addr.arpa.'])
+        data['op'] = 'del'
+        certprofile_run(data)
+
     def class_teardown(self, multihost):
         """ class teardown for Cert Profile Request """
         print("Running tear down for cert profile request")
