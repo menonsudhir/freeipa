@@ -11,6 +11,9 @@ import pytest
 from ipa_pytests.qe_class import multihost  # pylint: disable=unused-import
 from ipa_pytests.shared.permission_utils import permission_add, permission_del
 from ipa_pytests.shared.permission_utils import permission_show, permission_mod
+from ipa_pytests.shared.privilege_utils import privilege_add, privilege_del
+from ipa_pytests.shared.privilege_utils import privilege_find, privilege_remove_permission
+from ipa_pytests.shared.privilege_utils import privilege_add_permission, privilege_show
 
 
 class TestBugCheck(object):
@@ -97,3 +100,94 @@ class TestBugCheck(object):
         else:
             pytest.xfail("verification of bz837357 failed")
         permission_del(multihost.master, permission_name)
+
+    def test_0021_bz742327_bz893186_bz997085(self, multihost):
+        """
+        Function to verify bz742327, bz893186, bz997085: Check IPA provided Privileges have
+        assigned Permissions
+        :return:
+        """
+        multihost.master.kinit_as_admin()
+        check21a = privilege_find(multihost.master)
+        if check21a is not None:
+            check21a = check21a.stdout_text.split("\n")
+        for line in check21a:
+            if "Privilege name" in line:
+                privilege_name = line.split(":")[1].strip()
+                check21c = privilege_show(multihost.master, privilege_name, ['--all'])
+                if "Permissions:" not in check21c.stdout_text:
+                    pytest.fail(privilege_name + " doesn't have any permission")
+
+    def test_0022_bz816574(self, multihost):
+        """
+        Test to verify bz816574 - add privilege with blank setattr should work
+        :param multihost:
+        :return:
+        """
+        privilege_name = "Add User with blank attr"
+        privilege_desc = "--desc=Add User with blank attr"
+        attr = "--setattr="
+        privilege_add(multihost.master, privilege_name,
+                      [privilege_desc,
+                       attr])
+        privilege_del(multihost.master, privilege_name)
+
+    def test_0023_bz955699(self, multihost):
+        """
+        Test to verify bz955699 - Host administrator privilege should have certificate access
+        :param multihost:
+        :return:
+        """
+        privilege_name = "Host Administrators"
+        check23 = privilege_show(multihost.master, privilege_name)
+        check23a = "Revoke Certificate"
+        check23b = "Retrieve Certificates from the CA"
+        if check23a not in check23.stdout_text or check23b not in check23.stdout_text:
+            print(check23.stdout_text)
+            pytest.fail("Verification of bz955699 failed")
+
+    def test_0024_bz816624(self, multihost):
+        """
+        Test to verify bz816624 - add blank permission to privilege shouldn't throw internal error
+        :param multihost:
+        :return:
+        """
+        privilege_name = "Add User"
+        expmsg = "Number of permissions added 0"
+        privilege_add(multihost.master, privilege_name)
+        check24 = privilege_add_permission(multihost.master, privilege_name,
+                                           ['--permission='],
+                                           False)
+        if expmsg not in check24.stdout_text:
+            print(check24.stderr_text)
+            pytest.fail("Verification of bz816624 failed")
+        privilege_del(multihost.master, privilege_name)
+
+    def test_0025_bz797916(self, multihost):
+        """
+        Test to verify bz797916 - Should be able to remove the permission from the privilege
+        :param multihost:
+        :return:
+        """
+        privilege_name = "HBAC Administrator"
+        permission_name = "System: Add HBAC Rule"
+        check25 = privilege_remove_permission(multihost.master, privilege_name,
+                                              ['--permission='+permission_name])
+        if permission_name in check25.stdout_text:
+            pytest.fail("Verification of bz797916 failed")
+        privilege_add_permission(multihost.master, privilege_name,
+                                 ['--permission='+permission_name])
+
+    def test_0026_bz816624(self, multihost):
+        """
+        Test to verify bz816624 - remove blank permission from privilege should
+        not throw internal error
+        :param multihost:
+        :return:
+        """
+        privilege_name = "HBAC Administrator"
+        expmsg = "Number of permissions removed 0"
+        check26 = privilege_remove_permission(multihost.master, privilege_name,
+                                              ["--permission="])
+        if expmsg not in check26.stdout_text:
+            pytest.fail("Verification of bz816624 failed")

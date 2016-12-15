@@ -22,7 +22,7 @@ def role_add(host, role_name, options_list=None, raiseonerr=True):
     return op
 
 
-def role_del(host, role_name, raiseonerr=True):
+def role_del(host, role_name, options_list=None, raiseonerr=True):
     """
     Function to delete a role
     :param host:
@@ -31,6 +31,8 @@ def role_del(host, role_name, raiseonerr=True):
     :return:
     """
     cmd_list = [paths.IPA, 'role-del', role_name]
+    if options_list:
+        cmd_list.extend(options_list)
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
     return op
 

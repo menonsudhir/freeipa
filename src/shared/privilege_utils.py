@@ -22,15 +22,18 @@ def privilege_add(host, privilege_name, options_list=None, raiseonerr=True):
     return op
 
 
-def privilege_del(host, privilege_name, raiseonerr=True):
+def privilege_del(host, privilege_name, options_list=None, raiseonerr=True):
     """
     Function to delete a privilege
     :param host:
     :param privilege_name: string
+    :param options_list: list of all the options
     :param raiseonerr: boolean - False for negative testcases
     :return:
     """
     cmd_list = [paths.IPA, 'privilege-del', privilege_name]
+    if options_list:
+        cmd_list.extend(options_list)
     op = host.run_command(cmd_list, raiseonerr=raiseonerr)
     return op
 
