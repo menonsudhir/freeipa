@@ -504,7 +504,7 @@ class TestCertProfileRequest(object):
                       "part1 = " \
                       "GeneralString:%s\n" % (multihost.testuser,
                                               subjectAltName,
-                                              multihost.master.domain.name,
+                                              multihost.master.domain.realm,
                                               multihost.testuser)
 
         multihost.master.put_file_contents(openssl_file, openssl_cfg)

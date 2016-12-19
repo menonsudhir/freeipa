@@ -116,8 +116,8 @@ def caacl_run(options=None):
                 if isinstance(hosts, str):
                     cmd.append('--hosts=' + hosts)
                 elif isinstance(hosts, list):
-                    for host in hosts:
-                        cmd.append('--hosts=' + host)
+                    for h in hosts:
+                        cmd.append('--hosts=' + h)
             elif (op == 'add-host' or op == 'remove-host') and hostgroups is not None:
                 if isinstance(hostgroups, str):
                     cmd.append('--hostgroup=' + hostgroups)
