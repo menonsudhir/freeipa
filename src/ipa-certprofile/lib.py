@@ -1,3 +1,4 @@
+from __future__ import print_function
 import re
 import os
 import pytest
@@ -44,11 +45,9 @@ def certprofile_run(options=None):
 
     if exp_output is not None:
         print("Expected output : %s" % (exp_output))
-        if cmd.stdout_text and exp_output not in cmd.stdout_text:
+        all_out = cmd.stdout_text + cmd.stderr_text
+        if all_out and exp_output not in all_out:
             print("Returned stdout : %s" % (cmd.stdout_text))
-            pytest.xfail("Return code matched but failed to verify "
-                         "command output")
-        if cmd.stderr_text and exp_output not in cmd.stderr_text:
             print("Returned stderr : %s" % (cmd.stderr_text))
             pytest.xfail("Return code matched but failed to verify "
                          "command output")
@@ -164,11 +163,9 @@ def caacl_run(options=None):
 
     if exp_output is not None:
         print("Expected output : %s" % (exp_output))
-        if cmd.stdout_text and exp_output not in cmd.stdout_text:
+        all_out = cmd.stdout_text + cmd.stderr_text
+        if all_out and exp_output not in all_out:
             print("Returned stdout : %s" % (cmd.stdout_text))
-            pytest.xfail("Return code matched but failed to verify "
-                         "command output")
-        if cmd.stderr_text and exp_output not in cmd.stderr_text:
             print("Returned stderr : %s" % (cmd.stderr_text))
             pytest.xfail("Return code matched but failed to verify "
                          "command output")
