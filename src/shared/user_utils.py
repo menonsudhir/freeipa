@@ -28,7 +28,7 @@ def add_ipa_user(host, user, passwd=None, first=None, last=None, options=None,
         for opt in options.keys():
             cmd.extend(['--' + opt, options[opt]])
 
-    print("Runngin command : " + " ".join(cmd))
+    print("Running command : " + " ".join(cmd))
     op = host.run_command(cmd, stdin_text="Passw0rd1", raiseonerr=raiseonerr)
     if op.returncode == 0:
         host.run_command(['kdestroy', '-A'])
@@ -40,6 +40,21 @@ def add_ipa_user(host, user, passwd=None, first=None, last=None, options=None,
     return op
 
 
+def add_ipa_group(host, groupname, gid=None, nonposix=None, external=None, desc=None):
+    """Add a ipa group """
+    cmd_list = ['ipa', 'group-add', groupname]
+    if gid is not None:
+       cmd_list.append('--gid=' + gid)
+    if nonposix is not None:
+       cmd_list.append(--nonposix)
+    if external is not None:
+       cmd_list.append(--external)
+    if desc is not None:
+       cmd_list.append('--desc=' +desc)
+    check = host.run_command(cmd_list, raiseonerr=False)
+    return check
+
+    
 def del_ipa_user(host, username, preserve=False, skip_err=False):
     """
     Helper function to delete IPA user

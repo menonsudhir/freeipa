@@ -35,6 +35,15 @@ class QeConfig(pytest_multihost.config.Config):
                        'dns_forwarder': '',
                        'chrome_browser': '',
                        'browser': '',
+                       'dns_forwarder': '',
+                       'net_name': '',
+                       'ad_top_domain' : '',
+                       'ad_sub_domain' : '',
+                       'ad_ip': '',
+                       'ad_sub_ip': '',
+                       'ad_user': '',
+                       'ad_pwd': '',
+                       'ad_hostname': '',
                        'virtualdisplay': 0}
 
     def __init__(self, **kwargs):
@@ -46,10 +55,19 @@ class QeConfig(pytest_multihost.config.Config):
         self.admin_pw = kwargs.get('admin_pw', 'Secret123')
         self.dirman_id = kwargs.get('dirman_id', '"cn=Directory Manager"')
         self.dirman_pw = kwargs.get('dirman_pw', 'Secret123')
-        self.dns_forwarder = kwargs.get('dns_forwarder', '8.8.8.8')
+        self.dns_forwarder = kwargs.get('dns_forwarder', '10.76.33.206')
         self.chrome_browser = kwargs.get('chrome_browser', '/usr/bin/google-chrome')
         self.browser = kwargs.get('browser', 'firefox')
         self.virtualdisplay = kwargs.get('virtualdisplay', 0)
+        self.net_name = kwargs.get('net_name', 'TESTRELM')
+        self.ad_top_domain = kwargs.get('ad_top_domain', 'abc.test')
+        self.ad_sub_domain = kwargs.get('ad_sub_domain', 'chd.abc.test')
+        self.ad_ip = kwargs.get('ad_ip', '7.7.7.7')
+        self.ad_subip = kwargs.get('ad_subip', '8.8.8.8')
+        self.ad_user = kwargs.get('ad_user', 'Administrator')
+        self.ad_pwd = kwargs.get('ad_pwd', 'Secret123')
+        self.ad_hostname = kwargs.get('ad_hostname', 'host.abc.test')
+        self.ad_sub_hostname = kwargs.get('ad_sub_hostname', 'subhost.abc.test')
 
     def get_domain_class(self):
         """
