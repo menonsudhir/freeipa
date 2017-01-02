@@ -1,0 +1,327 @@
+""" Authentication Indicators Test Suite """
+import otp_lib as lib
+from ipa_pytests.shared.user_utils import mod_ipa_user
+from ipa_pytests.shared.service_utils import service_mod, service_show
+from ipa_pytests.shared.host_utils import host_mod
+from ipa_pytests.shared.rpm_utils import check_rpm
+import time
+
+TUSER = 'tuser01'
+TESTUSER = 'tuser02'
+INFOUSER = 'info'
+RADUSER = 'raduser01'
+RADPASS = 'testing123'
+SERVICENAME = ''
+OTP = ''
+NEW_HOST = ''
+REPOFILE = '/etc/yum.repos.d/repo-extra.repo'
+EXTRAREPO = "http://file.rdu.redhat.com/~spoore/idmqe-extras/7Server/x86_64/"
+
+
+class TestAuthIndent(object):
+    """ Authentication Identification test """
+
+    def test000(self, multihost):
+        """Setup"""
+        multihost.master.kinit_as_admin()
+        global SERVICENAME
+        SERVICENAME = "%s/%s@%s" % (
+            'DNS', multihost.master.hostname,
+            multihost.master.domain.realm)
+        global NEW_HOST
+        NEW_HOST = 'another01.' + multihost.master.domain.realm
+        lib.add_user(multihost, TUSER)
+        new_repo_file = "name=scotts\n" + \
+            "baseurl=" + EXTRAREPO + "\n" + \
+            "gpgcheck=0\n" + \
+            "enabled=1\n"
+        multihost.master.run_command(['touch', REPOFILE])
+        multihost.master.transport.put_file_contents(
+            REPOFILE, new_repo_file)
+        multithost.master.run_command(['yum', 'update', '-y'])
+        check_rpm(multihost.master, ['oathtool'])
+
+    def test001(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Add another authentication indicators for existing service
+        @casecomponent: ipa
+        """
+        print('\nServicename global : ')
+        print(SERVICENAME)
+        multihost.master.kinit_as_admin()
+        print("%s mod" % SERVICENAME)
+        service_mod(multihost.master, SERVICENAME, {'auth-ind': 'otp'})
+        print("%s mod done" % SERVICENAME)
+        cmd = service_show(multihost.master, SERVICENAME)
+        assert "otp" in cmd.stdout_text
+        print(SERVICENAME + " mod")
+        cmd1 = service_mod(
+            multihost.master,
+            SERVICENAME,
+            {'auth-ind': ['otp', 'radius']})
+        assert any(x in cmd1.stdout_text for x in ("otp", "radius"))
+
+    def test002(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Access service only with sufficient otp authentication
+        @casecomponent: ipa
+        """
+        multihost.master.kinit_as_admin()
+        print("\nAdd token")
+        token_key = lib.add_token(multihost, TUSER)
+        global OTP
+        OTP = lib.otp_key_convert(lib.get_otp_key(token_key))
+        service_mod(multihost.master, SERVICENAME, {'auth-ind': 'otp'})
+        mod_ipa_user(
+            multihost.master, TUSER,
+            ['--user-auth-type=otp',
+             '--user-auth-type=password',
+             '--user-auth-type=radius'])
+        multihost.master.kinit_as_user(
+            TUSER, multihost.master.config.admin_pw)
+        multihost.master.qerun([
+            'kvno', SERVICENAME
+            ], exp_returncode=1)
+        krb_cache = lib.get_krb_cache(multihost, INFOUSER)
+        password = multihost.master.config.admin_pw + lib.get_otp(OTP)
+        time.sleep(3)
+        print("kinit as %s with password + token" % TUSER)
+        multihost.master.run_command([
+            'kinit', '-T', krb_cache, TUSER
+            ], stdin_text=password)
+        multihost.master.run_command([
+            'kvno', SERVICENAME])
+        multihost.master.kinit_as_admin()
+        service_mod(
+            multihost.master,
+            SERVICENAME,
+            {'auth-ind': ['otp', 'radius', 'password']})
+
+    def test003(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Add multiple authentication indicator for service and try to access with different authentication types users(otpuser and radiususer)
+        @casecomponent: ipa
+        """
+        print("\nAdd radius user and setup server")
+        lib.prepare_radiusd(multihost, RADUSER)
+        lib.add_user(multihost, RADUSER)
+        radpassword = "%s\n%s" % (RADPASS, RADPASS)
+        multihost.master.run_command([
+            'ipa', 'radiusproxy-add', 'testproxy01', '--server=127.0.0.1'
+            ], stdin_text=radpassword)
+        mod_ipa_user(
+            multihost.master, RADUSER,
+            ['--radius=testproxy01'
+             '--user-auth-type=radius'])
+        mod_ipa_user(
+            multihost.master, RADUSER,
+            ['--user-auth-type=radius'])
+        service_mod(multihost.master, SERVICENAME, {'auth-ind': 'radius'})
+        password = multihost.master.config.admin_pw
+        krb_cache = lib.get_krb_cache(multihost, INFOUSER)
+        multihost.master.run_command([
+            'kinit', '-T', krb_cache, RADUSER
+            ], stdin_text=password)
+        multihost.master.run_command([
+            'kvno', SERVICENAME])
+        multihost.master.kinit_as_admin()
+        service_mod(
+            multihost.master,
+            SERVICENAME,
+            {'auth-ind': ['otp', 'radius']})
+        password = multihost.master.config.admin_pw + lib.get_otp(OTP)
+        time.sleep(3)
+        krb_cache = lib.get_krb_cache(multihost, INFOUSER)
+        multihost.master.run_command([
+            'kinit', '-T', krb_cache, TUSER
+            ], stdin_text=password)
+        multihost.master.run_command([
+            'kvno', SERVICENAME])
+
+    def test004(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Add new authentication indicator for service and try to access with OTP and Radius authentication types users
+        @casecomponent: ipa
+        """
+        multihost.master.kinit_as_admin()
+        service_mod(multihost.master, SERVICENAME, {'auth-ind': 'otp'})
+        password = multihost.master.config.admin_pw
+        krb_cache = lib.get_krb_cache(multihost, INFOUSER)
+        multihost.master.run_command([
+            'kinit', '-T', krb_cache, RADUSER
+            ], stdin_text=password)
+        multihost.master.qerun([
+            'kvno', SERVICENAME
+            ], exp_returncode=1)
+        krb_cache = lib.get_krb_cache(multihost, INFOUSER)
+        time.sleep(3)
+        password = multihost.master.config.admin_pw + lib.get_otp(OTP)
+        time.sleep(3)
+        multihost.master.run_command([
+            'kinit', '-T', krb_cache, TUSER
+            ], stdin_text=password)
+        multihost.master.qerun([
+            'kvno', SERVICENAME
+            ], exp_returncode=1)
+
+    def test005(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Add authentication indicator with leading space
+        @casecomponent: ipa
+        """
+        multihost.master.kinit_as_admin()
+        cmd = mod_ipa_user(
+            multihost.master, TUSER,
+            ['--user-auth-type= otp'], raiseonerr=False)
+        assert cmd.returncode == 1
+
+    def test006(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Add authentication indicator with trailing space
+        @casecomponent: ipa
+        """
+        cmd = mod_ipa_user(
+            multihost.master, TUSER,
+            ['--user-auth-type=otp '], raiseonerr=False)
+        assert cmd.returncode == 1
+
+    def test007(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Add authentication indicator with capital letters (eg: OTP, RADIUS)
+        @casecomponent: ipa
+        """
+        cmd = mod_ipa_user(
+            multihost.master, TUSER,
+            ['--user-auth-type=OTP'], raiseonerr=False)
+        assert cmd.returncode == 1
+        cmd = mod_ipa_user(
+            multihost.master, TUSER,
+            ['--user-auth-type=RADIUS'], raiseonerr=False)
+        assert cmd.returncode == 1
+
+    def test008(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Try to access host with sufficient authentication
+        @casecomponent: ipa
+        """
+        host_mod(
+            multihost.master,
+            multihost.master.hostname,
+            {'auth-ind': 'radius'})
+        password = multihost.master.config.admin_pw
+        krb_cache = lib.get_krb_cache(multihost, INFOUSER)
+        multihost.master.run_command([
+            'kinit', '-T', krb_cache, RADUSER
+            ], stdin_text=password)
+        krb_cache = lib.get_krb_cache(multihost, INFOUSER, multihost.client)
+        multihost.client.run_command([
+            'kinit', '-T', krb_cache, RADUSER
+            ], stdin_text=password)
+        lib.ssh_test(multihost, RADUSER)
+
+    def test009(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Create new host entry with specified authentication indicator
+        @casecomponent: ipa
+        """
+        multihost.master.kinit_as_admin()
+        cmd = multihost.master.run_command([
+            'ipa', 'host-add',
+            '--auth-ind=otp',
+            '--force', NEW_HOST
+            ])
+        assert "otp" in cmd.stdout_text
+
+    def test010(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Update existing host entry to another authentication indicator
+        @casecomponent: ipa
+        """
+        cmd = host_mod(multihost.master, NEW_HOST, {'auth-ind': 'radius'})
+        assert "radius" in cmd.stdout_text
+
+    def test011(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Verify that both authentication indicators can be set for a host
+        @casecomponent: ipa
+        """
+        cmd = host_mod(
+            multihost.master,
+            NEW_HOST,
+            {'auth-ind': ['radius', 'otp']})
+        assert all(x in cmd.stdout_text for x in ("otp", "radius"))
+
+    def test012(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Remove authentication indicators form hosts
+        @casecomponent: ipa
+        """
+        cmd = host_mod(
+            multihost.master,
+            multihost.master.hostname,
+            {'auth-ind': ''})
+        assert not any(x in cmd.stdout_text for x in ("otp", "radius"))
+
+    def test013(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Access hosts without authentication indicators
+        @casecomponent: ipa
+        """
+        time.sleep(3)
+        multihost.client.kinit_as_user(
+            TUSER, multihost.master.config.admin_pw)
+        lib.ssh_test(multihost, TUSER)
+        lib.krb_destroy(multihost.client)
+        krb_cache = lib.get_krb_cache(multihost, INFOUSER, multihost.client)
+        password = multihost.master.config.admin_pw + lib.get_otp(OTP)
+        time.sleep(3)
+        multihost.client.run_command([
+            'kinit', '-T', krb_cache, TUSER
+            ], stdin_text=password)
+        lib.ssh_test(multihost, TUSER)
+
+    def test014(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Try to access host with insufficient authentication
+        @casecomponent: ipa
+        """
+        multihost.master.kinit_as_admin()
+        host_mod(
+            multihost.master,
+            multihost.master.hostname,
+            {'auth-ind': 'otp'})
+        lib.add_user(multihost, TESTUSER)
+        multihost.client.kinit_as_user(
+            TESTUSER, multihost.master.config.admin_pw)
+        lib.ssh_neg_test(multihost, TESTUSER)
+        lib.krb_destroy(multihost.client)
+        krb_cache = lib.get_krb_cache(multihost, INFOUSER, multihost.client)
+        time.sleep(3)
+        password = multihost.master.config.admin_pw + lib.get_otp(OTP)
+        time.sleep(3)
+        multihost.client.run_command([
+            'kinit', '-T', krb_cache, TUSER
+            ], stdin_text=password)
+        lib.ssh_test(multihost, TUSER)
+
+    def test015(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Add authentication indicator with special characters
+        @casecomponent: ipa
+        """
+        service_mod(multihost.master, SERVICENAME, {'auth-ind': '%@!#'})
+
+    def test016(self, multihost):
+        """
+        @Title: IDM-IPA-TC: Authentication Indicators: Modify existing service entry to different authentication indicator as user
+        @casecomponent: ipa
+        """
+        multihost.master.kinit_as_user(
+            INFOUSER,
+            multihost.master.config.admin_pw)
+        cmd = service_mod(
+            multihost.master,
+            SERVICENAME,
+            {'auth-ind': 'otp'},
+            raiseonerr=False)
+        assert cmd.returncode == 1
