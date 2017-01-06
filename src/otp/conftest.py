@@ -8,7 +8,7 @@ from __future__ import print_function
 import pytest
 from ipa_pytests.qe_install import setup_master
 from ipa_pytests.qe_class import multihost  # pylint: disable=unused-import
-
+from ipa_pytests.qe_class import qe_use_class_setup # pylint: disable=unused-import
 
 def pytest_namespace():
     """ Define the number of test host roles using namespace hook """
@@ -20,6 +20,8 @@ def pytest_namespace():
 @pytest.fixture(scope="session", autouse=True)
 def setup_session(request, multihost):
     """ Setup session """
+    multihost.password = "Secret123"
+    multihost.secret = 'Secret123'
     try:
         setup_master(multihost.master)
 

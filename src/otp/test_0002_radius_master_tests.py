@@ -23,7 +23,6 @@ class TestRadiusfunction(object):
 
         multihost.realm = multihost.master.domain.realm
         multihost.password = "testing123"
-        multihost.secret = 'Secret123'
         multihost.log = "/tmp/log_radius"
         raddb_bkp = multihost.master.get_file_contents('/etc/raddb/users')
         raddb_bkp_file = '/etc/raddb/users_automation_bkp'

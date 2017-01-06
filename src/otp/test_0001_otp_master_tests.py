@@ -17,7 +17,6 @@ class TestOTPfunction(object):
 
         # Common username and password for required testcases
         multihost.testuser = "mytestuser"
-        multihost.password = "Secret123"
         multihost.token = "deftoken"
 
     def test_otp_0002(self, multihost):

@@ -84,17 +84,15 @@ def add_radiusproxy(multihost):
     Add radius proxy server to new user
     """
     multihost.master.kinit_as_admin()
-    cmd = 'ipa radiusproxy-add  %s --server=127.0.0.1 ' % multihost.radiusproxy
-    proc = pexpect.spawn(cmd)
-    proc.logfile = open(multihost.log, "w")
-    proc.expect("Secret:")
-    proc.sendline(multihost.password)
-    proc.expect("Enter Secret again to verify:")
-    proc.sendline(multihost.password)
-    proc.expect('Added RADIUS proxy server "%s"' % multihost.radiusproxy)
-    proc.expect(pexpect.EOF)
-    print_output(multihost.log)
-    proc.close()
+    expect_script = 'set timeout 15\n'
+    expect_script += 'spawn ipa radiusproxy-add %s --server=127.0.0.1\n' % multihost.radiusproxy
+    expect_script += 'expect "Secret:"\n'
+    expect_script += 'send "%s\r"\n' % multihost.password
+    expect_script += 'expect "Enter Secret again to verify:"\n'
+    expect_script += 'send "%s\r"\n' % multihost.password
+    expect_script += 'expect "Added RADIUS proxy server*"\n'
+    expect_script += 'expect EOF\n'
+    output = multihost.master.expect(expect_script)
     print ("########### radius proxy added successfully ###########\n")
 
 
@@ -118,14 +116,12 @@ def user_login(multihost):
     multihost.master.qerun(
         ['kswitch', '-c', 'KEYRING:persistent:0:0'], exp_returncode=0)
     multihost.master.kinit_as_admin()
-    cmd = 'kinit -T KEYRING:persistent:0:0 %s ' % multihost.testuser
-    proc = pexpect.spawn(cmd)
-    proc.logfile = open(multihost.log, "w")
-    proc.expect("Enter OTP Token Value:")
-    proc.sendline(multihost.secret)
-    proc.expect(pexpect.EOF)
-    print_output(multihost.log)
-    proc.close()
+    expect_script = 'set timeout 15\n'
+    expect_script += 'spawn kinit -T KEYRING:persistent:0:0 %s\n' % multihost.testuser
+    expect_script += 'expect "Enter OTP Token Value:"\n'
+    expect_script += 'send "%s\r"\n' % multihost.secret
+    expect_script += 'expect EOF\n'
+    output = multihost.master.expect(expect_script)
     print ("\n########### User login successfully ###########\n")
 
 
@@ -137,27 +133,23 @@ def user_failed_login(multihost):
     multihost.master.qerun(
         ['kswitch', '-c', 'KEYRING:persistent:0:0'], exp_returncode=0)
     multihost.master.kinit_as_admin()
-    cmd1 = 'kinit -T KEYRING:persistent:0:0 %s ' % multihost.testuser
-    proc = pexpect.spawn(cmd1)
-    proc.logfile = open(multihost.log, "w")
-    proc.expect("Enter OTP Token Value:")
-    proc.sendline(multihost.secret)
-    proc.expect(multihost.expectederror)
-    print_output(multihost.log)
-    proc.close()
+    expect_script = 'set timeout 15\n'
+    expect_script += 'spawn kinit -T KEYRING:persistent:0:0 %s\n' % multihost.testuser
+    expect_script += 'expect "Enter OTP Token Value:"\n'
+    expect_script += 'send "%s\r"\n' % multihost.secret
+    expect_script += '%s\n' % multihost.expectederror
+    output = multihost.master.expect(expect_script)
 
 
 def verify_user_login(multihost):
     """
     Verify user login
     """
-    cmd = 'klist'
-    proc = pexpect.spawn(cmd)
-    proc.logfile = open(multihost.log, "w")
-    proc.expect('principal: %s' % multihost.testuser)
-    proc.expect(pexpect.EOF)
-    print_output(multihost.log)
-    proc.close()
+    expect_script = 'set timeout 15\n'
+    expect_script += 'spawn klist'
+    expect_script += 'expect principal: %s\n' % multihost.testuser
+    expect_script += 'expect EOF\n'
+    output = multihost.master.expect(expect_script)
     print ("\n########### kinit successfully ###########\n")
 
 
