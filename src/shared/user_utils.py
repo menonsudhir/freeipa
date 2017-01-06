@@ -44,17 +44,23 @@ def add_ipa_group(host, groupname, gid=None, nonposix=None, external=None, desc=
     """Add a ipa group """
     cmd_list = ['ipa', 'group-add', groupname]
     if gid is not None:
-       cmd_list.append('--gid=' + gid)
+        cmd_list.append('--gid=' + gid)
     if nonposix is not None:
-       cmd_list.append(--nonposix)
+        cmd_list.append(--nonposix)
     if external is not None:
-       cmd_list.append(--external)
+        cmd_list.append(--external)
     if desc is not None:
-       cmd_list.append('--desc=' +desc)
+        cmd_list.append('--desc=' + desc)
     check = host.run_command(cmd_list, raiseonerr=False)
     return check
 
-    
+
+def del_ipa_group(host, groupname):
+    """Delete ipa groups"""
+    cmd_list = ['ipa', 'group-del', groupname]
+    host.run_command(cmd_list)
+
+
 def del_ipa_user(host, username, preserve=False, skip_err=False):
     """
     Helper function to delete IPA user
