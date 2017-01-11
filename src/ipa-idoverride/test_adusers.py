@@ -5,7 +5,7 @@ Overview: IDView Testcase automation
 import pytest
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.utils import service_control, disable_dnssec, dnsforwardzone_add
-from ipa_pytests.rpm_utils import check_rpm
+from ipa_pytests.shared.rpm_utils import check_rpm
 
 
 class Testidview(object):
