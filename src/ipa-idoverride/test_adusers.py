@@ -5,6 +5,7 @@ Overview: IDView Testcase automation
 import pytest
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.utils import service_control, disable_dnssec, dnsforwardzone_add
+from ipa_pytests.rpm_utils import check_rpm
 
 
 class Testidview(object):
@@ -30,6 +31,7 @@ class Testidview(object):
     def test_adtrust_install(self, multihost):
         """Setting up smb.conf for AD trust using ipa-adtrust-install command """
         multihost.master.kinit_as_admin()
+        check_rpm(multihost.master, 'ipa-server-trust-ad')
         multihost.master.qerun(['ipa-adtrust-install',
                                 '--netbios-name=' + multihost.master.config.net_name,
                                 '-a',
