@@ -120,3 +120,30 @@ def mod_ipa_user(host, login, options_list, raiseonerr=True):
     cmd.extend(options_list)
     op = host.run_command(cmd, raiseonerr=raiseonerr)
     return op
+
+
+def id_user(host, login, options_list=None, exp_returncode=0, exp_output=None):
+    """
+    Helper function to id
+    :param host:
+    :param login: string
+    :param options_list: list of options
+    :return:
+    """
+    cmd = [paths.ID, login]
+    if options_list:
+        cmd.extend(options_list)
+    print(" ".join(cmd))
+    host.qerun(cmd, exp_returncode=exp_returncode, exp_output=exp_output)
+
+
+def getent(host, database, login, exp_returncode=0, exp_output=None):
+    """
+    Helper function to getent
+    :param host:
+    :param database: string
+    :param login: string
+    :return:
+    """
+    cmd = [paths.GETENT, database, login]
+    host.qerun(cmd, exp_returncode=exp_returncode, exp_output=exp_output)
