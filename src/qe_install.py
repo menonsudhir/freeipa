@@ -368,29 +368,58 @@ def uninstall_client(host):
 
 def adtrust_install(host):
     """ Prepare an IPA server to establish trust relationships with AD """
-    runcmd = 'rpm -q ipa-server-trust-ad'
-    print("Running command: %s" % runcmd)
-    cmd = host.run_command(runcmd, raiseonerr=False)
-    print("STDOUT: %s" % cmd.stdout_text)
-    print("STDERR: %s" % cmd.stderr_text)
-    if 'package ipa-server-trust-ad is not installed' in cmd.stderr_text:
-        runcmd = 'yum install -y ipa-server-trust-ad'
-        cmd = host.run_command(runcmd, raiseonerr=False)
-        print("Running command: %s" % runcmd)
-        if cmd.returncode != 0:
-            pytest.fail("Unable to install ipa-server-trust-ad RPM on master")
-    else:
-        netbios = (host.domain.realm).split(".")[0]
-        print("NetBIOS name for master : %s " % netbios)
-        runcmd = 'ipa-adtrust-install --netbios-name=' + netbios + \
-                 ' -a ' + host.config.admin_pw + ' -U'
+    cmd = 'cat /etc/redhat-release | grep "Atomic"'
+    command = host.run_command(cmd, raiseonerr=False)
+    if command.returncode != 0:
+        print("Host is not an Atomic host.")
+        runcmd = 'rpm -q ipa-server-trust-ad'
         print("Running command: %s" % runcmd)
         cmd = host.run_command(runcmd, raiseonerr=False)
         print("STDOUT: %s" % cmd.stdout_text)
         print("STDERR: %s" % cmd.stderr_text)
-        if cmd.returncode != 0:
-            pytest.fail("IPA ad trust install failed on "
-                        "master [%s]" % host.hostname)
+        if 'package ipa-server-trust-ad is not installed' in cmd.stderr_text:
+            runcmd = 'yum install -y ipa-server-trust-ad'
+            cmd = host.run_command(runcmd, raiseonerr=False)
+            print("Running command: %s" % runcmd)
+            if cmd.returncode != 0:
+                pytest.fail("Unable to install ipa-server-trust-ad RPM on master")
+        else:
+            netbios = (host.domain.realm).split(".")[0]
+            print("NetBIOS name for master : %s " % netbios)
+            runcmd = 'ipa-adtrust-install --netbios-name=' + netbios + \
+                     ' -a ' + host.config.admin_pw + ' -U'
+            print("Running command: %s" % runcmd)
+            cmd = host.run_command(runcmd, raiseonerr=False)
+            print("STDOUT: %s" % cmd.stdout_text)
+            print("STDERR: %s" % cmd.stderr_text)
+            if cmd.returncode != 0:
+                pytest.fail("IPA ad trust install failed on "
+                            "master [%s]" % host.hostname)
+    else:
+        """ Prepare an IPA Docker server to establish trust relationships with AD """
+        print("Host is an Atomic host.")
+        runcmd = 'docker exec -it ipadocker rpm -q ipa-server-trust-ad < /dev/ptmx'
+        cmd = host.run_command(runcmd, raiseonerr=False)
+        print("STDOUT:", cmd.stdout_text)
+        print("STDERR:", cmd.stderr_text)
+        if 'package ipa-server-trust-ad is not installed' in cmd.stderr_text:
+            pytest.fail("Package for ad trust not installed")
+        else:
+            netbios = (host.domain.realm).split(".")[0]
+            print("NetBIOS name for master : %s " % netbios)
+            dockercmd = 'docker exec -it ipadocker'
+            runcmd = dockercmd + \
+                     ' ipa-adtrust-install --netbios-name=' + netbios + \
+                     ' -a ' + host.config.admin_pw + ' -U < /dev/ptmx'
+            print("Running command: %s" % runcmd)
+            cmd = host.run_command(runcmd, raiseonerr=False)
+            print("STDOUT: %s" % cmd.stdout_text)
+            print("STDERR: %s" % cmd.stderr_text)
+            if cmd.returncode != 0:
+                pytest.fail("IPA-DOCKER ad trust install failed on "
+                            "master [%s]" % host.hostname)
+            else:
+                print("IPA-Docker installed with ad trust successfully.")
 
 
 def print_time():
