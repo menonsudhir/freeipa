@@ -7,11 +7,11 @@ from ipa_pytests.shared.rpm_utils import check_rpm
 from ipa_pytests.shared.utils import service_control
 from ipa_pytests.shared import paths
 import base64
-import commands
 import re
 import time
 
 RAD_USERS_LOCAL = '/tmp/users'
+
 
 def add_user(multihost, user_to_create):
     """ add user """
@@ -19,10 +19,12 @@ def add_user(multihost, user_to_create):
                  user_to_create,
                  multihost.master.config.admin_pw)
 
+
 def krb_destroy(host):
     """ krb destroy """
     host.run_command([
         'kdestroy', '-A'])
+
 
 def otp_key_convert(key):
     """ convert base64 to base32 to oathtool can take it """
@@ -30,22 +32,22 @@ def otp_key_convert(key):
     encode = base64.b32encode(decode)
     return encode
 
-def get_otp(otp_key):
+
+def get_otp(multihost, otp_key):
     """ generate otp auth """
-    multihost.master.run_command(
-        [paths.OATHTOOL + " -b " + str(otp_key) + " --totp"])
+    output = multihost.master.run_command(
+        [paths.OATHTOOL, "-b", str(otp_key), "--totp"])
     return output.stdout_text
+
 
 def get_krb_cache(multihost, user, host=None):
     """ Get location of krb cache """
-    if host == None:
+    if host is None:
         host = multihost.master
     host.kinit_as_admin()
     cmd = find_ipa_user(multihost.master, user)
     if cmd.returncode == 0:
         del_ipa_user(multihost.master, user)
-        host.run_command([
-            'ipa', 'user-del', user])
     add_ipa_user(host,
                  user,
                  multihost.master.config.admin_pw)
@@ -56,10 +58,12 @@ def get_krb_cache(multihost, user, host=None):
     search = re.search('KEYRING.+(?!$)', cmd.stdout_text)
     return str(search.group())
 
+
 def get_otp_key(text):
     """ parse otptoken-add and take key """
     search = re.search('(?<=Key: ).+(?!$)', text)
     return str(search.group())
+
 
 def add_token(multihost, owner):
     """ generate otp token """
@@ -69,11 +73,12 @@ def add_token(multihost, owner):
         '--owner=%s' % owner])
     return cmd.stdout_text
 
+
 def prepare_radiusd(multihost, user):
     """ prepare radius server """
     check_rpm(multihost.client, ['freeradius', 'freeradius-ldap',
                                  'freeradius-utils', 'wpa-supplicant'])
-    multihost.master.transport.get_file(RAD_USERS, RAD_USERS_LOCAL)
+    multihost.master.transport.get_file(paths.RAD_USERS, RAD_USERS_LOCAL)
     new = ''
     with open(RAD_USERS_LOCAL, 'r') as fin:
         new = user + " Cleartext-Password := \"" + \
@@ -81,24 +86,28 @@ def prepare_radiusd(multihost, user):
         new += fin.read()
     with open(RAD_USERS_LOCAL, 'w') as fout:
         fout.write(new)
-    multihost.master.transport.put_file(RAD_USERS_LOCAL, RAD_USERS)
+    multihost.master.transport.put_file(RAD_USERS_LOCAL, paths.RAD_USERS)
     service_control(multihost.master, 'radiusd', 'start')
     time.sleep(10)
 
+
 def ssh_test(multihost, user, passwd=None):
     """ ssh test """
-    if passwd == None:
-        multihost.client.run_command([
+    if passwd is None:
+        cmd = multihost.client.run_command([
             'ssh', user + '@' + multihost.master.hostname, 'hostname'
             ])
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
     else:
         multihost.client.run_command([
             'ssh', user + '@' + multihost.master.hostname, 'hostname'
             ], stdin_text=passwd)
 
+
 def ssh_neg_test(multihost, user):
     """ negative ssh test """
-    multihost.client.qerun([
+    cmd = multihost.client.run_command([
         'ssh', user + '@' + multihost.master.hostname, 'hostname'
-        ], exp_returncode=255)
-
+        ], raiseonerr=False)
+    assert cmd.returncode != 0

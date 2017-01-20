@@ -4,6 +4,7 @@ from ipa_pytests.shared.user_utils import mod_ipa_user
 from ipa_pytests.shared.service_utils import service_mod, service_show
 from ipa_pytests.shared.host_utils import host_mod
 from ipa_pytests.shared.rpm_utils import check_rpm
+from ipa_pytests.shared import paths
 import time
 
 TUSER = 'tuser01'
@@ -31,14 +32,14 @@ class TestAuthIndent(object):
         global NEW_HOST
         NEW_HOST = 'another01.' + multihost.master.domain.realm
         lib.add_user(multihost, TUSER)
-        new_repo_file = "name=scotts\n" + \
+        new_repo_file = "[extra-repo]\n" + \
+            "name=pavelextra\n" + \
             "baseurl=" + EXTRAREPO + "\n" + \
             "gpgcheck=0\n" + \
             "enabled=1\n"
         multihost.master.run_command(['touch', REPOFILE])
         multihost.master.transport.put_file_contents(
             REPOFILE, new_repo_file)
-        multihost.master.run_command(['yum', 'update', '-y'])
         check_rpm(multihost.master, ['oathtool'])
 
     def test001(self, multihost):
@@ -59,6 +60,7 @@ class TestAuthIndent(object):
             multihost.master,
             SERVICENAME,
             {'auth-ind': ['otp', 'radius']})
+        print("mod 2 done")
         assert any(x in cmd1.stdout_text for x in ("otp", "radius"))
 
     def test002(self, multihost):
@@ -83,9 +85,9 @@ class TestAuthIndent(object):
             'kvno', SERVICENAME
             ], exp_returncode=1)
         krb_cache = lib.get_krb_cache(multihost, INFOUSER)
-        password = multihost.master.config.admin_pw + lib.get_otp(OTP)
+        password = multihost.master.config.admin_pw + lib.get_otp(multihost, OTP)
         time.sleep(3)
-        print("kinit as %s with password + token" % TUSER)
+        print("kinit as %s with password + token : %s" % (TUSER, password))
         multihost.master.run_command([
             'kinit', '-T', krb_cache, TUSER
             ], stdin_text=password)
@@ -106,16 +108,14 @@ class TestAuthIndent(object):
         lib.prepare_radiusd(multihost, RADUSER)
         lib.add_user(multihost, RADUSER)
         radpassword = "%s\n%s" % (RADPASS, RADPASS)
+        multihost.master.kinit_as_admin()
         multihost.master.run_command([
             'ipa', 'radiusproxy-add', 'testproxy01', '--server=127.0.0.1'
             ], stdin_text=radpassword)
         mod_ipa_user(
             multihost.master, RADUSER,
-            ['--radius=testproxy01'
+            ['--radius=testproxy01',
              '--user-auth-type=radius'])
-        mod_ipa_user(
-            multihost.master, RADUSER,
-            ['--user-auth-type=radius'])
         service_mod(multihost.master, SERVICENAME, {'auth-ind': 'radius'})
         password = multihost.master.config.admin_pw
         krb_cache = lib.get_krb_cache(multihost, INFOUSER)
@@ -129,7 +129,7 @@ class TestAuthIndent(object):
             multihost.master,
             SERVICENAME,
             {'auth-ind': ['otp', 'radius']})
-        password = multihost.master.config.admin_pw + lib.get_otp(OTP)
+        password = multihost.master.config.admin_pw + lib.get_otp(multihost, OTP)
         time.sleep(3)
         krb_cache = lib.get_krb_cache(multihost, INFOUSER)
         multihost.master.run_command([
@@ -155,14 +155,19 @@ class TestAuthIndent(object):
             ], exp_returncode=1)
         krb_cache = lib.get_krb_cache(multihost, INFOUSER)
         time.sleep(3)
-        password = multihost.master.config.admin_pw + lib.get_otp(OTP)
+        password = multihost.master.config.admin_pw + lib.get_otp(multihost, OTP)
         time.sleep(3)
         multihost.master.run_command([
             'kinit', '-T', krb_cache, TUSER
             ], stdin_text=password)
+        time.sleep(10)
+        multihost.master.run_command([
+            'kvno', SERVICENAME])
+        """
         multihost.master.qerun([
             'kvno', SERVICENAME
             ], exp_returncode=1)
+        """
 
     def test005(self, multihost):
         """
@@ -259,7 +264,7 @@ class TestAuthIndent(object):
         cmd = host_mod(
             multihost.master,
             multihost.master.hostname,
-            {'auth-ind': ''})
+            {'auth-ind': '""'})
         assert not any(x in cmd.stdout_text for x in ("otp", "radius"))
 
     def test013(self, multihost):
@@ -270,14 +275,18 @@ class TestAuthIndent(object):
         time.sleep(3)
         multihost.client.kinit_as_user(
             TUSER, multihost.master.config.admin_pw)
-        lib.ssh_test(multihost, TUSER)
+        lib.ssh_neg_test(multihost, TUSER)
         lib.krb_destroy(multihost.client)
         krb_cache = lib.get_krb_cache(multihost, INFOUSER, multihost.client)
-        password = multihost.master.config.admin_pw + lib.get_otp(OTP)
+        multihost.master.kinit_as_admin()
+        multihost.master.run_command(
+            [paths.IPA, 'user-unlock', TUSER])
+        password = multihost.master.config.admin_pw + lib.get_otp(multihost, OTP)
         time.sleep(3)
         multihost.client.run_command([
             'kinit', '-T', krb_cache, TUSER
             ], stdin_text=password)
+        time.sleep(15)
         lib.ssh_test(multihost, TUSER)
 
     def test014(self, multihost):
@@ -294,14 +303,18 @@ class TestAuthIndent(object):
         multihost.client.kinit_as_user(
             TESTUSER, multihost.master.config.admin_pw)
         lib.ssh_neg_test(multihost, TESTUSER)
+        multihost.master.kinit_as_admin()
+        multihost.master.run_command(
+            [paths.IPA, 'user-unlock', TUSER])
         lib.krb_destroy(multihost.client)
         krb_cache = lib.get_krb_cache(multihost, INFOUSER, multihost.client)
         time.sleep(3)
-        password = multihost.master.config.admin_pw + lib.get_otp(OTP)
+        password = multihost.master.config.admin_pw + lib.get_otp(multihost, OTP)
         time.sleep(3)
         multihost.client.run_command([
             'kinit', '-T', krb_cache, TUSER
             ], stdin_text=password)
+        time.sleep(10)
         lib.ssh_test(multihost, TUSER)
 
     def test015(self, multihost):

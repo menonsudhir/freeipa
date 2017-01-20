@@ -7,6 +7,7 @@ conftest to setup required fixtures needed by tests:
 from __future__ import print_function
 import pytest
 from ipa_pytests.qe_install import setup_master, setup_client
+from ipa_pytests.shared.rpm_utils import check_rpm
 from ipa_pytests.qe_class import multihost  # pylint: disable=unused-import
 from ipa_pytests.qe_class import qe_use_class_setup # pylint: disable=unused-import
 

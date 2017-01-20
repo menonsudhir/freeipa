@@ -6,7 +6,7 @@ Shared support for ipa service control
 
 import paths
 
-def service_mod(host, service, options=None):
+def service_mod(host, service, options=None, raiseonerr=True):
     """
     Helper function to modify service
     :param host: multihost
@@ -24,13 +24,12 @@ def service_mod(host, service, options=None):
         else:
             cmd.extend((key, value))
     cmd.append(service)
-    run = host.run_command(cmd)
-    return run
+    return host.run_command(cmd, raiseonerr=raiseonerr)
 
 def service_show(host, service):
     """
     :param host: multihost
     :param service: servicename
     """
-    cmd = host.run_command(paths.IPA, 'service-show', service)
+    cmd = host.run_command([paths.IPA, 'service-show', service])
     return cmd
