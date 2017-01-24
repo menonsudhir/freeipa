@@ -187,14 +187,22 @@ def add_dnsforwarder(host, domain, ip):
     """Add DNS forwarder on AD machine for IPA domain"""
 
     cmd = host.run_command('dnscmd /ZoneInfo ' + domain, raiseonerr=False)
+    print ("Add dns forwarder return code is: %s" % cmd.returncode)
+    print cmd.stdout_text, cmd.stderr_text
     if cmd.returncode == 1:
-        cmd = host.run_command(['dnscmd', '/ZoneDelete', domain],
-                               stdin_text='y', raiseonerr=False)
-    cmd = host.run_command('dnscmd /zoneadd ' + domain + ' /forwarder ' + ip,
-                           raiseonerr=False)
+        cmd = host.run_command(['dnscmd', '/ZoneDelete', domain, '/f'],
+                               raiseonerr=False)
+        print ("zone delete return code is: %s" % cmd.returncode)
+        print cmd.stdout_text, cmd.stderr_text
+    cmd = host.run_command('dnscmd /zoneadd ' + domain + ' /forwarder ' + ip, raiseonerr=False)
+    print ("zone add return code is: %s" % cmd.returncode)
+    print cmd.stdout_text, cmd.stderr_text
     cmd = host.run_command('ipconfig /flushdns', raiseonerr=False)
+    print ("flush dns return code is: %s" % cmd.returncode)
+    print cmd.stdout_text, cmd.stderr_text
     cmd = host.run_command('dnscmd /clearcache', raiseonerr=False)
-
+    print ("clear cache return code is: %s" % cmd.returncode)
+    print cmd.stdout_text, cmd.stderr_text
 
 def ipa_config_mod(multihost, opts=None):
     """
