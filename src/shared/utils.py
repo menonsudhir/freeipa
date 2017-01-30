@@ -15,6 +15,8 @@ import os
 import tempfile
 import paths
 import array
+import string
+import random
 from distutils.version import StrictVersion
 
 
@@ -282,3 +284,37 @@ def stop_firewalld(host):
     print("Stopping Firewalld")
     for i in ['disable', 'stop']:
         service_control(host, 'firewalld', i)
+
+def mkdtemp(host, tempdir=None):
+    """
+    Helper function to create a tempfile
+    :param host: hostname
+    :param tempdir: Temp directory name
+    :return: directory name
+    """
+    if tempdir is None:
+        tempdir = "/tmp/{0}".format(rand_str_generator())
+    print("Creating temp directory {0}".format(tempdir))
+    cmdstr = "mkdir {0}".format(tempdir)
+    print("Executing: {0}".format(cmdstr))
+    cmd = host.run_command(cmdstr, raiseonerr=False)
+    if cmd.returncode == 0:
+        return tempdir
+    else:
+        return ''
+
+def rand_str_generator(size=6, chars=None):
+    """
+    Generate a random string
+    """
+    if chars is None:
+        chars = string.ascii_uppercase + string.ascii_lowercase
+    return ''.join(random.SystemRandom().choice(chars) for _ in range(size))
+
+def chcon(host, context=None, dirname=None):
+    """
+    Helper function to change SELinux Context
+    """
+    cmdstr = "chcon -t {0} {1}".format(context, dirname)
+    print("Executing: {0}".format(cmdstr))
+    return host.run_command(cmdstr, raiseonerr=False)
