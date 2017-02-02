@@ -122,15 +122,14 @@ class TestRadiusfunction(object):
         multihost.master.qerun(
             ['kswitch', '-c', 'KEYRING:persistent:0:0'], exp_returncode=0)
         multihost.master.kinit_as_admin()
-        cmd = 'kinit -T KEYRING:persistent:0:0 %s ' % multihost.testuser
-        proc = pexpect.spawn(cmd)
-        proc.logfile = open(multihost.log, "w")
-        proc.expect("Enter OTP Token Value:")
-        proc.sendline(multihost.wrongsecret)
-        proc.expect(multihost.expectederror)
-        proc.expect(pexpect.EOF)
-        print_output(multihost.log)
-        proc.close()
+        expect_script = 'set timeout 15\n'
+        expect_script += 'spawn kinit -T KEYRING:persistent:0:0 %s \n' % multihost.testuser
+        expect_script += 'expect "Enter OTP Token Value:"\n'
+        expect_script += 'send "%s\r"\n' % multihost.wrongsecret
+        expect_script += 'expect "kinit: Preauthentication failed' \
+                         ' while getting initial credentials"\n'
+        expect_script += 'expect EOF\n'
+        output = multihost.master.expect(expect_script)
 
         # cleanup
         del_ipa_user(multihost.master, multihost.testuser)
@@ -189,18 +188,15 @@ class TestRadiusfunction(object):
         """
         multihost.radiusproxy = "radiusproxy05"
         multihost.testuser = 'radiususer05'
-
+        multihost.expoutput = 'Deleted RADIUS proxy server'
         # Add radius proxy
         add_radiusproxy(multihost)
 
         # Delete radius proxy as admin
-        cmd = 'ipa radiusproxy-del  %s ' % multihost.radiusproxy
-        proc = pexpect.spawn(cmd)
-        proc.logfile = open(multihost.log, "w")
-        proc.expect('Deleted RADIUS proxy server "%s"' % multihost.radiusproxy)
-        proc.expect(pexpect.EOF)
-        print_output(multihost.log)
-        proc.close()
+        multihost.master.qerun(['ipa', 'radiusproxy-del',
+                                multihost.radiusproxy],
+                               exp_returncode=0,
+                               exp_output=multihost.expoutput)
         print "########### radius proxy deleted successfully ###########\n"
 
     def test_radius_0006(self, multihost):
@@ -214,15 +210,13 @@ class TestRadiusfunction(object):
             multihost.radiusproxy = each_user
             add_radiusproxy(multihost)
 
-        cmd = 'ipa radiusproxy-mod --rename=%s' % users[1]
-        proc = pexpect.spawn(cmd)
-        proc.logfile = open(multihost.log, "w")
-        proc.expect('RADIUS proxy server name:')
-        proc.sendline(users[0])
-        proc.expect('ipa: ERROR: This entry already exists')
-        proc.expect(pexpect.EOF)
-        print_output(multihost.log)
-        proc.close()
+        expect_script = 'set timeout 15\n'
+        expect_script += 'spawn ipa radiusproxy-mod --rename=%s \n' % users[1]
+        expect_script += 'expect "RADIUS proxy server name:"\n'
+        expect_script += 'send "%s\r"\n' % users[0]
+        expect_script += 'expect "ipa: ERROR: This entry already exists"\n'
+        expect_script += 'expect EOF\n'
+        output = multihost.master.expect(expect_script)
 
 #        multihost.radiusproxy = users[0]
         for each_user in users:
@@ -240,15 +234,13 @@ class TestRadiusfunction(object):
         add_radiusproxy(multihost)
 
         # Modify radius proxy
-        cmd = 'ipa radiusproxy-mod --rename=%s' % users[0]
-        proc = pexpect.spawn(cmd)
-        proc.logfile = open(multihost.log, "w")
-        proc.expect('RADIUS proxy server name:')
-        proc.sendline(multihost.radiusproxy)
-        proc.expect('Modified RADIUS proxy server "%s"' % users[1])
-        proc.expect(pexpect.EOF)
-        print_output(multihost.log)
-        proc.close()
+        expect_script = 'set timeout 15\n'
+        expect_script += 'spawn ipa radiusproxy-mod --rename=%s \n' % users[0]
+        expect_script += 'expect "RADIUS proxy server name:"\n'
+        expect_script += 'send "%s\r"\n' % multihost.radiusproxy
+        expect_script += 'expect "Modified RADIUS proxy server"\n'
+        expect_script += 'expect EOF\n'
+        output = multihost.master.expect(expect_script)
         print "########### radius proxy rename successfully ###########\n"
 
         # Cleanup
