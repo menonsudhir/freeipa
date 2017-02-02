@@ -38,7 +38,7 @@ class TestAuthIndent(object):
         multihost.master.run_command(['touch', REPOFILE])
         multihost.master.transport.put_file_contents(
             REPOFILE, new_repo_file)
-        multithost.master.run_command(['yum', 'update', '-y'])
+        multihost.master.run_command(['yum', 'update', '-y'])
         check_rpm(multihost.master, ['oathtool'])
 
     def test001(self, multihost):
