@@ -1,14 +1,13 @@
 """
 Testsuite for IPA Lightweight Sub CA - ca-add
 """
-from ipa_pytests.qe_class import multihost
-from ipa_pytests.shared.ca_utils import *
-from ipa_pytests.shared.utils import *
-from lib import *
-import pexpect
-import pytest
 import re
 import time
+from ipa_pytests.shared.ca_utils import (ca_acl_add_ca, ca_acl_find, ca_add,
+                                         ca_del, ca_find)
+from ipa_pytests.shared.utils import mkdtemp, chcon
+from lib import (check_ca_add_output, check_ca_del_output,
+                 check_ca_find_output)
 
 
 class TestSubCAAdd(object):
@@ -20,6 +19,7 @@ class TestSubCAAdd(object):
         print("MASTER: %s" % multihost.master.hostname)
         print("REPLICA: %s" % multihost.replica.hostname)
         print("*" * 80)
+        multihost.realm = multihost.master.domain.realm
 
     def test_0001_subca_add_help(self, multihost):
         """
@@ -75,11 +75,17 @@ class TestSubCAAdd(object):
         # Add Sub CA
         cmd = "ipa ca-add"
         print("Running : {0}".format(cmd))
-        events = {"Name: ": '{0}\n'.format(subca['name']),
-                  "Subject DN: ": "CN={0},O={1}\n".format(subca['name'],
-                                                          subca['realm'])}
-        cmdout = pexpect.run(cmd, events=events)
-        check_ca_add_output(subca, cmdout)
+        expect_script = 'set timeout 15\n'
+        expect_script += 'spawn {0}\n'.format(cmd)
+        expect_script += 'expect "Name: "\n'
+        expect_script += 'send "%s\r"\n' % subca['name']
+        expect_script += 'expect "Subject DN: "\n'
+        subject_dn = "CN={0},O={1}\n".format(subca['name'], subca['realm'])
+        expect_script += 'send "%s\r"\n' % subject_dn
+        expect_script += 'expect EOF\n'
+        output = multihost.master.expect(expect_script)
+
+        check_ca_add_output(subca, output.stdout_text)
         # Delete create Sub CA
         cmd = ca_del(multihost.master, subca)
         if cmd[0] == 0:
@@ -166,15 +172,15 @@ class TestSubCAAdd(object):
 
         # Add CA ACL policy
         subca_acl['subca'] = subca['name']
-        cmd = ca_acl_add_ca(subca_acl)
+        cmd = ca_acl_add_ca(multihost.master, subca_acl)
         assert "ACL name: {0}".format(subca_acl['name']) in cmd[1]
 
         # Create temp directory
-        tempdir_name = "/tmp/temp_{0}".format(subca['name'])
-        mkdtemp(multihost.master, tempdir_name)
+        tempdir = "/tmp/temp_{0}".format(subca['name'])
+        mkdtemp(multihost.master, tempdir)
 
         # Change SELinux context for temp directory
-        chcon(multihost.master, 'cert_t', tempdir_name)
+        chcon(multihost.master, 'cert_t', tempdir)
 
         # Issue certificate using newly creates Sub CA
         cmd = "ipa-getcert request " \
