@@ -87,7 +87,6 @@ class TestSubCAShow(object):
         IDM-IPA-TC: ipa ca show for non-existing Sub CA
         """
         multihost.master.kinit_as_admin()
-        domain = multihost.master.domain.name.upper()
         subca = {}
         subca['name'] = "test_0004_subca1"
         cmd = ca_show(multihost.master, subca)
