@@ -25,6 +25,8 @@ def setup_session(request, multihost):
     # for single replica and client
     multihost.replica = multihost.replicas[0]
     passwd = multihost.master.config.admin_pw
+    for host in [multihost.master, multihost.replica]:
+        host.yum_install(['expect'])
     try:
         setup_master(multihost.master)
         setup_replica(multihost.replica, multihost.master)
