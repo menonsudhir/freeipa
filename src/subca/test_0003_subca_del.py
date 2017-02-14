@@ -103,8 +103,8 @@ class TestSubCADel(object):
         subca['realm'] = multihost.realm
         # Delete non-existing Sub CA
         cmd = ca_del(multihost.master, subca)
-        assert "ipa: ERROR: {0}: Certificate " \
-               "Authority not found".format(subca['name']) in cmd[2]
+        print("Stderr: %s " % cmd[2])
+        assert "ipa: ERROR: no such entry" in cmd[2]
 
     def test_0005_subca_del_default_subca(self, multihost):
         """
@@ -205,8 +205,8 @@ class TestSubCADel(object):
         subca['name'] = "test_0009_subca1"
         # Delete non-existing Sub CA from replica
         cmd = ca_del(multihost.master, subca)
-        assert "ipa: ERROR: {0}: Certificate " \
-               "Authority not found".format(subca['name']) in cmd[2]
+        print("Stderr: %s " % cmd[2])
+        assert "ipa: ERROR: no such entry" in cmd[2]
 
     def test_0010_subca_del_default_subca_replica(self, multihost):
         """
