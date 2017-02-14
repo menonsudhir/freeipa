@@ -2,8 +2,9 @@ domains:
   - name: testrelm.test
     type: sssd
     hosts:
-      - name: master.testrelm.test
-        external_hostname: hostname1
+      - name: ipaserver73.testrelm.test
+        external_hostname: ipaserver73.testrelm.test
+        ip: 10.76.33.240
         role: 'master'
       - name: client.testrelm.test
         external_hostname: hostname2
