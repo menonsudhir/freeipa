@@ -8,12 +8,13 @@ from __future__ import print_function
 import pytest
 import time
 import re
-import ipa_pytests.shared.paths
+from ipa_pytests.shared import paths
 from ipa_pytests.shared.utils import service_control
 from ipa_pytests.shared.rpm_utils import list_rpms
-from ipa_pytests.shared.utils import get_domain_level
-from ipa_pytests.shared.utils import ipa_version_gte
+from ipa_pytests.shared.utils import get_domain_level, ipa_version_gte
 from ipa_pytests.shared.log_utils import backup_logs
+from ipa_pytests.shared.dns_utils import dns_record_add
+from ipa_pytests.shared.host_utils import hostgroup_find, hostgroup_member_add
 
 
 def disable_firewall(host):
@@ -122,19 +123,25 @@ def setup_master(master, setup_reverse=True):
         master.ip.split('.')[1] + '.' + \
         master.ip.split('.')[0] + '.in-addr.arpa.'
 
+    print("Listing RPMS")
     list_rpms(master)
+    print("Disabling Firewall")
     disable_firewall(master)
+    print("Setting hostname")
     set_hostname(master)
+    print("Setting /etc/hosts")
     set_etc_hosts(master)
+    print("Setting up RNGD")
     set_rngd(master)
 
     print_time()
+    print("Installing required packages")
     master.yum_install(['ipa-server', 'ipa-server-dns',
                         'bind-dyndb-ldap', 'bind-pkcs11',
                         'bind-pkcs11-utils'])
 
     print_time()
-    runcmd = ['ipa-server-install',
+    runcmd = [paths.IPASERVERINSTALL,
               '--setup-dns',
               '--forwarder', master.config.dns_forwarder,
               '--domain', master.domain.name,
@@ -153,6 +160,7 @@ def setup_master(master, setup_reverse=True):
         if ipa_version_gte(master, '4.4.0'):
             runcmd.extend(['--allow-zone-overlap'])
 
+    print("Installing IPA Server on machine [%s]" % master.hostname)
     print("RUNCMD:", ' '.join(runcmd))
     cmd = master.run_command(runcmd, raiseonerr=False)
 
@@ -160,6 +168,7 @@ def setup_master(master, setup_reverse=True):
     print("STDERR:", cmd.stderr_text)
     print_time()
     if cmd.returncode != 0:
+        print("Failed to install IPA Server on machine [%s]" % master.hostname)
         backup_logs(master, ['/var/log/ipaserver-install.log',
                              '/var/log/ipaclient-install.log',
                              '/var/log/ipaupgrade.log'])
@@ -175,6 +184,9 @@ def setup_replica_prepare_file(replica, master):
               '--reverse-zone', replica.revnet,
               replica.hostname]
     print("RUNCMD:", ' '.join(runcmd))
+    print("Creating Replica Prepare file for "
+          "Replica machine [%s] from [%s]" % (replica.hostname,
+                                              master.hostname))
     cmd = master.run_command(runcmd, raiseonerr=False)
 
     print("STDOUT:", cmd.stdout_text)
@@ -189,7 +201,7 @@ def setup_replica_prepare_file(replica, master):
     replica.put_file_contents(prepfile, prep_content)
 
 
-def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=True):
+def setup_replica(replica, master, **kwargs):
     """
     This is the default testing setup for an IPA Replica.  This setup routine
     will install an IPA Replica with DNS and a forwarder.  The domain and realm
@@ -199,6 +211,10 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
     :type setup_dns: True or False
     :type setup_reverse: True or False
     """
+    setup_dns = kwargs.get('setup_dns', True)
+    setup_ca = kwargs.get('setup_ca', True)
+    setup_reverse = kwargs.get('setup_reverse', True)
+
     replica.revnet = replica.ip.split('.')[2] + '.' + \
         replica.ip.split('.')[1] + '.' + \
         replica.ip.split('.')[0] + '.in-addr.arpa.'
@@ -206,10 +222,7 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
         master.ip.split('.')[1] + '.' + \
         master.ip.split('.')[0] + '.in-addr.arpa.'
 
-    if replica.revnet != master.revnet:
-        setup_dns_revnet = True
-    else:
-        setup_dns_revnet = False
+    setup_dns_revnet = True if replica.revnet != master.revnet else False
     print("SETUPDNSREVNET = %s" % setup_dns_revnet)
 
     print("Listing RPMS")
@@ -226,6 +239,7 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
         set_resolv_conf_to_master(replica, master)
 
     print_time()
+    print("Installing required packages")
     replica.yum_install(['ipa-server', 'ipa-server-dns', 'bind-dyndb-ldap',
                          'bind-pkcs11', 'bind-pkcs11-utils'])
 
@@ -237,15 +251,15 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
     else:
         print("Domain Level is 1 so we do not need a prep file")
         master.kinit_as_admin()
-        cmd = master.run_command(['ipa', 'dnsrecord-add',
-                                  master.domain.name,
-                                  ''.join(replica.hostname.split('.')[:1]),
-                                  '--a-rec', replica.ip,
-                                  '--a-create-reverse'], raiseonerr=False)
+        cmd = dns_record_add(master,
+                             master.domain.name,
+                             replica.shortname,
+                             'A',
+                             [replica.ip])
 
     sleep(5)
     set_resolv_conf_to_master(replica, master)
-    params = ['ipa-replica-install', '-U']
+    params = [paths.IPAREPLICAINSTALL, '-U']
 
     print_time()
     if setup_dns:
@@ -275,12 +289,14 @@ def setup_replica(replica, master, setup_dns=True, setup_ca=True, setup_reverse=
     else:
         params.extend(['--principal', master.config.admin_id])
 
+    print("Installing Replica on server [%s]" % replica.hostname)
     print("RUNCMD:", ' '.join(params))
     cmd = replica.run_command(params, raiseonerr=False)
     print("STDOUT: %s" % cmd.stdout_text)
     print("STDERR: %s" % cmd.stderr_text)
     print_time()
     if cmd.returncode != 0:
+        print("Failed to install Replica on server %s" % replica.hostname)
         backup_logs(replica, ['/var/log/ipareplica-install.log',
                               '/var/log/ipaclient-install.log',
                               '/var/log/ipareplica-conncheck.log'])
@@ -295,18 +311,24 @@ def setup_client(client, master, server=None, domain=None):
     """
 
     print_time()
+    print("Installing required packages on client [%s]" % client.hostname)
     client.yum_install(['ipa-client', 'ipa-admintools'])
 
+    print("Listing RPMS")
     list_rpms(client)
+    print("Disabling Firewall")
     disable_firewall(client)
+    print("Setting hostname")
     set_hostname(client)
+    print("Setting /etc/hosts")
     set_etc_hosts(client)
+    print("Setting up RNGD")
     set_rngd(client)
     sleep(5)
     set_resolv_conf_to_master(client, master)
 
     print_time()
-    runcmd = ['ipa-client-install', '-U',
+    runcmd = [paths.IPACLIENTINSTALL, '-U',
               '--principal', 'admin',
               '--password', master.config.admin_pw]
 
@@ -314,6 +336,7 @@ def setup_client(client, master, server=None, domain=None):
         runcmd.extend(['--server', master.hostname])
         runcmd.extend(['--domain', master.domain.name])
 
+    print("Installing client on machine [%s]" % client.hostname)
     print("RUNCMD:", ' '.join(runcmd))
     cmd = client.run_command(runcmd, raiseonerr=False)
 
@@ -331,8 +354,8 @@ def uninstall_server(host):
     This is the default uninstall for a master or replica.  It merely runs
     the standard server uninstall command.
     """
-    if host.transport.file_exists('/etc/ipa/default.conf'):
-        runcmd = ['ipa-server-install',
+    if host.transport.file_exists(paths.IPADEFAULTCONF):
+        runcmd = [paths.IPASERVERINSTALL,
                   '--uninstall',
                   '-U']
         cmd = host.run_command(runcmd, raiseonerr=False)
@@ -343,7 +366,7 @@ def uninstall_server(host):
             raise ValueError("%s failed with error "
                              "code=%s" % (" ".join(runcmd), cmd.returncode))
     else:
-        print("/etc/ipa/default.conf not found...skipped --uninstall")
+        print("{0} not found...skipped --uninstall".format(paths.IPADEFAULTCONF))
 
 
 def uninstall_client(host):
@@ -351,8 +374,9 @@ def uninstall_client(host):
     This is the default uninstall for a client.  It runs the standard client
     uninstall command.
     """
-    if host.transport.file_exists('/etc/ipa/default.conf'):
-        runcmd = ['ipa-client-install', '--uninstall', '-U']
+    if host.transport.file_exists(paths.IPADEFAULTCONF):
+        runcmd = [paths.IPACLIENTINSTALL, '--uninstall', '-U']
+        print("Uninstalling IPA Client on machine [%s]" % host.hostname)
         cmd = host.run_command(runcmd, raiseonerr=False)
         print("Running command: %s" % " ".join(runcmd))
         print("STDOUT: %s" % cmd.stdout_text)
@@ -363,7 +387,7 @@ def uninstall_client(host):
             raise ValueError("Command [%s] failed with error "
                              "code=%s" % (" ".join(runcmd), cmd.returncode))
     else:
-        print("/etc/ipa/default.conf not found...skipped --uninstall")
+        print("{0} not found...skipped --uninstall".format(paths.IPADEFAULTCONF))
 
 
 def adtrust_install(host):
@@ -382,7 +406,8 @@ def adtrust_install(host):
             cmd = host.run_command(runcmd, raiseonerr=False)
             print("Running command: %s" % runcmd)
             if cmd.returncode != 0:
-                pytest.fail("Unable to install ipa-server-trust-ad RPM on master")
+                pytest.fail("Unable to install ipa-server-trust-ad "
+                            "RPM on master")
         else:
             netbios = (host.domain.realm).split(".")[0]
             print("NetBIOS name for master : %s " % netbios)
@@ -396,9 +421,11 @@ def adtrust_install(host):
                 pytest.fail("IPA ad trust install failed on "
                             "master [%s]" % host.hostname)
     else:
-        """ Prepare an IPA Docker server to establish trust relationships with AD """
+        # Prepare an IPA Docker server to establish
+        # trust relationships with AD
         print("Host is an Atomic host.")
-        runcmd = 'docker exec -it ipadocker rpm -q ipa-server-trust-ad < /dev/ptmx'
+        runcmd = 'docker exec -it ipadocker ' \
+                 'rpm -q ipa-server-trust-ad < /dev/ptmx'
         cmd = host.run_command(runcmd, raiseonerr=False)
         print("STDOUT:", cmd.stdout_text)
         print("STDERR:", cmd.stderr_text)
@@ -408,9 +435,11 @@ def adtrust_install(host):
             netbios = (host.domain.realm).split(".")[0]
             print("NetBIOS name for master : %s " % netbios)
             dockercmd = 'docker exec -it ipadocker'
-            runcmd = dockercmd + \
-                     ' ipa-adtrust-install --netbios-name=' + netbios + \
-                     ' -a ' + host.config.admin_pw + ' -U < /dev/ptmx'
+            runcmd = "{0} ipa-adtrust-install " \
+                     "--netbios-name={1} -a {2} " \
+                     "-U < /dev/ptmx".format(dockercmd,
+                                             netbios,
+                                             host.config.admin_pw)
             print("Running command: %s" % runcmd)
             cmd = host.run_command(runcmd, raiseonerr=False)
             print("STDOUT: %s" % cmd.stdout_text)

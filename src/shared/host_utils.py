@@ -71,3 +71,14 @@ def hostgroup_member_add(host, hg=None, options={}, raiseonerr=False):
     cmd.append(hg)
     print("Executing: [{0}]".format(" ".join(cmd)))
     return host.run_command(cmd, raiseonerr=raiseonerr)
+
+
+def hostgroup_find(host, hg=None, raiseonerr=False):
+    """
+    Helper function to find host in hostgroup
+    :param host: multihost
+    :param hg: hostgroup name
+    """
+    cmd = [paths.IPA, 'hostgroup-find', hg]
+    print("Executing: [{0}]".format(" ".join(cmd)))
+    return host.run_command(cmd, raiseonerr=raiseonerr)
