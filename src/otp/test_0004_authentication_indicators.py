@@ -4,7 +4,6 @@ from ipa_pytests.shared.user_utils import mod_ipa_user
 from ipa_pytests.shared.service_utils import service_mod, service_show
 from ipa_pytests.shared.host_utils import host_mod
 from ipa_pytests.shared.rpm_utils import check_rpm
-from ipa_pytests.shared import paths
 import time
 
 TUSER = 'tuser01'
@@ -14,6 +13,7 @@ RADUSER = 'raduser01'
 RADPASS = 'testing123'
 SERVICENAME = ''
 OTP = ''
+OTP2 = ''
 NEW_HOST = ''
 REPOFILE = '/etc/yum.repos.d/repo-extra.repo'
 EXTRAREPO = "http://file.rdu.redhat.com/~spoore/idmqe-extras/7Server/x86_64/"
@@ -163,11 +163,6 @@ class TestAuthIndent(object):
         time.sleep(10)
         multihost.master.run_command([
             'kvno', SERVICENAME])
-        """
-        multihost.master.qerun([
-            'kvno', SERVICENAME
-            ], exp_returncode=1)
-        """
 
     def test005(self, multihost):
         """
@@ -258,12 +253,12 @@ class TestAuthIndent(object):
 
     def test012(self, multihost):
         """
-        @Title: IDM-IPA-TC: Authentication Indicators: Remove authentication indicators form hosts
+        @Title: IDM-IPA-TC: Authentication Indicators: Remove authentication indicators from hosts
         @casecomponent: ipa
         """
         cmd = host_mod(
             multihost.master,
-            multihost.master.hostname,
+            NEW_HOST,
             {'auth-ind': '""'})
         assert not any(x in cmd.stdout_text for x in ("otp", "radius"))
 
@@ -272,22 +267,54 @@ class TestAuthIndent(object):
         @Title: IDM-IPA-TC: Authentication Indicators: Access hosts without authentication indicators
         @casecomponent: ipa
         """
-        time.sleep(3)
-        multihost.client.kinit_as_user(
-            TUSER, multihost.master.config.admin_pw)
-        lib.ssh_neg_test(multihost, TUSER)
-        lib.krb_destroy(multihost.client)
-        krb_cache = lib.get_krb_cache(multihost, INFOUSER, multihost.client)
         multihost.master.kinit_as_admin()
-        multihost.master.run_command(
-            [paths.IPA, 'user-unlock', TUSER])
-        password = multihost.master.config.admin_pw + lib.get_otp(multihost, OTP)
-        time.sleep(3)
+        multihost.client.kinit_as_admin()
+        lib.add_user(multihost, TESTUSER)
+        token_key = lib.add_token(multihost, TESTUSER)
+        print(token_key)
+        global OTP2
+        OTP2 = lib.otp_key_convert(lib.get_otp_key(token_key))
+        print(OTP2)
+        print(lib.get_otp(multihost, OTP2))
+        host_mod(
+            multihost.master,
+            multihost.master.hostname,
+            {'auth-ind': '""'})
+        multihost.master.run_command([
+            'ipa', 'user-unlock', TESTUSER])
+        multihost.master.run_command([
+            'sss_cache', '-E', TESTUSER])
+        multihost.master.run_command([
+            'ipactl', 'restart'])
+        multihost.master.run_command([
+            'systemctl', 'stop', 'ntpd'])
+        multihost.master.run_command([
+            'ntpdate', 'clock.redhat.com'])
+        multihost.master.run_command([
+            'systemctl', 'start', 'ntpd'])
         multihost.client.run_command([
-            'kinit', '-T', krb_cache, TUSER
-            ], stdin_text=password)
-        time.sleep(15)
-        lib.ssh_test(multihost, TUSER)
+            'systemctl', 'stop', 'ntpd'])
+        multihost.client.run_command([
+            'ntpdate', 'clock.redhat.com'])
+        multihost.client.run_command([
+            'systemctl', 'start', 'ntpd'])
+        time.sleep(13)
+        multihost.client.kinit_as_user(
+            TESTUSER, multihost.master.config.admin_pw)
+        multihost.client.run_command(['klist'])
+        time.sleep(5)
+        lib.ssh_test(multihost, TESTUSER)
+        krb_cache = lib.get_krb_cache(multihost, INFOUSER, multihost.client)
+        password = multihost.master.config.admin_pw + lib.get_otp(
+            multihost, OTP2)
+        time.sleep(3)
+        cmd = multihost.client.run_command([
+            'kinit', '-T', krb_cache, TESTUSER
+            ], stdin_text=password, raiseonerr=False)
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
+        time.sleep(5)
+        lib.ssh_test(multihost, TESTUSER)
 
     def test014(self, multihost):
         """
@@ -299,23 +326,20 @@ class TestAuthIndent(object):
             multihost.master,
             multihost.master.hostname,
             {'auth-ind': 'otp'})
-        lib.add_user(multihost, TESTUSER)
         multihost.client.kinit_as_user(
             TESTUSER, multihost.master.config.admin_pw)
         lib.ssh_neg_test(multihost, TESTUSER)
-        multihost.master.kinit_as_admin()
-        multihost.master.run_command(
-            [paths.IPA, 'user-unlock', TUSER])
         lib.krb_destroy(multihost.client)
         krb_cache = lib.get_krb_cache(multihost, INFOUSER, multihost.client)
         time.sleep(3)
-        password = multihost.master.config.admin_pw + lib.get_otp(multihost, OTP)
+        password = multihost.master.config.admin_pw + lib.get_otp(
+            multihost, OTP2)
         time.sleep(3)
         multihost.client.run_command([
-            'kinit', '-T', krb_cache, TUSER
+            'kinit', '-T', krb_cache, TESTUSER
             ], stdin_text=password)
         time.sleep(10)
-        lib.ssh_test(multihost, TUSER)
+        lib.ssh_test(multihost, TESTUSER)
 
     def test015(self, multihost):
         """

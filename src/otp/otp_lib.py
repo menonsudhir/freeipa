@@ -94,11 +94,9 @@ def prepare_radiusd(multihost, user):
 def ssh_test(multihost, user, passwd=None):
     """ ssh test """
     if passwd is None:
-        cmd = multihost.client.run_command([
+        multihost.client.run_command([
             'ssh', user + '@' + multihost.master.hostname, 'hostname'
             ])
-        print(cmd.stdout_text)
-        print(cmd.stderr_text)
     else:
         multihost.client.run_command([
             'ssh', user + '@' + multihost.master.hostname, 'hostname'
