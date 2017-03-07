@@ -17,7 +17,7 @@ import paths
 import array
 import string
 import random
-from distutils.version import StrictVersion
+from distutils.version import LooseVersion
 
 
 def kinit_as_user(host, user, passwd):
@@ -246,10 +246,10 @@ def ipa_version_gte(master, version):
     """
     cmd = master.run_command(['ipa-server-install', '--version'])
     ipa_version = cmd.stdout_text
-    if StrictVersion(ipa_version) >= StrictVersion(version):
-        return True
-    else:
-        return False
+    ret = False
+    if LooseVersion(ipa_version) >= LooseVersion(version):
+        ret = True
+    return ret
 
 
 def sssd_cache_reset(host):
@@ -285,6 +285,7 @@ def stop_firewalld(host):
     for i in ['disable', 'stop']:
         service_control(host, 'firewalld', i)
 
+
 def mkdtemp(host, tempdir=None):
     """
     Helper function to create a tempfile
@@ -303,6 +304,7 @@ def mkdtemp(host, tempdir=None):
     else:
         return ''
 
+
 def rand_str_generator(size=6, chars=None):
     """
     Generate a random string
@@ -310,6 +312,7 @@ def rand_str_generator(size=6, chars=None):
     if chars is None:
         chars = string.ascii_uppercase + string.ascii_lowercase
     return ''.join(random.SystemRandom().choice(chars) for _ in range(size))
+
 
 def chcon(host, context=None, dirname=None):
     """
