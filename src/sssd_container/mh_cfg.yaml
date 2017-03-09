@@ -4,7 +4,7 @@ domains:
     hosts:
       - name: ipaserver73.testrelm.test
         external_hostname: ipaserver73.testrelm.test
-        ip: 10.76.33.240
+        ip: 10.76.33.239
         role: 'master'
       - name: client.testrelm.test
         external_hostname: hostname2
