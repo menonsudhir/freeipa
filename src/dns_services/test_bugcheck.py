@@ -164,7 +164,7 @@ class TestBugCheck(object):
         multihost.master.kinit_as_admin()
         multihost.master.qerun(['ipa', 'dnsrecord-find', zone_name],
                                exp_returncode=0,
-                               exp_output=r'(.*)AAAA record: ::23, ::2, ::43(.*)')
+                               exp_output=r'(.*)AAAA record: ::2, ::23, ::43(.*)')
 
     def class_teardown(self, multihost):
         """ Full suite teardown """
