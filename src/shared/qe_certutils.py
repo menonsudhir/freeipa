@@ -6,6 +6,7 @@ we need from certutil commands
 
 import random
 import string
+from ipa_pytests.shared.utils import rand_str_generator
 
 
 class certutil(object):
@@ -25,6 +26,8 @@ class certutil(object):
         self.db_noise = ""
         self.password_file = self.db_dir + "/passwd.txt"
         self.noise_file = self.db_dir + "/noise.txt"
+        self.root_key_id = "0x{0}".format(rand_str_generator(20, "0123456789abcdef"))
+        self.ipa_ca_key_id = "0x{0}".format(rand_str_generator(20, "0123456789abcdef"))
 
         if not self.host.transport.file_exists(self.db_dir):
             self.host.transport.mkdir_recursive(self.db_dir)
@@ -82,6 +85,7 @@ class certutil(object):
 
     def selfsign_cert(self, subject, nick, options=None):
         """ certutil create self-signed cert and add to nssdb (-S) command """
+        stdin_text = 'y\n10\ny\n'
         cmdstr = ['certutil',
                   '-d', self.db_dir,
                   '-S',
@@ -96,11 +100,14 @@ class certutil(object):
                   '--keyUsage', 'certSigning,digitalSignature,nonRepudiation',
                   '--nsCertType', 'sslCA,smimeCA,objectSigningCA',
                   '-f', self.password_file]
+
         if options:
             cmdstr = cmdstr + options
 
-        print("\nRunning command : %s" % " ".join(cmdstr))
-        cmd = self.host.run_command(cmdstr, stdin_text='y\n10\ny\n', raiseonerr=False)
+        if "--extSKID" in options:
+            stdin_text += '%s\nn\n' % self.root_key_id
+        print("\nRunning command : %s with %s as stdin_text" % (" ".join(cmdstr), stdin_text))
+        cmd = self.host.run_command(cmdstr, stdin_text=stdin_text, raiseonerr=False)
         return cmd.stdout_text, cmd.stderr_text
 
     def create_server_cert(self, subject, nick, ca_nick='ca', options=None):
@@ -144,5 +151,29 @@ class certutil(object):
                   '-a']
         if outfile:
             cmdstr = cmdstr + ['-o', outfile]
+        print("Running: {0}".format(" ".join(cmdstr)))
         cmd = self.host.run_command(cmdstr)
+        return cmd.stdout_text, cmd.stderr_text
+
+    def sign_csr(self, csr_in, csr_out, nick, options=None):
+        """ Sign given CSR file using nssdb """
+        stdin_text = "y\n\ny\n"
+        cmdstr = ['certutil',
+                  '-C',
+                  '-d', self.db_dir,
+                  '-i', csr_in,
+                  '-o', csr_out,
+                  '-c', nick,
+                  '-1', '-2',
+                  '-z', self.noise_file,
+                  '--keyUsage', 'certSigning,digitalSignature,nonRepudiation',
+                  '--nsCertType', 'sslCA,smimeCA,objectSigningCA',
+                  '-f', self.password_file]
+        if options:
+            cmdstr += options
+        if '--extSKID' in options:
+            stdin_text += "%s\n\n\nn\n%s\nn\n" % (self.root_key_id, self.ipa_ca_key_id)
+
+        print("Running: [%s] with stdin_text %s" % (" ".join(cmdstr), stdin_text))
+        cmd = self.host.run_command(cmdstr, stdin_text=stdin_text, raiseonerr=False)
         return cmd.stdout_text, cmd.stderr_text
