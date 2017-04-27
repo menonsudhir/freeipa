@@ -81,6 +81,7 @@ class TestOneWay(object):
         print "waiting for 60 seconds"
         time.sleep(60)
         sssd_cache_reset(multihost.master)
+        time.sleep(10)
         cmd = multihost.master.run_command(['id', aduser + '@' + forwardzone],
                                            raiseonerr=False)
         print cmd.stdout_text
