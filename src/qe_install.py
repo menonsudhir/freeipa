@@ -401,7 +401,7 @@ def adtrust_install(host):
         cmd = host.run_command(runcmd, raiseonerr=False)
         print("STDOUT: %s" % cmd.stdout_text)
         print("STDERR: %s" % cmd.stderr_text)
-        if 'package ipa-server-trust-ad is not installed' in cmd.stderr_text:
+        if 'package ipa-server-trust-ad is not installed' in cmd.stderr_text or cmd.stdout_text:
             runcmd = 'yum install -y ipa-server-trust-ad'
             cmd = host.run_command(runcmd, raiseonerr=False)
             print("Running command: %s" % runcmd)
