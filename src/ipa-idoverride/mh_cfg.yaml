@@ -3,14 +3,26 @@ admin_id: admin
 admin_pw: Secret123
 dirman_id: '"cn=Directory Manager"'
 dirman_pw: Secret123
-dns_forwarder: 10.76.33.206
+dns_forwarder: 10.76.33.229
 domains:
   - name: testrelm.test
     type: ipa
     hosts:
       - name: master.testrelm.test
         external_hostname: hostname1
+        external_ip: 10.19.34.10
         role: master
       - name: client.testrelm.test
         external_hostname: hostname2
+        external_ip: 10.19.34.12
         role: client
+  - name: pne.qe
+    type: ad
+    hosts:
+      - name: win1.pne.qe
+        external_hostname: win1.pne.qe
+        role: ad
+        ip: 10.76.33.229
+        username: 'Administrator'
+        password: 'Secret123'
+        host_type: 'windows'
