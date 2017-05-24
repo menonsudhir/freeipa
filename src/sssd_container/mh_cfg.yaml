@@ -7,5 +7,5 @@ domains:
         ip: 10.76.33.239
         role: 'master'
       - name: client.testrelm.test
-        external_hostname: hostname2
+        external_hostname: hostname1
         role: 'client'
