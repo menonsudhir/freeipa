@@ -6,6 +6,6 @@ domains:
         external_hostname: ipaserver73.testrelm.test
         ip: 10.76.33.239
         role: 'master'
-      - name: client.testrelm.test
+      - name: hostname1
         external_hostname: hostname1
         role: 'client'
