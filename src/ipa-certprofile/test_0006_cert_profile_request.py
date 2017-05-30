@@ -335,7 +335,7 @@ class TestCertProfileRequest(object):
                                 cert_acl, '--usercat=all', '--hostcat=all',
                                 '--servicecat=all'],
                                exp_returncode=0)
-        output = "subject alt name type DNS name is forbidden " \
+        output = "subject alt name type DNSName is forbidden " \
                  "for user principals"
         multihost.master.qerun(['ipa', 'cert-request', testuser_csr,
                                 '--profile-id=' + cname,

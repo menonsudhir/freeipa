@@ -68,7 +68,6 @@ class TestCertProfileImport(object):
                     '--permissions=Get Certificates status from the CA',
                     '--permissions=Revoke Certificate',
                     '--permissions=Certificate Remove Hold',
-                    '--permissions=Request Certificate with SubjectAltName',
                     '--permissions=System: Add CA Certificate For Renewal',
                     '--permissions=System: Add Certificate Store Entry',
                     '--permissions=System: Modify CA Certificate',

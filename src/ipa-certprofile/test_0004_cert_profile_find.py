@@ -141,8 +141,8 @@ class TestCertProfileFind(object):
 
         # Test case: Successfully find profiles with store False
         data['store'] = 'False'
-        data['exp_code'] = '1'
-        data['exp_output'] = 'Number of entries returned 0'
+        data['exp_code'] = '0'
+        data['exp_output'] = 'Number of entries returned 1'
         certprofile_run(data)
 
         # Test case: Fail to find profiles with invalid store value
