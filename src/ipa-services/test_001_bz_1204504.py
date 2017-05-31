@@ -8,7 +8,6 @@ IPA Client configured on RHEL7.2
 """
 
 import pytest
-from ipa_pytests.qe_class import multihost
 
 
 class Test_bz_1204504(object):
