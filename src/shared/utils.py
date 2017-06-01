@@ -183,6 +183,8 @@ def dnsforwardzone_add(host, forwardzone, forwarder):
                            ' --forwarder=' + forwarder +
                            ' --forward-policy=only',
                            raiseonerr=False)
+    print("STDOUT: %s" % cmd.stdout_text)
+    print("STDERR: %s" % cmd.stderr_text)
     service_control(host, 'named-pkcs11', 'restart')
     if 'Active zone: TRUE' in cmd.stdout_text:
         print("DNS Forwardzone has been added sucessfully on IPA "
