@@ -9,5 +9,5 @@ domains:
     type: ipa
     hosts:
       - name: hostname1.testrelm.test
-        external_hostname: hostname1.testrelm.test
+        external_hostname: hostname1
         role: master
