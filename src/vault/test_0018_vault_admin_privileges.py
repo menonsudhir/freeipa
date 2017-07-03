@@ -94,7 +94,6 @@ class TestVaultAdminPrivileges(object):
         multihost.master.qerun(runcmd, exp_returncode=1, exp_output="Insufficient access")
         multihost.master.kinit_as_admin()
 
-    @pytest.mark.skip(reason="Skipping due to BZ1362333")
     def test_0007_successfully_add_vault_if_current_user_is_container_owner(self, multihost):
         """
         IDM-IPA-TC: Vault:  Successfully add vault if current user is container owner
@@ -105,7 +104,6 @@ class TestVaultAdminPrivileges(object):
         multihost.master.qerun(runcmd)
         multihost.master.kinit_as_admin()
 
-    @pytest.mark.skip(reason="Skipping due to BZ1362333")
     def test_0008_successfully_remove_vault_if_current_user_is_container_owner(self, multihost):
         """
         IDM-IPA-TC: Vault: Successfully remove vault if current user is container owner

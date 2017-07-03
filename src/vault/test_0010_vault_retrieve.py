@@ -170,7 +170,6 @@ class TestVaultRetrieve(object):
                  ['--password-file=' + data.DNE_FILE]
         multihost.master.qerun(runcmd, exp_returncode=1, exp_output="No such file or directory")
 
-    @pytest.mark.skip(reason="Skipping due to BZ1362312")
     def test_0017_fail_to_retrieve_secret_from_vault_with_invalid_public_key_value(self, multihost):
         """
         IDM-IPA-TC: Vault: Fail to retrieve secret from vault with invalid public key value
