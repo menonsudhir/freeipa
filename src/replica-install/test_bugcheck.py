@@ -56,7 +56,9 @@ class TestBugCheck(object):
         in order to verify that SRV DNS records for the replica were added correctly."""
         stop_firewalld(multihost.master)
         stop_firewalld(multihost.replicas[0])
-        setup_replica(multihost.replica, multihost.master, False, False)
+        setup_replica(multihost.replica, multihost.master,
+                      setup_dns=True,
+                      setup_ca=True)
         multihost.master.kinit_as_admin()
         multihost.replica.kinit_as_admin()
         master_op = multihost.master.run_command(['ipa', 'dnsrecord-find', multihost.master.domain.name])
