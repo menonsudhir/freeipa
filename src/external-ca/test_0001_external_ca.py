@@ -22,8 +22,31 @@ class TestExternalCA(object):
         print("*" * 80)
 
     def test_0001_external_ca_server_install(self, multihost):
-        """ test_0001_external_ca_server_install
-        IDM-IPA-TC: Install IPA Server using external-ca option """
+        """
+
+        :Title: IDM-IPA-TC: Install IPA Server using external-ca option
+
+        :Description: Check installation of IPA Master using external-ca option
+
+        :Setup:
+
+        1. RHEL 7.4 system
+
+        :Steps:
+            1. Install IPA Master with option --external-ca
+            2. Check if IPA Master is installed successfully
+            3. Check if ipactl works with various operations
+
+        :Expectedresults:
+            1. No errors or warnings during installation procedure
+            2. Successful IPA Master installation
+            3. Successful ipactl operations
+
+        :Automation: No
+
+        :CaseComponent: ipa
+
+        """
         master = multihost.master
         seconds = 1
         cmd = [paths.IPASERVERINSTALL,
