@@ -1,0 +1,3 @@
+PURPOSE of /ipa-server/rhel74/pytest2bkr
+Description: A generic job to run Pytest TC inside Beaker Job
+Author: Abhijeet Kasurde <akasurde@redhat.com>
