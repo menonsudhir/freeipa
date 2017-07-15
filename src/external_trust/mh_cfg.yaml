@@ -17,9 +17,9 @@ domains:
   - name: pne.qe
     type: ad
     hosts:
-      - name: win1.pne.qe
-        external_hostname: win1.pne.qe
-        ip: 10.76.33.206
+      - name: idm-qe-ipa-win3.ipaad2012r2.test
+        external_hostname: idm-qe-ipa-win3.ipaad2012r2.test
+        ip: 10.8.63.43
         role: ad
         username: 'Administrator'
         password: 'Secret123'
