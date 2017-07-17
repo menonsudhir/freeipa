@@ -110,7 +110,7 @@ class Testmaster(object):
                                 '--zonemgr=Tko@redhat..com', '-U'],
                                exp_returncode=2,
                                exp_output="ipa-server-install: error: "
-                                          "option --zonemgr: empty DNS label")
+                                          "option zonemgr: empty DNS label")
 
     def test_0005_bz1283890(self, multihost):
         """
