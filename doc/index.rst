@@ -7,7 +7,7 @@ Welcome to IPA PyTests' documentation!
 ======================================
 
 IPA PyTests is a project designed to provide test suites for Red Hat's
-Identity Management product--IPA.  These tests are written in pyton
+Identity Management product--IPA.  These tests are written in python
 using pytest for the testing framework.  In addition they rely heavily
 on a new python pytest plugin called multihost[#_].
 
