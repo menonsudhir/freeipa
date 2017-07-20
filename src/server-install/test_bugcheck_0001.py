@@ -255,6 +255,8 @@ class Testmaster(object):
                                              passwd, passwd,
                                              master1.config.dns_forwarder,
                                              passwd, passwd)
+        cmdstr += ['--no-pkinit']
+
         print("\nRuning command : %s" % cmdstr)
         cmd = master1.run_command(cmdstr, raiseonerr=False)
         if cmd.returncode != 0:
@@ -385,6 +387,8 @@ class Testmaster(object):
 
         cmdstr += ['--ip-address', replica1.ip,
                    '--unattended']
+
+        cmdstr += ['--no-pkinit']
 
         print("\nRunning command : %s" % " ".join(cmdstr))
         cmd = replica1.run_command(cmdstr, raiseonerr=False)
