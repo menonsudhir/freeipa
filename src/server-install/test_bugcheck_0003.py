@@ -7,13 +7,17 @@ import pytest
 from ipa_pytests.qe_install import setup_master, uninstall_server
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_class import qe_use_class_setup
+from ipa_pytests.shared import paths
 
 
 class TestMasterInstallBugs(object):
     """ Test Class """
     def class_setup(self, multihost):
         """ Setup for class """
-        setup_master(multihost.master)
+        if multihost.master.transport.file_exists(paths.IPADEFAULTCONF):
+            print("IPA Server already installed, skipping installation.")
+        else:
+            setup_master(multihost.master)
 
     def test_0001_bz1351276(self, multihost):
         """
