@@ -129,12 +129,24 @@ class Testmaster(object):
         """
         Testcase to validate IPA server install parameters
         """
-        exp_output = "ipa-server-install: error: option --subject: " \
-                     "invalid subject base format"
+        exp_output = "ipa-server-install: error: option subject-base: invalid DN: malformed RDN string = \"NOSUBJECT\""
         multihost.master.qerun(['ipa-server-install', '--setup-dns',
                                 '--forwarder=10.11.5.19', '-r TESTRELM.TEST',
                                 '-p', 'password', '-a', 'password',
                                 '--subject=NOSUBJECT', '-U'],
+                               exp_returncode=2,
+                               exp_output=exp_output)
+
+    def test_0006_bz1283890_with_subject_base(self, multihost):
+        """
+        Testcase to validate IPA server install parameters for the `--subject-base' option
+        This option replaces the `--subject' option, which is undocumented but still works.
+        """
+        exp_output = "ipa-server-install: error: option subject-base: invalid DN: malformed RDN string = \"NOSUBJECT\""
+        multihost.master.qerun(['ipa-server-install', '--setup-dns',
+                                '--forwarder=10.11.5.19', '-r TESTRELM.TEST',
+                                '-p', 'password', '-a', 'password',
+                                '--subject-base=NOSUBJECT', '-U'],
                                exp_returncode=2,
                                exp_output=exp_output)
 
