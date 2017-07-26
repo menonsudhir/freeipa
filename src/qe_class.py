@@ -132,7 +132,7 @@ class QeHost(pytest_multihost.host.Host):
         - <password> - krb password for <uesr>
         """
         self.run_command('kdestroy -A')
-        self.run_command(['kinit', user], stdin_text=passwd)
+        self.run_command(['kinit', user], stdin_text=passwd, raiseonerr=False)
         cmd = self.run_command('klist')
         print cmd.stdout_text
 

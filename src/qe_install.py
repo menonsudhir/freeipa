@@ -51,7 +51,7 @@ def set_hostname(host):
         host.run_command(['hostname', host.hostname])
 
 
-def set_etc_hosts(host):
+def set_etc_hosts(host, dest_host=None):
     """ Set /etc/hosts entry for host.ip host.hostname """
     etc_hosts = host.get_file_contents('/etc/hosts')
     host.put_file_contents('/etc/hosts.set_etc_hosts.backup', etc_hosts)
@@ -62,6 +62,10 @@ def set_etc_hosts(host):
                            flags=re.MULTILINE)
     etc_hosts += '\n%s %s\n' % (host.ip, host.hostname)
     host.put_file_contents('/etc/hosts', etc_hosts)
+    if dest_host:
+        dest_etc_hosts = dest_host.get_file_contents('/etc/hosts')
+        dest_etc_hosts += '\n%s %s\n' % (host.ip, host.hostname)
+        dest_host.put_file_contents('/etc/hosts', dest_etc_hosts)
 
 
 def set_resolv_conf_to_master(host, master):

@@ -8,11 +8,13 @@ from ipa_pytests.shared.utils import (service_control, start_firewalld,
                                       stop_firewalld)
 from lib import (update_krbv_conf, revert_krbv_conf,
                  change_user_passwd, pwpolicy_mod)
+from ipa_pytests.qe_install import set_etc_hosts, sleep
 import time
 
 
 class TestKdcproxy(object):
     """ Test Class """
+    twentyseconds = 20
     def class_setup(self, multihost):
         """ Setup for class """
         multihost.client = multihost.clients[0]
@@ -212,9 +214,15 @@ class TestKdcproxy(object):
         # 2. Update krb5 with multiple replica
         update_krbv_conf(multihost, replica=True)
         # 3. Enable and start firewall on Master server
+        set_etc_hosts(multihost.master, multihost.client)
+        set_etc_hosts(multihost.replica, multihost.client)
         start_firewalld(multihost.master)
         # Sleep for 20 seconds
-        time.sleep(20)
+        sleep(twentyseconds)
+        service_control(multihost.master, 'httpd', 'restart')         
+        sleep(twentyseconds)
+        service_control(multihost.replica, 'httpd', 'restart')
+        sleep(twentyseconds)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 4. Run kinit
         multihost.client.kinit_as_user(multihost.testuser, multihost.password)
@@ -249,9 +257,8 @@ class TestKdcproxy(object):
         revert_krbv_conf(multihost)
         # 2. Modify client krb5.conf for http_anchors
         update_krbv_conf(multihost)
-        twentyseconds = 20
         print("Sleeping for [{0}] seconds".format(twentyseconds))
-        time.sleep(twentyseconds)
+        sleep(twentyseconds)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 3. Run kinit
         multihost.client.kinit_as_user(multihost.testuser, multihost.password)
@@ -443,12 +450,13 @@ class TestKdcproxy(object):
         # 4. Start Firewalld and unblock 80 and 443
         for port in ['80', '443']:
             multihost.master.qerun(['firewall-cmd', '--permanent',
-                                   '--add-port=' + port + '/tcp'],
+                                    '--add-port=' + port + '/tcp'],
                                    exp_returncode=0)
             multihost.master.qerun(['firewall-cmd', '--reload'],
                                    exp_returncode=0)
 
         service_control(multihost.client, 'sssd', 'restart')
+        sleep(twentyseconds)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 5. Run kinit
         cmd = multihost.client.run_command(['kinit', multihost.testuser],
@@ -476,7 +484,7 @@ class TestKdcproxy(object):
         # 9. Clean up
         for port in ['80', '443']:
             multihost.master.qerun(['firewall-cmd', '--permanent',
-                                   '--remove-port=' + port + '/tcp'],
+                                    '--remove-port=' + port + '/tcp'],
                                    exp_returncode=0)
             multihost.master.qerun(['firewall-cmd', '--reload'],
                                    exp_returncode=0)
