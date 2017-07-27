@@ -45,7 +45,8 @@ class TestSudo(object):
         multihost.client.qerun(cmd)
         service_control(multihost.client, 'sssd', 'restart')
         #Disable compat plugin on server
-        cmd = ['cp', '-af', '/etc/dirsrv/slapd-TESTRELM-TEST/dse.ldif', '/etc/dirsrv/slapd-TESTRELM-TEST/dse.ldif.bak']
+        DSE_LDIF_PATH = '/etc/dirsrv/slapd-' + multihost.realm.replace('.','-')
+        cmd = ['cp', '-af', DSE_LDIF_PATH + '/dse.ldif', DSE_LDIF_PATH + '/dse.ldif.bak']
         multihost.master.qerun(cmd)
         cmd = ['ldapdelete', '-x', '-D', 'cn=Directory Manager', '-w', multihost.admin_pw, '-r', 'cn=sudoers,cn=Schema Compatibility,cn=plugins,cn=config']
         multihost.master.qerun(cmd)
@@ -190,6 +191,7 @@ class TestSudo(object):
         cmd = ['sed', '-i', '/sudo_provider = ipa/d', '/etc/sssd/sssd.conf']
         multihost.client.qerun(cmd)
         service_control(multihost.client, 'sssd', 'restart')
-        cmd = ['mv', '-f', '/etc/dirsrv/slapd-TESTRELM-TEST/dse.ldif.bak', '/etc/dirsrv/slapd-TESTRELM-TEST/dse.ldif']
+        DSE_LDIF_PATH = '/etc/dirsrv/slapd-' + multihost.realm.replace('.','-')
+        cmd = ['mv', '-f', DSE_LDIF_PATH + '/dse.ldif.bak', DSE_LDIF_PATH + '/dse.ldif']
         multihost.master.qerun(cmd)
 
