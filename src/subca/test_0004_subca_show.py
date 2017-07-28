@@ -18,8 +18,13 @@ class TestSubCAShow(object):
 
     def test_0001_subca_show_help(self, multihost):
         """
-        test_0001_subca_show_help
-        IDM-IPA-TC: ipa ca show help
+        :Title: IDM-IPA-TC: ipa ca show help
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         cmd = "ipa help ca-show"
@@ -38,8 +43,13 @@ class TestSubCAShow(object):
 
     def test_0002_subca_show(self, multihost):
         """
-        test_0002_subca_show
-        IDM-IPA-TC: ipa ca show for existing Sub CA
+        :Title: IDM-IPA-TC: ipa ca show for existing Sub CA
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -60,8 +70,13 @@ class TestSubCAShow(object):
 
     def test_0003_subca_show_replica(self, multihost):
         """
-        test_0003_subca_show_replica
-        IDM-IPA-TC: ipa ca show for existing Sub CA from IPA Replica Server
+        :Title: IDM-IPA-TC: ipa ca show for existing Sub CA from IPA Replica Server
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.replica.kinit_as_admin()
         subca = {}
@@ -83,8 +98,13 @@ class TestSubCAShow(object):
 
     def test_0004_subca_show(self, multihost):
         """
-        test_0004_subca_show
-        IDM-IPA-TC: ipa ca show for non-existing Sub CA
+        :Title: IDM-IPA-TC: ipa ca show for non-existing Sub CA
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -95,8 +115,13 @@ class TestSubCAShow(object):
 
     def test_0005_subca_show_replica(self, multihost):
         """
-        test_0005_subca_show_replica
-        IDM-IPA-TC: ipa ca show for existing Sub CA from IPA Replica Server
+        :Title: IDM-IPA-TC: ipa ca show for existing Sub CA from IPA Replica Server
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.replica.kinit_as_admin()
         subca = {}

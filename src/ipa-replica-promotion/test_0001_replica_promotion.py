@@ -27,8 +27,13 @@ class TestIPAReplicaPromotion(object):
 
     def test_0001_replica_install_without_client(self, multihost):
         """
-        IDM-IPA-TC: Installing IPA replica without IPA Client install
-                    on given machine
+        :Title: IDM-IPA-TC: Installing IPA replica without IPA Client install on given machine
+
+        :Requirement: IDM-IPA-REQ : Replica Promotion
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         testuser = "test_0001_testuser1"
@@ -49,7 +54,13 @@ class TestIPAReplicaPromotion(object):
 
     def test_0002_replica_install_without_required_params(self, multihost):
         """
-        IDM-IPA-TC: Installing IPA replica without required parameters
+        :Title: IDM-IPA-TC: Installing IPA replica without required parameters
+
+        :Requirement: IDM-IPA-REQ : Replica Promotion
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         cmd = "ipa-replica-install"
         cmdout = multihost.replica.run_command(cmd, raiseonerr=False)
@@ -59,7 +70,13 @@ class TestIPAReplicaPromotion(object):
 
     def test_0003_replica_install_with_required_params(self, multihost):
         """
-        IDM-IPA-TC: Installing IPA replica with required parameters
+        :Title: IDM-IPA-TC: Installing IPA replica with required parameters
+
+        :Requirement: IDM-IPA-REQ : Replica Promotion
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         testuser = "test_0003_testuser1"
@@ -83,7 +100,13 @@ class TestIPAReplicaPromotion(object):
 
     def test_0004_prompt_replica_to_ca(self, multihost):
         """
-        IDM-IPA-TC: Promoting IPA replica server with CA
+        :Title: IDM-IPA-TC: Promoting IPA replica server with CA
+
+        :Requirement: IDM-IPA-REQ : Replica Promotion
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         testuser = "test_0004_testuser1"
@@ -115,7 +138,13 @@ class TestIPAReplicaPromotion(object):
 
     def test_0005_kra_install(self, multihost):
         """
-        IDM-IPA-TC: Installing KRA on IPA replica server
+        :Title: IDM-IPA-TC: Installing KRA on IPA replica server
+
+        :Requirement: IDM-IPA-REQ : Replica Promotion
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         testuser = "test_0005_testuser1"
@@ -145,7 +174,13 @@ class TestIPAReplicaPromotion(object):
 
     def test_0006_rejoin_replica(self, multihost):
         """
-        IDM-IPA-TC: Rejoin replica on given server after uninstall
+        :Title: IDM-IPA-TC: Rejoin replica on given server after uninstall
+
+        :Requirement: IDM-IPA-REQ : Replica Promotion
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         testuser = "test_0006_testuser1"
@@ -178,7 +213,13 @@ class TestIPAReplicaPromotion(object):
 
     def test_0007_otp_install(self, multihost):
         """
-        IDM-IPA-TC: Installing IPA replica server using OTP token
+        :Title: IDM-IPA-TC: Installing IPA replica server using OTP token
+
+        :Requirement: IDM-IPA-REQ : Replica Promotion
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         testuser = "test_0007_testuser1"
@@ -223,7 +264,13 @@ class TestIPAReplicaPromotion(object):
 
     def test_0008_otp_two_step_install(self, multihost):
         """
-        IDM-IPA-TC: Installing IPA replica server using OTP installed client
+        :Title: IDM-IPA-TC: Installing IPA replica server using OTP installed client
+
+        :Requirement: IDM-IPA-REQ : Replica Promotion
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         testuser = "test_0008_testuser1"

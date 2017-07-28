@@ -18,8 +18,13 @@ class TestSubCAFind(object):
 
     def test_0001_subca_help(self, multihost):
         """
-        test_0001_subca_help
-        IDM-IPA-TC: Check help message for ipa ca
+        :Title: IDM-IPA-TC: Check help message for ipa ca
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         cmd = "ipa help ca"
@@ -33,8 +38,13 @@ class TestSubCAFind(object):
 
     def test_0002_subca_find_help(self, multihost):
         """
-        test_0002_subca_find_help
-        IDM-IPA-TC: Check help message for ipa ca-find
+        :Title: IDM-IPA-TC: Check help message for ipa ca-find
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         cmd = "ipa help ca-find"
@@ -46,8 +56,13 @@ class TestSubCAFind(object):
 
     def test_0003_subca_find_no_param(self, multihost):
         """
-        test_0003_subca_find_no_param
-        IDM-IPA-TC: ipa ca find without any parameters
+        :Title: IDM-IPA-TC: ipa ca find without any parameters
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -57,8 +72,13 @@ class TestSubCAFind(object):
 
     def test_0004_subca_find_name_param(self, multihost):
         """
-        test_0004_subca_find_name_param
-        IDM-IPA-TC: ipa ca find with name option
+        :Title: IDM-IPA-TC: ipa ca find with name option
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -68,8 +88,13 @@ class TestSubCAFind(object):
 
     def test_0005_subca_find_non_existent_subca(self, multihost):
         """
-        test_0005_subca_find_non_existent_subca
-        IDM-IPA-TC: ipa ca find with non-existent sub ca name option
+        :Title: IDM-IPA-TC: ipa ca find with non-existent sub ca name option
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -80,8 +105,13 @@ class TestSubCAFind(object):
 
     def test_0006_subca_find_existent_subca(self, multihost):
         """
-        test_0006_subca_find_existent_subca
-        IDM-IPA-TC: ipa ca find with existent Sub CA
+        :Title: IDM-IPA-TC: ipa ca find with existent Sub CA
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}

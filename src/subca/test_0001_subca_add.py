@@ -23,8 +23,13 @@ class TestSubCAAdd(object):
 
     def test_0001_subca_add_help(self, multihost):
         """
-        test_0001_subca_add_help
-        IDM-IPA-TC: ipa ca add with help option
+        :Title: IDM-IPA-TC: ipa ca add with help option
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         cmd = "ipa help ca-add"
@@ -42,8 +47,13 @@ class TestSubCAAdd(object):
 
     def test_0002_subca_add_subca(self, multihost):
         """
-        test_0002_subca_add_subca
-        IDM-IPA-TC: ipa ca add with options
+        :Title: IDM-IPA-TC: ipa ca add with options
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -65,8 +75,13 @@ class TestSubCAAdd(object):
 
     def test_0003_subca_add_interactive(self, multihost):
         """
-        test_0003_subca_add_interactive
-        IDM-IPA-TC: ipa ca add in interactive mode
+        :Title: IDM-IPA-TC: ipa ca add in interactive mode
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -93,8 +108,13 @@ class TestSubCAAdd(object):
 
     def test_0004_subca_add_existing_subca(self, multihost):
         """
-        test_0004_subca_add_existing_subca
-        IDM-IPA-TC: ipa ca add with pre-existing Sub CA name
+        :Title: IDM-IPA-TC: ipa ca add with pre-existing Sub CA name
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -119,8 +139,13 @@ class TestSubCAAdd(object):
 
     def test_0005_subca_add_existing_subjectDN(self, multihost):
         """
-        test_0005_subca_add_existing_subjectDN
-        IDM-IPA-TC: ipa ca add with pre-existing Subject DN
+        :Title: IDM-IPA-TC: ipa ca add with pre-existing Subject DN
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -147,8 +172,13 @@ class TestSubCAAdd(object):
 
     def test_0006_subca_issue_certificates(self, multihost):
         """
-        test_0006_subca_issue_certificates
-        IDM-IPA-TC: Issue certificate using Sub CA
+        :Title: IDM-IPA-TC: Issue certificate using Sub CA
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -232,8 +262,13 @@ class TestSubCAAdd(object):
 
     def test_0007_subca_issue_certificates_replica(self, multihost):
         """
-        test_0007_subca_issue_certificates_replica
-        IDM-IPA-TC: Issue certificate using Sub CA from replica
+        :Title: IDM-IPA-TC: Issue certificate using Sub CA from replica
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.replica.kinit_as_admin()
         subca = {}

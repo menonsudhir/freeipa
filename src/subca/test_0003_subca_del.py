@@ -19,8 +19,13 @@ class TestSubCADel(object):
 
     def test_0001_subca_del_help(self, multihost):
         """
-        test_0001_subca_del_help
-        IDM-IPA-TC: ipa ca del with help option
+        :Title: IDM-IPA-TC: ipa ca delete with help option
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         cmd = "ipa help ca-del"
@@ -38,8 +43,12 @@ class TestSubCADel(object):
 
     def test_0002_subca_del_subca(self, multihost):
         """
-        test_0002_subca_del_subca
-        IDM-IPA-TC: ipa ca delete with non-interactive mode
+        :Title: IDM-IPA-TC: ipa ca delete with non-interactive mode
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -60,8 +69,13 @@ class TestSubCADel(object):
 
     def test_0003_subca_del_interactive(self, multihost):
         """
-        test_0003_subca_del_interactive
-        IDM-IPA-TC: ipa ca delete with interactive mode
+        :Title:  IDM-IPA-TC: ipa ca delete with interactive mode
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -94,8 +108,13 @@ class TestSubCADel(object):
 
     def test_0004_subca_del_non_existing_subca(self, multihost):
         """
-        test_0004_subca_del_non_existing_subca
-        IDM-IPA-TC: ipa ca delete with non-existent Sub CA
+        :Title: IDM-IPA-TC: ipa ca delete with non-existent Sub CA
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -108,8 +127,13 @@ class TestSubCADel(object):
 
     def test_0005_subca_del_default_subca(self, multihost):
         """
-        test_0005_subca_del_default_subca
-        IDM-IPA-TC: ipa ca delete with default Sub CA
+        :Title: IDM-IPA-TC: ipa ca delete with default Sub CA
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca = {}
@@ -129,8 +153,13 @@ class TestSubCADel(object):
 
     def test_0006_subca_del_multiple_subca(self, multihost):
         """
-        test_0006_subca_del_multiple_subca
-        IDM-IPA-TC: ipa ca delete multiple Sub CAs
+        :Title: IDM-IPA-TC: ipa ca delete multiple Sub CAs
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.master.kinit_as_admin()
         subca_prefix = "test_0006_subca_"
@@ -152,8 +181,13 @@ class TestSubCADel(object):
 
     def test_0007_subca_del_replica_subca(self, multihost):
         """
-        test_0007_subca_del_replica_subca
-        IDM-IPA-TC: ipa ca delete multiple Sub CAs from replica
+        :Title: IDM-IPA-TC: ipa ca delete multiple Sub CAs from replica
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.replica.kinit_as_admin()
         subca = {}
@@ -175,8 +209,13 @@ class TestSubCADel(object):
 
     def test_0008_subca_del_multiple_subca_replica(self, multihost):
         """
-        test_0008_subca_del_multiple_subca_replica
-        IDM-IPA-TC: ipa ca delete multiple Sub CAs from Replica
+        :Title: IDM-IPA-TC: ipa ca delete multiple Sub CAs from Replica
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.replica.kinit_as_admin()
         subca_prefix = "test_0008_subca_"
@@ -197,8 +236,13 @@ class TestSubCADel(object):
 
     def test_0009_subca_del_non_existing_subca_replica(self, multihost):
         """
-        test_0009_subca_del_non_existing_subca_replica
-        IDM-IPA-TC: ipa ca delete with non-existent Sub CA from replica
+        :Title: IDM-IPA-TC: ipa ca delete with non-existent Sub CA from replica
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.replica.kinit_as_admin()
         subca = {}
@@ -210,8 +254,13 @@ class TestSubCADel(object):
 
     def test_0010_subca_del_default_subca_replica(self, multihost):
         """
-        test_0010_subca_del_default_subca_replica
-        IDM-IPA-TC: ipa ca delete with default Sub CA from IPA replica
+        :Title: IDM-IPA-TC: ipa ca delete with default Sub CA from IPA replica
+
+        :Requirement: IDM-IPA-REQ : Lightweight sub-CAs
+
+        :Automation: Yes
+
+        :casecomponent: ipa
         """
         multihost.replica.kinit_as_admin()
         subca = {}
