@@ -340,3 +340,101 @@ def chcon(host, context=None, dirname=None):
     cmdstr = "chcon -t {0} {1}".format(context, dirname)
     print("Executing: {0}".format(cmdstr))
     return host.run_command(cmdstr, raiseonerr=False)
+
+
+def backup_resolv_conf(host):
+    """ backup resolv.conf nameserver"""
+    host.run_command(['cp', '-af',
+                      '/etc/resolv.conf',
+                      '/etc/resolv.conf.qebackup'])
+
+
+def docker_kinit_as_admin(host, container):
+    """ run kinit as admin inside container"""
+    cmd=host.run_command([paths.DOCKER, 'exec', '-i',
+                          container,
+                          'kinit', 'admin'],
+                          stdin_text='Secret123',
+                          set_env=False,
+                          raiseonerr=False)
+    print(cmd.stdout_text)
+    assert cmd.returncode == 0
+
+
+def docker_klist(host, container):
+    """ run klist inside container"""
+    cmd=host.run_command([paths.DOCKER, 'exec', '-i', container, 'klist'],
+                         raiseonerr=False)
+    print(cmd.stdout_text)
+
+
+def docker_kdestroy(host, container):
+    """ run destroy inside container"""
+    host.qerun([paths.DOCKER, 'exec', '-i', container, 'kdestroy'],
+               exp_returncode=0)
+
+
+def docker_get_version(host, container):
+    """
+    Get verison of IPA package.
+    """
+    if container == 'ipadocker' or container == 'replicadocker':
+        cmd=host.run_command([paths.DOCKER, 'exec', '-i', container, paths.RPM, '-qa', 'ipa-server', 'ipa-client'],
+                             raiseonerr=False)
+        print(cmd.stdout_text)
+    else:
+        cmd=host.run_command([paths.DOCKER, 'exec', '-i', container, paths.RPM, '-qa','ipa-client'],
+                             raiseonerr=False)
+        print(cmd.stdout_text)
+
+
+def docker_service_status(host, container):
+    """
+    Verify status of ipactl command.
+    """
+    if container == 'ipadocker' or container == 'replicadocker':
+        cmd=host.run_command([paths.DOCKER, 'exec', '-i', container, 'ipactl', 'status'],
+                             raiseonerr=False)
+        print(cmd.stdout_text)
+    else:
+        print("Not an IPA master")
+
+
+def docker_service_restart(host, container):
+    """
+    Restart ipactl command.
+    """
+    if container == 'ipadocker' or container == 'replicadocker':
+        host.qerun([paths.DOCKER, 'exec', '-i', container, 'ipactl', 'restart'],
+                   exp_returncode=0)
+    else:
+        print("Not an IPA master")
+
+
+def docker_service_stop(host, container):
+    """
+    Stop ipactl command.
+    """
+    if container == 'ipadocker' or container == 'replicadocker':
+        host.qerun([paths.DOCKER, 'exec', '-i', container, 'ipactl', 'stop'],
+                   exp_returncode=0)
+    else:
+        print("Not an IPA master")
+
+
+def docker_service_start(host, container):
+    """
+    Start ipactl command.
+    """
+    if container == 'ipadocker' or container == 'replicadocker':
+        host.qerun([paths.DOCKER, 'exec', '-i', container, 'ipactl', 'start'],
+                   exp_returncode=0)
+    else:
+        print("Not an IPA master")
+
+
+def restore_resolv_conf(host):
+    """ restore resolv.conf nameserver"""
+    host.run_command(['cp', '-af',
+                      '/etc/resolv.conf.qebackup',
+                      '/etc/resolv.conf'])

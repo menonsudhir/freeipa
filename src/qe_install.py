@@ -468,3 +468,82 @@ def sleep(seconds=1):
     """
     print("Sleeping for [%d] seconds" % seconds)
     time.sleep(seconds)
+
+
+def setup_master_docker(master, setup_dns=True):
+    """
+    This is the default testing setup for an IPA Docker Master.
+    This setup routine will install an IPA Master with DNS and a forwarder.
+    The domain and realm will be set differently than the real DNS domain.
+    """
+    set_hostname(master)
+    set_etc_hosts(master)
+
+    service_control(master, 'docker', 'restart')
+    master.transport.put_file('docker', '/etc/sysconfig/docker')
+    service_control(master, 'docker', 'restart')
+
+    pull = paths.DOCKER + ' pull rhel7/ipa-server'
+    master.qerun(pull, exp_returncode=0)
+    tag = 'docker tag $(docker images -q) rhel7/ipa-server'
+    master.qerun(tag, exp_returncode=0)
+
+    master.qerun([paths.DOCKER, 'images'], exp_returncode=0)
+    master.run_command('mkdir /var/lib/ipadocker', raiseonerr=False)
+
+    ipaserveroptions = '/var/lib/ipadocker/ipa-server-install-options'
+    ipaserveroptions_1 = '/var/lib/ipadocker/ipa-server-install-options_1'
+
+    if setup_dns:
+        install_options = ('--hostname=' + master.hostname +
+                           '\n--setup-dns' +
+                           '\n--forwarder=' + master.config.dns_forwarder)
+        master.put_file_contents(ipaserveroptions, install_options)
+
+    install_options_1 = ('\n-r ' + master.domain.realm +
+                         '\n-a ' + master.config.admin_pw +
+                         '\n-p ' + master.config.dirman_pw +
+                         '\n--ip-address=' + master.ip +
+                         '\n-U')
+
+    master.put_file_contents(ipaserveroptions_1, install_options_1)
+    master.run_command('cat ' + ipaserveroptions_1 + ' >> ' + ipaserveroptions)
+
+    install_file = '/var/lib/ipadocker/ipa-server-install-options'
+
+    if master.transport.file_exists(install_file):
+        print("ipa-server-install-option file exists")
+
+    master.run_command('rm -rf ' + ipaserveroptions_1)
+
+    backup_resolv_conf(master)
+    runcmd = paths.ATOMIC + ' install --name ipadocker rhel7/ipa-server net-host < /dev/ptmx'
+    print(runcmd)
+    cmd = master.run_command(runcmd, raiseonerr=False)
+
+    print("STDOUT:", cmd.stdout_text)
+    print("STDERR:", cmd.stderr_text)
+    if cmd.returncode != 0:
+        raise ValueError("atomic install for ipaserver failed with "
+                         "error code=%s" % cmd.returncode)
+    else:
+        print ("IPA MASTER install using docker image successful.")
+
+    print('Starting ipadocker container')
+    runcmd2 = [paths.DOCKER , 'run', '--net=host',
+               '-d', '--name', 'ipadocker',
+               '-v', '/var/lib/ipadocker:/data:Z',
+               '-v', '/sys/fs/cgroup:/sys/fs/cgroup:ro',
+               '--tmpfs', '/run', '--tmpfs', '/tmp',
+               '-v', '/dev/urandom:/dev/random:ro', 'rhel7/ipa-server']
+    print(runcmd2)
+    cmd2 = master.run_command(runcmd2, raiseonerr=False)
+    print("STDOUT:", cmd2.stdout_text)
+    if cmd2.returncode != 0:
+        raise ValueError("ipa-docker start failed with "
+                         "error code=%s" % cmd2.returncode)
+    else:
+        print ("IPA MASTER container start using docker image successful.")
+
+
+
