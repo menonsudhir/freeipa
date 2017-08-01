@@ -9,7 +9,7 @@ import pytest
 import time
 import re
 from ipa_pytests.shared import paths
-from ipa_pytests.shared.utils import service_control
+from ipa_pytests.shared.utils import service_control, backup_resolv_conf, restore_resolv_conf
 from ipa_pytests.shared.rpm_utils import list_rpms
 from ipa_pytests.shared.utils import get_domain_level, ipa_version_gte
 from ipa_pytests.shared.log_utils import backup_logs
@@ -546,4 +546,214 @@ def setup_master_docker(master, setup_dns=True):
         print ("IPA MASTER container start using docker image successful.")
 
 
+def uninstall_master_docker(master):
+    """
+    This is the default uninstall for a master.
+    """
+    runcmd1 = paths.ATOMIC + ' stop ipadocker'
+    master.qerun(runcmd1, exp_returncode=0)
 
+    runcmd2 = paths.ATOMIC + ' uninstall --name ipadocker rhel7/ipa-server'
+    master.qerun(runcmd2, exp_returncode=0)
+
+    master.log.info("Restoring backup of /etc/resolv.conf")
+    restore_resolv_conf(master)
+
+
+def setup_client_docker(client, master):
+    """
+    This is the default testing setup for an IPA Client-docker.
+    This setup routine will install an IPA client using autodiscovery.
+    """
+    set_hostname(client)
+    set_etc_hosts(client)
+    backup_resolv_conf(client)
+
+    set_resolv_conf_to_master(client, master)
+
+    service_control(client, 'docker', 'restart')
+    client.transport.put_file('docker', '/etc/sysconfig/docker')
+    service_control(client, 'docker', 'restart')
+
+    pull = paths.DOCKER + ' pull rhel7/sssd'
+    client.qerun(pull, exp_returncode=0)
+
+    client.run_command('mkdir /etc/sssd', raiseonerr=False)
+
+    tag = paths.DOCKER + ' tag $(docker images -q) rhel7/sssd'
+    client.qerun(tag, exp_returncode=0)
+
+    client.qerun([paths.DOCKER, 'images'], exp_returncode=0)
+
+    ipaclientoptions = '/etc/sssd/ipa-client-install-options'
+    install_options = ('--server ' + master.hostname +
+                       '\n--domain ' + master.domain.name +
+                       '\n--principal ' + master.config.admin_id +
+                       '\n--password ' + master.config.admin_pw +
+                       '\n--force-join')
+    client.put_file_contents(ipaclientoptions, install_options)
+    runcmd = paths.ATOMIC + ' install rhel7/sssd'
+    cmd = client.run_command(runcmd, raiseonerr=False)
+    client.qerun(['ls', '/etc/systemd/system/sssd.service'],
+                 exp_returncode=0)
+
+    print("STDOUT:", cmd.stdout_text)
+    print("STDERR:", cmd.stderr_text)
+    if cmd.returncode == 0:
+        print ("IPA client within docker install successfull.")
+    else:
+        pytest.fail("IPA client within docker install not successful.")
+    if not client.transport.file_exists('/etc/systemd/system/sssd.service'):
+        pytest.fail('SSSD service file not found, kindly debug')
+    service_control(client, 'sssd', 'restart')
+    client.qerun(['systemctl', 'status', 'sssd'],
+                 exp_returncode=0,
+                 exp_output="container")
+
+
+def setup_replica_docker(replica, master, setup_dns=True, setup_ca=True, setup_reverse=True):
+    """
+    This is the default testing setup for an IPA Docker Replica.
+    This setup routine will install an IPA Master with DNS and a forwarder.
+    The domain and realm will be set differently than the real DNS domain.
+    """
+    replica.revnet = replica.ip.split('.')[2] + '.' + \
+        replica.ip.split('.')[1] + '.' + \
+        replica.ip.split('.')[0] + '.in-addr.arpa.'
+    master.revnet = master.ip.split('.')[2] + '.' + \
+        master.ip.split('.')[1] + '.' + \
+        master.ip.split('.')[0] + '.in-addr.arpa.'
+
+    if replica.revnet != master.revnet:
+        setup_dns_revnet = True
+    else:
+        setup_dns_revnet = False
+    print("SETUPDNSREVNET = %s" % setup_dns_revnet)
+
+    print("Setting hostname")
+    set_hostname(replica)
+    print("Setting /etc/hosts")
+    set_etc_hosts(replica)
+
+    service_control(replica, 'docker', 'restart')
+    replica.transport.put_file('docker', '/etc/sysconfig/docker')
+    service_control(replica, 'docker', 'restart')
+
+    backup_resolv_conf(replica)
+    pull = paths.DOCKER + ' pull rhel7/ipa-server'
+    replica.qerun(pull, exp_returncode=0)
+    if setup_dns:
+        set_resolv_conf_to_master(replica, master)
+
+    set_resolv_conf_to_master(replica, master)
+
+    tag = paths.DOCKER + ' tag $(docker images -q) rhel7/ipa-server'
+    replica.qerun(tag, exp_returncode=0)
+
+    replica.qerun([paths.DOCKER, 'images'], exp_returncode=0)
+
+    replica.run_command('mkdir /var/lib/replicadocker', raiseonerr=False)
+
+    ipareplicainstalloptions = '/var/lib/replicadocker/ipa-replica-install-options'
+    ipareplicainstalloptions_1 = '/var/lib/replicadocker/ipa-replica-install-options_1'
+
+    if setup_dns:
+        install_options = ('--setup-dns'
+                           #'\n--forwarder=' + master.config.dns_forwarder)
+                           '\n--forwarder=10.65.201.89')
+        replica.put_file_contents(ipareplicainstalloptions, install_options)
+        if setup_reverse and setup_dns_revnet:
+            # only add allow-zone-overlap if IPA >= 4.4.0
+            install_options_1 = ('\n--reverse-zone=' + replica.revnet)
+            replica.put_file_contents(ipareplicainstalloptions_1, install_options_1)
+            replica.run_command('cat ' + ipareplicainstalloptions_1 + ' >> ' + ipareplicainstalloptions)
+            if ipa_version_gte(master, '4.4.0'):
+                install_options_1 = ('\n--allow-zone-overlap')
+                replica.put_file_contents(ipareplicainstalloptions_1, install_options_1)
+                replica.run_command('cat ' + ipareplicainstalloptions_1 + ' >> ' + ipareplicainstalloptions)
+
+    if not setup_reverse:
+        install_options_1 = ('\n--no-reverse')
+        replica.put_file_contents(ipareplicainstalloptions_1, install_options_1)
+        replica.run_command('cat ' + ipareplicainstalloptions_1 + ' >> ' + ipareplicainstalloptions)
+
+    if setup_ca:
+        install_options_1 = ('\n--setup-ca')
+        replica.put_file_contents(ipareplicainstalloptions_1, install_options_1)
+        replica.run_command('cat ' + ipareplicainstalloptions_1 + ' >> ' + ipareplicainstalloptions)
+
+    install_options_1 = ('\n--server ' + master.hostname +
+                         '\n--domain ' + master.domain.name +
+                         '\n--admin-password ' + master.config.admin_pw +
+                         '\n--principal ' + master.config.admin_id +
+                         '\n-U')
+    replica.put_file_contents(ipareplicainstalloptions_1, install_options_1)
+    replica.run_command('cat ' + ipareplicainstalloptions_1 + ' >> ' + ipareplicainstalloptions)
+
+    replica.run_command('rm -rf ' + ipareplicainstalloptions_1)
+
+    runcmd = paths.ATOMIC + ' install --name replicadocker rhel7/ipa-server net-host ipa-replica-install < /dev/ptmx'
+    print(runcmd)
+    cmd = replica.run_command(runcmd, raiseonerr=False)
+
+    print("STDOUT:", cmd.stdout_text)
+    print("STDOUT:", cmd.stdout_text)
+    if cmd.returncode != 0:
+        raise ValueError("ipa-replica-docker failed with "
+                         "error code=%s" % cmd.returncode)
+    else:
+        print ("IPA Replica install using docker image successful.")
+
+    runcmd2 = [paths.DOCKER , 'run', '--net=host',
+               '-d', '--name', 'replicadocker',
+               '-v', '/var/lib/replicadocker:/data:Z',
+               '-v', '/sys/fs/cgroup:/sys/fs/cgroup:ro',
+               '--tmpfs', '/run', '--tmpfs', '/tmp',
+               '-v', '/dev/urandom:/dev/random:ro', 'rhel7/ipa-server']
+    cmd2 = replica.run_command(runcmd2, raiseonerr=False)
+
+    print("STDOUT:", cmd2.stdout_text)
+    if cmd2.returncode != 0:
+        raise ValueError("docker run command for ipa-replica-docker failed with "
+                         "error code=%s" % cmd2.returncode)
+    else:
+        print ("IPA Replica container start using docker image successful.")
+
+
+def uninstall_replica_docker(replica, master):
+    cmd1 = paths.DOCKER + ' exec -i ipadocker ipa-replica-manage del '
+    cmd2 = master.run_command(cmd1 + replica.hostname,
+                              stdin_text='Secret123',
+                              raiseonerr=False)
+    print("STDOUT:", cmd2.stdout_text)
+    print("STDERR:", cmd2.stderr_text)
+
+    runcmd1 = paths.ATOMIC + ' stop replicadocker'
+    replica.qerun(runcmd1, exp_returncode=0)
+
+    runcmd2 = paths.ATOMIC + ' uninstall --name replicadocker rhel7/ipa-server'
+    replica.qerun(runcmd2, exp_returncode=0)
+
+    replica.log.info("Restoring backup of /etc/resolv.conf")
+    restore_resolv_conf(replica)
+
+
+def uninstall_client_docker(client):
+    """
+    This is the default uninstall for a client-docker.  It runs the standard client
+    uninstall command.
+    """
+    runcmd1 = paths.DOCKER + ' stop sssd'
+    client.qerun(runcmd1, exp_returncode=0)
+
+    runcmd2 = paths.ATOMIC + ' uninstall rhel7/sssd'
+    client.qerun(runcmd2, exp_returncode=0)
+
+    cmd1 = 'systemctl stop sssd.service'
+    cmd2 = 'rm /etc/systemd/system/sssd.service'
+    cmd3 = 'systemctl daemon-reload'
+    client.qerun(cmd1, exp_returncode=0)
+    client.qerun(cmd2, exp_returncode=0)
+    client.qerun(cmd3, exp_returncode=0)
+    client.log.info("Restoring backup of /etc/resolv.conf")
+    restore_resolv_conf(client)
