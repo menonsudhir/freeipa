@@ -36,10 +36,16 @@ class TestCaAclsProfile(object):
 
     def test_0042_positive_caacl_profile_add_profile(self, multihost):
         """
-        test_0042_positive_caacl_profile_add_profile
-        IDM-IPA-TC: Certificate Profiles: Successfully add profile to CA ACL
-        """
 
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully add profile to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
+        """
         # Kinit as admin
         multihost.master.kinit_as_admin()
         cnames = {'smime': '1.3.6.1.5.5.7.3.4',

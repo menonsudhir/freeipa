@@ -37,8 +37,14 @@ class TestCaAclHost(object):
 
     def test_0036_positive_caacls_host_create(self, multihost):
         """
-        test_0036_positive_caacls_host_create
-        IPA-TC: Certificate Profiles CA ACLs: Successfully add host to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add host to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
         """
         cname = "testacl_0008"
         data = {'host': multihost.master,
@@ -65,9 +71,15 @@ class TestCaAclHost(object):
 
     def test_0037_positive_caacls_host_add_multiple_hosts(self, multihost):
         """
-        test_0037_positive_caacls_host_add_multiple_hosts
-        IPA-TC: Certificate Profiles CA ACLs: Successfully add
-                multiple hosts to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add multiple hosts to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         cname = "testacl_0009"
         data = {'host': multihost.master,
@@ -95,7 +107,7 @@ class TestCaAclHost(object):
         data['op'] = 'remove-host'
         caacl_run(data)
 
-        # IDM- IPA-TC: Certificate Profiles CA ACLs:
+        # IDM-IPA-TC: Certificate Profiles CA ACLs:
         #               Fail to remove non-existent host from CA ACL
         data['exp_code'] = '1'
         data['op'] = 'remove-host'
@@ -114,9 +126,15 @@ class TestCaAclHost(object):
 
     def test_0038_positive_caacls_hostgroup_create(self, multihost):
         """
-        test_0038_positive_caacls_hostgroup_create
-        IPA-TC: Certificate Profiles CA ACLs: Successfully add
-                hostgroup to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add hostgroup to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         cname = "testacl_0010"
         data = {'host': multihost.master,
@@ -155,9 +173,15 @@ class TestCaAclHost(object):
 
     def test_0039_positive_caacls_hg_create_multiple_hosts(self, multihost):
         """
-        test_0039_positive_caacls_hg_create_multiple_hosts
-        IPA-TC: Certificate Profiles CA ACLs: Successfully add
-                multiple hostgroups to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add multiple hostgroups to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         cname = "testacl_0011"
         data = {'host': multihost.master,
@@ -198,9 +222,15 @@ class TestCaAclHost(object):
 
     def test_0039_negative_caacls_host_create(self, multihost):
         """
-        test_0039_negative_caacls_host_create
-        IPA-TC: Certificate Profiles CA ACLs:  Fail to add host
-                to non-existent CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs:  Fail to add host to non-existent CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         cname = "testacl_0012"
         data = {'host': multihost.master,
@@ -214,9 +244,15 @@ class TestCaAclHost(object):
 
     def test_0040_negative_caacls_non_existent_host_create(self, multihost):
         """
-        test_0040_negative_caacls_non_existent_host_create
-        IPA-TC: Certificate Profiles CA ACLs: Fail to add
-                non-existent host to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add non-existent host to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         cname = "testacl_0013"
         data = {'host': multihost.master,
@@ -244,9 +280,15 @@ class TestCaAclHost(object):
 
     def test_0041_negative_caacls_non_existent_hg_create(self, multihost):
         """
-        test_0041_negative_caacls_non_existent_hg_create
-        IPA-TC: Certificate Profiles CA ACLs: Fail to add non-existant
-                hostgroup to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add non-existant hostgroup to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         cname = "testacl_0014"
         data = {'host': multihost.master,

@@ -36,8 +36,15 @@ class TestCaAclService(object):
 
     def test_0043_positive_caacls_service_add(self, multihost):
         """
-        test_0043_positive_caacls_service_add
-        IDM-IPA-TC: Certificate Profiles: Successfully add service to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully add service to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -71,9 +78,15 @@ class TestCaAclService(object):
 
     def test_0044_caacls_service_add_multiple_services(self, multihost):
         """
-        test_0044_caacls_service_add_multiple_services
-        IDM-IPA-TC: Certificate Profiles: Successfully add
-                    multiple service to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully add multiple service to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -113,9 +126,15 @@ class TestCaAclService(object):
 
     def test_0045_caacls_service_add_service_nonexistent_acl(self, multihost):
         """
-        test_0045_caacls_service_add_service_nonexistent_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to
-                    add service to non-existent CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add service to non-existent CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -144,9 +163,15 @@ class TestCaAclService(object):
 
     def test_0046_caacls_service_add_nonexistent_service_acl(self, multihost):
         """
-        test_0046_caacls_service_add_nonexistent_service_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add
-                    non-existent profile to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add non-existent profile to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -178,7 +203,14 @@ class TestCaAclService(object):
 
     def test_bz1366626_caacls_fail_to_add_nonexistent_service(self, multihost):
         """
-        @Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add non-existent service to acl
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add non-existent service to acl
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         service = 'bz1366626/' + multihost.master.hostname + \
                   '@' + multihost.master.domain.realm

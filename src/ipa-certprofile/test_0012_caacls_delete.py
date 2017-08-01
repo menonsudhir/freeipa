@@ -37,9 +37,15 @@ class TestCaAclDelete(object):
 
     def test_0055_negative_caacls_delete_nonexistent_acl(self, multihost):
         """
-        test_0055_negative_caacls_delete_nonexistent_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully continue
-                    when cannot delete CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully continue when cannot delete CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()

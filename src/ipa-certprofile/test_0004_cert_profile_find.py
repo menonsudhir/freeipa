@@ -36,9 +36,16 @@ class TestCertProfileFind(object):
 
     def test_0015_positive_cert_profile_find(self, multihost):
         """
-        test_0015_positive_cert_profile_find
-        IDM-IPA-TC: Certificate Profiles: Successfully find all profiles
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully find all profiles
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
         """
+
         # Kinit as admin
         multihost.master.kinit_as_admin()
         data = {'host': multihost.master,
@@ -49,9 +56,15 @@ class TestCertProfileFind(object):
 
     def test_0016_positive_cert_profile_find_custom(self, multihost):
         """
-        test_0016_positive_cert_profile_find_custom
-        IDM-IPA-TC: Certificate Profiles: Successfully find
-                    custom profile config
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully find custom profile config
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -110,9 +123,16 @@ class TestCertProfileFind(object):
 
     def test_0017_negative_cert_profile_find_invalid(self, multihost):
         """
-        test_0014_negative_cert_profile_find_invalid
-        IDM-IPA-TC:  Certificate Profiles: Fail to find profile by invalid id
+
+        :Title: IDM-IPA-TC:  Certificate Profiles: Fail to find profile by invalid id
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
         """
+
         # Kinit as admin
         multihost.master.kinit_as_admin()
         cname = 'testprofile_invalid_find'

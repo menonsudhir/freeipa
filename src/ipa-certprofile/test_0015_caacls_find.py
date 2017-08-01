@@ -36,9 +36,15 @@ class TestCaAclsFind(object):
 
     def test_0058_positive_caacls_find_acl(self, multihost):
         """
-        test_0058_positive_caacls_find_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully find
-                    all CA ACLs
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully find all CA ACLs
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()

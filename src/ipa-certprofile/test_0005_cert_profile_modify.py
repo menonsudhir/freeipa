@@ -36,9 +36,15 @@ class TestCertProfileModify(object):
 
     def test_0018_positive_cert_profile_modify(self, multihost):
         """
-        test_0018_positive_cert_profile_modify
-        IDM-IPA-TC: Certificate Profiles: Successfully change
-                    profile description
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully change profile description
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -96,9 +102,15 @@ class TestCertProfileModify(object):
 
     def test_0019_positive_cert_profile_modify_cfg(self, multihost):
         """
-        test_0019_positive_cert_profile_modify_cfg
-        IDM-IPA-TC: Certificate Profiles: Successfully change profile
-                    config from file
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully change profile config from file
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -156,9 +168,15 @@ class TestCertProfileModify(object):
 
     def test_0020_negative_cert_profile_mod_nonexistent(self, multihost):
         """
-        test_0020_negative_cert_profile_mod_nonexistent
-        IDM-IPA-TC: Certificate Profiles: Fail to change profile description
-                    for non-existent profile
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Fail to change profile description for non-existent profile
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()

@@ -36,9 +36,15 @@ class TestCaAclModify(object):
 
     def test_0059_positive_caacls_mod_acl(self, multihost):
         """
-        test_0059_positive_caacls_mod_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully
-                    change description for CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully change description for CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -143,9 +149,15 @@ class TestCaAclModify(object):
 
     def test_0060_negative_caacls_mod_acl(self, multihost):
         """
-        test_0059_negative_caacls_mod_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to change
-                    description for non-existent CA
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to change description for non-existent CA
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()

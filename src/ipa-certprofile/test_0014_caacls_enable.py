@@ -36,9 +36,15 @@ class TestCaAclEnable(object):
 
     def test_0057_negative_cacls_enable_acl(self, multihost):
         """
-        test_0057_negative_cacls_enable_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to enable
-                    non-existent CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to enable non-existent CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()

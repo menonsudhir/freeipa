@@ -36,9 +36,15 @@ class TestCaAclUserGroup(object):
 
     def test_0047_positive_caacls_add_user_acl(self, multihost):
         """
-        test_0047_positive_caacls_add_user_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully
-                    add user to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add user to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -73,9 +79,15 @@ class TestCaAclUserGroup(object):
 
     def test_0048_positive_caacls_add_multiple_user_acl(self, multihost):
         """
-        test_0048_positive_caacls_add_multiple_user_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add
-                    multiple user to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add multiple user to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -112,9 +124,15 @@ class TestCaAclUserGroup(object):
 
     def test_0049_positive_caacls_add_group_acl(self, multihost):
         """
-        test_0049_positive_caacls_add_group_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add
-                    group to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add group to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -149,9 +167,15 @@ class TestCaAclUserGroup(object):
 
     def test_0050_positive_caacls_add_multiple_group_acl(self, multihost):
         """
-        test_0050_positive_caacls_add_multiple_group_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add
-                    multiple groups to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add multiple groups to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -186,9 +210,15 @@ class TestCaAclUserGroup(object):
 
     def test_0051_negative_caacls_add_user_nonexistent_acl(self, multihost):
         """
-        test_0051_negative_caacls_add_user_nonexistent_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add user
-                    to non-existent CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add user to non-existent CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -217,9 +247,15 @@ class TestCaAclUserGroup(object):
 
     def test_0052_negative_caacls_add_nonexistent_user_acl(self, multihost):
         """
-        test_0052_positive_caacls_add_nonexistent_user_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add
-                    non-existent user to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add non-existent user to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -249,9 +285,15 @@ class TestCaAclUserGroup(object):
 
     def test_0053_negative_caacls_add_group_nonexistent_acl(self, multihost):
         """
-        test_0053_negative_caacls_add_group_nonexistent_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add group
-                    to non-existent CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add group to non-existent CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -275,9 +317,15 @@ class TestCaAclUserGroup(object):
 
     def test_0054_negative_caacls_add_nonexistent_group_acl(self, multihost):
         """
-        test_0054_negative_caacls_add_nonexistent_group_acl
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add
-                    non-existent group to CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add non-existent group to CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()

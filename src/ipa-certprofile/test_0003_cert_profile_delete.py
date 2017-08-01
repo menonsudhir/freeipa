@@ -36,9 +36,15 @@ class TestCertProfileDelete(object):
 
     def test_0013_negative_cert_profile_delete_default(self, multihost):
         """
-        test_0013_negative_cert_profile_delete_default
-        IDM-IPA-TC: Certificate Profiles: Successfully delete
-                    default IPA profile
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully delete default IPA profile
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -50,9 +56,16 @@ class TestCertProfileDelete(object):
 
     def test_0014_negative_cert_profile_delete_nonexistent(self, multihost):
         """
-        test_0014_negative_cert_profile_delete_nonexistent
-        IDM-IPA-TC:  Certificate Profiles: Fail to delete non-existent profile
+
+        :Title: IDM-IPA-TC:  Certificate Profiles: Fail to delete non-existent profile
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
         """
+
         # Kinit as admin
         multihost.master.kinit_as_admin()
         data = {'host': multihost.master,

@@ -37,8 +37,8 @@ class TestCertProfileRequest(object):
 
     def test_0021_positive_cert_request(self, multihost):
         """
-        test_0021_positive_cert_request
-        IPA-TC: Certificate Profiles: Successfully generate cert for user
+
+        IDM-IPA-TC: Certificate Profiles: Successfully generate cert for user
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -113,8 +113,8 @@ class TestCertProfileRequest(object):
 
     def test_0022_positive_cert_request_multiple_email(self, multihost):
         """
-        test_0022_positive_cert_request_multiple_email
-        IPA-TC: Certificate Profiles: Successfully generate cert for user
+
+        IDM-IPA-TC: Certificate Profiles: Successfully generate cert for user
                         when SNA includes multiple email
         """
         # Kinit as admin
@@ -195,8 +195,8 @@ class TestCertProfileRequest(object):
 
     def test_0023_negative_cert_request_invalid_email(self, multihost):
         """
-        test_0023_negative_cert_request_invalid_email
-        IPA-TC: Certificate Profiles: Fail to generate cert for user
+
+        IDM-IPA-TC: Certificate Profiles: Fail to generate cert for user
                 when subjectAltName email invalid
         """
         # Kinit as admin
@@ -271,8 +271,8 @@ class TestCertProfileRequest(object):
 
     def test_0024_negative_cert_request_domain_name(self, multihost):
         """
-        test_0024_negative_cert_request_domain_name
-        IPA-TC: Certificate Profiles: Fail to generate cert for
+
+        IDM-IPA-TC: Certificate Profiles: Fail to generate cert for
                 user when subjectAltName includes DNS
         """
         # Kinit as admin
@@ -351,8 +351,8 @@ class TestCertProfileRequest(object):
 
     def test_0025_positive_cert_request_replica_ldap(self, multihost):
         """
-        test_0025_positive_cert_request_replica_ldap
-        IPA-TC: Certificate Profiles: Successfully see imported
+
+        IDM-IPA-TC: Certificate Profiles: Successfully see imported
                 profile is replicated
         """
         # Kinit as admin
@@ -396,8 +396,8 @@ class TestCertProfileRequest(object):
 
     def test_0026_positive_cert_request_replica_delete(self, multihost):
         """
-        test_0026_positive_cert_request_replica_delete
-        IPA-TC: Certificate Profiles: Successfully see deleted profile
+
+        IDM-IPA-TC: Certificate Profiles: Successfully see deleted profile
                 is removed from all replicas
         """
         # Kinit as admin
@@ -441,8 +441,8 @@ class TestCertProfileRequest(object):
 
     def test_0027_positive_cert_request_krb5principal_name(self, multihost):
         """
-        test_0027_negative_cert_request_krb5principal_name
-        IPA-TC: Certificate Profiles: Successfully request cert with
+
+        IDM-IPA-TC: Certificate Profiles: Successfully request cert with
                 krb5principalName SAN
         """
         # Kinit as admin

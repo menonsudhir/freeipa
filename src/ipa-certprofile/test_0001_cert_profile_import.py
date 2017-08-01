@@ -37,9 +37,15 @@ class TestCertProfileImport(object):
 
     def test_0001_positive_cert_profile_import(self, multihost):
         """
-        test_0001_positive_cert_profile_import
-        IDM-IPA-TC: Certificate Profiles: Successfully import profile
-                    with store in raw config format
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully import profile with store in raw config format
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -67,9 +73,15 @@ class TestCertProfileImport(object):
 
     def test_0002_negative_cert_profile_import(self, multihost):
         """
-        test_0002_negative_cert_profile_import
-        IDM-IPA-TC: Certificate Profiles: Fail to import already
-            existing profile with same profileID
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Fail to import already existing profile with same profileID
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -90,9 +102,15 @@ class TestCertProfileImport(object):
 
     def test_0003_negative_cert_profile_import_xml(self, multihost):
         """
-        test_0003_negative_cert_profile_import_xml
-        IDM-IPA-TC: Certificate Profiles: Fail to import
-            profile in xml config format
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Fail to import profile in xml config format
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         profile_name = 'caUserCert'
@@ -112,9 +130,15 @@ class TestCertProfileImport(object):
 
     def test_0004_negative_cert_profile_import_classid(self, multihost):
         """
-        test_0004_negative_cert_profile_import_classid
-        IDM-IPA-TC: Certificate Profiles: Fail to import profile with
-            classID missing from config
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Fail to import profile with classID missing from config
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -145,9 +169,15 @@ class TestCertProfileImport(object):
 
     def test_0005_negative_cert_profile_import_profileid(self, multihost):
         """
-        test_0005_negative_cert_profile_import_profileid
-        IDM-IPA-TC: Certificate Profiles: Fail to import profile with
-            profileID missing from config
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Fail to import profile with profileID missing from config
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -181,9 +211,15 @@ class TestCertProfileImport(object):
 
     def test_0006_cert_profile_import_invalid_profileid(self, multihost):
         """
-        test_0006_cert_profile_import_invalid_profileid
-        IDM-IPA-TC: Certificate Profiles: Fail to import profile with
-                    invalid profileID
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Fail to import profile with invalid profileID
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -219,9 +255,15 @@ class TestCertProfileImport(object):
 
     def test_0007_positive_cert_profile_import_wo_store(self, multihost):
         """
-        test_0007_positive_cert_profile_import_wo_store
-        IDM-IPA-TC: Certificate Profiles: Successfully import
-                    profile without store
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully import profile without store
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -250,9 +292,15 @@ class TestCertProfileImport(object):
 
     def test_0008_positive_cert_profile_import_profiles(self, multihost):
         """
-        test_0008_positive_cert_profile_import_profiles
-        IDM-IPA-TC: Certificate Profiles: Successfully import different
-                    types of profiles
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully import different types of profiles
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -291,9 +339,15 @@ class TestCertProfileImport(object):
 
     def test_0009_positive_cert_profile_import_invalid_config(self, multihost):
         """
-        test_0009_positive_cert_profile_import_invalid_config
-        IDM-IPA-TC: Certificate Profiles: Fail to import profile
-                    with invalid config
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Fail to import profile with invalid config
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()

@@ -36,9 +36,15 @@ class TestCertProfileImport(object):
 
     def test_0061_caacls_permission_acls(self, multihost):
         """
-        test_0061_caacls_permission_acls
-        IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully run
-                    cert-request with CAACL ignore permission
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully run cert-request with CAACL ignore permission
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kdestroy
         multihost.master.qerun(['kdestroy', '-A'])

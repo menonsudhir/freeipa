@@ -36,9 +36,15 @@ class TestCertProfileShow(object):
 
     def test_0010_positive_cert_profile_show_default(self, multihost):
         """
-        test_0010_positive_cert_profile_show
-        IDM-IPA-TC: Certificate Profiles: Successfully
-                    show default IPA profile
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully show default IPA profile
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -50,9 +56,16 @@ class TestCertProfileShow(object):
 
     def test_0011_negative_cert_profile_show_nonexistent(self, multihost):
         """
-        test_0011_negative_cert_profile_show_nonexistent
-        IDM-IPA-TC: Certificate Profiles: Fail to show non-existent profile
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Fail to show non-existent profile
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
         """
+
         # Kinit as admin
         multihost.master.kinit_as_admin()
         data = {'host': multihost.master,
@@ -63,9 +76,15 @@ class TestCertProfileShow(object):
 
     def test_0012_positive_cert_profile_show_custom(self, multihost):
         """
-        test_0012_positive_cert_profile_show
-        IDM-IPA-TC: Certificate Profiles: Successfully show
-                    custom profile config
+
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully show custom profile config
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()

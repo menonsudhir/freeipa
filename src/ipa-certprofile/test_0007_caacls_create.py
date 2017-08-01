@@ -37,8 +37,15 @@ class TestCaAclCreate(object):
 
     def test_0028_positive_caacls_create(self, multihost):
         """
-        test_0028_positive_caacls_create
-        IDM-IPA-TC: Certificate Profiles: CA ACLs: Successfully add CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles: CA ACLs: Successfully add CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -55,9 +62,15 @@ class TestCaAclCreate(object):
 
     def test_0029_positive_caacls_create_desc(self, multihost):
         """
-        test_0029_positive_caacls_create_desc
-        IPA-TC: Certificate Profiles CA ACLs: Successfully add
-                CA ACL with description
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add CA ACL with description
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         cname = "testacl_0002"
         data = {'host': multihost.master,
@@ -72,9 +85,15 @@ class TestCaAclCreate(object):
 
     def test_0030_positive_caacls_create_profilecat(self, multihost):
         """
-        test_0030_positive_caacls_create_profilecat
-        IPA-TC: Certificate Profiles CA ACLs: Successfully add
-                CA ACL with profilecat all
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add CA ACL with profilecat all
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         cname = "testacl_0003"
         data = {'host': multihost.master,
@@ -89,9 +108,15 @@ class TestCaAclCreate(object):
 
     def test_0031_positive_caacls_create_usercat(self, multihost):
         """
-        test_0031_positive_caacls_create_usercat
-        IPA-TC: Certificate Profiles CA ACLs: Successfully add
-                CA ACL with usercat all
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add CA ACL with usercat all
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         cname = "testacl_0004"
         data = {'host': multihost.master,
@@ -106,9 +131,15 @@ class TestCaAclCreate(object):
 
     def test_0032_positive_caacls_create_hostcat(self, multihost):
         """
-        test_0032_positive_caacls_create_hostcat
-        IPA-TC: Certificate Profiles CA ACLs: Successfully add
-                CA ACL with hostcat all
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add CA ACL with hostcat all
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         cname = "testacl_0005"
         data = {'host': multihost.master,
@@ -123,9 +154,15 @@ class TestCaAclCreate(object):
 
     def test_0033_positive_caacls_create_servicecat(self, multihost):
         """
-        test_0033_positive_caacls_create_servicecat
-        IPA-TC: Certificate Profiles CA ACLs: Successfully add
-                CA ACL with servicecat all
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Successfully add CA ACL with servicecat all
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         cname = "testacl_0006"
         data = {'host': multihost.master,
@@ -140,9 +177,15 @@ class TestCaAclCreate(object):
 
     def test_0034_negative_caacls_create_same_name(self, multihost):
         """
-        test_0034_positive_caacls_create_same_name
-        IPA-TC: Certificate Profiles CA ACLs: Fail to add
-                CA ACL with same name
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add CA ACL with same name
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         cname = "testacl_0007"
         data = {'host': multihost.master,
@@ -162,8 +205,14 @@ class TestCaAclCreate(object):
 
     def test_0035_negative_caacls_create_default_acl(self, multihost):
         """
-        test_0035_positive_caacls_create_default_acl
-        IPA-TC: Certificate Profiles CA ACLs: Fail to add default CA ACL
+
+        :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add default CA ACL
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
         """
         cname = "hosts_services_caIPAserviceCert"
         data = {'host': multihost.master,
