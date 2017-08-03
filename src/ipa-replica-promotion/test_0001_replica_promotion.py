@@ -4,14 +4,12 @@ This is a quick test for IPA Replica Promotion
 import pytest
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_install import (setup_replica, uninstall_server,
-                                    setup_client)
+                                    setup_client, set_etc_hosts)
 from ipa_pytests.shared.user_utils import (add_ipa_user, del_ipa_user,
                                            show_ipa_user, find_ipa_user)
-from ipa_pytests.shared.utils import (service_control, start_firewalld,
-                                      stop_firewalld)
-from ipa_pytests.shared.dns_utils import dns_record_add
 from ipa_pytests.shared.host_utils import host_add, hostgroup_member_add
-import time
+from ipa_pytests.shared.server_utils import server_del
+from ipa_pytests.shared.dns_utils import dns_record_add
 import re
 
 
@@ -40,10 +38,12 @@ class TestIPAReplicaPromotion(object):
         passwd = multihost.master.config.admin_pw
 
         add_ipa_user(multihost.master, testuser, passwd)
+        cmd = multihost.replica.run_command(['kdestroy', '-A'],
+                                            raiseonerr=False)
         setup_replica(multihost.replica, multihost.master,
                       setup_dns=True,
                       setup_ca=True,
-                      setup_reverse=True)
+                      setup_reverse=False)
         cmd = show_ipa_user(multihost.replica, testuser)
         assert cmd.returncode == 0
         assert testuser in cmd.stdout_text
@@ -51,6 +51,9 @@ class TestIPAReplicaPromotion(object):
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
             uninstall_server(multihost.replica)
+            server_del(multihost.master,
+                       hostname=multihost.replica.hostname,
+                       force=True)
 
     def test_0002_replica_install_without_required_params(self, multihost):
         """
@@ -83,20 +86,34 @@ class TestIPAReplicaPromotion(object):
         passwd = multihost.master.config.admin_pw
 
         add_ipa_user(multihost.master, testuser, passwd)
+        cmd = multihost.replica.run_command(['kdestroy', '-A'],
+                                            raiseonerr=False)
         setup_client(multihost.replica, multihost.master,
                      server=True, domain=True)
         print("\nInstalling IPA Replica using required parameters only")
-        print("\nPlease wait")
-        cmdstr = "ipa-replica-install -P admin -w {0}".format(passwd)
+        print("\nPlease wait...")
+        cmd = multihost.replica.run_command(['kdestroy', '-A'],
+                                            raiseonerr=False)
+        set_etc_hosts(multihost.replica, multihost.master)
+        set_etc_hosts(multihost.master, multihost.replica)
+        cmdstr = "ipa-replica-install -U -P admin -w {0}".format(passwd)
         cmd = multihost.replica.run_command(cmdstr, raiseonerr=False)
+        print("Running    :> " + str (cmdstr))
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert cmd.returncode == 0
         cmd = show_ipa_user(multihost.replica, testuser)
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert cmd.returncode == 0
         assert testuser in cmd.stdout_text
         if cmd.returncode == 0:
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
             uninstall_server(multihost.replica)
+            server_del(multihost.master,
+                       hostname=multihost.replica.hostname,
+                       force=True)
 
     def test_0004_prompt_replica_to_ca(self, multihost):
         """
@@ -113,10 +130,12 @@ class TestIPAReplicaPromotion(object):
         passwd = multihost.master.config.admin_pw
 
         add_ipa_user(multihost.master, testuser, passwd)
+        cmd = multihost.replica.run_command(['kdestroy', '-A'],
+                                            raiseonerr=False)
         setup_replica(multihost.replica, multihost.master,
-                      setup_dns=False,
+                      setup_dns=True,
                       setup_ca=False,
-                      setup_reverse=True)
+                      setup_reverse=False)
         cmd = show_ipa_user(multihost.replica, testuser)
         assert cmd.returncode == 0
         assert testuser in cmd.stdout_text
@@ -126,8 +145,14 @@ class TestIPAReplicaPromotion(object):
         cmdstr = "ipa-ca-install -P {0} -w {1}".format(passwd,
                                                        passwd)
         cmd = multihost.replica.run_command(cmdstr, raiseonerr=False)
+        print("Running    :> " + str (cmdstr))
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         cmdstr = "ipa server-role-find"
         cmd = multihost.replica.run_command(cmdstr, raiseonerr=False)
+        print("Running    :> " + str (cmdstr))
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert "{0}".format(multihost.replica.hostname) in cmd.stdout_text
 
         # Clean
@@ -135,6 +160,9 @@ class TestIPAReplicaPromotion(object):
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
             uninstall_server(multihost.replica)
+            server_del(multihost.master,
+                       hostname=multihost.replica.hostname,
+                       force=True)
 
     def test_0005_kra_install(self, multihost):
         """
@@ -151,6 +179,8 @@ class TestIPAReplicaPromotion(object):
         passwd = multihost.master.config.admin_pw
 
         add_ipa_user(multihost.master, testuser, passwd)
+        cmd = multihost.replica.run_command(['kdestroy', '-A'],
+                                            raiseonerr=False)
         setup_replica(multihost.replica, multihost.master,
                       setup_dns=True,
                       setup_ca=True,
@@ -162,8 +192,14 @@ class TestIPAReplicaPromotion(object):
         multihost.replica.kinit_as_admin()
         cmdstr = "ipa-kra-install"
         cmd = multihost.replica.run_command(cmdstr, raiseonerr=False)
+        print("Running    :> " + str (cmdstr))
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         cmdstr = "ipa server-role-find"
         cmd = multihost.replica.run_command(cmdstr, raiseonerr=False)
+        print("Running    :> " + str (cmdstr))
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert "{0}".format(multihost.replica.hostname) in cmd.stdout_text
 
         # Clean
@@ -171,6 +207,9 @@ class TestIPAReplicaPromotion(object):
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
             uninstall_server(multihost.replica)
+            server_del(multihost.master,
+                       hostname=multihost.replica.hostname,
+                       force=True)
 
     def test_0006_rejoin_replica(self, multihost):
         """
@@ -187,21 +226,31 @@ class TestIPAReplicaPromotion(object):
         passwd = multihost.master.config.admin_pw
 
         add_ipa_user(multihost.master, testuser, passwd)
+        cmd = multihost.replica.run_command(['kdestroy', '-A'],
+                                            raiseonerr=False)
         setup_replica(multihost.replica, multihost.master,
                       setup_dns=True,
                       setup_ca=True,
                       setup_reverse=False)
         cmd = show_ipa_user(multihost.replica, testuser)
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert cmd.returncode == 0
         assert testuser in cmd.stdout_text
-
+        
         uninstall_server(multihost.replica)
-
+        server_del(multihost.master,
+                       hostname=multihost.replica.hostname,
+                       force=True)
+        cmd = multihost.replica.run_command(['kdestroy', '-A'],
+                                            raiseonerr=False)
         setup_replica(multihost.replica, multihost.master,
                       setup_dns=True,
                       setup_ca=True,
                       setup_reverse=False)
         cmd = show_ipa_user(multihost.replica, testuser)
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert cmd.returncode == 0
         assert testuser in cmd.stdout_text
 
@@ -210,6 +259,9 @@ class TestIPAReplicaPromotion(object):
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
             uninstall_server(multihost.replica)
+            server_del(multihost.master,
+                       hostname=multihost.replica.hostname,
+                       force=True)
 
     def test_0007_otp_install(self, multihost):
         """
@@ -225,35 +277,47 @@ class TestIPAReplicaPromotion(object):
         testuser = "test_0007_testuser1"
         passwd = multihost.master.config.admin_pw
 
+        uninstall_server(multihost.replica)
         add_ipa_user(multihost.master, testuser, passwd)
-
-        # Add DNS record for ipa host
+        cmd = multihost.replica.run_command(['kdestroy', '-A'],
+                                            raiseonerr=False)
+        # Add host in host record
+        server_del(multihost.master,
+                       hostname=multihost.replica.hostname,
+                       force=True)
         cmd = dns_record_add(multihost.master,
-                             multihost.replica.domain.name,
+                             multihost.master.domain.name,
                              multihost.replica.shortname,
                              'A',
                              [multihost.replica.ip])
-        assert cmd.returncode == 0
-
-        # Add host in host record
         cmd = host_add(multihost.master, multihost.replica.hostname,
                        options={'random': ''})
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert cmd.returncode == 0
         result = re.search("Random password: (?P<password>.*$)",
                            cmd.stdout_text,
                            re.MULTILINE)
+        print("result :>" + str(result))
         randpasswd = result.group('password')
         # Add host to host group
         cmd = hostgroup_member_add(multihost.master, 'ipaservers',
                                    options={'hosts':
                                             multihost.replica.hostname})
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert cmd.returncode == 0
         # Install replica using random password
         cmdstr = ['ipa-replica-install', '-p', randpasswd, '-U']
         cmd = multihost.replica.run_command(cmdstr, raiseonerr=False)
+        print("Running    :> " + str (cmdstr))
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert cmd.returncode == 0
         # Find out users on newly installed replica
         cmd = show_ipa_user(multihost.replica, testuser)
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert cmd.returncode == 0
         assert testuser in cmd.stdout_text
         # Clean
@@ -261,6 +325,9 @@ class TestIPAReplicaPromotion(object):
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
             uninstall_server(multihost.replica)
+            server_del(multihost.master,
+                       hostname=multihost.replica.hostname,
+                       force=True)
 
     def test_0008_otp_two_step_install(self, multihost):
         """
@@ -276,51 +343,74 @@ class TestIPAReplicaPromotion(object):
         testuser = "test_0008_testuser1"
         passwd = multihost.master.config.admin_pw
 
+        uninstall_server(multihost.replica)
         add_ipa_user(multihost.master, testuser, passwd)
 
-        # Add DNS record for ipa host
+        # Add host in host record
+        server_del(multihost.master,
+                       hostname=multihost.replica.hostname,
+                       force=True)
         cmd = dns_record_add(multihost.master,
-                             multihost.replica.domain.name,
+                             multihost.master.domain.name,
                              multihost.replica.shortname,
                              'A',
                              [multihost.replica.ip])
-        assert cmd.returncode == 0
-
-        # Add host in host record
         cmd = host_add(multihost.master, multihost.replica.hostname,
                        options={'random': ''})
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert cmd.returncode == 0
         result = re.search("Random password: (?P<password>.*$)",
                            cmd.stdout_text,
                            re.MULTILINE)
+        print("result :> " + str(result))
         randpasswd = result.group('password')
         # Add host to host group
         cmd = hostgroup_member_add(multihost.master, 'ipaservers',
                                    options={'hosts':
                                             multihost.replica.hostname})
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert cmd.returncode == 0
         # Install client using random password
+        cmd = multihost.replica.run_command(['kdestroy', '-A'],
+                                            raiseonerr=False)
         cmdstr = ['ipa-client-install', '-w', randpasswd, '-U']
         cmd = multihost.replica.run_command(cmdstr, raiseonerr=False)
+        print("Running    :> " + str (cmdstr))
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert cmd.returncode == 0
         # Prompt client to REPLICA
-        cmdstr = ['ipa-replica-install']
+        cmd = multihost.replica.run_command(['kdestroy', '-A'],
+                                            raiseonerr=False)
+        cmdstr = ['ipa-replica-install', '-U']
         cmd = multihost.replica.run_command(cmdstr, raiseonerr=False)
         print("Stdout: %s" % cmd.stdout_text)
         print("Stderr: %s" % cmd.stderr_text)
         assert cmd.returncode == 0
 
         # Add CA on replica
+        cmd = multihost.replica.run_command(['kdestroy', '-A'],
+                                            raiseonerr=False)
         multihost.replica.kinit_as_admin()
         cmdstr = "ipa-ca-install -P {0} -w {1}".format(passwd,
                                                        passwd)
         cmd = multihost.replica.run_command(cmdstr, raiseonerr=False)
+        print("Running    :> " + str (cmdstr))
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         cmdstr = "ipa server-role-find"
         cmd = multihost.replica.run_command(cmdstr, raiseonerr=False)
+        print("Running    :> " + str (cmdstr))
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert "{0}".format(multihost.replica.hostname) in cmd.stdout_text
 
         # Find out users on newly installed replica
         cmd = show_ipa_user(multihost.replica, testuser)
+        print("CMD STDOUT :> " + cmd.stdout_text)
+        print("CMD STDERR :> " + cmd.stderr_text)
         assert cmd.returncode == 0
         assert testuser in cmd.stdout_text
         # Clean
@@ -328,6 +418,9 @@ class TestIPAReplicaPromotion(object):
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
             uninstall_server(multihost.replica)
+            server_del(multihost.master,
+                       hostname=multihost.replica.hostname,
+                       force=True)
 
     def class_teardown(self, multihost):
         """ Teardown for class """
@@ -343,3 +436,4 @@ class TestIPAReplicaPromotion(object):
                           "\nPlease do cleanup manually using "
                           "following command :".format(user))
                     print("\nipa user-del {0}".format(user))
+
