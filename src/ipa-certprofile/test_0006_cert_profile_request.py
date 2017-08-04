@@ -37,8 +37,13 @@ class TestCertProfileRequest(object):
 
     def test_0021_positive_cert_request(self, multihost):
         """
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully generate cert for user
 
-        IDM-IPA-TC: Certificate Profiles: Successfully generate cert for user
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -114,8 +119,14 @@ class TestCertProfileRequest(object):
     def test_0022_positive_cert_request_multiple_email(self, multihost):
         """
 
-        IDM-IPA-TC: Certificate Profiles: Successfully generate cert for user
-                        when SNA includes multiple email
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully generate cert for user when SNA includes multiple email
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -196,8 +207,14 @@ class TestCertProfileRequest(object):
     def test_0023_negative_cert_request_invalid_email(self, multihost):
         """
 
-        IDM-IPA-TC: Certificate Profiles: Fail to generate cert for user
-                when subjectAltName email invalid
+        :Title: IDM-IPA-TC: Certificate Profiles: Fail to generate cert for user when subjectAltName email invalid
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -272,8 +289,14 @@ class TestCertProfileRequest(object):
     def test_0024_negative_cert_request_domain_name(self, multihost):
         """
 
-        IDM-IPA-TC: Certificate Profiles: Fail to generate cert for
-                user when subjectAltName includes DNS
+        :Title: IDM-IPA-TC: Certificate Profiles: Fail to generate cert for user when subjectAltName includes DNS
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -352,8 +375,14 @@ class TestCertProfileRequest(object):
     def test_0025_positive_cert_request_replica_ldap(self, multihost):
         """
 
-        IDM-IPA-TC: Certificate Profiles: Successfully see imported
-                profile is replicated
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully see imported profile is replicated
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -397,8 +426,14 @@ class TestCertProfileRequest(object):
     def test_0026_positive_cert_request_replica_delete(self, multihost):
         """
 
-        IDM-IPA-TC: Certificate Profiles: Successfully see deleted profile
-                is removed from all replicas
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully see deleted profile is removed from all replicas
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -442,8 +477,14 @@ class TestCertProfileRequest(object):
     def test_0027_positive_cert_request_krb5principal_name(self, multihost):
         """
 
-        IDM-IPA-TC: Certificate Profiles: Successfully request cert with
-                krb5principalName SAN
+        :Title: IDM-IPA-TC: Certificate Profiles: Successfully request cert with krb5principalName SAN
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         # Kinit as admin
         multihost.master.kinit_as_admin()
@@ -529,7 +570,14 @@ class TestCertProfileRequest(object):
 
     def test_bz1364197_request_svc_cert_as_svc(self, multihost):
         """
-        @Title: IPA-IDM-TC: Certificate Profiles: Request service certificate as service
+        :Title: IPA-IDM-TC: Certificate Profiles: Request service certificate as service
+
+        :Requirement: IDM-IPA-REQ : Cert Profile
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         master1 = multihost.master
         cpname = 'bz1364197_cert_profile'
