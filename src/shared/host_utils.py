@@ -36,6 +36,13 @@ def host_add(host, hostname, options={}, raiseonerr=False):
     :param hostname: hostname
     :param options: options without --
     """
+    cmd = host_find(host, hostname=hostname)
+    if "Host name: {0}".format(hostname) in cmd.stdout_text:
+        return type('RetObj', (object,),
+                    dict(returncode=0,
+                         stdout_text='Host already exists',
+                         stderr_text=''))
+
     cmd = [paths.IPA, 'host-add']
     cmd.append(hostname)
     for key, value in options.iteritems():
@@ -82,3 +89,33 @@ def hostgroup_find(host, hg=None, raiseonerr=False):
     cmd = [paths.IPA, 'hostgroup-find', hg]
     print("Executing: [{0}]".format(" ".join(cmd)))
     return host.run_command(cmd, raiseonerr=raiseonerr)
+
+
+def host_find(host, hostname, raiseonerr=False):
+    """
+    Helper function to find host
+    :param host: Multihost
+    :param hostname: Hostname to find
+    :param raiseonerr: Boolean
+    """
+    cmd = [paths.IPA, 'host-find', "--hostname={0}".format(hostname)]
+    print("Executing [{0}]".format(" ".join(cmd)))
+    return host.run_command(cmd, raiseonerr=raiseonerr)
+
+
+def host_del(host, hostname, raiseonerr=False):
+    """
+    Helper function to delete host
+    :param host: multihost
+    :param hostname: hostname to delete
+    """
+    cmd = host_find(host, hostname=hostname)
+    if "Host name: {0}".format(hostname) not in cmd.stdout_text:
+        return type('RetObj', (object,),
+                    dict(returncode=1,
+                         stdout_text='Host does not exists',
+                         stderr_text=''))
+    cmd = [paths.IPA, 'host-del', hostname]
+    print("Executing [{0}]".format(" ".join(cmd)))
+    return host.run_command(cmd, raiseonerr=raiseonerr)
+
