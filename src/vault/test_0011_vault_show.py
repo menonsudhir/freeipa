@@ -25,42 +25,84 @@ class TestVaultShow(object):
 
     def test_0001_successfully_show_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully show vault
+        :Title: IDM-IPA-TC: Vault: Successfully show vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-show'] + data.PRIV_VAULT
         multihost.master.qerun(runcmd)
 
     def test_0002_successfully_show_user_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully show user vault
+        :Title: IDM-IPA-TC: Vault: Successfully show user vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-show'] + data.USER_VAULT
         multihost.master.qerun(runcmd)
 
     def test_0003_successfully_show_shared_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully show shared vault
+        :Title: IDM-IPA-TC: Vault: Successfully show shared vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-show'] + data.SHARED_VAULT
         multihost.master.qerun(runcmd)
 
     def test_0004_successfully_show_service_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully show service vault
+        :Title: IDM-IPA-TC: Vault: Successfully show service vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-show'] + data.SERVICE_VAULT
         multihost.master.qerun(runcmd)
 
     def test_0005_fail_to_show_non_existent_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to show non_existent vault
+        :Title: IDM-IPA-TC: Vault: Fail to show non_existent vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-show'] + data.DNE_VAULT
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0006_fail_to_show_user_vault_with_service_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to show user vault with service option
+        :Title: IDM-IPA-TC: Vault: Fail to show user vault with service option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-show', data.PREFIX + '_vault_user',
                   '--service=' + data.SERVICE1]
@@ -68,28 +110,56 @@ class TestVaultShow(object):
 
     def test_0007_fail_to_show_shared_vault_with_user_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to show shared vault with user option
+        :Title: IDM-IPA-TC: Vault: Fail to show shared vault with user option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-show', data.PREFIX + '_vault_shared', '--user=' + data.USER1]
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0008_fail_to_show_service_vault_with_shared_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to show service vault with shared option
+        :Title: IDM-IPA-TC: Vault: Fail to show service vault with shared option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-show', data.PREFIX + '_vault_service', '--shared']
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0009_fail_to_show_user_vault_with_non_existent_user_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to show user vault with non_existent user option
+        :Title: IDM-IPA-TC: Vault: Fail to show user vault with non_existent user option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-show', data.PREFIX + '_vault_user', '--user=dne']
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0010_fail_to_show_service_vault_with_non_existent_service_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to show service vault with non_existent service option
+        :Title: IDM-IPA-TC: Vault: Fail to show service vault with non_existent service option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-show', data.PREFIX + '_vault_service',
                   '--service=dne/' + multihost.master.hostname]

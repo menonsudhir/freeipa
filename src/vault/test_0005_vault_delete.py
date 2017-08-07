@@ -40,28 +40,56 @@ class TestVaultDelete(object):
 
     def test_0001_successfully_delete_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully delete vault
+        :Title: IDM-IPA-TC: Vault: Successfully delete vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_vault_priv']
         multihost.master.qerun(runcmd)
 
     def test_0002_successfully_delete_shared_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully delete shared vault
+        :Title: IDM-IPA-TC: Vault: Successfully delete shared vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_vault_shared', '--shared']
         multihost.master.qerun(runcmd)
 
     def test_0003_successfully_delete_user_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully delete user vault
+        :Title: IDM-IPA-TC: Vault: Successfully delete user vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_vault_user', '--user=' + data.USER1]
         multihost.master.qerun(runcmd)
 
     def test_0004_successfully_delete_service_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully delete service vault
+        :Title: IDM-IPA-TC: Vault: Successfully delete service vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_vault_service',
                   '--service=' + data.SERVICE1]
@@ -69,36 +97,70 @@ class TestVaultDelete(object):
 
     def test_0005_successfully_continue_on_delete_vault_failure(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully continue on delete vault failure
+        :Title: IDM-IPA-TC: Vault: Successfully continue on delete vault failure
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-del', '--continue', data.PREFIX + '_vault_priv']
         multihost.master.qerun(runcmd, exp_returncode=0, exp_output="Failed to remove")
 
     def test_0006_fail_to_delete_non_existent_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to delete non_existent vault
-        @Status: Upstream Test Plan.  Not in automation that I can find.
+        :Title: IDM-IPA-TC: Vault: Fail to delete non_existent vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-del', 'dne_vault']
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0007_fail_to_delete_user_vault_with_shared_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to delete user vault with shared option
+        :Title: IDM-IPA-TC: Vault: Fail to delete user vault with shared option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_user_vault_fail', '--shared']
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0008_fail_to_delete_service_vault_with_user_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to delete service vault with user option
+        :Title: IDM-IPA-TC: Vault: Fail to delete service vault with user option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_service_vault_fail', '--user=' + data.USER1]
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0009_fail_to_delete_shared_fault_with_service_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to delete shared fault with service option
+        :Title: IDM-IPA-TC: Vault: Fail to delete shared fault with service option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_shared_vault_fail',
                   '--service=' + data.SERVICE1]
@@ -106,21 +168,42 @@ class TestVaultDelete(object):
 
     def test_0010_fail_to_delete_user_vault_with_wrong_user(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to delete user vault with wrong user
+        :Title: IDM-IPA-TC: Vault: Fail to delete user vault with wrong user
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_user_vault_fail', '--user=admin']
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0011_fail_to_delete_user_vault_with_non_existent_user(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to delete user vault with non_existent user
+        :Title: IDM-IPA-TC: Vault: Fail to delete user vault with non_existent user
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_user_vault_fail', '--user=dne']
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0012_fail_to_delete_service_vault_with_wrong_service(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to delete service vault with wrong service
+        :Title: IDM-IPA-TC: Vault: Fail to delete service vault with wrong service
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_service_vault_fail',
                   '--service=http/' + multihost.master.hostname]
@@ -128,7 +211,14 @@ class TestVaultDelete(object):
 
     def test_0013_fail_to_delete_service_vault_with_non_existent_service(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to delete service vault with non_existent service
+        :Title: IDM-IPA-TC: Vault: Fail to delete service vault with non_existent service
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_service_vault_fail',
                   '--service=dne/' + multihost.master.hostname]

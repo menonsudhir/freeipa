@@ -25,7 +25,14 @@ class TestVaultAdd(object):
 
     def test_0001_successfully_add_standard_private_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add standard private vault
+        :Title: IDM-IPA-TC: Vault: Successfully add standard private vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--type=standard', vault_name]
@@ -33,7 +40,14 @@ class TestVaultAdd(object):
 
     def test_0002_successfully_add_symmetric_private_vault_password(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add symmetric private vault password
+        :Title: IDM-IPA-TC: Vault: Successfully add symmetric private vault password
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--type=symmetric', '--password=1234', vault_name]
@@ -41,7 +55,14 @@ class TestVaultAdd(object):
 
     def test_0003_successfully_add_symmetric_private_vault_password_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add symmetric private vault password_file
+        :Title: IDM-IPA-TC: Vault: Successfully add symmetric private vault password_file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--type=symmetric',
@@ -50,7 +71,14 @@ class TestVaultAdd(object):
 
     def test_0004_successfully_add_asymmetric_private_vault_public_key(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add asymmetric private vault public_key
+        :Title: IDM-IPA-TC: Vault: Successfully add asymmetric private vault public_key
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         pubkey = multihost.master.transport.get_file_contents(data.PUBKEY_FILE)
@@ -61,7 +89,14 @@ class TestVaultAdd(object):
 
     def test_0005_successfully_add_asymmetric_private_vault_public_key_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add asymmetric private vault public_key_file
+        :Title: IDM-IPA-TC: Vault: Successfully add asymmetric private vault public_key_file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--type=asymmetric',
@@ -70,7 +105,14 @@ class TestVaultAdd(object):
 
     def test_0006_successfully_add_standard_user_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add standard user vault
+        :Title: IDM-IPA-TC: Vault: Successfully add standard user vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--user=%s' % data.USER1, '--type=standard',
@@ -79,7 +121,14 @@ class TestVaultAdd(object):
 
     def test_0007_successfully_add_symmetric_user_vault_password(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add symmetric user vault password
+        :Title: IDM-IPA-TC: Vault: Successfully add symmetric user vault password
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--user=%s' % data.USER1, '--type=symmetric',
@@ -88,7 +137,14 @@ class TestVaultAdd(object):
 
     def test_0008_successfully_add_symmetric_user_vault_password_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add symmetric user vault password_file
+        :Title: IDM-IPA-TC: Vault: Successfully add symmetric user vault password_file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--user=%s' % data.USER1, '--type=symmetric',
@@ -97,7 +153,14 @@ class TestVaultAdd(object):
 
     def test_0009_successfully_add_asymmetric_user_vault_public_key(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add asymmetric user vault public_key
+        :Title: IDM-IPA-TC: Vault: Successfully add asymmetric user vault public_key
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         pubkey = multihost.master.transport.get_file_contents(data.PUBKEY_FILE)
@@ -108,7 +171,14 @@ class TestVaultAdd(object):
 
     def test_0010_successfully_add_asymmetric_user_vault_public_key_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add asymmetric user vault public_key_file
+        :Title: IDM-IPA-TC: Vault: Successfully add asymmetric user vault public_key_file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--user=%s' % data.USER1, '--type=asymmetric',
@@ -117,7 +187,14 @@ class TestVaultAdd(object):
 
     def test_0011_successfully_add_standard_shared_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add standard shared vault
+        :Title: IDM-IPA-TC: Vault: Successfully add standard shared vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--shared', '--type=standard', vault_name]
@@ -125,7 +202,14 @@ class TestVaultAdd(object):
 
     def test_0012_successfully_add_symmetric_shared_vault_password(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add symmetric shared vault password
+        :Title: IDM-IPA-TC: Vault: Successfully add symmetric shared vault password
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--shared', '--type=symmetric',
@@ -134,7 +218,14 @@ class TestVaultAdd(object):
 
     def test_0013_successfully_add_symmetric_shared_vault_password_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add symmetric shared vault password_file
+        :Title: IDM-IPA-TC: Vault: Successfully add symmetric shared vault password_file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--shared', '--type=symmetric',
@@ -143,7 +234,14 @@ class TestVaultAdd(object):
 
     def test_0014_successfully_add_asymmetric_shared_vault_public_key(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add asymmetric shared vault public_key
+        :Title: IDM-IPA-TC: Vault: Successfully add asymmetric shared vault public_key
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         pubkey = multihost.master.transport.get_file_contents(data.PUBKEY_FILE)
@@ -154,7 +252,14 @@ class TestVaultAdd(object):
 
     def test_0015_successfully_add_asymmetric_shared_vault_public_key_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add asymmetric shared vault public_key_file
+        :Title: IDM-IPA-TC: Vault: Successfully add asymmetric shared vault public_key_file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--shared', '--type=asymmetric',
@@ -163,7 +268,14 @@ class TestVaultAdd(object):
 
     def test_0016_successfully_add_standard_service_vault(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add standard service vault
+        :Title: IDM-IPA-TC: Vault: Successfully add standard service vault
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--service=%s' % data.SERVICE1, '--type=standard',
@@ -172,7 +284,14 @@ class TestVaultAdd(object):
 
     def test_0017_successfully_add_symmetric_service_vault_password(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add symmetric service vault password
+        :Title: IDM-IPA-TC: Vault: Successfully add symmetric service vault password
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--service=%s' % data.SERVICE1, '--type=symmetric',
@@ -181,7 +300,14 @@ class TestVaultAdd(object):
 
     def test_0018_successfully_add_symmetric_service_vault_password_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add symmetric service vault password_file
+        :Title: IDM-IPA-TC: Vault: Successfully add symmetric service vault password_file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--service=%s' % data.SERVICE1, '--type=symmetric',
@@ -190,7 +316,14 @@ class TestVaultAdd(object):
 
     def test_0019_successfully_add_asymmetric_service_vault_public_key(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add asymmetric service vault public_key
+        :Title: IDM-IPA-TC: Vault: Successfully add asymmetric service vault public_key
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         pubkey = multihost.master.transport.get_file_contents(data.PUBKEY_FILE)
@@ -201,7 +334,14 @@ class TestVaultAdd(object):
 
     def test_0020_successfully_add_asymmetric_service_vault_public_key_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully add asymmetric service vault public_key_file
+        :Title: IDM-IPA-TC: Vault: Successfully add asymmetric service vault public_key_file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--service=%s' % data.SERVICE1, '--type=asymmetric',
@@ -210,7 +350,14 @@ class TestVaultAdd(object):
 
     def test_0021_fail_to_add_vault_with_same_name(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add vault with same name
+        :Title: IDM-IPA-TC: Vault: Fail to add vault with same name
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--password=1234', vault_name]
@@ -219,7 +366,14 @@ class TestVaultAdd(object):
 
     def test_0022_fail_to_add_vault_with_invalid_type(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add vault with invalid type
+        :Title: IDM-IPA-TC: Vault: Fail to add vault with invalid type
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--type=DNE', vault_name]
@@ -227,7 +381,14 @@ class TestVaultAdd(object):
 
     def test_0023_fail_to_add_vault_with_non_existent_password_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add vault with non_existent password file
+        :Title: IDM-IPA-TC: Vault: Fail to add vault with non_existent password file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--password-file=%s' % data.DNE_FILE, vault_name]
@@ -235,7 +396,14 @@ class TestVaultAdd(object):
 
     def test_0024_fail_to_add_vault_with_invalid_public_key_blob(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add vault with invalid public key blob
+        :Title: IDM-IPA-TC: Vault: Fail to add vault with invalid public key blob
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--type=asymmetric', '--public-key="%s"' % data.INVALID_KEY, vault_name]
@@ -243,7 +411,14 @@ class TestVaultAdd(object):
 
     def test_0025_fail_to_add_vault_with_non_existent_public_key_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add vault with non_existent public key file
+        :Title: IDM-IPA-TC: Vault: Fail to add vault with non_existent public key file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--type=asymmetric', '--public-key-file=%s' % data.DNE_FILE, vault_name]
@@ -251,7 +426,14 @@ class TestVaultAdd(object):
 
     def test_0026_fail_to_add_vault_with_invalid_public_key_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add vault with invalid public key file
+        :Title: IDM-IPA-TC: Vault: Fail to add vault with invalid public key file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--type=asymmetric', '--public-key-file=/etc/hosts', vault_name]
@@ -259,7 +441,14 @@ class TestVaultAdd(object):
 
     def test_0027_fail_to_add_vault_as_both_shared_and_user(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add vault as both shared and user
+        :Title: IDM-IPA-TC: Vault: Fail to add vault as both shared and user
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--user=%s' % data.USER1, '--shared',
@@ -269,7 +458,14 @@ class TestVaultAdd(object):
 
     def test_0028_fail_to_add_vault_as_both_user_and_service(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add vault as both user and service
+        :Title: IDM-IPA-TC: Vault: Fail to add vault as both user and service
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--user=%s' % data.USER1, '--service=%s' % data.SERVICE1,
@@ -279,7 +475,14 @@ class TestVaultAdd(object):
 
     def test_0029_fail_to_add_vault_as_both_service_and_shared(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add vault as both service and shared
+        :Title: IDM-IPA-TC: Vault: Fail to add vault as both service and shared
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--service=%s' % data.SERVICE1, '--shared',
@@ -289,7 +492,14 @@ class TestVaultAdd(object):
 
     def test_0030_fail_to_add_asymmetric_vault_without_public_key_or_pk_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add asymmetric vault without public _key or pk file
+        :Title: IDM-IPA-TC: Vault: Fail to add asymmetric vault without public _key or pk file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--type=asymmetric', vault_name]
@@ -298,7 +508,14 @@ class TestVaultAdd(object):
 
     def test_0031_fail_to_add_asymmetric_vault_with_password_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add asymmetric vault with password_file
+        :Title: IDM-IPA-TC: Vault: Fail to add asymmetric vault with password_file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--type=asymmetric',
@@ -308,7 +525,14 @@ class TestVaultAdd(object):
 
     def test_0032_fail_to_add_asymmetric_vault_with_password(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add asymmetric vault with password
+        :Title: IDM-IPA-TC: Vault: Fail to add asymmetric vault with password
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--type=asymmetric', '--password=1234', vault_name]
@@ -317,7 +541,14 @@ class TestVaultAdd(object):
 
     def test_0033_fail_to_add_symmetric_vault_with_public_key_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add symmetric vault with public_key_file
+        :Title: IDM-IPA-TC: Vault: Fail to add symmetric vault with public_key_file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         runcmd = ['ipa', 'vault-add', '--type=symmetric',
@@ -327,7 +558,14 @@ class TestVaultAdd(object):
 
     def test_0034_fail_to_add_symmetric_vault_with_public_key(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add symmetric vault with public_key
+        :Title: IDM-IPA-TC: Vault: Fail to add symmetric vault with public_key
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         vault_name = "idmqe_vault_%s" % pytest.count  # pylint: disable=no-member
         pubkey = multihost.master.transport.get_file_contents(data.PUBKEY_FILE)

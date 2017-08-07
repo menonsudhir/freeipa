@@ -35,7 +35,14 @@ class TestVaultAdminPrivileges(object):
 
     def test_0001_create_new_vault_administrators_group(self, multihost):
         """
-        IDM-IPA-TC: Vault: Create new Vault Administrators group
+        :Title: IDM-IPA-TC: Vault: Create new Vault Administrators group
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'role-add', 'vadmins']
         multihost.master.qerun(runcmd)
@@ -49,7 +56,14 @@ class TestVaultAdminPrivileges(object):
 
     def test_0002_add_new_container_owner_with_vault_admin(self, multihost):
         """
-        IDM-IPA-TC: Vault: Add new container owner with Vault Admin
+        :Title: IDM-IPA-TC: Vault: Add new container owner with Vault Admin
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         multihost.master.kinit_as_user(VADMIN, data.PASSWORD)
         runcmd = ['ipa', 'vaultcontainer-add-owner', '--user=' + data.USER1,
@@ -59,7 +73,14 @@ class TestVaultAdminPrivileges(object):
 
     def test_0003_fail_to_add_container_owner_as_non_admin(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add container owner as non_admin
+        :Title: IDM-IPA-TC: Vault: Fail to add container owner as non_admin
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         multihost.master.kinit_as_user(NONVADMIN, data.PASSWORD)
         runcmd = ['ipa', 'vaultcontainer-add-owner', '--user=' + data.USER1,
@@ -69,7 +90,14 @@ class TestVaultAdminPrivileges(object):
 
     def test_0004_fail_to_remove_container_owner_as_non_admin(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to remove container owner as non_admin
+        :Title: IDM-IPA-TC: Vault: Fail to remove container owner as non_admin
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         multihost.master.kinit_as_user(NONVADMIN, data.PASSWORD)
         runcmd = ['ipa', 'vaultcontainer-remove-owner', '--user=' + data.USER1,
@@ -79,7 +107,14 @@ class TestVaultAdminPrivileges(object):
 
     def test_0005_fail_to_add_vault_if_current_user_not_container_owner_or_admin(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to add vault if current user not container owner or admin
+        :Title: IDM-IPA-TC: Vault: Fail to add vault if current user not container owner or admin
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         multihost.master.kinit_as_user(NONVADMIN, data.PASSWORD)
         runcmd = ['ipa', 'vault-add', '--type=standard', 'vault_add_fails', '--user=' + data.USER1]
@@ -87,7 +122,14 @@ class TestVaultAdminPrivileges(object):
 
     def test_0006_fail_to_remove_vault_if_current_user_not_container_owner_or_admin(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to remove vault if current user not container owner or admin
+        :Title: IDM-IPA-TC: Vault: Fail to remove vault if current user not container owner or admin
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         multihost.master.kinit_as_user(NONVADMIN, data.PASSWORD)
         runcmd = ['ipa', 'vault-del', data.PREFIX + '_vault_user', '--user=' + data.USER1]
@@ -96,7 +138,14 @@ class TestVaultAdminPrivileges(object):
 
     def test_0007_successfully_add_vault_if_current_user_is_container_owner(self, multihost):
         """
-        IDM-IPA-TC: Vault:  Successfully add vault if current user is container owner
+        :Title: IDM-IPA-TC: Vault:  Successfully add vault if current user is container owner
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         multihost.master.kinit_as_user(data.PREFIX + '_user2', data.PASSWORD)
         runcmd = ['ipa', 'vault-add', '--type=standard', '--user=' + data.USER1,
@@ -106,7 +155,14 @@ class TestVaultAdminPrivileges(object):
 
     def test_0008_successfully_remove_vault_if_current_user_is_container_owner(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully remove vault if current user is container owner
+        :Title: IDM-IPA-TC: Vault: Successfully remove vault if current user is container owner
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         multihost.master.kinit_as_user(data.PREFIX + '_user2', data.PASSWORD)
         runcmd = ['ipa', 'vault-del', '--user=' + data.USER1, data.PREFIX + 'newvault_from_newowner']

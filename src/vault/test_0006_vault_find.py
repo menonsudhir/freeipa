@@ -44,7 +44,14 @@ class TestVaultFind(object):
 
     def test_0001_successfully_find_all_shared_vaults(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find all shared vaults
+        :Title: IDM-IPA-TC: Vault: Successfully find all shared vaults
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', '--shared']
         multihost.master.qerun(runcmd)
@@ -57,7 +64,14 @@ class TestVaultFind(object):
 
     def test_0002_successfully_find_all_user_vaults_for_user(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find all user vaults for user
+        :Title: IDM-IPA-TC: Vault: Successfully find all user vaults for user
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', '--user=' + data.USER1]
         multihost.master.qerun(runcmd)
@@ -70,7 +84,14 @@ class TestVaultFind(object):
 
     def test_0003_successfully_find_all_service_vaults_for_service(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find all service vaults for service
+        :Title: IDM-IPA-TC: Vault: Successfully find all service vaults for service
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', '--service=' + data.SERVICE1]
         multihost.master.qerun(runcmd)
@@ -83,7 +104,14 @@ class TestVaultFind(object):
 
     def test_0004_successfully_find_vault_by_name(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find vault by name
+        :Title: IDM-IPA-TC: Vault: Successfully find vault by name
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', data.PREFIX + '_vault_priv_0']
         cmd = multihost.master.run_command(runcmd)
@@ -92,7 +120,14 @@ class TestVaultFind(object):
 
     def test_0005_successfully_find_shared_vault_by_name(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find shared vault by name
+        :Title: IDM-IPA-TC: Vault: Successfully find shared vault by name
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', data.PREFIX + '_vault_shared_0', '--shared']
         cmd = multihost.master.run_command(runcmd)
@@ -101,7 +136,14 @@ class TestVaultFind(object):
 
     def test_0006_successfully_find_service_vault_by_name(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find service vault by name
+        :Title: IDM-IPA-TC: Vault: Successfully find service vault by name
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', data.PREFIX + '_vault_service_0',
                   '--service=' + data.SERVICE1]
@@ -111,7 +153,14 @@ class TestVaultFind(object):
 
     def test_0007_successfully_find_vault_by_name_with_name_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find vault by name with name option
+        :Title: IDM-IPA-TC: Vault: Successfully find vault by name with name option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', '--name=find_vault_priv_0']
         cmd = multihost.master.run_command(runcmd)
@@ -120,7 +169,14 @@ class TestVaultFind(object):
 
     def test_0008_successfully_find_vault_by_description(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find vault by description
+        :Title: IDM-IPA-TC: Vault: Successfully find vault by description
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', '--desc=my_vault_with_description']
         cmd = multihost.master.run_command(runcmd)
@@ -129,7 +185,14 @@ class TestVaultFind(object):
 
     def test_0009_successfully_find_vault_by_type_standard(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find vault by type standard
+        :Title: IDM-IPA-TC: Vault: Successfully find vault by type standard
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', '--desc=my_vault_with_description']
         cmd = multihost.master.run_command(runcmd)
@@ -138,7 +201,14 @@ class TestVaultFind(object):
 
     def test_0010_successfully_find_vault_by_type_symmetric(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find vault by type symmetric
+        :Title: IDM-IPA-TC: Vault: Successfully find vault by type symmetric
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', '--type=symmetric']
         multihost.master.qerun(runcmd)
@@ -148,7 +218,14 @@ class TestVaultFind(object):
 
     def test_0011_successfully_find_vault_by_type_asymmetric(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find vault by type asymmetric
+        :Title: IDM-IPA-TC: Vault: Successfully find vault by type asymmetric
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', '--type=asymmetric']
         multihost.master.qerun(runcmd)
@@ -158,7 +235,14 @@ class TestVaultFind(object):
 
     def test_0012_successfully_find_vaults_and_only_list_primary_key(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find vaults and only list primary key
+        :Title: IDM-IPA-TC: Vault: Successfully find vaults and only list primary key
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', '--pkey-only']
         cmd = multihost.master.run_command(runcmd)
@@ -167,7 +251,14 @@ class TestVaultFind(object):
 
     def test_0013_successfully_find_vaults_with_time_limit(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find vaults with time limit
+        :Title: IDM-IPA-TC: Vault: Successfully find vaults with time limit
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', '--timelimit=1']
         cmd = multihost.master.run_command(runcmd)
@@ -175,7 +266,14 @@ class TestVaultFind(object):
 
     def test_0014_successfully_find_vaults_with_size_limit(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find vaults with size limit
+        :Title: IDM-IPA-TC: Vault: Successfully find vaults with size limit
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', '--sizelimit=1']
         cmd = multihost.master.run_command(runcmd, raiseonerr=False)
@@ -184,7 +282,14 @@ class TestVaultFind(object):
 
     def test_0015_fail_to_find_non_existent_vault_by_name(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to find non_existent vault by name
+        :Title: IDM-IPA-TC: Vault: Fail to find non_existent vault by name
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', 'dne']
         cmd = multihost.master.run_command(runcmd, raiseonerr=False)
@@ -193,7 +298,14 @@ class TestVaultFind(object):
 
     def test_0016_fail_to_find_user_vault_with_service_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to find user vault with service option
+        :Title: IDM-IPA-TC: Vault: Fail to find user vault with service option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', data.PREFIX + '_vault_user_0',
                   '--service=' + data.SERVICE1]
@@ -203,7 +315,14 @@ class TestVaultFind(object):
 
     def test_0017_fail_to_find_shared_vault_with_user_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to find shared vault with user option
+        :Title: IDM-IPA-TC: Vault: Fail to find shared vault with user option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', data.PREFIX + '_vault_shared_0', '--user=' + data.USER1]
         cmd = multihost.master.run_command(runcmd, raiseonerr=False)
@@ -212,7 +331,14 @@ class TestVaultFind(object):
 
     def test_0018_fail_to_find_service_vault_with_shared_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to find service vault with shared option
+        :Title: IDM-IPA-TC: Vault: Fail to find service vault with shared option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', data.PREFIX + '_vault_service_0', '--shared']
         cmd = multihost.master.run_command(runcmd, raiseonerr=False)
@@ -221,7 +347,14 @@ class TestVaultFind(object):
 
     def test_0019_fail_to_find_type_standard_vault_with_type_asymmetric_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to find type standard vault with type asymmetric option
+        :Title: IDM-IPA-TC: Vault: Fail to find type standard vault with type asymmetric option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', data.PREFIX + '_vault_priv_0', '--type=asymmetric']
         cmd = multihost.master.run_command(runcmd, raiseonerr=False)
@@ -230,7 +363,14 @@ class TestVaultFind(object):
 
     def test_0020_fail_to_find_type_symmetric_vault_with_type_standard_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to find type symmetric vault with type standard option
+        :Title: IDM-IPA-TC: Vault: Fail to find type symmetric vault with type standard option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', data.PREFIX + '_vault_priv_symmetric', '--type=standard']
         cmd = multihost.master.run_command(runcmd, raiseonerr=False)
@@ -239,7 +379,14 @@ class TestVaultFind(object):
 
     def test_0021_fail_to_find_type_asymmetric_vault_with_type_symmetric_option(self, multihost):
         """
-        IDM-IPA-TC: Vault: Fail to find type asymmetric vault with type symmetric option
+        :Title: IDM-IPA-TC: Vault: Fail to find type asymmetric vault with type symmetric option
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', data.PREFIX + '_vault_priv_asymmetric', '--type=symmetric']
         cmd = multihost.master.run_command(runcmd, raiseonerr=False)
@@ -248,7 +395,14 @@ class TestVaultFind(object):
 
     def test_0022_successfully_find_all_service_vaults(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find all service vaults
+        :Title: IDM-IPA-TC: Vault: Successfully find all service vaults
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', '--services']
         cmd = multihost.master.run_command(runcmd)
@@ -256,7 +410,14 @@ class TestVaultFind(object):
 
     def test_0023_successfully_find_all_user_vaults(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully find all user vaults
+        :Title: IDM-IPA-TC: Vault: Successfully find all user vaults
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-find', '--users']
         cmd = multihost.master.run_command(runcmd)

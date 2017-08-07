@@ -12,14 +12,28 @@ class TestVaultConfigShow(object):
 
     def test_0001_successfully_show_vaultconfig(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully show vaultconfig
+        :Title: IDM-IPA-TC: Vault: Successfully show vaultconfig
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vaultconfig-show']
         multihost.master.qerun(runcmd, exp_output="Transport Certificate: ")
 
     def test_0002_successfully_show_vaultconfig_and_output_to_file(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully show vaultconfig and output to file
+        :Title: IDM-IPA-TC: Vault: Successfully show vaultconfig and output to file
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         outfile = '/tmp/ipa_vaultconfig_show.out'
         runcmd = ['ipa', 'vaultconfig-show', '--transport-out=' + outfile]

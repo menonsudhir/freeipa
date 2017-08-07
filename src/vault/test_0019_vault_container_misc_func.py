@@ -38,7 +38,14 @@ class TestVaultContainerMiscFunc(object):
 
     def test_0001_fail_to_create_user_container_with_different_unprivileged_user_running_vault_add(self, multihost):
         """
-        IDM-IPA-TC: Vault:  Fail to create user container with different unprivileged user running vault-add
+        :Title: IDM-IPA-TC: Vault:  Fail to create user container with different unprivileged user running vault-add
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         multihost.master.kinit_as_user(data.PREFIX + '_user1', data.PASSWORD)
         runcmd = ['ipa', 'vault-add', '--type=standard', '--user=' + data.PREFIX + '_user2',
@@ -48,7 +55,14 @@ class TestVaultContainerMiscFunc(object):
 
     def test_0002_fail_to_show_orphaned_container_with_unprivileged_user(self, multihost):
         """
-        IDM-IPA-TC: Vault:  Fail to show orphaned container with unprivileged user
+        :Title: IDM-IPA-TC: Vault:  Fail to show orphaned container with unprivileged user
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         runcmd = ['ipa', 'vault-add', '--type=standard', 'orphan_vault', '--user=orphan1']
         multihost.master.qerun(runcmd)

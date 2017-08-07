@@ -35,7 +35,14 @@ class TestVaultMiscFunc(object):
 
     def test_0001_successfully_manage_service_vaults_with_normalized_service_name(self, multihost):
         """
-        IDM-IPA-TC: Vault:  Successfully manage service vaults with normalized service name
+        :Title: IDM-IPA-TC: Vault:  Successfully manage service vaults with normalized service name
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
         service_short = data.PREFIX + '_service1/' + multihost.master.hostname
         service_long = service_short + '@' + multihost.master.domain.realm
@@ -86,7 +93,14 @@ class TestVaultMiscFunc(object):
 
     def test_0002_successfully_manage_service_vault_with_service(self, multihost):
         """
-        IDM-IPA-TC: Vault: Successfully manage service vault with service
+        :Title: IDM-IPA-TC: Vault: Successfully manage service vault with service
+
+        :Requirement: IDM-IPA: Password Vault - Key and Secret Storage
+
+        :Casecomponent: ipa
+
+        :Caseautomation: automated
+
         """
 
         service_base = data.PREFIX + '_service_management'
