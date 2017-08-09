@@ -10,11 +10,10 @@ from lib import (update_krbv_conf, revert_krbv_conf,
                  change_user_passwd, pwpolicy_mod)
 from ipa_pytests.qe_install import set_etc_hosts, sleep
 import time
-
+twentyseconds = 20
 
 class TestKdcproxy(object):
     """ Test Class """
-    twentyseconds = 20
     def class_setup(self, multihost):
         """ Setup for class """
         multihost.client = multihost.clients[0]
