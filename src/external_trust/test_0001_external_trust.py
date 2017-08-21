@@ -47,10 +47,11 @@ class TestExternalTrust(object):
         etchostscfg += '\n' + ad1.ip + ' ' + ad1.hostname + '\n'
         multihost.master.put_file_contents(etchosts, etchostscfg)
 
+        multihost.master.run_command(['kdestroy', '-A'])
+        multihost.master.kinit_as_admin()
         dnsforwardzone_add(multihost.master, forwardzone, ad1.ip)
 
         add_dnsforwarder(ad1, domain, multihost.master.ip)
-        add_dnsforwarder(ad1, domain, multihost.master.external_ip)
 
         cmd = multihost.master.run_command(paths.DIG + ' short SRV _ldap._tcp.' + forwardzone, raiseonerr=False)
         print cmd.stdout_text, cmd.stderr_text
