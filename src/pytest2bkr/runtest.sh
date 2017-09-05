@@ -35,50 +35,52 @@ pytest_location=/root/ipa-pytests
 mh_cfg=$MH_CONF_FILE
 junit_xml=${PYCONF_DIR}/${TESTCASE}.xml
 
+install_pytest() {
+    rlPhaseStartTest "Installing Pytest and required dependencies"
+        rlLog "Installing Packages [$PACKAGE]"
+        yum install -y $PACKAGE
+        for p in $PACKAGE
+        do
+            rlAssertRpm $p
+        done
+        rlLog "Install PyYAML"
+        yum install -y PyYAML
+
+        if [ -z $SRC_LOCATION ]; then
+            SRC_LOCATION=http://git.app.eng.bos.redhat.com/git/ipa-pytests.git
+        fi
+
+        rlLog "Clone git repo ipa-pytests using $SRC_LOCATION"
+        rlRun "git clone $SRC_LOCATION $pytest_location" 0
+
+        rlLog "Install Pytest and dependencies"
+        easy_install pip pytest pytest-multihost
+        if [ $? -eq 0 ]; then
+            if [ -d ${pytest_location} ]; then
+                pushd `pwd`
+                cd ${pytest_location}
+                python setup.py install
+                if [ $? -eq 0 ]; then
+                    rlPass "Successfully install Pytest"
+                else
+                    rlFail "Failed to install Pytest"
+                fi
+                popd
+            fi
+        else
+            rlFail "Faild to install Pytest"
+        fi
+    rlPhaseEnd
+}
+
 rlJournalStart
     rlPhaseStartSetup
         echo "$MASTER" | grep -i "$(hostname)"
         if [ $? -eq 0 ]; then
-            rlLog "Installing Packages [$PACKAGE]"
-            yum install -y $PACKAGE
-
-            for p in $PACKAGE
-            do
-                rlAssertRpm $p
-            done
-            rlLog "Install PyYAML"
-            yum install -y PyYAML
-
-            if [ -z $SRC_LOCATION ]; then
-                SRC_LOCATION=http://git.app.eng.bos.redhat.com/git/ipa-pytests.git
-            fi
-
-            rlLog "Clone git repo ipa-pytests using $SRC_LOCATION"
-            rlRun "git clone $SRC_LOCATION $pytest_location" 0
-
-            rlLog "Install Pytest and dependencies"
-            easy_install pip pytest pytest-multihost
-            if [ $? -eq 0 ]; then
-                if [ -d ${pytest_location} ]; then
-                    pushd `pwd`
-                    cd ${pytest_location}
-                    python setup.py install
-                    if [ $? -eq 0 ]; then
-                        rlPass "Successfully install Pytest"
-                    else
-                        rlFail "Failed to install Pytest"
-                    fi
-                    popd
-                fi
-            else
-                rlFail "Faild to install Pytest"
-            fi
-            rlPhaseEnd
-
-            rlPhaseStartTest
+            install_pytest
             if [ -z ${TESTCASE} ]; then
                 rlFail "Unable to find environment variable TESTCASE, please specify "\
-                       "param with TESTCASE as name in task definiation"
+                       "param with TESTCASE as name in task definition"
             fi
             rlLog "Running testcase $TESTCASE"
             if [ -d ${pytest_location}/src/$TESTCASE -a -f $mh_cfg ];
@@ -94,6 +96,7 @@ rlJournalStart
             fi
             rlRun "rhts-sync-set -s 'DONE' -m $MASTER"
         else
+            install_pytest
             rlLog "$(hostname) is not MASTER, so skipping operations and waiting for master"
             rlRun "rhts-sync-block -s 'DONE' $MASTER"
         fi
