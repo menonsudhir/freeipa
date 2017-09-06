@@ -7,6 +7,7 @@ tests.
 ###############################################################
 '''
 import pytest
+from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.utils import *
 from ipa_pytests.qe_install import setup_client_docker, uninstall_client_docker
 
