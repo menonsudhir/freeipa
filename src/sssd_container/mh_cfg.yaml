@@ -7,7 +7,7 @@ dns_forwarder: 10.65.201.89
 root_password: 'Secret123'
 domains:
   - name: testrelm.test
-    type: sssd
+    type: ipa
     hosts:
       - name: master.testrelm.test
         external_hostname: hostname1
