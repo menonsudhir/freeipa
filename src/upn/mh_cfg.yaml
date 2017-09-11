@@ -10,7 +10,6 @@ domains:
     hosts:
       - name: master.testrelm.test
         external_hostname: hostname1
-        external_ip: 1.2.3.4
         role: master
   - name: ipaad2012r2.test
     type: ad
