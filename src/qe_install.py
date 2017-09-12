@@ -757,3 +757,42 @@ def uninstall_client_docker(client):
     client.qerun(cmd3, exp_returncode=0)
     client.log.info("Restoring backup of /etc/resolv.conf")
     restore_resolv_conf(client)
+
+
+def setup_ca(host):
+    """
+    Setup CA on given host
+    """
+    runcmd = [paths.IPACAINSTALL,
+              '-U',
+              '-w', host.config.admin_pw,
+              '-P', host.config.admin_id,
+              ]
+
+    print_time()
+    print("Installing IPA CA Server on machine [%s]" % host.hostname)
+    print("RUNCMD:", ' '.join(runcmd))
+    cmd = host.run_command(runcmd, raiseonerr=False)
+
+    print("STDOUT:", cmd.stdout_text)
+    print("STDERR:", cmd.stderr_text)
+    print_time()
+
+
+def setup_kra(host):
+    """
+    Setup KRA on given host
+    """
+    runcmd = [paths.IPAKRAINSTALL,
+              '-U',
+              '-p', host.config.admin_pw
+              ]
+
+    print_time()
+    print("Installing IPA KRA Server on machine [%s]" % host.hostname)
+    print("RUNCMD:", ' '.join(runcmd))
+    cmd = host.run_command(runcmd, raiseonerr=False)
+
+    print("STDOUT:", cmd.stdout_text)
+    print("STDERR:", cmd.stderr_text)
+    print_time()

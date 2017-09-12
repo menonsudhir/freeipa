@@ -2,7 +2,7 @@
 This is a quick test for IPA installation functionality
 """
 import time
-from ipa_pytests.qe_install import setup_master, setup_replica, setup_client
+from ipa_pytests.qe_install import setup_master, setup_replica, setup_client, setup_ca, setup_kra
 
 
 class TestQuick(object):
@@ -47,6 +47,13 @@ class TestQuick(object):
         multihost.client.qerun(['id', 'mytestuser1'],
                                exp_returncode=0,
                                exp_output='mytestuser1')
+
+    def test_0007_kra_install(self, multihost):
+        """ Install KRA on given master and replica """
+        setup_ca(multihost.replica)
+        setup_kra(multihost.master)
+        setup_kra(multihost.replica)
+
 
     def class_teardown(self, multihost):
         """ Teardown for class """
