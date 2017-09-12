@@ -16,8 +16,8 @@ class Testmaster(object):
     def class_setup(self, multihost):
         """ Setup for class """
         print("\nClass Setup")
-        print"MASTER: ", multihost.master.hostname
-        print"CLIENT: ", multihost.client.hostname
+        print("MASTER: ", multihost.master.hostname)
+        print("CLIENT: ", multihost.client.hostname)
 
     def test_0001_Install_Client(self, multihost):
         """Install IPA client using sssd-container"""
