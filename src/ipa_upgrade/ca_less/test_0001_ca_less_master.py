@@ -2,21 +2,22 @@
 Overview:
 SetUp Requirements For IPA server upgrade
 """
-
 import pytest
 import time
 from ipa_pytests.shared.rpm_utils import get_rpm_version
 from ipa_pytests.shared import paths
 from distutils.version import LooseVersion
+from selenium import webdriver
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.ipa_upgrade.constants import repo_urls
 from ipa_pytests.shared.qe_certutils import certutil
+from ipa_pytests.shared.yum_utils import add_repo
 from ipa_pytests.ipa_upgrade.utils import upgrade, is_allowed_to_update
 from ipa_pytests.shared.utils import run_pk12util
 from ipa_pytests.qe_install import setup_master_ca_less
 from ipa_pytests.shared.user_utils import add_ipa_user, show_ipa_user
 from ipa_pytests.shared.utils import stop_firewalld
-
+from ipa_pytests.test_webui import ui_lib
 
 class Testmaster(object):
     """ Test Class """
@@ -31,6 +32,12 @@ class Testmaster(object):
         passwd = 'Secret123'
         seconds = 10
 
+        upgrade_from = '7.3.b'
+        # upgrade_from this can be used to set repo version of packages
+        # for this refer ipa_upgrade/constants.py
+
+        for repo in repo_urls[upgrade_from]:
+            cmd = add_repo(multihost.master, repo)
 
         """Adding command to stop firewall service on master """
         stop_firewalld(multihost.master)
@@ -84,6 +91,10 @@ class Testmaster(object):
                         % master.hostname)
         else:
             print("\nIPA server installed successfully")
+
+        ipa_version = get_rpm_version(multihost.master, 'ipa-server')
+        print ipa_version
+
         print ("\n IPA Server Before Updation")
         # checking for ipactl command output before updation
         multihost.master.kinit_as_admin()
@@ -99,35 +110,56 @@ class Testmaster(object):
         cmd = show_ipa_user(multihost.master, user1)
         assert cmd.returncode == 0
 
-    def test_rpm_version_0001(self, multihost):
+    def test_web_ui_0001(self, multihost):
+        """
+        test for web ui testing before upgrade
+        """
+        user1 = 'testuser1'
+        userpass = 'TestP@ss123'
+        tp = ui_lib.ui_driver(multihost)
+        try:
+            tp.setup()
+            multihost.driver = tp
+        except StandardError as errval:
+            pytest.skip("setup_session_skip : %s" % (errval.args[0]))
+        multihost.driver.init_app(username=user1, password=userpass)
+        multihost.driver.logout()
+
+    def test_rpm_version_0002(self, multihost):
         """
         test for automation of upgradation of packeges
         test for rpm comparison
         """
         rpm = "ipa-server"
-        # global updated_version
         print "Current IPA version"
         ipa_version = get_rpm_version(multihost.master, rpm)
-        print ipa_version                                   # get current ipa version
-        is_allowed = is_allowed_to_update(multihost.master)
-        print is_allowed
-        if is_allowed:
-            upgrade_to = multihost.master.config.upgrade_to
-            # print upgrade_to
-            repo = repo_urls.get(upgrade_to)                     # get repo from repo_urls dictionary
-            print repo
-            cmdupdate = upgrade(multihost.master, repo)   # upgrade starts at this point
-            print cmdupdate
-            updated_version = get_rpm_version(multihost.master, rpm)   # get updated ipa version
-            print "Upgraded version"
-            print updated_version                           # prints upgraded version
-            if LooseVersion(updated_version) > LooseVersion(ipa_version):
-                print "Upgrade rpm test verified"
-            else:
-                print "rpm version check failed"
 
+        print ipa_version
 
-    def test_logs_0002(self, multihost):
+        # get current ipa version
+        print("Upgrading from 7.3.b to 7.4.b")
+        upgrade_from = '7.3.b'
+        upgrade_to = '7.4.b'
+
+        # upgrade_from is version from which version upgrade is start
+        # upgrade_to is version which can be used to set repo as per appropriate version for upgrading the packages
+        # for this refer ipa_upgrade/constants.py
+
+        if is_allowed_to_update(upgrade_to, upgrade_from):
+            for repo in repo_urls[upgrade_to]:
+             print("Upgrading using repo : %s" % repo)
+             cmdupdate = add_repo(multihost.master, repo)
+        upgrade(multihost.master)                                                         # upgrade starts at this point
+        print cmdupdate
+        updated_version = get_rpm_version(multihost.master, rpm)                              # get updated ipa version
+        print "Upgraded version is %s " % updated_version                                        # prints upgraded version
+
+        if LooseVersion(updated_version) > LooseVersion(ipa_version):
+            print "Upgrade rpm test verified"
+        else:
+            print "rpm version check failed  on %s " % multihost.master
+
+    def test_logs_0003(self, multihost):
         """
         test for automation of upgradation of packeges
         test for logs verification
@@ -141,7 +173,7 @@ class Testmaster(object):
         else:
            print "Log test failed"
 
-    def test_services_0003(self, multihost):
+    def test_services_0004(self, multihost):
         """
         test for automation of upgradation of packeges
         test for service verification
@@ -153,7 +185,7 @@ class Testmaster(object):
         else:
             print("IPA service is running, continuing")
 
-    def test_users_0004(self, multihost):
+    def test_users_0005(self, multihost):
         """
         test for automation of upgradation of packeges
         test for service verification
@@ -165,21 +197,36 @@ class Testmaster(object):
         assert user1 in cmd2.stdout_text
         print("User Successfully verified")
 
-    def test_bz1477243_0002(self, multihost):
+    def test_bz1477243_0006(self, multihost):
         """
         test after removing .cache directory
         """
         cache = '/root/.cache/ipa/schema'
-        error = 'ipa: WARNING: Failed to read schema: [Errno 2]'
+        error = 'Failed to read schema:'
         multihost.master.run_command([paths.RM, '-rf', cache], raiseonerr=False)
         cmd = "ipa help"
         cmdout = multihost.master.run_command(cmd, raiseonerr=False)
         print cmdout.stderr_text
         if error in cmdout.stderr_text:
-          print "Traceback is found /" \
+          print "Traceback is found " \
                 "bz1477243 found"
         else:
             print "Traceback is not found"
+
+    def test_webui_0007(self, multihost):
+        """
+        test for web ui testing after upgrade
+        """
+        user1 = 'testuser1'
+        userpass = 'TestP@ss123'
+        tp = ui_lib.ui_driver(multihost)
+        try:
+            tp.setup()
+            multihost.driver = tp
+        except StandardError as errval:
+            pytest.skip("setup_session_skip : %s" % (errval.args[0]))
+        multihost.driver.init_app(username=user1, password=userpass)
+        multihost.driver.logout()
 
     def class_teardown(self, multihost):
         """Full suite teardown """

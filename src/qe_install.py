@@ -153,6 +153,7 @@ def setup_master(master, setup_reverse=True):
               # '--ip-address', master.ip,
               '--admin-password', master.config.admin_pw,
               '--ds-password', master.config.dirman_pw,
+              '--setup-kra',
               # '--mkhomedir',
               '-U']
     if not setup_reverse:
@@ -162,6 +163,12 @@ def setup_master(master, setup_reverse=True):
         # only add allow-zone-overlap if IPA >= 4.4.0
         if ipa_version_gte(master, '4.4.0'):
             runcmd.extend(['--allow-zone-overlap'])
+    domain_level = master.config.domain_level
+    if domain_level in range(0, 10):
+        runcmd.append('--domain-level=0')
+    else:
+        print("Invalid domain level setting it to default 1")
+        runcmd.append('--domain-level=1')
 
     print("Installing IPA Server on machine [%s]" % master.hostname)
     print("RUNCMD:", ' '.join(runcmd))

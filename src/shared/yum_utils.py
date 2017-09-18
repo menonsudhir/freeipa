@@ -10,6 +10,8 @@ import paths
 
 def add_repo(host, repo_url):
     """ add repo file"""
+    nogpgcheck = [paths.YUMCONFIGMANAGER, '--setopt=\*.gpgcheck=0', '--save']
+    cmd2 = host.run_command(nogpgcheck, raiseonerr=False)
     yum_add = [paths.YUMCONFIGMANAGER, '--add-repo=%s' % repo_url]
     cmd = host.run_command(yum_add, raiseonerr=False)
 

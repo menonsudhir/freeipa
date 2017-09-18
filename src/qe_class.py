@@ -3,6 +3,7 @@ qe_class provides the expansion to the multihost plugin for IPA testing.
 """
 
 import logging
+import os
 import yaml
 import random
 from distutils.version import LooseVersion
@@ -47,7 +48,10 @@ class QeConfig(pytest_multihost.config.Config):
                        'virtualdisplay': 0,
                        'upgrade_from': '',
                        'upgrade_to': '',
-                       'skip': ''}
+                       'skip': '',
+                       'untrusted_certs': False,
+                       'domain_level': 1,
+                       }
 
     def __init__(self, **kwargs):
         """
@@ -71,9 +75,11 @@ class QeConfig(pytest_multihost.config.Config):
         self.ad_pwd = kwargs.get('ad_pwd', 'Secret123')
         self.ad_hostname = kwargs.get('ad_hostname', 'win1.pne.qe')
         self.ad_sub_hostname = kwargs.get('ad_sub_hostname', 'win2.chd.pne.qe')
-        self.upgrade_from = kwargs.get('upgrade_from', '')
-        self.upgrade_to = kwargs.get('upgrade_to', '')
+        self.upgrade_from = kwargs.get('upgrade_from', os.getenv('UPGRADE_FROM'))
+        self.upgrade_to = kwargs.get('upgrade_to', os.getenv("UPGRADE_TO"))
         self.skip = kwargs.get('skip', 'True')
+        self.untrusted_certs = kwargs.get('untrusted_certs', os.getenv('UNTRUSTED_CERTS', False))
+        self.domain_level = kwargs.get('domain_level', os.getenv('DOMAIN_LEVEL', 1))
 
     def get_domain_class(self):
         """

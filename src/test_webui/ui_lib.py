@@ -55,6 +55,7 @@ class ui_driver(object):
         self.config['ipa_admin'] = self.multihost.master.config.admin_id
         self.config['browser'] = self.multihost.master.config.browser
         self.config['virtualdisplay'] = self.multihost.master.config.virtualdisplay
+        self.config['untrusted_certs'] = self.multihost.master.config.untrusted_certs
 
     def get_base_url(self):
         """
@@ -82,6 +83,10 @@ class ui_driver(object):
                     fp.set_preference("browser.download.dir", os.getcwd())
                     fp.set_preference("browser.helperApps.neverAsk.saveToDisk",
                                       "application/octet-stream")
+                    untrusted_certs = self.config.get('untrusted_certs', 'False')
+
+                    if untrusted_certs == 'True':
+                        fp.accept_untrusted_certs = True
                     options = fp
 
                 driver = webdriver.Firefox(firefox_profile=options)
@@ -248,6 +253,7 @@ class ui_driver(object):
         Logout of IPA application
         """
         self.profile_menu_action('logout')
+        self.driver.quit()
 
     def profile_menu_action(self, name):
         """
