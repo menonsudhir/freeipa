@@ -14,7 +14,6 @@ from ipa_pytests.shared.rpm_utils import list_rpms
 from ipa_pytests.shared.utils import get_domain_level, ipa_version_gte
 from ipa_pytests.shared.log_utils import backup_logs
 from ipa_pytests.shared.dns_utils import dns_record_add
-from ipa_pytests.shared.host_utils import hostgroup_find, hostgroup_member_add
 
 
 def disable_firewall(host):
@@ -796,3 +795,47 @@ def setup_kra(host):
     print("STDOUT:", cmd.stdout_text)
     print("STDERR:", cmd.stderr_text)
     print_time()
+
+
+def setup_master_ca_less(master, admin_passwd, http_pin, dirsrv_pin, http_cert_file, dirsrv_cert_file):
+    """
+    This is the default testing setup for an IPA Master.in CA less.
+    """
+    revnet = master.ip.split('.')[2] + '.' + \
+        master.ip.split('.')[1] + '.' + \
+        master.ip.split('.')[0] + '.in-addr.arpa.'
+    passwd = admin_passwd
+
+    print("Listing RPMS")
+    list_rpms(master)
+    print("Disabling Firewall")
+    disable_firewall(master)
+    print("Setting hostname")
+    set_hostname(master)
+    print("Setting /etc/hosts")
+    set_etc_hosts(master)
+    print("Setting up RNGD")
+    set_rngd(master)
+    print_time()
+    print("Installing required packages")
+    master.yum_install(['ipa-server', 'ipa-server-dns',
+                       'bind-dyndb-ldap', 'bind-pkcs11',
+                       'bind-pkcs11-utils'])
+    print(" Installing ipa-server ")
+
+    cmdstr = "{} --http-cert-file {} " \
+             "--dirsrv-cert-file {} --ip-address {} -r {} -p {} " \
+             "-a {} --setup-dns --forwarder {} --http-pin {} " \
+             "--dirsrv-pin {} -U ".format(paths.IPASERVERINSTALL,
+                                          http_cert_file,
+                                          dirsrv_cert_file,
+                                          master.ip,
+                                          master.domain.realm,
+                                          passwd, passwd,
+                                          master.config.dns_forwarder,
+                                          http_pin, dirsrv_pin)
+    if ipa_version_gte(master, '4.5.0'):
+        cmdstr += "--no-pkinit"
+        print("\nRuning command : %s" % cmdstr)
+    cmd = master.run_command(cmdstr, raiseonerr=False)
+    return cmd

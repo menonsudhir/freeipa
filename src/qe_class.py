@@ -5,6 +5,7 @@ qe_class provides the expansion to the multihost plugin for IPA testing.
 import logging
 import yaml
 import random
+from distutils.version import LooseVersion
 import pytest_multihost.config
 import pytest_multihost.host
 from pytest_multihost import make_multihost_fixture
@@ -35,7 +36,6 @@ class QeConfig(pytest_multihost.config.Config):
                        'dns_forwarder': '',
                        'chrome_browser': '',
                        'browser': '',
-                       'dns_forwarder': '',
                        'net_name': '',
                        'ad_top_domain' : '',
                        'ad_sub_domain' : '',
@@ -44,7 +44,10 @@ class QeConfig(pytest_multihost.config.Config):
                        'ad_user': '',
                        'ad_pwd': '',
                        'ad_hostname': '',
-                       'virtualdisplay': 0}
+                       'virtualdisplay': 0,
+                       'upgrade_from': '',
+                       'upgrade_to': '',
+                       'skip': ''}
 
     def __init__(self, **kwargs):
         """
@@ -68,6 +71,9 @@ class QeConfig(pytest_multihost.config.Config):
         self.ad_pwd = kwargs.get('ad_pwd', 'Secret123')
         self.ad_hostname = kwargs.get('ad_hostname', 'host.abc.test')
         self.ad_sub_hostname = kwargs.get('ad_sub_hostname', 'subhost.abc.test')
+        self.upgrade_from = kwargs.get('upgrade_from', '')
+        self.upgrade_to = kwargs.get('upgrade_to', '')
+        self.skip = kwargs.get('skip', 'True')
 
     def get_domain_class(self):
         """
@@ -123,6 +129,20 @@ class QeHost(pytest_multihost.host.Host):
         """
         cmd = self.run_command('hostname')
         print cmd.stdout_text
+
+    def get_os_version(host):
+        rel = "/etc/redhat-release"
+        # Set default value
+        rhel_ver_string = '72'
+        # Copy contents of file in variable
+        release_text = host.transport.get_file_contents(rel)
+        # Form Python regex for OS version
+        release_regex = re.compile(r"Red Hat.*([0-9])\.([0-9])")
+        osver = release_regex.match(release_text)
+        if osver:
+            # if found, group 1 and 2 will have major and minor version
+            rhel_ver_string = osver.group(1) + osver.group(2)
+        return rhel_ver_string
 
     def kinit_as_user(self, user, passwd):
         """
