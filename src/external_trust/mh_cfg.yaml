@@ -1,4 +1,5 @@
 ssh_key_filename: ~/.ssh/id_rsa
+ssh_password: Secret123
 admin_id: admin
 admin_pw: Secret123
 dirman_id: '"cn=Directory Manager"'
@@ -14,7 +15,7 @@ domains:
       - name: client.testrelm.test
         external_hostname: hostname2
         role: client
-  - name: pne.qe
+  - name: ipaad2012r2.test
     type: ad
     hosts:
       - name: idm-qe-ipa-win3.ipaad2012r2.test

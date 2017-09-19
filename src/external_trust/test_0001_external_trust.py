@@ -53,13 +53,13 @@ class TestExternalTrust(object):
 
         add_dnsforwarder(ad1, domain, multihost.master.ip)
 
-        cmd = multihost.master.run_command(paths.DIG + ' short SRV _ldap._tcp.' + forwardzone, raiseonerr=False)
+        cmd = multihost.master.run_command(paths.DIG + ' +short SRV _ldap._tcp.' + forwardzone, raiseonerr=False)
         print cmd.stdout_text, cmd.stderr_text
         if ad1.hostname in cmd.stdout_text:
             print "dns resolution passed for ad domain"
         else:
             pytest.fail("dns resolution failed for ad domain", pytrace=False)
-        cmd = multihost.master.run_command(paths.DIG + ' short SRV @' + ad1.ip + ' _ldap._tcp.' + domain,
+        cmd = multihost.master.run_command(paths.DIG + ' +short SRV @' + ad1.ip + ' _ldap._tcp.' + domain,
                                            raiseonerr=False)
         print cmd.stdout_text, cmd.stderr_text
         if domain in cmd.stdout_text:
