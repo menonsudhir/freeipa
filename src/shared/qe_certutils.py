@@ -59,11 +59,15 @@ class certutil(object):
                                '-a',
                                '-i', cert_file])
 
-    def list_certs(self, nick=None):
+    def list_certs(self, nick=None, db_dir=None):
         """ certutil list (-L) command """
-        cmdstr = ['certutil', '-d', self.db_dir, '-L']
+        cert_dir = self.db_dir
+        if db_dir:
+            cert_dir = db_dir
+        cmdstr = ['certutil', '-d', cert_dir, '-L']
         if nick:
-            cmdstr = cmdstr + ['-n', nick]
+            cmdstr += ['-n', nick]
+        print("Running : {0}".format(" ".join(cmdstr)))
         cmd = self.host.run_command(cmdstr)
         return cmd.stdout_text, cmd.stderr_text
 
@@ -78,7 +82,7 @@ class certutil(object):
         cmdstr = ['certutil', '-d', self.db_dir, '-R', '-s', subject,
                   '-a', '-z', self.noise_file]
         if outfile:
-            cmdstr = cmdstr + ['-o', outfile]
+            cmdstr += ['-o', outfile]
 
         cmd = self.host.run_command(cmdstr)
         return cmd.stdout_text, cmd.stderr_text
@@ -102,7 +106,7 @@ class certutil(object):
                   '-f', self.password_file]
 
         if options:
-            cmdstr = cmdstr + options
+            cmdstr += options
 
         if "--extSKID" in options:
             stdin_text += '%s\nn\n' % self.root_key_id
@@ -124,7 +128,7 @@ class certutil(object):
                   '-f', self.password_file]
 
         if options:
-            cmdstr = cmdstr + options
+            cmdstr += options
 
         print("\nRunning command : %s" % " ".join(cmdstr))
         cmd = self.host.run_command(cmdstr, stdin_text='n\n0\ny\n', raiseonerr=False)
@@ -150,7 +154,7 @@ class certutil(object):
                   '-n', nick,
                   '-a']
         if outfile:
-            cmdstr = cmdstr + ['-o', outfile]
+            cmdstr += ['-o', outfile]
         print("Running: {0}".format(" ".join(cmdstr)))
         cmd = self.host.run_command(cmdstr)
         return cmd.stdout_text, cmd.stderr_text
