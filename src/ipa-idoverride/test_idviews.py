@@ -40,7 +40,7 @@ class Testidview(object):
 
         dnsforwardzone_add(multihost.master, forwardzone, ad1.ip)
 
-        add_dnsforwarder(ad1, domain, multihost.master.external_ip)
+        add_dnsforwarder(ad1, domain, multihost.master.ip)
 
         cmd = multihost.master.run_command('dig +short SRV _ldap._tcp.' +
                                            forwardzone, raiseonerr=False)
