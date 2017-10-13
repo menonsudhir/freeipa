@@ -38,7 +38,7 @@ class Testidview(object):
         etchostscfg += '\n' + ad1.ip + ' ' + ad1.hostname + '\n'
         multihost.master.put_file_contents(etchosts, etchostscfg)
 
-        dnsforwardzone_add(multihost.master, forwardzone, ad1.ip)
+        #dnsforwardzone_add(multihost.master, forwardzone, ad1.ip)
 
         add_dnsforwarder(ad1, domain, multihost.master.ip)
 
