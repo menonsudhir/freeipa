@@ -8,6 +8,6 @@ domains:
   - name: testrelm.test
     type: ipa
     hosts:
-      - name: hostname1.testrelm.test
+      - name: master.testrelm.test
         external_hostname: hostname1
         role: master
