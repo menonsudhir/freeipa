@@ -12,6 +12,7 @@ from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.utils import service_control
 from ipa_pytests.shared.user_utils import *
 from ipa_pytests.shared.idviews_lib import *
+import time
 
 import pytest
 
@@ -26,7 +27,7 @@ class Testidview(object):
         print "CLIENT: ", multihost.client.hostname
 
         disable_dnssec(multihost.master)
-        check_rpm(multihost.master, ['ipa-server-trust-ad'])
+        check_rpm(multihost.master, ['ipa-server-trust-ad', 'expect'])
         adtrust_install(multihost.master)
 
         ad1 = multihost.ads[0]
@@ -38,9 +39,11 @@ class Testidview(object):
         etchostscfg += '\n' + ad1.ip + ' ' + ad1.hostname + '\n'
         multihost.master.put_file_contents(etchosts, etchostscfg)
 
-        #dnsforwardzone_add(multihost.master, forwardzone, ad1.ip)
+        dnsforwardzone_add(multihost.master, forwardzone, ad1.ip)
+        time.sleep(20)
 
         add_dnsforwarder(ad1, domain, multihost.master.ip)
+        time.sleep(20)
 
         cmd = multihost.master.run_command('dig +short SRV _ldap._tcp.' +
                                            forwardzone, raiseonerr=False)
