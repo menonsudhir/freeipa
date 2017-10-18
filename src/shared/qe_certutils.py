@@ -175,8 +175,8 @@ class certutil(object):
                   '-f', self.password_file]
         if options:
             cmdstr += options
-        if '--extSKID' in options:
-            stdin_text += "%s\n\n\nn\n%s\nn\n" % (self.root_key_id, self.ipa_ca_key_id)
+            if '--extSKID' in options:
+                stdin_text += "%s\n\n\nn\n%s\nn\n" % (self.root_key_id, self.ipa_ca_key_id)
 
         print("Running: [%s] with stdin_text %s" % (" ".join(cmdstr), stdin_text))
         cmd = self.host.run_command(cmdstr, stdin_text=stdin_text, raiseonerr=False)

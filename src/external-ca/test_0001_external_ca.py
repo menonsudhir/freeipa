@@ -7,11 +7,12 @@ import pytest
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_install import (disable_firewall, set_hostname,
                                    set_etc_hosts, set_rngd, print_time)
-from ipa_pytests.shared.rpm_utils import list_rpms
+from ipa_pytests.shared.rpm_utils import list_rpms, get_rpm_version
 from ipa_pytests.shared.user_utils import add_ipa_user, show_ipa_user, del_ipa_user
 from ipa_pytests.shared.qe_certutils import certutil
 from ipa_pytests.shared.openssl_utils import openssl_util
 import ipa_pytests.shared.paths as paths
+from ipa_pytests.qe_install import ipa_version_gte
 
 class TestExternalCA(object):
     """ Test Class """
@@ -99,7 +100,10 @@ class TestExternalCA(object):
 
         certs = certutil(master, nssdb_dir)
         print("\nCreating self-signed CA certificate")
-        certs.selfsign_cert(ca_subject, ca_nick, options=['-m', '1', '--extSKID'])
+        if ipa_version_gte(multihost.master, '4.5.0'):
+            certs.selfsign_cert(ca_subject, ca_nick, options=['-m', '1', '--extSKID'])
+        else:
+            certs.selfsign_cert(ca_subject, ca_nick, options=['-m', '1'])
 
         print("\nSleeping for [%d] seconds" % seconds)
         time.sleep(seconds)
@@ -108,9 +112,17 @@ class TestExternalCA(object):
         cmd = ['req', '-outform', 'der', '-in', install_cert_file,
                '-out', cert_der_file]
         openssl_util(master, cmd)
-
         out_der_file = "%s/external.crt" % (nssdb_dir)
-        certs.sign_csr(cert_der_file, out_der_file, ca_nick, options=['--extSKID'])
+        rpm = "ipa-server"
+        print "Current IPA version"
+        ipa_version = get_rpm_version(multihost.master, rpm)
+        print ipa_version
+        if ipa_version_gte(multihost.master, '4.5.0'):
+            print("Ipa version is %s" % ipa_version, "using extSKID option installing Ipa server ")
+            certs.sign_csr(cert_der_file, out_der_file, ca_nick, options=['--extSKID'])
+        else:
+            print("Ipa version is %s" % ipa_version, "without extSKID option installing Ipa server ")
+            certs.sign_csr(cert_der_file, out_der_file, ca_nick)
         # Generate PEM file
         out_pem_file = "%s/external.pem" % (nssdb_dir)
         cmdstr = ['x509', '-inform', 'der', '-in', out_der_file,
