@@ -22,5 +22,6 @@ def upgrade(host):
     cmdupdate = yum_update(host, rpms)
     print cmdupdate.stdout_text
     print cmdupdate.stderr_text
+    return cmdupdate
 
 
