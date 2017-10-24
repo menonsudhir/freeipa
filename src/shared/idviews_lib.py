@@ -27,16 +27,40 @@ def idview_add(host, viewname, desc=None, set_attr=None, addattr=None,
         cmd_list.append('--all', '--raw')
     check = host.run_command(cmd_list, raiseonerr=False)
     if check.returncode != 0:
-        print ("Error in adding idview" + viewname)
+        print ("Error in adding idview  " + viewname)
     else:
         print (viewname + " added sucessfully")
-
+    return check
 
 def idview_del(host, viewname):
     """Deleting views """
     cmd_list = ['ipa', 'idview-del', viewname]
     if viewname:
         cmd_list.append(viewname)
+    check = host.run_command(cmd_list, raiseonerr=False)
+    return check
+
+def idview_find(host, viewname=None, desc=None, timelimit=None,
+                sizelimit=None, alloption=None, raw=None, allraw=None, pkey=None):
+    """Finding views """
+    cmd_list = ['ipa', 'idview-find']
+    if viewname:
+        cmd_list.append('--name=' + viewname)
+    if desc:
+        cmd_list.append('--desc=' + desc)
+    if timelimit:
+        cmd_list.append('--timelimit=' + timelimit)
+    if sizelimit:
+        cmd_list.append('--sizelimit=' + sizelimit)
+    if alloption:
+        cmd_list.append('--all')
+    if raw:
+        cmd_list.append('--raw')
+    if allraw:
+        cmd_list.append('--all')
+        cmd_list.append('--raw')
+    if pkey:
+        cmd_list.append('--pkey-only')
     check = host.run_command(cmd_list, raiseonerr=False)
     return check
 
@@ -61,7 +85,7 @@ def idoverrideuser_add(host, viewname, user=None, uid=None, gid=None,
     if shell:
         cmd_list.append('--shell=' + shell)
     if key:
-        cmd_list.append('--key=' + key)
+        cmd_list.append('--sshpubkey=' + key)
     if homedir:
         cmd_list.append('--homedir=' + homedir)
     check = host.run_command(cmd_list, raiseonerr=False)
@@ -88,7 +112,7 @@ def idoverrideuser_mod(host, viewname, user=None, uid=None, gid=None,
     if shell:
         cmd_list.append('--shell=' + shell)
     if key:
-        cmd_list.append('--key=' + key)
+        cmd_list.append('--sshpubkey=' + key)
     if homedir:
         cmd_list.append('--homedir=' + homedir)
     check = host.run_command(cmd_list, raiseonerr=False)
@@ -161,5 +185,137 @@ def idoverrideuser_find(host, viewname, anchor, desc=None,
         cmd_list.append('--gidnumber=' + gidnumber)
     if homedir:
         cmd_list.append('--homedir=' + homedir)
+    check = host.run_command(cmd_list, raiseonerr=False)
+    return check
+
+def idoverridegroup_find(host, viewname, anchor, desc=None,
+                        groupname=None, gid=None, timelimit=None,
+                        sizelimit=None, alloption=None, raw=None, allraw=None,
+                        fallbacktoldap=None, pkey=None):
+    """find groupoverride"""
+    cmd_list = ['ipa', 'idoverridegroup-find', viewname]
+    if anchor:
+        cmd_list.append('--anchor=' + anchor)
+    if desc:
+        cmd_list.append('--desc=' + desc)
+    if groupname:
+        cmd_list.append('--group-name=', + groupname)
+    if gid:
+        cmd_list.append('--gid=', +gid)
+    if timelimit:
+        cmd_list.append('--timelimit=' + timelimit)
+    if sizelimit:
+        cmd_list.append('--sizelimit=' + sizelimit)
+    if alloption:
+        cmd_list.append('--all')
+    if raw:
+        cmd_list.append('--raw')
+    if allraw:
+        cmd_list.append('--all')
+        cmd_list.append('--raw')
+    if fallbacktoldap:
+        cmd_list.append('--fallback-to-ldap=')
+    if pkey:
+        cmd_list.append('--pkey-only')
+    check = host.run_command(cmd_list, raiseonerr=False)
+    return check
+
+def idoverrideuser_show(host, viewname, anchor, rights=None,
+                        fallbacktoldap=None, alloption=None, raw=None, allraw=None):
+    """useroverride show"""
+    cmd_list = ['ipa', 'idoverrideuser-show', viewname, anchor]
+    if desc:
+        cmd_list.append('--desc=' + desc)
+    if alloption:
+        cmd_list.append('--all')
+    if raw:
+        cmd_list.append('--raw')
+    if allraw:
+        cmd_list.append('--all', '--raw')
+    if fallbacktoldap:
+        cmd_list.append('--fallback-to-ldap')
+    check = host.run_command(cmd_list, raiseonerr=False)
+    return check
+
+def idview_show(host, viewname, rights=None,
+        showhosts=None, alloption=None, raw=None, allraw=None):
+    """idview show"""
+    cmd_list = ['ipa', 'idview-show', viewname]
+    if rights:
+        cmd_list.append('--rights=' + rights)
+    if alloption:
+        cmd_list.append('--all')
+    if raw:
+        cmd_list.append('--raw')
+    if allraw:
+        cmd_list.append('--all', '--raw')
+    if showhosts:
+        cmd_list.append('--show-hosts')
+    check = host.run_command(cmd_list, raiseonerr=False)
+    return check
+
+def idview_mod(host, viewname, desc=None,
+                        domainresolutionorder=None, setattrs=None, addattrs=None, delattrs=None,
+                        rights=None, alloption=None, raw=None, allraw=None):
+    """idview mod"""
+    cmd_list = ['ipa', 'idview-mod', viewname]
+    if desc:
+        cmd_list.append('--desc=' +desc)
+    if domainresolutionorder:
+        cmd_list.append('--domain-resolution-order=', domain-resolution-order)
+    if setattrs:
+        cmd_list.append('--setattr=', setattrs)
+    if addattrs:
+        cmd_list.append('--addattr=', addattrs)
+    if delattrs:
+        cmd_list.append('--delattr=', delattrs)
+    if rights:
+        cmd_list.append('--rights=' + rights)
+    if alloption:
+        cmd_list.append('--all')
+    if raw:
+        cmd_list.append('--raw')
+    if allraw:
+        cmd_list.append('--all')
+        cmd_list.append('--raw')
+    if show-hosts:
+        cmd_list.append('--show-hosts')
+    check = host.run_command(cmd_list, raiseonerr=False)
+    return check
+
+def idoverridegroup_show(host, viewname, anchor, rights=None,
+        fallbacktoldap=None, alloption=None, raw=None, allraw=None):
+    """groupoverride show"""
+    cmd_list = ['ipa', 'idoverridegroup-show', viewname, anchor]
+    if desc:
+        cmd_list.append('--desc=' + desc)
+    if alloption:
+        cmd_list.append('--all')
+    if raw:
+        cmd_list.append('--raw')
+    if allraw:
+        cmd_list.append('--all', '--raw')
+    if fallbacktoldap:
+        cmd_list.append('--fallback-to-ldap')
+    check = host.run_command(cmd_list, raiseonerr=False)
+    return check
+
+def idview_apply(host, viewname, hosts=None, hostgroups=None):
+    """idview apply"""
+    cmd_list = ['ipa', 'idview-apply', viewname]
+    if hosts:
+        cmd_list.append('--hosts=' + hosts)
+    if hostgroups:
+        cmd_list.append('--hostgroups=' +hostgroups)
+    check = host.run_command(cmd_list, raiseonerr=False)
+    return check
+
+def idview_unapply(host, viewname, hosts=None, hostgroups=None):
+    """idview unapply"""
+    cmd_list = ['ipa', 'idview-unapply', viewname]
+    if hosts:
+        cmd_list.append('--hosts=' + hosts)
+    if hostgroups:
+        cmd_list.append('--hostgroups=' +hostgroups)
     check = host.run_command(cmd_list, raiseonerr=False)
     return check

@@ -70,7 +70,7 @@ class QeConfig(pytest_multihost.config.Config):
         self.ad_top_domain = kwargs.get('ad_top_domain', 'pne.qe')
         self.ad_sub_domain = kwargs.get('ad_sub_domain', 'chd.pne.qe')
         self.ad_ip = kwargs.get('ad_ip', '10.76.33.229')
-        self.ad_subip = kwargs.get('ad_subip', '10.76.33.236')
+        self.ad_subip = kwargs.get('ad_subip', '10.76.33.209')
         self.ad_user = kwargs.get('ad_user', 'Administrator')
         self.ad_pwd = kwargs.get('ad_pwd', 'Secret123')
         self.ad_hostname = kwargs.get('ad_hostname', 'win1.pne.qe')

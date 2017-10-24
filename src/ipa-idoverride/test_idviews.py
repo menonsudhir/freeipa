@@ -5,13 +5,15 @@ Overview: IDView Testcase automation
 from ipa_pytests.qe_class import qe_use_class_setup
 from ipa_pytests.shared.utils import (disable_dnssec, dnsforwardzone_add,
                                       add_dnsforwarder, sssd_cache_reset)
-from ipa_pytests.qe_install import adtrust_install
+from ipa_pytests.qe_install import adtrust_install, uninstall_client, uninstall_server
 from ipa_pytests.shared.rpm_utils import check_rpm
 from ipa_pytests.shared.utils import kinit_as_user
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.utils import service_control
 from ipa_pytests.shared.user_utils import *
 from ipa_pytests.shared.idviews_lib import *
+from ipa_pytests.qe_install import setup_client, setup_master
+
 import time
 
 import pytest
@@ -25,6 +27,8 @@ class Testidview(object):
         print "\nClass Setup"
         print "MASTER: ", multihost.master.hostname
         print "CLIENT: ", multihost.client.hostname
+        setup_master(multihost.master)
+        setup_client(multihost.client, multihost.master)
 
         disable_dnssec(multihost.master)
         check_rpm(multihost.master, ['ipa-server-trust-ad', 'expect'])
@@ -87,7 +91,7 @@ class Testidview(object):
         else:
             print output.stdout_text
 
-    def test_useradd(self, multihost):
+    def test_useradd_domain(self, multihost):
         multihost.master.kinit_as_admin()
         check_rpm(multihost.master, ['adcli'])
         cmd = multihost.ads[0].run_command(['kinit',
@@ -103,6 +107,25 @@ class Testidview(object):
                 cmd = multihost.master.run_command(['adcli', 'create-user',
                                                     '--domain=' + multihost.master.config.ad_top_domain,
                                                     'idviewuser%s' % str(i), '-x'],
+                                                   stdin_text=multihost.master.config.ad_pwd,
+                                                   raiseonerr=False)
+
+    def test_groupadd_domain(self, multihost):
+        multihost.master.kinit_as_admin()
+        check_rpm(multihost.master, ['adcli'])
+        cmd = multihost.ads[0].run_command(['kinit',
+                                            multihost.master.config.ad_user + '@' + multihost.master.config.ad_top_domain],
+                                           stdin_text=multihost.master.config.ad_pwd,
+                                           raiseonerr=False)
+
+        print cmd.stdout_text
+        print cmd.stderr_text
+        print cmd.returncode
+        if cmd.returncode == 1:
+            for i in range(20):
+                cmd = multihost.master.run_command(['adcli', 'create-group',
+                                                    '--domain=' + multihost.master.config.ad_top_domain,
+                                                    'idviewgroup%s' % str(i), '-x'],
                                                    stdin_text=multihost.master.config.ad_pwd,
                                                    raiseonerr=False)
 
@@ -126,74 +149,69 @@ class Testidview(object):
     def test_0071_addwithoutoptions(self, multihost):
         """Adding view using idview-add command"""
         multihost.master.kinit_as_admin()
-        multihost.master.qerun(['ipa', 'idview-add', 'TestView2'],
-                               exp_returncode=0,
-                               exp_output='Added ID View "TestView2"')
+        cmd = idview_add(multihost.master, viewname='TestView2')
+        print cmd.stdout_text
+        assert 'Added ID View "TestView2"' in cmd.stdout_text
 
     def test_0072_adddescription(self, multihost):
         """Adding view using idview-add command and desc option"""
-        multihost.master.kinit_as_admin()
-        multihost.master.qerun(['ipa', 'idview-add', 'TestView6', '--desc=view6'],
-                               exp_returncode=0,
-                               exp_output='Description: view6')
+        cmd = idview_add(multihost.master, viewname='TestView6', desc='view6')
+        print cmd.stdout_text
+        assert 'Description: view6' in cmd.stdout_text
 
     def test_0073_addsameviewagain(self, multihost):
         """Adding view which already exists"""
-        multihost.master.kinit_as_admin()
-        multihost.master.qerun(['ipa', 'idview-add', 'TestView6'],
-                               exp_returncode=1,
-                               exp_output='ipa: ERROR: ID View with name "TestView6" already exists')
+        cmd = idview_add(multihost.master, viewname='TestView6', desc='view6')
+        print cmd.stdout_text
+        assert 'ipa: ERROR: ID View with name "TestView6" already exists' in cmd.stderr_text
 
     def test_0074_differentcase(self, multihost):
         """Adding view which already exists but with differentcase"""
-        multihost.master.kinit_as_admin()
-        multihost.master.qerun(['ipa', 'idview-add', 'TESTVIEW6'],
-                               exp_returncode=1,
-                               exp_output='ipa: ERROR: ID View with name "TESTVIEW6" already exists')
+        cmd = idview_add(multihost.master, viewname='TESTVIEW6', desc='view6')
+        print cmd.stdout_text
+        assert 'ipa: ERROR: ID View with name "TESTVIEW6" already exists' in cmd.stderr_text
 
     def test_0090_findname(self, multihost):
         """Find a specific view using idview-find command"""
-        multihost.master.kinit_as_admin()
-        multihost.master.qerun(['ipa', 'idview-find', 'TestView6'],
-                               exp_returncode=0,
-                               exp_output='Number of entries returned 1')
+        cmd = idview_find(multihost.master, viewname='TestView6')
+        print cmd.stdout_text
+        assert 'Number of entries returned 1' in cmd.stdout_text
 
     def test_0091_finddesc(self, multihost):
         """Find a specific view using  desc option"""
-        multihost.master.kinit_as_admin()
-        multihost.master.qerun(['ipa', 'idview-find', '--desc=view6'],
-                               exp_returncode=0,
-                               exp_output='Number of entries returned 1')
+        cmd = idview_find(multihost.master, viewname='TestView6', desc='view6')
+        print cmd.stdout_text
+        assert 'Number of entries returned 1' in cmd.stdout_text
 
     def test_0092_findall(self, multihost):
         """Find all views on the IPA  box"""
-        multihost.master.kinit_as_admin()
-        multihost.master.qerun(['ipa', 'idview-find', '--all'],
-                               exp_returncode=0,
-                               exp_output='4 ID Views matched')
+        cmd = idview_find(multihost.master, alloption='all')
+        print cmd.stdout_text
+        assert '4 ID Views matched' in cmd.stdout_text
 
     def test_0093_findraw(self, multihost):
-        """Need to check this one"""
-        multihost.master.kinit_as_admin()
-        multihost.master.qerun(['ipa', 'idview-find', '--all'],
-                               exp_returncode=0,
-                               exp_output='4 ID Views matched')
+        """find view with raw option"""
+        cmd = idview_find(multihost.master, raw='raw')
+        print cmd.stdout_text
+        assert '4 ID Views matched' in cmd.stdout_text
 
     def test_0094_findallraw(self, multihost):
         """Find views using all and raw option"""
-        multihost.master.qerun(['ipa', 'idview-find', '--all', '--raw'],
-                               exp_returncode=0,
-                               exp_output='4 ID Views matched')
+        cmd = idview_find(multihost.master, allraw='allraw')
+        print cmd.stdout_text
+        assert '4 ID Views matched' in cmd.stdout_text
 
     def test_0095_findsizelimit(self, multihost):
         """Find idview with specified sizelimit """
-        multihost.master.qerun(['ipa', 'idview-find', '--sizelimit=2'],
-                               exp_returncode=0, exp_output='2 ID Views matched')
+        cmd = idview_find(multihost.master, sizelimit='2')
+        print cmd.stdout_text
+        assert '2 ID Views matched' in cmd.stdout_text
 
     def test_0096_findcaseinsensitive(self, multihost):
         """Find idview  as case insensitive option"""
-        multihost.master.qerun(['ipa', 'idview-find', 'TESTVIEW2'],
-                               exp_returncode=0, exp_output='1 ID View matched')
+        cmd = idview_find(multihost.master, viewname='TESTVIEW2')
+        print cmd.stdout_text
+        assert '1 ID View matched' in cmd.stdout_text
 
     def test_0098_modrename(self, multihost):
         """Renaming idviews using rename option"""
@@ -1039,6 +1057,18 @@ class Testidview(object):
         print (cmd2.stderr_text)
         assert 'Description: testing desc' in cmd2.stdout_text
 
+    def test_views_ipa_0141(self, multihost):
+        """idoverridegroup-find with anchor option"""
+        cmd1 = add_ipa_group(multihost.master, groupname='idviewgroup1')
+        print cmd1.stdout_text
+        cmd2 = idview_add(multihost.master, viewname='groupview1')
+        print cmd2.stdout_text
+        cmd3 = idoverridegroup_add(multihost.master, viewname='groupview1', groupname='idviewgroup1')
+        print cmd3.stdout_text
+        cmd4 = idoverridegroup_find(multihost.master, viewname='groupview1', anchor='idviewgroup1')
+        print cmd4.stdout_text
+        assert '1 Group ID override matched' in cmd4.stdout_text
+
     def test_views_0049(self, multihost):
         """idoverrideuser find with desc option"""
         multihost.master.kinit_as_admin()
@@ -1058,3 +1088,273 @@ class Testidview(object):
         print (cmd.stdout_text)
         print (cmd.stderr_text)
         assert 'User login: user4' in cmd.stdout_text
+
+    def test_views_ipa_0008(self, multihost):
+        """Adding user override with uid and sshpubkey options"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser8')
+        idview_add(multihost.master, viewname='ipaview8')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview8', user='ipauser8', uid='10001',
+                                 key='ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAx0Hg3CZIzizMIohZydE5+cSgIyByWmD0r/J5+k2P0Av'
+                                     'eG4i5lVFhcuMasK6VYBKSrFxSgpgkw5M82Ven2lyDpFoPbPJFE8KW6eLoRPCYPO+BBaI2j9t90HueoT2y'
+                                     '1NBrKo0QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1'
+                                     'lDHo522tIhiQCKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIj'
+                                     'l9JnG/9ecuMWAhiZq9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser8@localhost')
+        print (cmd.stdout_text)
+        assert 'UID: 10001' in cmd.stdout_text
+        assert 'SSH public key: ssh-rsa' in cmd.stdout_text
+
+    def test_views_ipa_0010(self, multihost):
+        """Adding ipa user override with gidnumber"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser9')
+        idview_add(multihost.master, viewname='ipaview9')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview9', user='ipauser9', gid='10002')
+        print (cmd.stdout_text)
+        assert 'GID: 10002' in cmd.stdout_text
+
+    def test_views_ipa_0011(self, multihost):
+        """Adding ipa user override with gidnumber and login"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser10')
+        idview_add(multihost.master, viewname='ipaview10')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview10', user='ipauser10', gid='10003', login='user10')
+        print (cmd.stdout_text)
+        assert 'User login: user10' in cmd.stdout_text
+
+    def test_views_ipa_0012(self, multihost):
+        """Adding ipa user override with gidnumber and gecos"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser11')
+        idview_add(multihost.master, viewname='ipaview11')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview11', user='ipauser11', gid='10004', gecos='user11')
+        print (cmd.stdout_text)
+        assert 'GECOS: user11' in cmd.stdout_text
+
+    def test_views_ipa_0013(self, multihost):
+        """Adding ipa user override with gidnumber and homedir"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser12')
+        idview_add(multihost.master, viewname='ipaview12')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview12', user='ipauser12', gid='10005', homedir='/home/ipauser12')
+        print (cmd.stdout_text)
+        assert 'Home directory: /home/ipauser12' in cmd.stdout_text
+
+    def test_views_ipa_0014(self, multihost):
+        """Adding ipa user override with gidnumber and shell"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser13')
+        idview_add(multihost.master, viewname='ipaview13')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview13', user='ipauser13', gid='10006', shell='/bin/sh')
+        print (cmd.stdout_text)
+        assert 'Login shell: /bin/sh' in cmd.stdout_text
+
+    def test_views_ipa_0015(self, multihost):
+        """Adding ipa user override with gidnumber and sshkey"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser14')
+        idview_add(multihost.master, viewname='ipaview14')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview14', user='ipauser14', gid='10007', 
+                                 key='ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAx0Hg3CZIzizMIohZydE5+cSgIyByWmD0r/J5+k2P0Ave'
+                                     'G4i5lVFhcuMasK6VYBKSrFxSgpgkw5M82Ven2lyDpFoPbPJFE8KW6eLoRPCYPO+BBaI2j9t90HueoT2y1N'
+                                     'BrKo0QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDH'
+                                     'o522tIhiQCKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIjl9Jn'
+                                     'G/9ecuMWAhiZq9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser14@localhost')
+        print (cmd.stdout_text)
+        assert 'GID: 10007' in cmd.stdout_text
+        assert 'SSH public key: ssh-rsa' in cmd.stdout_text
+
+    def test_views_ipa_0016(self, multihost):
+        """Adding ipa user override with login"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser15')
+        idview_add(multihost.master, viewname='ipaview15')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview15', user='ipauser15', login='user15')
+        print (cmd.stdout_text)
+        assert 'User login: user15' in cmd.stdout_text
+
+    def test_views_ipa_0017(self, multihost):
+        """Adding ipa user override with login and gecos"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser16')
+        idview_add(multihost.master, viewname='ipaview16')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview16', user='ipauser16', login='user16', gecos='ipauser16')
+        print (cmd.stdout_text)
+        assert 'User login: user16' in cmd.stdout_text
+        assert 'GECOS: ipauser16' in cmd.stdout_text
+
+    def test_views_ipa_0018(self, multihost):
+        """Adding ipa user override with login and homedir"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser17')
+        idview_add(multihost.master, viewname='ipaview17')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview17', user='ipauser17', login='user17', homedir='/home/user17')
+        print (cmd.stdout_text)
+        assert 'User login: user17' in cmd.stdout_text
+        assert 'Home directory: /home/user17' in cmd.stdout_text
+
+    def test_views_ipa_0019(self, multihost):
+        """Adding ipa user override with login and shell"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser18')
+        idview_add(multihost.master, viewname='ipaview18')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview18', user='ipauser18', login='user18', shell='/bin/sh')
+        print (cmd.stdout_text)
+        assert 'User login: user18' in cmd.stdout_text
+        assert 'Login shell: /bin/sh' in cmd.stdout_text
+
+    def test_views_ipa_0020(self, multihost):
+        """Adding ipa user override with login and sshpubkey"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser19')
+        idview_add(multihost.master, viewname='ipaview19')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview19', user='ipauser19', login='user19',
+                                 key='ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAx0Hg3CZIzizMIohZydE5+cSgIyByWmD0r/J5+k2P0AveG'
+                                 '4i5lVFhcuMasK6VYBKSrFxSgpgkw5M82Ven2lyDpFoPbPJFE8KW6eLoRPCYPO+BBaI2j9t90HueoT2y1NBrKo0'
+                                 'QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDHo522tIhiQ'
+                                 'CKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIjl9JnG/9ecuMWAhiZq'
+                                 '9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser20@localhost')
+        print (cmd.stdout_text)
+        assert 'User login: user19' in cmd.stdout_text
+        assert 'SSH public key: ssh-rsa' in cmd.stdout_text
+
+    def test_views_ipa_0021(self, multihost):
+        """Adding ipa user override with gecos"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser20')
+        idview_add(multihost.master, viewname='ipaview20')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview20', user='ipauser20', gecos='user20')
+        print (cmd.stdout_text)
+        assert 'GECOS: user20' in cmd.stdout_text
+
+    def test_views_ipa_0022(self, multihost):
+        """Adding ipa user override with gecos and homedir"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser21')
+        idview_add(multihost.master, viewname='ipaview21')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview21', user='ipauser21', gecos='user21', homedir='/home/user21')
+        print (cmd.stdout_text)
+        assert 'GECOS: user21' in cmd.stdout_text
+        assert 'Home directory: /home/user21' in cmd.stdout_text
+
+    def test_views_ipa_0023(self, multihost):
+        """Adding ipa user override with gecos and shell"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser22')
+        idview_add(multihost.master, viewname='ipaview22')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview22', user='ipauser22', gecos='user22', shell='/bin/bash')
+        print (cmd.stdout_text)
+        assert 'GECOS: user22' in cmd.stdout_text
+        assert 'Login shell: /bin/bash' in cmd.stdout_text
+
+    def test_views_ipa_0024(self, multihost):
+        """Adding ipa user override with gecos and sshpubkey"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipausr19')
+        idview_add(multihost.master, viewname='ipaview19')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview19', user='ipausr19', gecos='ipausr19',
+                                 key='ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAx0Hg3CZIzizMIohZydE5+cSgIyByWmD0r/J5+k2P0AveG'
+                                 '4i5lVFhcuMasK6VYBKSrFxSgpgkw5M82Ven2lyDpFoPbPJFE8KW6eLoRPCYPO+BBaI2j9t90HueoT2y1NBrKo0'
+                                 'QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDHo522tIhiQ'
+                                 'CKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIjl9JnG/9ecuMWAhiZq'
+                                 '9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser19@localhost')
+        print (cmd.stdout_text)
+        assert 'GECOS: ipausr19' in cmd.stdout_text
+        assert 'SSH public key: ssh-rsa' in cmd.stdout_text
+
+    def test_views_ipa_0025(self, multihost):
+        """Adding ipa user override with homedir option"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser23')
+        idview_add(multihost.master, viewname='ipaview23')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview23', user='ipauser23', homedir='/home/ipauser23')
+        print (cmd.stdout_text)
+        assert 'Home directory: /home/ipauser23' in cmd.stdout_text
+
+    def test_views_ipa_0026(self, multihost):
+        """Adding ipa user override with homedir and shell option"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser24')
+        idview_add(multihost.master, viewname='ipaview24')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview24', user='ipauser24', shell='/bin/bash')
+        print (cmd.stdout_text)
+        assert 'Login shell: /bin/bash' in cmd.stdout_text
+
+    def test_views_ipa_0027(self, multihost):
+        """Adding ipa user override with homedir and sshpubkey"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser25')
+        idview_add(multihost.master, viewname='ipaview25')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview25', user='ipauser25', homedir='/home/ipauser25',
+                                 key='ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAx0Hg3CZIzizMIohZydE5+cSgIyByWmD0r/J5+k2P0AveG'
+                                 '4i5lVFhcuMasK6VYBKSrFxSgpgkw5M82Ven2lyDpFoPbPJFE8KW6eLoRPCYPO+BBaI2j9t90HueoT2y1NBrKo0'
+                                 'QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDHo522tIhiQ'
+                                 'CKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIjl9JnG/9ecuMWAhiZq'
+                                 '9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser25@localhost')
+        print (cmd.stdout_text)
+        assert 'Home directory: /home/ipauser25' in cmd.stdout_text
+        assert 'SSH public key: ssh-rsa' in cmd.stdout_text
+
+    def test_views_ipa_0028(self, multihost):
+        """Adding ipa user override with shell option"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser26')
+        idview_add(multihost.master, viewname='ipaview26')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview26', user='ipauser26', shell='/bin/sh')
+        print (cmd.stdout_text)
+        assert 'Login shell: /bin/sh' in cmd.stdout_text
+
+    def test_views_ipa_0029(self, multihost):
+        """Adding ipa user override with shell and sshpubkey"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser27')
+        idview_add(multihost.master, viewname='ipaview27')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview27', user='ipauser27', shell='/bin/bash',
+                                 key='ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAx0Hg3CZIzizMIohZydE5+cSgIyByWmD0r/J5+k2P0AveG'
+                                 '4i5lVFhcuMasK6VYBKSrFxSgpgkw5M82Ven2lyDpFoPbPJFE8KW6eLoRPCYPO+BBaI2j9t90HueoT2y1NBrKo0'
+                                 'QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDHo522tIhiQ'
+                                 'CKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIjl9JnG/9ecuMWAhiZq'
+                                 '9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser27@localhost')
+        print (cmd.stdout_text)
+        assert 'Login shell: /bin/bash' in cmd.stdout_text
+        assert 'SSH public key: ssh-rsa' in cmd.stdout_text
+
+    def test_views_ipa_0030(self, multihost):
+        """Adding ipa user override with sshpubkey only"""
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser28')
+        idview_add(multihost.master, viewname='ipaview28')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview28', user='ipauser28',
+                                 key='ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAx0Hg3CZIzizMIohZydE5+cSgIyByWmD0r/J5+k2P0AveG'
+                                 '4i5lVFhcuMasK6VYBKSrFxSgpgkw5M82Ven2lyDpFoPbPJFE8KW6eLoRPCYPO+BBaI2j9t90HueoT2y1NBrKo0'
+                                 'QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDHo522tIhiQ'
+                                 'CKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIjl9JnG/9ecuMWAhiZq'
+                                 '9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser28@localhost')
+        print (cmd.stdout_text)
+        assert 'SSH public key: ssh-rsa' in cmd.stdout_text
+
+    def test_views_ipa_0031(self, multihost):
+        """Adding ipa user override with all options """
+        multihost.master.kinit_as_admin()
+        add_ipa_user(multihost.master, user='ipauser29')
+        idview_add(multihost.master, viewname='ipaview29')
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview29', user='ipauser29', uid='213313', login='user29', 
+                                 homedir='/home/ipauser29', desc='testuser', gid='213313', shell='/bin/sh',
+                                 key='ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAx0Hg3CZIzizMIohZydE5+cSgIyByWmD0r/J5+k2P0AveG'
+                                 '4i5lVFhcuMasK6VYBKSrFxSgpgkw5M82Ven2lyDpFoPbPJFE8KW6eLoRPCYPO+BBaI2j9t90HueoT2y1NBrKo0'
+                                 'QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDHo522tIhiQ'
+                                 'CKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE23o4+lU+8SIKpFkhJIjl9JnG/9ecuMWAhiZq'
+                                 '9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser29@localhost')
+        print (cmd.stdout_text)
+        assert 'Description: testuser' in cmd.stdout_text
+        assert 'User login: user29' in cmd.stdout_text
+        assert 'UID: 213313' in cmd.stdout_text
+        assert 'GID: 213313' in cmd.stdout_text
+        assert 'Home directory: /home/ipauser29' in cmd.stdout_text
+        assert 'Login shell: /bin/sh' in cmd.stdout_text
+        assert 'SSH public key: ssh-rsa' in cmd.stdout_text
+
+    def class_teardown(self, multihost):
+        cmd = multihost.master.qerun('ipa trust-del ' + multihost.master.config.ad_top_domain)
+        uninstall_client(multihost.client)
+        uninstall_server(multihost.master)
