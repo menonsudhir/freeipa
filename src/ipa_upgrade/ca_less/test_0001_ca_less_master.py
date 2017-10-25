@@ -33,7 +33,7 @@ class Testmaster(object):
         seconds = 10
 
         upgrade_from = '7.3.b'
-        # upgrade_from this can be used to set repo version of packages
+        # upgrade_from this can be used to set repo depending on version of packages from where the upgrade is starting.
         # for this refer ipa_upgrade/constants.py
 
         for repo in repo_urls[upgrade_from]:
@@ -132,14 +132,14 @@ class Testmaster(object):
         """
         rpm = "ipa-server"
         print "Current IPA version"
-        ipa_version = get_rpm_version(multihost.master, rpm)
+        ipa_version = get_rpm_version(multihost.master, rpm)                      # get current ipa version
 
         print ipa_version
 
-        # get current ipa version
-        print("Upgrading from 7.3.b to 7.4.b")
         upgrade_from = '7.3.b'
         upgrade_to = '7.4.b'
+        print("Upgrading from : %s" % upgrade_from)
+        print("Upgrading to : %s" % upgrade_to)
 
         # upgrade_from is version from which version upgrade is start
         # upgrade_to is version which can be used to set repo as per appropriate version for upgrading the packages
@@ -147,17 +147,24 @@ class Testmaster(object):
 
         if is_allowed_to_update(upgrade_to, upgrade_from):
             for repo in repo_urls[upgrade_to]:
-             print("Upgrading using repo : %s" % repo)
-             cmdupdate = add_repo(multihost.master, repo)
-        upgrade(multihost.master)                                                         # upgrade starts at this point
-        print cmdupdate
-        updated_version = get_rpm_version(multihost.master, rpm)                              # get updated ipa version
-        print "Upgraded version is %s " % updated_version                                        # prints upgraded version
+                print("Upgrading using repo : %s" % repo)
+                cmdupdate = add_repo(multihost.master, repo)
+        else:
+            pytest.xfail("Please specify correct upgrade path")
 
-        if LooseVersion(updated_version) > LooseVersion(ipa_version):
+        cmd = upgrade(multihost.master)  # upgrade starts at this point
+        if cmd.returncode == 0:
+            print("Upgraded Successfully")
+        else:
+            pytest.xfail("Upgrade Failed")
+
+        updated_version = get_rpm_version(multihost.master, rpm)  # get updated ipa version
+        print "Upgraded version is %s " % updated_version  # prints upgraded version
+
+        if updated_version > ipa_version:
             print "Upgrade rpm test verified"
         else:
-            print "rpm version check failed  on %s " % multihost.master
+            pytest.xfail("rpm version check failed  on %s " % multihost.master)
 
     def test_logs_0003(self, multihost):
         """
@@ -169,9 +176,9 @@ class Testmaster(object):
         log2 = multihost.master.run_command(['tail', paths.IPAUPGRADELOGFILE], raiseonerr=True)
         print log2.stdout_text
         if str1 in log2.stdout_text:
-           print "Log test verified, continuing to next test"
+            print "Log test verified, continuing to next test"
         else:
-           print "Log test failed"
+            pytest.xfail("Log test failed")
 
     def test_services_0004(self, multihost):
         """
@@ -181,7 +188,7 @@ class Testmaster(object):
         multihost.master.kinit_as_admin()
         check_ipactl = multihost.master.run_command('ipactl status | grep RUNNING')
         if check_ipactl.returncode != 0:
-           print("IPA server service not RUNNING.Kindly debug")
+            pytest.xfail("IPA server service not RUNNING.Kindly debug")
         else:
             print("IPA service is running, continuing")
 
@@ -197,23 +204,7 @@ class Testmaster(object):
         assert user1 in cmd2.stdout_text
         print("User Successfully verified")
 
-    def test_bz1477243_0006(self, multihost):
-        """
-        test after removing .cache directory
-        """
-        cache = '/root/.cache/ipa/schema'
-        error = 'Failed to read schema:'
-        multihost.master.run_command([paths.RM, '-rf', cache], raiseonerr=False)
-        cmd = "ipa help"
-        cmdout = multihost.master.run_command(cmd, raiseonerr=False)
-        print cmdout.stderr_text
-        if error in cmdout.stderr_text:
-          print "Traceback is found " \
-                "bz1477243 found"
-        else:
-            print "Traceback is not found"
-
-    def test_webui_0007(self, multihost):
+    def test_webui_0006(self, multihost):
         """
         test for web ui testing after upgrade
         """
