@@ -165,7 +165,7 @@ def setup_master(master, setup_reverse=True):
             runcmd.extend(['--allow-zone-overlap'])
     domain_level = master.config.domain_level
     if domain_level in range(0, 10):
-        runcmd.append('--domain-level=0')
+        runcmd.append('--domain-level={}'.format(domain_level))
     else:
         print("Invalid domain level setting it to default 1")
         runcmd.append('--domain-level=1')
