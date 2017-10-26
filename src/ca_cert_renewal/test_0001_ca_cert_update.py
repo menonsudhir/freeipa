@@ -9,6 +9,8 @@ from ipa_pytests.shared.openssl_utils import openssl_util
 import ipa_pytests.shared.paths as paths
 from ipa_pytests.qe_install import setup_master
 from ipa_pytests.shared.ipa_cert_utils import ipa_ca_cert_update
+from ipa_pytests.shared.rpm_utils import get_rpm_version
+from ipa_pytests.shared.utils import ipa_version_gte
 
 
 class TestCaCertRenewal(object):
@@ -71,7 +73,11 @@ class TestCaCertRenewal(object):
 
         certs = certutil(master, nssdb_dir)
         print("\nCreating self-signed CA certificate")
-        certs.selfsign_cert(ca_subject, ca_nick, options=['-m', '1', '--extSKID'])
+
+        if ipa_version_gte(multihost.master, '4.5.0'):
+            certs.selfsign_cert(ca_subject, ca_nick, options=['-m', '1', '--extSKID'])
+        else:
+            certs.selfsign_cert(ca_subject, ca_nick, options=['-m', '1'])
 
         # Create
         master.kinit_as_admin()
@@ -88,7 +94,17 @@ class TestCaCertRenewal(object):
         openssl_util(master, cmd)
 
         out_der_file = "%s/external.crt" % nssdb_dir
-        certs.sign_csr(cert_der_file, out_der_file, ca_nick, options=['--extSKID'])
+        print "Current IPA version"
+        rpm = "ipa-server"
+        ipa_version = get_rpm_version(multihost.master, rpm)
+        print ipa_version
+        if ipa_version_gte(multihost.master, '4.5.0'):
+            print("Ipa version is %s" % ipa_version, "using extSKID option installing Ipa server ")
+            certs.sign_csr(cert_der_file, out_der_file, ca_nick, options=['--extSKID'])
+        else:
+            print("Ipa version is %s" % ipa_version, "without extSKID option installing Ipa server ")
+            certs.sign_csr(cert_der_file, out_der_file, ca_nick)
+
         # Generate PEM file
         out_pem_file = "%s/external.pem" % nssdb_dir
         cmdstr = ['x509', '-inform', 'der', '-in', out_der_file,
