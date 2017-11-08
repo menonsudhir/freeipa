@@ -30,28 +30,35 @@
 . /usr/share/beakerlib/beakerlib.sh || exit 1
 . /etc/pytest_env.sh
 
-PACKAGE="ipa-server ipa-server-dns selinux-policy pki-server"
+PACKAGES="ipa-server ipa-server-dns selinux-policy pki-server PyYAML"
 pytest_location=/root/ipa-pytests
 mh_cfg=$MH_CONF_FILE
 junit_xml=${PYCONF_DIR}/${TESTCASE}.xml
 
 install_pytest() {
     rlPhaseStartTest "Installing Pytest and required dependencies"
-        rlLog "Installing Packages [$PACKAGE]"
-        yum install -y $PACKAGE
-        for p in $PACKAGE
+        rlLog "Installing PACKAGES [$PACKAGES]"
+        yum install -y $PACKAGES
+        for pkg in $PACKAGES
         do
-            rlAssertRpm $p
+            rlAssertRpm $pkg
         done
-        rlLog "Install PyYAML"
-        yum install -y PyYAML
 
         if [ -z $SRC_LOCATION ]; then
             SRC_LOCATION=http://git.app.eng.bos.redhat.com/git/ipa-pytests.git
         fi
 
-        rlLog "Clone git repo ipa-pytests using $SRC_LOCATION"
-        rlRun "git clone $SRC_LOCATION $pytest_location" 0
+        if [ -z $BRANCH ]; then
+            BRANCH="master"
+        fi
+
+        SSL=""
+        if [ ! -z $SSL_NO_VERIFY ]; then
+            SSL="GIT_SSL_NO_VERIFY=true"
+        fi
+
+        rlLog "Clone git repo ipa-pytests using $SRC_LOCATION using branch $BRANCH"
+        rlRun "${SSL} git clone -b $BRANCH $SRC_LOCATION $pytest_location" 0
 
         rlLog "Install Pytest and dependencies"
         easy_install pip pytest pytest-multihost
