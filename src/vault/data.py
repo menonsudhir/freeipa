@@ -67,7 +67,7 @@ def init(multihost, prefix):
     SECRET_FILE = "/root/multihost_tests/vault_secret"
     SECRET_OUT_FILE = "/root/multihost_tests/vault_secret_out"
     INVALID_KEY = base64.b64encode("INVALID")
-    DNE_FILE = "/tmp/dne_file"
+    DNE_FILE = "/root/multihost_tests/dne_file"
     LARGE_FILE = "/root/multihost_tests/large_file"
     DNE_VAULT = ['dne_vault']
     PRIV_VAULT = [PREFIX + '_vault_priv']

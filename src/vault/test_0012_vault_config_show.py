@@ -35,7 +35,7 @@ class TestVaultConfigShow(object):
         :Caseautomation: automated
 
         """
-        outfile = '/tmp/ipa_vaultconfig_show.out'
+        outfile = '/root/multihost_tests/ipa_vaultconfig_show.out'
         runcmd = ['ipa', 'vaultconfig-show', '--transport-out=' + outfile]
         multihost.master.qerun(runcmd, exp_output="Transport Certificate:")
 

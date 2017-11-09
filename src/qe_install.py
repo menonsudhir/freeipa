@@ -116,12 +116,15 @@ def set_rngd(host):
         print("STDOUT: ", cmd.stdout_text)
 
 
-def setup_master(master, setup_reverse=True):
+def setup_master(master, **kwargs):
     """
     This is the default testing setup for an IPA Master.
     This setup routine will install an IPA Master with DNS and a forwarder.
     The domain and realm will be set differently than the real DNS domain.
     """
+    setup_reverse = kwargs.get('setup_reverse', True)
+    setup_kra = kwargs.get('setup_kra', False)
+
     revnet = master.ip.split('.')[2] + '.' + \
         master.ip.split('.')[1] + '.' + \
         master.ip.split('.')[0] + '.in-addr.arpa.'
@@ -153,7 +156,6 @@ def setup_master(master, setup_reverse=True):
               # '--ip-address', master.ip,
               '--admin-password', master.config.admin_pw,
               '--ds-password', master.config.dirman_pw,
-              '--setup-kra',
               # '--mkhomedir',
               '-U']
     if not setup_reverse:
@@ -163,6 +165,10 @@ def setup_master(master, setup_reverse=True):
         # only add allow-zone-overlap if IPA >= 4.4.0
         if ipa_version_gte(master, '4.4.0'):
             runcmd.extend(['--allow-zone-overlap'])
+
+    if setup_kra:
+        runcmd.append('--setup-kra')
+
     domain_level = master.config.domain_level
     if domain_level in range(0, 10):
         runcmd.append('--domain-level={}'.format(domain_level))
@@ -224,6 +230,7 @@ def setup_replica(replica, master, **kwargs):
     setup_dns = kwargs.get('setup_dns', True)
     setup_ca = kwargs.get('setup_ca', True)
     setup_reverse = kwargs.get('setup_reverse', True)
+    setup_kra = kwargs.get('setup_kra', False)
 
     replica.revnet = replica.ip.split('.')[2] + '.' + \
         replica.ip.split('.')[1] + '.' + \
@@ -286,6 +293,9 @@ def setup_replica(replica, master, **kwargs):
 
     if setup_ca:
         params.append('--setup-ca')
+
+    if setup_kra:
+        params.append('--setup-kra')
 
     # params.extend(['--ip-address', replica.ip])
     params.extend(['--server', master.hostname])
