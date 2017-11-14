@@ -8,6 +8,7 @@ from __future__ import print_function
 import pytest
 import time
 import re
+import os
 from ipa_pytests.shared import paths
 from ipa_pytests.shared.utils import service_control, backup_resolv_conf, restore_resolv_conf
 from ipa_pytests.shared.rpm_utils import list_rpms
@@ -169,8 +170,9 @@ def setup_master(master, **kwargs):
     if setup_kra:
         runcmd.append('--setup-kra')
 
-    domain_level = master.config.domain_level
-    if domain_level in range(0, 10):
+    domain_level = os.getenv('DOMAIN_LEVEL', master.config.domain_level)
+
+    if int(domain_level) in range(0, 10):
         runcmd.append('--domain-level={}'.format(domain_level))
     else:
         print("Invalid domain level setting it to default 1")
@@ -298,8 +300,10 @@ def setup_replica(replica, master, **kwargs):
         params.append('--setup-kra')
 
     # params.extend(['--ip-address', replica.ip])
-    params.extend(['--server', master.hostname])
-    params.extend(['--domain', master.domain.name])
+
+    if domain_level != 0:
+        params.extend(['--server', master.hostname])
+        params.extend(['--domain', master.domain.name])
     params.extend(['--admin-password', master.config.admin_pw])
 
     if domain_level == 0:

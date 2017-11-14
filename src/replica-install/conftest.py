@@ -13,15 +13,9 @@ def pytest_namespace():
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_session(request, multihost):
-    try:
-        setup_master(multihost.master)
-        multihost.replica = multihost.replicas[0]
-
-    except StandardError as errval:
-        print("Error in setup_session %s" % (str(errval.args[0])))
-        pytest.skip("setup_session_skip")
+    """ Setup session """
 
     def teardown_session():
         """ define fixture for session level teardown """
-        uninstall_server(multihost.master)
+        pass
     request.addfinalizer(teardown_session)

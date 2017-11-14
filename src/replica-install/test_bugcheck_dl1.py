@@ -1,6 +1,6 @@
 """
 Overview:
-IPA replica install bzs automation
+IPA replica install bzs automation on domain-level 1
 #1283890
 #1242036
 SetUp Requirements:
@@ -11,8 +11,9 @@ SetUp Requirements:
 import pytest
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_class import qe_use_class_setup
-from ipa_pytests.shared import paths
-from ipa_pytests.qe_install import setup_master, setup_replica
+import os
+from ipa_pytests.shared.server_utils import server_del
+from ipa_pytests.qe_install import uninstall_server, setup_replica, setup_master
 from ipa_pytests.shared.rpm_utils import check_rpm
 from ipa_pytests.shared.utils import (start_firewalld,
                                       stop_firewalld)
@@ -22,7 +23,12 @@ class TestBugCheck(object):
     """ Test Class """
     def class_setup(self, multihost):
         """ Setup for class """
+        multihost.replica = multihost.replicas[0]
         print("\nClass Setup")
+        os.environ['DOMAIN_LEVEL'] = '1'
+        print os.environ['DOMAIN_LEVEL']
+        setup_master(multihost.master,setup_kra=False)
+        print ("Master: ", multihost.master.hostname)
         print("REPLICA: ", multihost.replica.hostname)
         print("\nChecking IPA server package whether installed on REPLICA")
         rpm_list = ['ipa-server']
@@ -54,6 +60,10 @@ class TestBugCheck(object):
         *.gpg file is installed on replica without using '--setup-dns'
         both master and replica give same output for 'dnsrecord-find testrelm.test'
         in order to verify that SRV DNS records for the replica were added correctly."""
+        uninstall_server(multihost.replica)
+        server_del(multihost.master,
+                   hostname=multihost.replica.hostname,
+                   force=True)
         stop_firewalld(multihost.master)
         stop_firewalld(multihost.replicas[0])
         setup_replica(multihost.replica, multihost.master,
@@ -68,4 +78,6 @@ class TestBugCheck(object):
 
     def class_teardown(self, multihost):
         """ Full suite teardown """
-        pass
+        uninstall_server(multihost.replica)
+        uninstall_server(multihost.master)
+
