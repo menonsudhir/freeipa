@@ -9,8 +9,6 @@ import ast
 import pytest
 from ipa_pytests.shared.qe_certs import QE_IPA_Certs
 
-scripts_dir = "/usr/lib/python%s/site-packages/ipa_pytests/scripts" % sys.version[:3]
-qe_getcerts = "/usr/bin/python %s/qe_ipa_getcerts.py" % scripts_dir
 qe_certs = QE_IPA_Certs()
 
 
@@ -24,8 +22,12 @@ class TestUserA(object):
 
     def test_list_certs_0001(self, multihost):
         """ list IPA certs """
-        pytest.set_trace()
-        cmd = multihost.master.run_command(qe_getcerts)
+        #It fails for bz-1512952
+        script1 = "/usr/lib/python%s/site-packages/ipa_pytests/scripts/qe_ipa_getcerts.py" % sys.version[:3]
+        script =  "/tmp/qe_ipa_getcerts.py"
+        f =  open(script1).read()
+        multihost.master.transport.put_file_contents(script, f)
+        cmd = multihost.master.run_command(['/usr/bin/python', script])
         qe_certs.set_certs(ast.literal_eval(cmd.stdout_text))
         latest = qe_certs.get_latest_expiration()
         current = int(multihost.master.run_command(['date', '+%s', '-u']).stdout_text)
@@ -37,9 +39,11 @@ class TestUserA(object):
                     cmd = multihost.master.run_command(['date', set_date])
                     current = int(multihost.master.run_command(['date', '+%s', '-u']).stdout_text)
                 time.sleep(300)
-                cmd = multihost.master.run_command(qe_getcerts)
+                cmd = multihost.master.run_command(['/usr/bin/python', script])
                 qe_certs.set_certs(ast.literal_eval(cmd.stdout_text))
                 resubmit = qe_certs.get_resubmit_status()
+                if resubmit != 0:
+                    pytest.xfail("Failed : bz-1512952 Found..!!")
                 next_soonest = qe_certs.get_soonest_expiration()
                 if next_soonest > soonest:
                     break

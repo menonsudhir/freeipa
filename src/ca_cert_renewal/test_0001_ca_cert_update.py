@@ -120,6 +120,24 @@ class TestCaCertRenewal(object):
         master.put_file_contents(chain_cert_file,
                                  pem_file_content + ca_cert_file_content)
 
+        #bz-1506526 automation
+        ca_csr_out_file = '/tmp/ca_csr.out'
+        cmd = ['req', '-in', install_cert_file, '-noout', '-text', '-out', ca_csr_out_file]
+        openssl_util(master, cmd)
+        ca_csr_out = master.get_file_contents(ca_csr_out_file)
+        cmd = ['openssl', 'x509', '-in', out_pem_file, '-noout', '-text']
+        print("Running : %s" % " ".join(cmd))
+        cmd1 = master.run_command(cmd, raiseonerr=False)
+
+        cmd = ['openssl', 'x509', '-in', ca_cert_file, '-noout', '-text']
+        print("Running : %s" % " ".join(cmd))
+        cmd2 = master.run_command(cmd, raiseonerr=False)
+
+        if 'CA:TRUE' in ca_csr_out and 'CA:TRUE' in cmd1.stdout_text and 'CA:TRUE' in cmd2.stdout_text:
+            print("Success : bz-1506526 verified")
+        else:
+            pytest.xfail("Failed : bz-1506526 found..!!")
+
         # List all Cert before renew
         master.kinit_as_admin()
         certs.list_certs(db_dir='/etc/pki/pki-tomcat/alias')

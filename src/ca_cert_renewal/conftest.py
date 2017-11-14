@@ -18,9 +18,7 @@ def session_multihost(request):
             {
                 'type': 'ipa',
                 'hosts': {
-                    'master': 1,
-                    'replica': 1,
-                    'client': 1,
+                    'master': 1
                 },
             },
         ],
@@ -28,8 +26,6 @@ def session_multihost(request):
     )
     mh.domain = mh.config.domains[0]
     [mh.master] = mh.domain.hosts_by_role('master')
-    [mh.replica] = mh.domain.hosts_by_role('replica')
-    [mh.client] = mh.domain.hosts_by_role('client')
     return mh
 
 
