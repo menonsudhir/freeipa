@@ -1,13 +1,10 @@
 """
-Overview:
-SetUp Requirements:
-IPA Server configured on RHEL7.1
-IPA Client configured on RHEL7.2
+user tests scenarios
 """
 
 import pytest
 from ipa_pytests.qe_class import multihost
-from ipa_pytests.shared.user_utils import add_ipa_user, del_ipa_user, user_find
+from ipa_pytests.shared.user_utils import add_ipa_user, del_ipa_user, find_ipa_user
 from ipa_pytests.shared.utils import ldapmodify_cmd
 
 
@@ -20,28 +17,28 @@ class Testipauserfind(object):
         print "MASTER: ", multihost.master.hostname
         print "CLIENT: ", multihost.client.hostname
 
-    def test_0001_ipauserfinderror(self, multihost):
-        """
-        IDM-IPA-TC: ipa user-find: ipa user-find gives
-                    error when run on RHEL7.1 IPA client
-        """
-        realm = multihost.master.domain.realm
-        multihost.client.kinit_as_admin()
-        multihost.client.qerun(['ipa', 'user-find'], exp_returncode=1,
-                               exp_output="ipa: ERROR:")
+    #def test_0001_ipauserfinderror(self, multihost):
+    #    """
+    #    IDM-IPA-TC: ipa user-find: ipa user-find gives
+    #                error when run on RHEL7.1 IPA client
+    #    """
+    #    realm = multihost.master.domain.realm
+    #    multihost.client.kinit_as_admin()
+    #    multihost.client.qerun(['ipa', 'user-find'], exp_returncode=1,
+    #                           exp_output="ipa: ERROR:")
 
-    def test_0002_ipauserskipversioncheck(self, multihost):
-        """
-        Test to verify Bugzilla 1211589 - [RFE] Add option to skip
-        the verify_client_version
-        IDM-IPA-TC: ipa user-find: ipa -e skip_version_check=1
-                    user-find works without any error on RHEL7.1 client
-        """
-        realm = multihost.master.domain.realm
-        multihost.client.kinit_as_admin()
-        multihost.client.qerun(['ipa', '-e', 'skip_version_check=1',
-                               'user-find'], exp_returncode=0,
-                               exp_output="1 user matched")
+    #def test_0002_ipauserskipversioncheck(self, multihost):
+    #    """
+    #    Test to verify Bugzilla 1211589 - [RFE] Add option to skip
+    #    the verify_client_version
+    #    IDM-IPA-TC: ipa user-find: ipa -e skip_version_check=1
+    #                user-find works without any error on RHEL7.1 client
+    #    """
+    #    realm = multihost.master.domain.realm
+    #    multihost.client.kinit_as_admin()
+    #   multihost.client.qerun(['ipa', '-e', 'skip_version_check=1',
+    #                           'user-find'], exp_returncode=0,
+    #                          exp_output="1 user matched")
 
     def test_0003_bz1288967(self, multihost):
         """
@@ -56,7 +53,7 @@ class Testipauserfind(object):
         add_ipa_user(multihost.master, testuser1, options=opt)
         # Manager info is shown in '--all' of user-find command
         opt['all'] = ''
-        cmd = user_find(multihost.master, options=opt)
+        cmd = find_ipa_user(multihost.master, options=opt)
         if cmd.returncode == 0:
             if 'Manager: ' + testuser2 in cmd.stdout_text:
                 del_ipa_user(multihost.master, testuser1)
