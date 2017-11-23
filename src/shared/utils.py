@@ -179,6 +179,7 @@ def disable_dnssec(host):
 
 def dnsforwardzone_add(host, forwardzone, forwarder):
     """Add forwardzone for AD domain"""
+    host.kinit_as_admin()
     cmd = host.run_command('ipa dnsforwardzone-add ' + forwardzone +
                            ' --forwarder=' + forwarder +
                            ' --forward-policy=only',
