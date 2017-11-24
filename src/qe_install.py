@@ -432,6 +432,17 @@ def adtrust_install(host):
             if cmd.returncode != 0:
                 pytest.fail("Unable to install ipa-server-trust-ad "
                             "RPM on master")
+            netbios = (host.domain.realm).split(".")[0]
+            print("NetBIOS name for master : %s " % netbios)
+            runcmd = 'ipa-adtrust-install --netbios-name=' + netbios + \
+                     ' -a ' + host.config.admin_pw + ' -U'
+            print("Running command: %s" % runcmd)
+            cmd = host.run_command(runcmd, raiseonerr=False)
+            print("STDOUT: %s" % cmd.stdout_text)
+            print("STDERR: %s" % cmd.stderr_text)
+            if cmd.returncode != 0:
+                pytest.fail("IPA ad trust install failed on "
+                            "master [%s]" % host.hostname)
         else:
             netbios = (host.domain.realm).split(".")[0]
             print("NetBIOS name for master : %s " % netbios)
