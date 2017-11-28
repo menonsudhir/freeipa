@@ -1,0 +1,13 @@
+ssh_key_filename: ~/.ssh/id_rsa
+admin_id: admin
+admin_pw: Secret123
+dirman_id: '"cn=Directory Manager"'
+dirman_pw: Secret123
+dns_forwarder: 10.11.5.19
+domains:
+  - name: testrelm.test
+    type: ipa
+    hosts:
+      - name: master.testrelm.test
+        external_hostname: master.testrelm.test
+        role: master
