@@ -12,6 +12,8 @@ from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.utils import service_control
 from ipa_pytests.shared.user_utils import *
 from ipa_pytests.qe_install import setup_client, setup_master
+from ipa_pytests.qe_install import adtrust_install, uninstall_client, uninstall_server
+
 
 from ipa_pytests.shared.idviews_lib import *
 import time
@@ -488,3 +490,25 @@ class Testsubidview(object):
                                 '--anchor=idviewuser25@' + multihost.master.config.ad_sub_domain],
                                exp_returncode=0,
                                exp_output='1 User ID overrides matched')
+
+    def test_userdel_subdomain(self, multihost):
+        multihost.master.kinit_as_admin()
+        check_rpm(multihost.master, ['adcli'])
+        cmd = multihost.ads[0].run_command(['kinit',
+                                            multihost.master.config.ad_user + '@' + multihost.master.config.ad_sub_domain],
+                                           stdin_text=multihost.master.config.ad_pwd,
+                                           raiseonerr=False)
+        print cmd.stdout_text
+        print cmd.stderr_text
+        print cmd.returncode
+        if cmd.returncode == 1:
+            for i in range(30):
+                cmd = multihost.master.run_command(['adcli', 'delete-user',
+                                                    '--domain=' + multihost.master.config.ad_sub_domain,
+                                                    'idviewuser%s' % str(i), '-x'],
+                                                   stdin_text=multihost.master.config.ad_pwd,
+                                                   raiseonerr=False)
+    def class_teardown(self, multihost):
+        cmd = multihost.master.qerun('ipa trust-del ' + multihost.master.config.ad_top_domain)
+        uninstall_client(multihost.client)
+        uninstall_server(multihost.master)

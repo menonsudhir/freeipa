@@ -110,6 +110,9 @@ class Testidview(object):
                                                    stdin_text=multihost.master.config.ad_pwd,
                                                    raiseonerr=False)
 
+        time.sleep(20)
+        sssd_cache_reset(multihost.master)
+
     def test_groupadd_domain(self, multihost):
         multihost.master.kinit_as_admin()
         check_rpm(multihost.master, ['adcli'])
@@ -128,6 +131,9 @@ class Testidview(object):
                                                     'idviewgroup%s' % str(i), '-x'],
                                                    stdin_text=multihost.master.config.ad_pwd,
                                                    raiseonerr=False)
+
+        time.sleep(20)
+        sssd_cache_reset(multihost.master)
 
     def test_0070_addinteractively(self, multihost):
         """Interactively add  IDview on IPA server"""
@@ -1154,7 +1160,7 @@ class Testidview(object):
         multihost.master.kinit_as_admin()
         add_ipa_user(multihost.master, user='ipauser14')
         idview_add(multihost.master, viewname='ipaview14')
-        cmd = idoverrideuser_add(multihost.master, viewname='ipaview14', user='ipauser14', gid='10007', 
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview14', user='ipauser14', gid='10007',
                                  key='ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAx0Hg3CZIzizMIohZydE5+cSgIyByWmD0r/J5+k2P0Ave'
                                      'G4i5lVFhcuMasK6VYBKSrFxSgpgkw5M82Ven2lyDpFoPbPJFE8KW6eLoRPCYPO+BBaI2j9t90HueoT2y1N'
                                      'BrKo0QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDH'
@@ -1338,7 +1344,7 @@ class Testidview(object):
         multihost.master.kinit_as_admin()
         add_ipa_user(multihost.master, user='ipauser29')
         idview_add(multihost.master, viewname='ipaview29')
-        cmd = idoverrideuser_add(multihost.master, viewname='ipaview29', user='ipauser29', uid='213313', login='user29', 
+        cmd = idoverrideuser_add(multihost.master, viewname='ipaview29', user='ipauser29', uid='213313', login='user29',
                                  homedir='/home/ipauser29', desc='testuser', gid='213313', shell='/bin/sh',
                                  key='ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAx0Hg3CZIzizMIohZydE5+cSgIyByWmD0r/J5+k2P0AveG'
                                  '4i5lVFhcuMasK6VYBKSrFxSgpgkw5M82Ven2lyDpFoPbPJFE8KW6eLoRPCYPO+BBaI2j9t90HueoT2y1NBrKo0'
@@ -1353,6 +1359,25 @@ class Testidview(object):
         assert 'Home directory: /home/ipauser29' in cmd.stdout_text
         assert 'Login shell: /bin/sh' in cmd.stdout_text
         assert 'SSH public key: ssh-rsa' in cmd.stdout_text
+
+    def test_userdel_domain(self, multihost):
+        multihost.master.kinit_as_admin()
+        check_rpm(multihost.master, ['adcli'])
+        cmd = multihost.ads[0].run_command(['kinit',
+                                            multihost.master.config.ad_user + '@' + multihost.master.config.ad_top_domain],
+                                           stdin_text=multihost.master.config.ad_pwd,
+                                           raiseonerr=False)
+
+        print cmd.stdout_text
+        print cmd.stderr_text
+        print cmd.returncode
+        if cmd.returncode == 1:
+            for i in range(30):
+                cmd = multihost.master.run_command(['adcli', 'delete-user',
+                                                    '--domain=' + multihost.master.config.ad_top_domain,
+                                                    'idviewuser%s' % str(i), '-x'],
+                                                   stdin_text=multihost.master.config.ad_pwd,
+                                                   raiseonerr=False)
 
     def class_teardown(self, multihost):
         cmd = multihost.master.qerun('ipa trust-del ' + multihost.master.config.ad_top_domain)
