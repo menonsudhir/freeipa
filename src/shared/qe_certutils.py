@@ -26,6 +26,7 @@ class certutil(object):
         self.db_noise = ""
         self.password_file = self.db_dir + "/passwd.txt"
         self.noise_file = self.db_dir + "/noise.txt"
+        self.db_file = self.db_dir + "/cert8.db"
         self.root_key_id = "0x{0}".format(rand_str_generator(20, "0123456789abcdef"))
         self.ipa_ca_key_id = "0x{0}".format(rand_str_generator(20, "0123456789abcdef"))
 
@@ -44,10 +45,11 @@ class certutil(object):
                                      for _ in xrange(32)])
             self.host.put_file_contents(self.noise_file, self.db_noise)
 
-        self.host.run_command(['certutil',
-                               '-d', self.db_dir,
-                               '-N',
-                               '-f', self.password_file])
+        if not self.host.transport.file_exists(self.db_file):
+            self.host.run_command(['certutil',
+                                   '-d', self.db_dir,
+                                   '-N',
+                                   '-f', self.password_file])
 
     def add_cert(self, cert_file, nick, trust):
         """ certutil add (-A) command """
