@@ -1,5 +1,5 @@
 # Repos
-# 7.2.a in this 'a' is referred as candidate latest-1 repo
+# 7.4.a in this 'a' is referred as candidate latest-1 repo
 # 7.4.b in this 'b' is referred as candidate latest repo
 # 7.4.0 in this '0' is referred as 0day repo
 
@@ -17,4 +17,5 @@ repo_urls = {
                    "http://download.eng.bos.redhat.com/devel/task-repos/official/sssd/1.15.2/50.el7_4.6/x86_64",
                    "http://download.eng.bos.redhat.com/devel/task-repos/official/python-cryptography/1.7.2/1.el7_4.1/x86_64"
                    ],
+    "7.5": ["http://download.eng.pnq.redhat.com/rel-eng/repos/rhel-7.5-candidate/x86_64/"]
 }

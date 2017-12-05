@@ -25,6 +25,8 @@ import time
 class ui_driver(object):
     def __init__(self, multihost):
         self.multihost = multihost
+        self.display = Display(visible=0, size=(800, 600))
+        self.display.start()
 
     def setup(self, driver=None, config=None):
         self.request_timeout = 30
@@ -33,17 +35,13 @@ class ui_driver(object):
         self.display = None
         self.get_config()
         self.driver = self.get_driver()
-        self.usevirtualdisplay = self.config.get('virtualdisplay', None)
-        if self.usevirtualdisplay:
-            self.display = Display(visible=0, size=(800, 600))
-            self.display.start()
 
     def teardown(self):
         """
         Cleanup all driver
         """
         self.driver.quit()
-        if self.usevirtualdisplay and self.display:
+        if self.display:
             self.display.stop()
 
     def get_config(self):

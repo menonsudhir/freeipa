@@ -30,29 +30,37 @@
 . /usr/share/beakerlib/beakerlib.sh || exit 1
 . /etc/pytest_env.sh
 
-PACKAGES="ipa-server ipa-server-dns selinux-policy pki-server PyYAML"
+PACKAGES="ipa-server ipa-server-dns selinux-policy pki-server firefox xorg-x11-server-Xvfb PyYAML"
 pytest_location=/root/ipa-pytests
 mh_cfg=$MH_CONF_FILE
 junit_xml=${PYCONF_DIR}/${TESTCASE}.xml
+gecko_driver=https://github.com/mozilla/geckodriver/releases/download/v0.12.0/geckodriver-v0.12.0-linux64.tar.gz
+pytest_ver=3.2.1
+selenium_ver=3.4.3
 
 install_pytest() {
     rlPhaseStartTest "Installing Pytest and required dependencies"
-        rlLog "Installing PACKAGES [$PACKAGES]"
+        rlLog "Installing Packages [$PACKAGES]"
         yum install -y $PACKAGES
-        for pkg in $PACKAGES
+        for p in $PACKAGES
         do
-            rlAssertRpm $pkg
+            rlAssertRpm $p
         done
 
         if [ -z $SRC_LOCATION ]; then
             SRC_LOCATION=http://git.app.eng.bos.redhat.com/git/ipa-pytests.git
         fi
 
+        rlLog "Clone git repo ipa-pytests using $SRC_LOCATION"
+        rlRun "wget $gecko_driver" 0
+        rlRun "tar xvzf geckodriver-v0.12.0-linux64.tar.gz" 0
+        rlRun "mv geckodriver /usr/bin/" 0
+
         if [ -z $BRANCH ]; then
             BRANCH="master"
         fi
 
-        SSL=""
+        SSL="GIT_SSL_NO_VERIFY=false"
         if [ ! -z $SSL_NO_VERIFY ]; then
             SSL="GIT_SSL_NO_VERIFY=true"
         fi
@@ -60,8 +68,11 @@ install_pytest() {
         rlLog "Clone git repo ipa-pytests using $SRC_LOCATION using branch $BRANCH"
         rlRun "${SSL} git clone -b $BRANCH $SRC_LOCATION $pytest_location" 0
 
+
         rlLog "Install Pytest and dependencies"
-        easy_install pip pytest pytest-multihost
+        rlLog "Going to install : pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver"
+        easy_install pip
+        pip install pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver PyYAML
         if [ $? -eq 0 ]; then
             if [ -d ${pytest_location} ]; then
                 pushd `pwd`

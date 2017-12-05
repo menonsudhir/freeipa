@@ -8,6 +8,7 @@ from ipa_pytests.shared.rpm_utils import get_rpm_version
 from ipa_pytests.shared import paths
 from distutils.version import LooseVersion
 from selenium import webdriver
+import os
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.ipa_upgrade.constants import repo_urls
 from ipa_pytests.shared.qe_certutils import certutil
@@ -32,12 +33,9 @@ class Testmaster(object):
         passwd = 'Secret123'
         seconds = 10
 
-        upgrade_from = '7.3.b'
+        upgrade_from = multihost.config.upgrade_from
         # upgrade_from this can be used to set repo depending on version of packages from where the upgrade is starting.
         # for this refer ipa_upgrade/constants.py
-
-        for repo in repo_urls[upgrade_from]:
-            cmd = add_repo(multihost.master, repo)
 
         """Adding command to stop firewall service on master """
         stop_firewalld(multihost.master)
@@ -123,7 +121,7 @@ class Testmaster(object):
         except StandardError as errval:
             pytest.skip("setup_session_skip : %s" % (errval.args[0]))
         multihost.driver.init_app(username=user1, password=userpass)
-        multihost.driver.logout()
+        multihost.driver.teardown()
 
     def test_rpm_version_0002(self, multihost):
         """
@@ -136,8 +134,8 @@ class Testmaster(object):
 
         print ipa_version
 
-        upgrade_from = '7.3.b'
-        upgrade_to = '7.4.b'
+        upgrade_from = os.getenv('UPGRADE_FROM', multihost.master.config.upgrade_from)
+        upgrade_to = os.getenv('UPGRADE_TO', multihost.master.config.upgrade_to)
         print("Upgrading from : %s" % upgrade_from)
         print("Upgrading to : %s" % upgrade_to)
 
@@ -154,17 +152,15 @@ class Testmaster(object):
 
         cmd = upgrade(multihost.master)  # upgrade starts at this point
         if cmd.returncode == 0:
-            print("Upgraded Successfully")
+            updated_version = get_rpm_version(multihost.master, rpm)  # get updated ipa version
+            print "Upgraded version is %s " % updated_version  # prints upgraded version
+            if updated_version > ipa_version:
+                print "Upgrade rpm test verified"
+                print("Upgraded Successfully")
+            else:
+                pytest.xfail("rpm version check failed  on %s " % multihost.master.hostname)
         else:
             pytest.xfail("Upgrade Failed")
-
-        updated_version = get_rpm_version(multihost.master, rpm)  # get updated ipa version
-        print "Upgraded version is %s " % updated_version  # prints upgraded version
-
-        if updated_version > ipa_version:
-            print "Upgrade rpm test verified"
-        else:
-            pytest.xfail("rpm version check failed  on %s " % multihost.master)
 
     def test_logs_0003(self, multihost):
         """
@@ -182,13 +178,24 @@ class Testmaster(object):
 
     def test_services_0004(self, multihost):
         """
-        test for automation of upgradation of packeges
-        test for service verification
+        test for service verification after upgrade
         """
+        # check ipactl status after upgrade
+
         multihost.master.kinit_as_admin()
-        check_ipactl = multihost.master.run_command('ipactl status | grep RUNNING')
-        if check_ipactl.returncode != 0:
-            pytest.xfail("IPA server service not RUNNING.Kindly debug")
+
+        check5 = multihost.master.run_command('ipactl status | grep RUNNING')
+        if check5.returncode != 0:
+            print("IPA server service not RUNNING.Kindly debug")
+        else:
+            print("IPA service is running, continuing")
+
+        restart = multihost.master.run_command('ipactl restart', raiseonerr=False)
+        print restart.stdout_text
+
+        status1 = multihost.master.run_command('ipactl status | grep RUNNING')
+        if status1.returncode != 0:
+            print("IPA server service not RUNNING.Kindly debug")
         else:
             print("IPA service is running, continuing")
 
@@ -204,7 +211,7 @@ class Testmaster(object):
         assert user1 in cmd2.stdout_text
         print("User Successfully verified")
 
-    def test_webui_0006(self, multihost):
+    def test_web_ui_0006(self, multihost):
         """
         test for web ui testing after upgrade
         """
@@ -217,7 +224,7 @@ class Testmaster(object):
         except StandardError as errval:
             pytest.skip("setup_session_skip : %s" % (errval.args[0]))
         multihost.driver.init_app(username=user1, password=userpass)
-        multihost.driver.logout()
+        multihost.driver.teardown()
 
     def class_teardown(self, multihost):
         """Full suite teardown """
