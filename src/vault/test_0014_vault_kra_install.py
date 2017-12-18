@@ -23,7 +23,6 @@ class TestVaultKRAInstall(object):
         """ Class Teardown """
         pass
 
-    @pytest.mark.skip(reason="Skipping due to bz1302127")
     def test_0008_renew_kra_agent_cert(self, multihost):
         """
         :Title: IDM-IPA-TC: Vault: Renew KRA agent cert
@@ -37,7 +36,6 @@ class TestVaultKRAInstall(object):
         """
         pass
 
-    @pytest.mark.skip(reason="Skipping due to bz1302127")
     def test_0009_install_kra_after_ipa_cert_renewed(self, multihost):
         """
         :Title: IDM-IPA-TC: Vault: Install KRA after IPA cert renewed
