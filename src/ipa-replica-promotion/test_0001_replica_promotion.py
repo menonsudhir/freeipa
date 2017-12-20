@@ -142,7 +142,7 @@ class TestIPAReplicaPromotion(object):
 
         # Add CA on replica
         multihost.replica.kinit_as_admin()
-        cmdstr = "ipa-ca-install -P {0} -w {1}".format(passwd,
+        cmdstr = "ipa-ca-install -p {0} -w {1}".format(passwd,
                                                        passwd)
         cmd = multihost.replica.run_command(cmdstr, raiseonerr=False)
         print("Running    :> " + str (cmdstr))
@@ -394,7 +394,7 @@ class TestIPAReplicaPromotion(object):
         cmd = multihost.replica.run_command(['kdestroy', '-A'],
                                             raiseonerr=False)
         multihost.replica.kinit_as_admin()
-        cmdstr = "ipa-ca-install -P {0} -w {1}".format(passwd,
+        cmdstr = "ipa-ca-install -p {0} -w {1}".format(passwd,
                                                        passwd)
         cmd = multihost.replica.run_command(cmdstr, raiseonerr=False)
         print("Running    :> " + str (cmdstr))
