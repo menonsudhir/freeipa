@@ -6,10 +6,13 @@ yum - shared support utility functions
 """
 
 import paths
+from rpm_utils import check_rpm
 
 
 def add_repo(host, repo_url):
     """ add repo file"""
+
+    cmd = check_rpm(host, ['yum-utils'])
     nogpgcheck = [paths.YUMCONFIGMANAGER, '--setopt=\*.gpgcheck=0', '--save']
     cmd2 = host.run_command(nogpgcheck, raiseonerr=False)
     yum_add = [paths.YUMCONFIGMANAGER, '--add-repo=%s' % repo_url]
