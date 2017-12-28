@@ -20,11 +20,11 @@ class TestPermissionShowPositive(object):
         :return:
         """
         permission_name = "ManageUser"
-        exp_output = "attributelevelrights: {u'ipapermright': u'rscwo', u'cn': u'rscwo'," \
-                     " u'ipapermtarget': u'rscwo', u'ipapermtargetto': u'rscwo', u'attrs': " \
-                     "u'rscwo', u'owner': u'rscwo', u'ipapermlocation': u'rscwo', " \
-                     "u'ipapermincludedattr': u'rscwo', u'nsaccountlock': u'rscwo', " \
-                     "u'ipapermtargetfrom': u'rscwo', u'ipapermbindruletype': u'rscwo', " \
+        exp_output = "attributelevelrights: {u'ipapermright': u'rscwo', u'cn': u'rscwo', " \
+                     "u'ipapermtarget': u'rscwo', u'ipapermtargetto': u'rscwo', u'attrs': " \
+                     "u'rscwo', u'ipapermlocation': u'rscwo', u'ipapermincludedattr': u'rscwo', " \
+                     "u'nsaccountlock': u'rscwo', u'ipapermtargetfrom': u'rscwo', " \
+                     "u'ipapermbindruletype': u'rscwo', u'owner': u'rscwo', " \
                      "u'member': u'rscwo', u'type': u'rscwo', u'ipapermtargetfilter': u'rscwo', " \
                      "u'description': u'rscwo', u'businesscategory': u'rscwo', u'memberof': " \
                      "u'rscwo', u'seealso': u'rscwo', u'ipapermissiontype': u'rscwo', " \
