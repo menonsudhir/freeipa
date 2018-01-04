@@ -72,7 +72,7 @@ install_pytest() {
         rlLog "Install Pytest and dependencies"
         rlLog "Going to install : pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver"
         easy_install pip
-        pip install pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver PyYAML --index https://pypi.org/simple/
+        pip install pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver PyYAML pexpect --index https://pypi.org/simple/
         if [ $? -eq 0 ]; then
             if [ -d ${pytest_location} ]; then
                 pushd `pwd`
