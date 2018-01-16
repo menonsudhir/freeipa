@@ -43,8 +43,8 @@ class TestOTPfunction(object):
                 '{}'.format(
                     multihost.testuser)],
             exp_returncode=1,
-            exp_output='kinit: Generic preauthentication '
-                       'failure while getting initial credentials')
+            exp_output='kinit: Pre-authentication failed: '
+                       'Invalid argument while getting initial credentials')
 
         #   delete otp user
         del_ipa_user(multihost.master, multihost.testuser)

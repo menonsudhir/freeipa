@@ -105,6 +105,12 @@ class TestAuthIndent(object):
         @casecomponent: ipa
         """
         print("\nAdd radius user and setup server")
+        multihost.master.run_command([
+            'yum', 'remove', 'freeradius', 'freeradius-ldap',
+            'freeradius-utils', '-y'])
+        multihost.master.run_command([
+            'yum', 'install', 'freeradius', 'freeradius-ldap',
+            'freeradius-utils', '-y'])
         lib.prepare_radiusd(multihost, RADUSER)
         lib.add_user(multihost, RADUSER)
         radpassword = "%s\n%s" % (RADPASS, RADPASS)
@@ -276,14 +282,19 @@ class TestAuthIndent(object):
         OTP2 = lib.otp_key_convert(lib.get_otp_key(token_key))
         print(OTP2)
         print(lib.get_otp(multihost, OTP2))
+        mod_ipa_user(
+            multihost.master, TESTUSER,
+            ['--user-auth-type=otp',
+             '--user-auth-type=password',
+             '--user-auth-type=radius'])
         host_mod(
             multihost.master,
             multihost.master.hostname,
-            {'auth-ind': '""'})
+            {'auth-ind=':''})
         multihost.master.run_command([
             'ipa', 'user-unlock', TESTUSER])
         multihost.master.run_command([
-            'sss_cache', '-E', TESTUSER])
+            'sss_cache', '-E'])
         multihost.master.run_command([
             'ipactl', 'restart'])
         multihost.master.run_command([
