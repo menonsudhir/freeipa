@@ -93,8 +93,7 @@ class TestRadiusfunction(object):
 
     def test_radius_0003(self, multihost):
         """
-        IDM-IPA-TC: OTP: User login with a radius
-        authentication with wrong secret key
+        IDM-IPA-TC: OTP: User login with a radius authentication with wrong secret key
         """
         multihost.radiusproxy = "radiusproxy03"
         multihost.testuser = "radiususer03"

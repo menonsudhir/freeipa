@@ -11,8 +11,7 @@ class TestFineGrainedOTP(object):
 
     def test_second_factor_optional(self, multihost):
         """
-        IDM-IPA-TC: OTP: Verifying OTP/2FA authentication optional while login
-        BZ=1325809
+        IDM-IPA-TC: OTP: Verifying OTP/2FA authentication optional while login BZ=1325809
         """
         multihost.testuser = 'otpuser1325809'
         multihost.token = "deftoken"

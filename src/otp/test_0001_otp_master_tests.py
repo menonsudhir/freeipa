@@ -54,8 +54,7 @@ class TestOTPfunction(object):
 
     def test_otp_0007(self, multihost):
         """
-        IDM-IPA-TC: OTP: Log-in with Password
-         only when authenticating type is OTP
+        IDM-IPA-TC: OTP: Log-in with Password only when authenticating type is OTP
         """
         multihost.testuser = 'otpuser0007'
         multihost.token = 'token0007'
@@ -106,8 +105,7 @@ class TestOTPfunction(object):
 
     def test_otp_0013(self, multihost):
         """
-        IDM-IPA-TC: OTP: Re-assign token to non-existing
-        user(ipa otptoken-mod).
+        IDM-IPA-TC: OTP: Re-assign token to non-existing user(ipa otptoken-mod).
         """
         multihost.testuser = 'otpuser0013'
         multihost.token = 'token0013'
@@ -330,8 +328,7 @@ class TestOTPfunction(object):
 
     def test_otp_0034(self, multihost):
         """
-        IDM-IPA-TC: OTP: Change authentication
-        window to 2147483650 seconds_bz1200867
+        IDM-IPA-TC: OTP: Change authentication window to 2147483650 seconds_bz1200867
         """
 
         #   log-in as admin
@@ -412,8 +409,7 @@ class TestOTPfunction(object):
 
     def test_otp_0037(self, multihost):
         """
-        IDM-IPA-TC: OTP: Change authentication
-        window to non numaric value_bz1200867
+        IDM-IPA-TC: OTP: Change authentication window to non numaric value_bz1200867
         """
 
         #   log-in as admin
@@ -440,8 +436,7 @@ class TestOTPfunction(object):
 
     def test_otp_0038(self, multihost):
         """
-        IDM-IPA-TC: OTP: Change authentication window with
-        blank space_bz1200867
+        IDM-IPA-TC: OTP: Change authentication window with blank space_bz1200867
         """
 
         #   log-in as admin
@@ -468,8 +463,7 @@ class TestOTPfunction(object):
 
     def test_otp_0039(self, multihost):
         """
-        IDM-IPA-TC: OTP: Change authentication
-         window with leading space_bz1200867
+        IDM-IPA-TC: OTP: Change authentication window with leading space_bz1200867
         """
 
         #   log-in as admin
@@ -496,8 +490,7 @@ class TestOTPfunction(object):
 
     def test_otp_0042(self, multihost):
         """
-        IDM-IPA-TC: OTP: Change authentication
-         window to 2147483650 seconds_bz1200867
+        IDM-IPA-TC: OTP: Change synchronization window to 2147483650 seconds_bz1200867
         """
 
         #   log-in as admin
@@ -578,8 +571,7 @@ class TestOTPfunction(object):
 
     def test_otp_0045(self, multihost):
         """
-        IDM-IPA-TC: OTP: Change synchronization
-         window to non numaric value_bz1200867
+        IDM-IPA-TC: OTP: Change synchronization window to non numaric value_bz1200867
         """
 
         #   log-in as admin
@@ -606,8 +598,7 @@ class TestOTPfunction(object):
 
     def test_otp_0046(self, multihost):
         """
-        IDM-IPA-TC: OTP: Change synchronization
-         window with blank space_bz1200867
+        IDM-IPA-TC: OTP: Change synchronization window with blank space_bz1200867
         """
 
         #   log-in as admin
@@ -634,8 +625,7 @@ class TestOTPfunction(object):
 
     def test_otp_0047(self, multihost):
         """
-        IDM-IPA-TC: OTP: Change synchronization
-         window with leading space_bz1200867
+        IDM-IPA-TC: OTP: Change synchronization window with leading space_bz1200867
         """
 
         #   log-in as admin
