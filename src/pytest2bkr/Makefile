@@ -51,7 +51,7 @@ $(METADATA): Makefile
 	@echo "Path:            $(TEST_DIR)" >> $(METADATA)
 	@echo "Description:     A generic task to run Pytest as beaker job" >> $(METADATA)
 	@echo "Type:            Install" >> $(METADATA)
-	@echo "TestTime:        3h" >> $(METADATA)
+	@echo "TestTime:        4h" >> $(METADATA)
 	@echo "Priority:        Normal" >> $(METADATA)
 	@echo "License:         GPLv2+" >> $(METADATA)
 	@echo "Confidential:    no" >> $(METADATA)

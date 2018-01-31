@@ -91,34 +91,55 @@ install_pytest() {
     rlPhaseEnd
 }
 
+run_test() {
+    install_pytest
+    if [ -z ${TESTCASE} ]; then
+         rlFail "Unable to find environment variable TESTCASE, please specify "\
+                "param with TESTCASE as name in task definition"
+    fi
+    rlLog "Running testcase $TESTCASE"
+    rlLog "running pytest"
+    if [ -d ${pytest_location}/src/$TESTCASE -a -f $mh_cfg ];
+    then
+        pytest -s -v --multihost-config=${mh_cfg} --junit-xml=${junit_xml} ${pytest_location}/src/${TESTCASE}
+        if [ $? -eq 0 ]; then
+            rlPass "$TESTCASE Passed"
+        else
+            rlFail "$TESTCASE Failed"
+        fi
+    else
+        rlFail "Failed to find Pytest src or multihost config file"
+    fi
+}
+
 rlJournalStart
     rlPhaseStartSetup
-        echo "$MASTER" | grep -i "$(hostname)"
+        echo "$CONTROLLER" | grep -i $(hostname)
         if [ $? -eq 0 ]; then
-            install_pytest
-            if [ -z ${TESTCASE} ]; then
-                rlFail "Unable to find environment variable TESTCASE, please specify "\
-                       "param with TESTCASE as name in task definition"
-            fi
-            rlLog "Running testcase $TESTCASE"
-            if [ -d ${pytest_location}/src/$TESTCASE -a -f $mh_cfg ];
-            then
-                pytest -s -v --multihost-config=${mh_cfg} --junit-xml=${junit_xml} ${pytest_location}/src/${TESTCASE}
-                if [ $? -eq 0 ]; then
-                    rlPass "$TESTCASE Passed"
-                else
-                    rlFail "$TESTCASE Failed"
-                fi
+            run="CONTROLLER"
+            if [ $run == "CONTROLLER" ]; then
+                 run_test
+                 rlRun "rhts-sync-set -s 'DONE' -m $CONTROLLER"
             else
-                rlFail "Failed to find Pytest src or multihost config file"
+                install_pytest
+                rlLog "$(hostname) is not CONTROLLER, so skipping operations and waiting for CONTROLLER"
+                rlRun "rhts-sync-block -s 'DONE' $CONTROLLER"
             fi
-            rlRun "rhts-sync-set -s 'DONE' -m $MASTER"
         else
-            install_pytest
-            rlLog "$(hostname) is not MASTER, so skipping operations and waiting for master"
-            rlRun "rhts-sync-block -s 'DONE' $MASTER"
+            echo "$MASTER" | grep -i $(hostname)
+            if [ $? -eq 0 ]; then
+                 run_test
+                 rlRun "rhts-sync-set -s 'DONE' -m $MASTER"
+            else
+                install_pytest
+                rlLog "$(hostname) is not MASTER, so skipping operations and waiting for master"
+                rlRun "rhts-sync-block -s 'DONE' $MASTER"
+            fi
         fi
     rlPhaseEnd
+    mh_yaml_report=$MH_CONF_FILE
+    makereport $mh_yaml_report
+    rhts-submit-log -l $mh_yaml_report
 
 rlJournalPrintText
 rlJournalEnd
