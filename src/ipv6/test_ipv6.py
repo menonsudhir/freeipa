@@ -2,11 +2,8 @@ from subprocess import call
 import pytest
 from ipa_pytests.qe_install import uninstall_server, \
     set_resolv_conf_to_master, uninstall_client
+from ipa_pytests.shared.utils import get_ipv6_ip
 
-monitor_ip_six = '2002::1'
-master_ip_six = '2002::3'
-replica_ip_six = '2002::4'
-client_ip_six = '2002::5'
 tuser = "tuser"
 tpassword = "Password123"
 
@@ -15,8 +12,24 @@ class TestIPv6Tests(object):
 
     def class_setup(self, multihost):
 
+        global master_ip_six
+        global replica_ip_six
+        global client_ip_six
+
+        master_ip_six = get_ipv6_ip(multihost.master)
+        replica_ip_six = get_ipv6_ip(multihost.replica)
+        client_ip_six = get_ipv6_ip(multihost.client)
+        print "Master ip :"
+        print master_ip_six
+
+        print "Replica ip :"
+        print replica_ip_six
+
+        print "Client ip :"
+        print client_ip_six
+
         print "changing variables"
-        multihost.master.ip = master_ip_six 
+        multihost.master.ip = master_ip_six
         multihost.master.external_hostname = master_ip_six
         multihost.replica.ip = replica_ip_six
         multihost.replica.external_hostname = replica_ip_six
@@ -25,9 +38,10 @@ class TestIPv6Tests(object):
 
         print "uninstall"
         """ Uninstall if ipa installed """
-        uninstall_server(multihost.master)
-        uninstall_server(multihost.replica)
         uninstall_client(multihost.client)
+        uninstall_server(multihost.replica)
+        cmdun3 = multihost.master.run_command(['ipa-server-install', '--uninstall', '-U',
+                                               '--ignore-last-of-role'], raiseonerr=False)
 
         """ resolv.conf on replica and client to point on master """
         set_resolv_conf_to_master(multihost.client, multihost.master)
@@ -38,7 +52,7 @@ class TestIPv6Tests(object):
         IDM-IPA-TC: IPV6: Install ipa-server
         """
         print "Install ipa-server"
-        cmd = multihost.master.run_command([
+        params1 = [
             'ipa-server-install',
             '--setup-dns',
             '--no-forwarders',
@@ -48,7 +62,9 @@ class TestIPv6Tests(object):
             '--ip-address', multihost.master.ip,
             '--admin-password', multihost.master.config.admin_pw,
             '--ds-password', multihost.master.config.dirman_pw,
-            '-U'])
+            '-U']
+        print("RUNCMD:", ' '.join(params1))
+        cmd = multihost.master.run_command(params1, raiseonerr=False)
 
     def test_ipv6_0002(self, multihost):
         """
@@ -60,28 +76,35 @@ class TestIPv6Tests(object):
             'ipa',
             'dnsconfig-mod',
             '--allow-sync-ptr=true'])
-        cmd2 = multihost.replica.run_command([
+        params2 = [
             'ipa-client-install',
             '--principal', 'admin',
             '--password', multihost.master.config.admin_pw,
             '--force-join',
             '--ip-address=' + replica_ip_six,
-            '-U'])
+            '--domain', multihost.master.domain.name,
+            '-U']
+        print("RUNCMD:", ' '.join(params2))
+        cmd2 = multihost.replica.run_command(params2, raiseonerr=False)
+
         print "Install replica - promote"
-        cmd3 = multihost.replica.run_command([
+        params3 = [
             'ipa-replica-install',
             '--setup-dns',
             '--no-forwarders',
             '--admin-password', multihost.master.config.admin_pw,
             '--password', multihost.master.config.dirman_pw,
-            '-U'])
+            '--domain', multihost.master.domain.name,
+            '-U']
+        print("RUNCMD:", ' '.join(params3))
+        cmd3 = multihost.replica.run_command(params3, raiseonerr=False)
 
     def test_ipv6_0003(self, multihost):
         """
         IDM-IPA-TC: IPV6: Install ipa-client
         """
         print "Install ipa-client and join"
-        cmd = multihost.client.run_command([
+        params4 = [
             'ipa-client-install',
             '--domain', multihost.master.domain.name,
             '--realm', multihost.master.domain.realm,
@@ -90,7 +113,9 @@ class TestIPv6Tests(object):
             '--password', multihost.master.config.admin_pw,
             '--hostname', multihost.client.hostname,
             '--force-join',
-            '-U'])
+            '-U']
+        print("RUNCMD:", ' '.join(params4))
+        cmd = multihost.client.run_command(params4, raiseonerr=False)
 
     def test_ipv6_0004(self, multihost):
         """
@@ -141,7 +166,7 @@ class TestIPv6Tests(object):
         cmd_uninstall = multihost.client.run_command(['ipa-client-install',
                                                       '--uninstall', '-U'])
         print "REinstall client"
-        cmd_install = multihost.client.run_command([
+        params5 = [
             'ipa-client-install',
             '--domain', multihost.master.domain.name,
             '--realm', multihost.master.domain.realm,
@@ -150,7 +175,9 @@ class TestIPv6Tests(object):
             '--password', multihost.master.config.admin_pw,
             '--hostname', multihost.client.hostname,
             '--force-join',
-            '-U'])
+            '-U']
+        print("RUNCMD:", ' '.join(params5))
+        cmd_install = multihost.client.run_command(params5, raiseonerr=False)
 
     def class_teardown(self, multihost):
         pass

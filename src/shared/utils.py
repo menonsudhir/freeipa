@@ -439,3 +439,18 @@ def restore_resolv_conf(host):
     host.run_command(['cp', '-af',
                       '/etc/resolv.conf.qebackup',
                       '/etc/resolv.conf'])
+
+
+def get_ipv6_ip(host):
+    """
+    returns ipv6 address of given host
+    """
+
+    cmd = host.run_command('ifconfig')
+    m_regex = re.compile('\s*inet6\s(\S+).*\<global\>')
+    m_group = m_regex.search(cmd.stdout_text)
+    if m_group is not None:
+        expect_out = m_group.group(1)
+        return expect_out
+    else:
+        pytest.fail("ipv6 is not enabled on %s " % host.hostname)
