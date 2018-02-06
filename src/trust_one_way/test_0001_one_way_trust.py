@@ -1,7 +1,7 @@
 """
 This covers the test cases for one way trust feature
 """
-
+from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_class import qe_use_class_setup
 from ipa_pytests.shared.utils import (disable_dnssec, dnsforwardzone_add,
                                       add_dnsforwarder, sssd_cache_reset)

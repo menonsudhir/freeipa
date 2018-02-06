@@ -204,7 +204,7 @@ def add_dnsforwarder(host, domain, ip):
     print ("Add dns forwarder return code is: %s" % cmd.returncode)
     print cmd.stdout_text, cmd.stderr_text
     if cmd.returncode == 1:
-        cmd = host.run_command(['dnscmd', '/ZoneDelete', domain, '/f'],
+        cmd = host.run_command(['dnscmd', '/ZoneDelete', domain, '/DsDel', '/f'],
                                raiseonerr=False)
         print ("zone delete return code is: %s" % cmd.returncode)
         print cmd.stdout_text, cmd.stderr_text
