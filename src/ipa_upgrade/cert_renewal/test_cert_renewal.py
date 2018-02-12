@@ -19,6 +19,8 @@ from ipa_pytests.shared.user_utils import add_ipa_user, show_ipa_user
 from ipa_pytests.shared.ipa_cert_utils import ipa_ca_cert_update
 from ipa_pytests.test_webui import ui_lib
 from ipa_pytests.shared.utils import ipa_version_gte
+from distutils.version import LooseVersion
+
 
 class Testmaster(object):
     """ Test Class """
@@ -235,7 +237,7 @@ class Testmaster(object):
         if cmd.returncode == 0:
             updated_version = get_rpm_version(multihost.master, rpm)  # get updated ipa version
             print "Upgraded version is %s " % updated_version  # prints upgraded version
-            if updated_version > ipa_version:
+            if LooseVersion(updated_version) > LooseVersion(ipa_version):
                 print "Upgrade rpm test verified"
                 print("Upgraded Successfully")
             else:

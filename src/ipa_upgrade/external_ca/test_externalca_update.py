@@ -17,6 +17,7 @@ from ipa_pytests.test_webui import ui_lib
 import os
 from ipa_pytests.shared.yum_utils import add_repo
 from ipa_pytests.shared.user_utils import add_ipa_user, show_ipa_user
+from distutils.version import LooseVersion
 
 
 class TestExternalCA(object):
@@ -230,7 +231,7 @@ class TestExternalCA(object):
         if cmd.returncode == 0:
             updated_version = get_rpm_version(multihost.master, rpm)  # get updated ipa version
             print "Upgraded version is %s " % updated_version  # prints upgraded version
-            if updated_version > ipa_version:
+            if LooseVersion(updated_version) > LooseVersion(ipa_version):
                 print "Upgrade rpm test verified"
                 print("Upgraded Successfully")
             else:

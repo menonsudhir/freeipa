@@ -37,6 +37,7 @@ junit_xml=${PYCONF_DIR}/${TESTCASE}.xml
 gecko_driver=https://github.com/mozilla/geckodriver/releases/download/v0.12.0/geckodriver-v0.12.0-linux64.tar.gz
 pytest_ver=3.2.1
 selenium_ver=3.4.3
+pytest_multihost_ver=1.1.1
 
 install_pytest() {
     rlPhaseStartTest "Installing Pytest and required dependencies"
@@ -72,7 +73,7 @@ install_pytest() {
         rlLog "Install Pytest and dependencies"
         rlLog "Going to install : pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver"
         easy_install pip
-        pip install pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver PyYAML pexpect --index https://pypi.org/simple/
+        pip install pytest==$pytest_ver pytest-multihost==$pytest_multihost_ver pyvirtualdisplay selenium==$selenium_ver PyYAML pexpect --index https://pypi.org/simple/
         if [ $? -eq 0 ]; then
             if [ -d ${pytest_location} ]; then
                 pushd `pwd`

@@ -12,10 +12,6 @@ repo_urls = {
     "7.4.0": ["http://download-node-02.eng.bos.redhat.com/rel-eng/updates/RHEL-7.4/RHEL-7.4-Update-0.0/compose/Server/x86_64/os/"],
     "7.4.a": ["http://download.eng.pnq.redhat.com/rel-eng/repos/rhel-7.4-z/x86_64/"],
     "7.4.b": ["http://download.eng.pnq.redhat.com/rel-eng/repos/rhel-7.4-z-candidate/x86_64/"],
-    "7.4.update2": ["http://download.eng.pnq.redhat.com/rel-eng/repos/rhel-7.4-z/x86_64/",
-                   "http://download.eng.bos.redhat.com/devel/task-repos/official/ipa/4.5.0/21.el7_4.2.2/x86_64",
-                   "http://download.eng.bos.redhat.com/devel/task-repos/official/sssd/1.15.2/50.el7_4.6/x86_64",
-                   "http://download.eng.bos.redhat.com/devel/task-repos/official/python-cryptography/1.7.2/1.el7_4.1/x86_64"
-                   ],
-    "7.5": ["http://download.eng.pnq.redhat.com/rel-eng/repos/rhel-7.5-candidate/x86_64/"]
+    "7.5": ["http://download.eng.pnq.redhat.com/released/RHEL-7/7.5-Beta/Server/Server/x86_64/os"],      # 7.5 beta repo
+    "7.5.a": ["http://download.eng.pnq.redhat.com/rel-eng/repos/rhel-7.5-candidate/x86_64/"]
 }
