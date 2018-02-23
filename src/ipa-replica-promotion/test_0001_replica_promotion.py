@@ -190,7 +190,7 @@ class TestIPAReplicaPromotion(object):
         assert testuser in cmd.stdout_text
 
         multihost.replica.kinit_as_admin()
-        cmdstr = "ipa-kra-install"
+        cmdstr = "ipa-kra-install -U -p " + multihost.master.config.dirman_pw
         cmd = multihost.replica.run_command(cmdstr, raiseonerr=False)
         print("Running    :> " + str (cmdstr))
         print("CMD STDOUT :> " + cmd.stdout_text)
