@@ -1,11 +1,13 @@
 """
 OTP testcases
 """
-from ipa_pytests.shared.utils import (kinit_as_user)
+from ipa_pytests.shared.utils import (kinit_as_user, get_base_dn)
 from ipa_pytests.shared.user_utils import del_ipa_user
 from .lib import (add_user, mod_otp_user, add_otptoken,
                   delete_otptoken)
 import pytest
+import otp_lib as lib
+import time
 
 
 class TestOTPfunction(object):
@@ -18,6 +20,64 @@ class TestOTPfunction(object):
         # Common username and password for required testcases
         multihost.testuser = "mytestuser"
         multihost.token = "deftoken"
+
+    def test_otp_0001(self, multihost):
+        """
+        IDM-IPA-TC: OTP: Add otptoken to new user and test with enabling FAST
+        """
+        multihost.testuser = 'testuser0001'
+        multihost.nonotpuser = 'nonotpuser'
+
+        # add otp user
+        add_user(multihost)
+
+        multihost.master.kinit_as_user(
+            multihost.testuser, multihost.master.config.admin_pw)
+
+        #   modify otp user as admin
+        mod_otp_user(multihost)
+
+        #   Add otptoken as admin
+        multihost.master.kinit_as_admin()
+        print("\nAdd token")
+        token_key = lib.add_token(multihost, multihost.testuser)
+        otp = lib.otp_key_convert(lib.get_otp_key(token_key))
+
+        # krb auth with OTP
+        krb_cache = lib.get_krb_cache(multihost, multihost.nonotpuser)
+        krbotp = multihost.master.config.admin_pw + lib.get_otp(multihost, otp)
+        time.sleep(3)
+        print("kinit as %s with password + token : %s" % (multihost.testuser, krbotp))
+        cmd = multihost.master.run_command([
+              'kinit', '-T', krb_cache, multihost.testuser
+               ], stdin_text=krbotp, raiseonerr=False)
+        print cmd.stdout_text
+        print cmd.stderr_text
+        if cmd.returncode != 0:
+            pytest.xfail("krb auth with otp failed")
+
+        # Ldap bind with OTP
+
+        time.sleep(60)
+        base_dn = get_base_dn(multihost.master)
+        print base_dn
+
+        ldapotp = str(multihost.master.config.admin_pw + lib.get_otp(multihost, otp)).strip('\n')
+
+        search = ['ldapsearch', '-xLLL',
+                  '-D', 'uid='+multihost.testuser+',cn=users,cn=accounts,'+base_dn,
+                  '-w', ldapotp,
+                  '-h', multihost.master.hostname,
+                  '-b', 'cn=users,cn=accounts,'+base_dn,
+                  '-s', 'sub']
+
+        cmd = multihost.master.run_command(search, raiseonerr=False)
+        if cmd.returncode != 0:
+            pytest.xfail("ldapauth with otp failed")
+        print cmd.stdout_text
+        print cmd.stderr_text
+        #   delete otp user
+        del_ipa_user(multihost.master, multihost.testuser)
 
     def test_otp_0002(self, multihost):
         """

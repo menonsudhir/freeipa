@@ -454,3 +454,9 @@ def get_ipv6_ip(host):
         return expect_out
     else:
         pytest.fail("ipv6 is not enabled on %s " % host.hostname)
+
+def get_base_dn(host):
+    with open('/etc/openldap/ldap.conf','r') as f:
+        for line in f:
+            if 'BASE dc=' in line:
+               return (line.split(" ")[1]).strip('\n')
