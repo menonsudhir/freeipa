@@ -3,7 +3,6 @@ import otp_lib as lib
 from ipa_pytests.shared.user_utils import mod_ipa_user
 from ipa_pytests.shared.service_utils import service_mod, service_show
 from ipa_pytests.shared.host_utils import host_mod
-from ipa_pytests.shared.rpm_utils import check_rpm
 import time
 
 TUSER = 'tuser01'
@@ -15,8 +14,6 @@ SERVICENAME = ''
 OTP = ''
 OTP2 = ''
 NEW_HOST = ''
-REPOFILE = '/etc/yum.repos.d/repo-extra.repo'
-EXTRAREPO = "http://file.rdu.redhat.com/~spoore/idmqe-extras/7Server/x86_64/"
 
 
 class TestAuthIndent(object):
@@ -32,15 +29,6 @@ class TestAuthIndent(object):
         global NEW_HOST
         NEW_HOST = 'another01.' + multihost.master.domain.realm
         lib.add_user(multihost, TUSER)
-        new_repo_file = "[extra-repo]\n" + \
-            "name=pavelextra\n" + \
-            "baseurl=" + EXTRAREPO + "\n" + \
-            "gpgcheck=0\n" + \
-            "enabled=1\n"
-        multihost.master.run_command(['touch', REPOFILE])
-        multihost.master.transport.put_file_contents(
-            REPOFILE, new_repo_file)
-        check_rpm(multihost.master, ['oathtool'])
 
     def test001(self, multihost):
         """

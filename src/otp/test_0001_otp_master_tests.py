@@ -5,6 +5,7 @@ from ipa_pytests.shared.utils import (kinit_as_user, get_base_dn)
 from ipa_pytests.shared.user_utils import del_ipa_user
 from .lib import (add_user, mod_otp_user, add_otptoken,
                   delete_otptoken)
+from ipa_pytests.shared.rpm_utils import check_rpm
 import pytest
 import otp_lib as lib
 import time
@@ -20,6 +21,18 @@ class TestOTPfunction(object):
         # Common username and password for required testcases
         multihost.testuser = "mytestuser"
         multihost.token = "deftoken"
+        REPOFILE = '/etc/yum.repos.d/repo-extra.repo'
+        EXTRAREPO = "http://file.rdu.redhat.com/~spoore/idmqe-extras/7Server/x86_64/"
+        new_repo_file = "[extra-repo]\n" + \
+            "name=pavelextra\n" + \
+            "baseurl=" + EXTRAREPO + "\n" + \
+            "gpgcheck=0\n" + \
+            "enabled=1\n"
+        multihost.master.run_command(['touch', REPOFILE])
+        multihost.master.transport.put_file_contents(
+            REPOFILE, new_repo_file)
+        check_rpm(multihost.master, ['oathtool'])
+
 
     def test_otp_0001(self, multihost):
         """
