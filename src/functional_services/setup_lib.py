@@ -72,4 +72,4 @@ def _ipa_client(multihost):
     if multihost.client.hostname not in cmd.stdout_text:
         multihost.master.kinit_as_admin()
         cmd = multihost.master.run_command(['ipa', 'dnsrecord-add', revnet, revip,
-                                            '--ptr-rec=%s.' % multihost.client.hostname])
+                                            '--ptr-rec=%s.' % multihost.client.hostname], raiseonerr=False)
