@@ -75,8 +75,7 @@ class TestBugCheck(object):
 
     def test_0003(self, multihost):
         """ 
-        IDM-IPA-TC: client install : bz1215200 and bz1211708 ipa-client-install configures IPA server
-        as NTP source even when if IPA server has not ntpd configured
+        IDM-IPA-TC: client install : bz1215200 and bz1211708 ipa-client-install with IPA server with no ntp
         """
         uninstall_client(multihost.client)
         uninstall_server(multihost.master)
