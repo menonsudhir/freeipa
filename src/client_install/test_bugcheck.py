@@ -23,9 +23,7 @@ class TestBugCheck(object):
 
     def test_0001(self, multihost):
         """
-        Added Automation for: bz1209476
-        Bugzilla automation to check that ipa-client package is removed when dbus-python
-        is removed since ipa-client is dependent on dbus-python
+        IDM-IPA-TC: client install : bz1209476 ipa-client is removed when dbus-python removed
         """
         check_rpm(multihost.client, ['ipa-client'])
         dbus_remove_cmd = multihost.client.run_command([paths.YUM, 'remove', 'dbus-python', '-y'])
@@ -35,13 +33,13 @@ class TestBugCheck(object):
             multihost.client.qerun(['ipa-client-install'], exp_returncode=127)
             multihost.client.qerun([paths.RPM, '-q', 'ipa-client'], exp_returncode=1)
 
+        #installing subscription manager back
+        multihost.client.run_command([paths.YUM, 'install', 'subscription-manager', '-y'])
+
     def test_0002(self, multihost):
-        """ Added automation for:bz1196656, bz1284025, bz1205160.
-        Bugzilla verification to enable debugging for spawned commands.
-        Also verifying whether sshd_config details get modified after client
-        install.
-        Also verifying that when backend doesn't start due to missing or
-        invalid keytab, it is captured inside sssd.log file."""
+        """ 
+        IDM-IPA-TC: client install : coverage for bz1196656 and bz1284025 and bz1205160
+        """
         sshd_conf = multihost.client.get_file_contents('/etc/ssh/sshd_config')
         sshd_conf += '\nMatch Address 10.65.207.112'
         multihost.client.put_file_contents('/etc/ssh/sshd_config', sshd_conf)
@@ -76,9 +74,10 @@ class TestBugCheck(object):
             pytest.xfail("IPA client is not installed, BZ1196656 FAILED")
 
     def test_0003(self, multihost):
-        """ Added automation for : bz1215200, bz1211708.
-        Bugzilla verifying ipa-client-install configures IPA server
-        as NTP source even when if IPA server has not ntpd configured."""
+        """ 
+        IDM-IPA-TC: client install : bz1215200 and bz1211708 ipa-client-install configures IPA server
+        as NTP source even when if IPA server has not ntpd configured
+        """
         uninstall_client(multihost.client)
         uninstall_server(multihost.master)
         '''Setup master with no NTP'''
@@ -110,9 +109,9 @@ class TestBugCheck(object):
                 pytest.xfail("IPA client is not installed, BZ1215200 and BZ1211708 FAILED")
 
     def test_0004(self, multihost):
-        """ Added automation for : bz1215197.
-        Bugzilla automation to verify ipa-client-install
-        does not ignores --ntp-server option during time sync"""
+        """ 
+        IDM-IPA-TC: client install : bz1215197 ipa-client-install does not ignores --ntp-server option during time sync
+        """
         uninstall_client(multihost.client)
         """Setup client with NTP"""
         cmd = multihost.client.run_command(['ipa-client-install',
@@ -133,8 +132,8 @@ class TestBugCheck(object):
             pytest.xfail("NTP server details not found, BZ1215197 FAILED")
 
     def test_0005(self, multihost):
-        """Added automation for : bz1337484.
-        Bugzilla automation to verify ipa-client-install handles EOF
+        """
+        IDM-IPA-TC: client install : bz1337484 ipa-client-install handles EOF
         """
         check_rpm(multihost.client, ['ipa-client'])
         """Run ipa-client-install command with stdin as some text
