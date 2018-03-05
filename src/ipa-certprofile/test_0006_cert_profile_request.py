@@ -568,7 +568,7 @@ class TestCertProfileRequest(object):
                                exp_returncode=0)
         multihost.master.qerun(['ipa', 'caacl-del', cert_acl])
 
-    def test_bz1364197_request_svc_cert_as_svc(self, multihost):
+    def test_0028_bz1364197_request_svc_cert_as_svc(self, multihost):
         """
         :Title: IPA-IDM-TC: Certificate Profiles: Request service certificate as service
 
