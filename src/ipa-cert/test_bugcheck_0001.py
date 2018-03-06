@@ -33,9 +33,7 @@ class TestBugCheck(object):
 
     def test_0001_bz1254641(self, multihost):
         """
-        Test to verify bugzilla 1254641 - Remove CSR allowed-extensions restriction
-        :param multihost:
-        :return:
+        IDM-IPA-TC : ipa-cert : Test to verify bugzilla 1254641 - Remove CSR allowed-extensions restriction
         """
         try:
             multihost.master.kinit_as_admin()
@@ -64,7 +62,7 @@ class TestBugCheck(object):
 
     def test_0002_bz1351593(self, multihost):
         """
-        IDM-IPA-TC: Custom permission for insufficient privileges check in cert revoke
+        IDM-IPA-TC: ipa-cert : Custom permission for insufficient privileges check in cert revoke
         """
         test_host = 'bz1351593.' + multihost.master.domain.name
         user = "retriever"
@@ -126,9 +124,9 @@ class TestBugCheck(object):
         multihost.master.qerun(['ipa', 'role-del', 'ITretrievers'])
         multihost.master.qerun(['ipa', 'host-del', test_host])
 
-    def test_0002_bz1366982(self, multihost):
+    def test_0003_bz1366982(self, multihost):
         """
-        @Title: IDM-IPA-TC: Certifcates: User with retrieve perm cannot revoke
+        IDM-IPA-TC: ipa-cert : Certifcates: User with retrieve perm cannot revoke
         """
         user = 'retrieve_cert'
         password = 'Secret123'
