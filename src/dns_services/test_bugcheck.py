@@ -34,7 +34,7 @@ class TestBugCheck(object):
             print("\n IPA server package found on MASTER, running tests")
 
     def test_0001_ipaverify_1207539(self, multihost):
-        '''Adding TLS server certificate or public key
+        '''IDM-IPA-TC: dns-services: Adding TLS server certificate or public key
         with the domain name for TLSA certificate association.'''
         multihost.master.kinit_as_admin()
         tlsa = "0 0 1 d2abde240d7cd3ee6b4b28c54df034b97983" \
@@ -59,7 +59,7 @@ class TestBugCheck(object):
                                exp_output=out)
 
     def test_0002_ipaverify_1211608_and_1207541(self, multihost):
-        ''' Verification for bugzilla 1211608 and 1207541'''
+        '''IDM-IPA-TC: dns-services: Verification for bugzilla 1211608 and 1207541'''
         multihost.master.kinit_as_admin()
         cmdstr = 'ipa dnszone-mod testrelm.test ' \
                  '--update-policy \"grant * wildcard *;\"'
@@ -91,7 +91,7 @@ class TestBugCheck(object):
 
     def test_0003_bz1139776(self, multihost):
         """
-        Verify if LDAP MODRDN rename is supported
+        IDM-IPA-TC: dns-services: Verify if LDAP MODRDN rename is supported
         """
         master1 = multihost.master
         master1.kinit_as_admin()
@@ -126,9 +126,7 @@ class TestBugCheck(object):
 
     def test_0004_bz1184065(self, multihost):
         """
-        Verification of bz1184065 - PTR record synchronization for A/AAAA record tuple can fail mysteriously
-        :param multihost:
-        :return:None
+        IDM-IPA-TC: dns-services: Verification of bz1184065 - PTR record synchronization for A/AAAA record tuple can fail mysteriously
         """
         uninstall_server(multihost.master)
         setup_master(multihost.master, setup_reverse=False)
