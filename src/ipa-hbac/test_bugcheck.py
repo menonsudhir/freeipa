@@ -28,9 +28,7 @@ class TestBugCheck(object):
 
     def test_0001_bz1243261(self, multihost):
         """
-        Test to check Bug 1243261 - non-admin users cannot search hbac rules
-        :param multihost:
-        :return:
+        IDM-IPA-TC: hbac : Test to check Bug 1243261 - non-admin users cannot search hbac rules
         """
 
         add_ipa_user(multihost.master, fakeuser, fakepassword)
