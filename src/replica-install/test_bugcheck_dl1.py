@@ -36,7 +36,7 @@ class TestBugCheck(object):
 
     def test_0001_bz1283890(self, multihost):
         """
-        Testcase to validate IPA replica install parameters
+        IDM-IPA-TC : Replica-Install : validate IPA replica install parameter : --forwarder
         """
         exp_output = "ipa-replica-install: error: option --forwarder:"
         multihost.replica.qerun(['ipa-replica-install', '--forwarder=a.c.b.d'],
@@ -45,7 +45,7 @@ class TestBugCheck(object):
 
     def test_0002_bz1283890(self, multihost):
         """
-        Testcase to validate IPA replica install parameters
+        IDM-IPA-TC : Replica-Install : validate IPA replica install parameters
         """
         cmd = "ipa-replica-install"
         string = "Configuration of client side components failed"
@@ -56,10 +56,13 @@ class TestBugCheck(object):
            print "bz1283890 failed"
 
     def test_0003_bz_1242036(self, multihost):
-        """Master is configured using '--setup-dns'
-        *.gpg file is installed on replica without using '--setup-dns'
-        both master and replica give same output for 'dnsrecord-find testrelm.test'
-        in order to verify that SRV DNS records for the replica were added correctly."""
+        """
+        IDM-IPA-TC : Replica-Install : Verify SRV DNS records for the replica added correctly
+        """
+        # Master is configured using '--setup-dns'
+        # *.gpg file is installed on replica without using '--setup-dns'
+        # both master and replica give same output for 'dnsrecord-find testrelm.test'
+        # in order to verify that SRV DNS records for the replica were added correctly.
         uninstall_server(multihost.replica)
         server_del(multihost.master,
                    hostname=multihost.replica.hostname,

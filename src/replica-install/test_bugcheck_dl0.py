@@ -33,10 +33,13 @@ class TestBugCheck(object):
         check_rpm(multihost.replica, rpm_list)
 
     def test_0001_bz_1492560(self, multihost):
-        """Master is configured using --domain-level=0
-         replica is installed using --setup-kra
-         in order to verify ipa-replica is installed successfully
-         using setup-kra at domain level 0 """
+        """
+        IDM-IPA-TC : Replica-Install : Verify replica install with setup-kra at doamin 0
+        """
+        # Master is configured using --domain-level=0
+        # replica is installed using --setup-kra
+        # in order to verify ipa-replica is installed successfully
+        # using setup-kra at domain level 0
         setup_replica(multihost.replica, multihost.master,
                       setup_dns=True,
                       setup_ca=True, setup_kra=True)
