@@ -27,12 +27,9 @@ class TestBugCheck(object):
 
     def test_0001_bz1232950(self, multihost):
         """
-        Test to check Bug 1232950 - [IPA/IdM] sudoOrder not honored as expected
-        :param multihost:
-        :return:
-        requirement:no sudorules should be present when the function is called
+        IDM-IPA-TC : Sudo : Test to check Bug 1232950 - [IPA/IdM] sudoOrder not honored as expected
         """
-
+        #requirement:no sudorules should be present when the function is called
         multihost.master.kinit_as_admin()
         sudorule_add(multihost.master, low_prior_rule, usercat='all', hostcat='all', cmdcat='all',
                      runasusercat='all', runasgroupcat='all', order=low_priority_order)
