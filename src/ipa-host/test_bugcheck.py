@@ -22,7 +22,7 @@ class TestBugChecks(object):
         print ("MASTER: ", multihost.master.hostname)
 
     def test_0001_bz_1248524(self, multihost):
-        """Verification for #1248524 - User can't find any hosts using 'ipa host-find $HOSTNAME' """
+        """IDM-IPA-TC : host-cli : Verification for #1248524 - User can't find any hosts using 'ipa host-find $HOSTNAME' """
         try:
             # Finding a host as admin
             multihost.master.kinit_as_admin()
