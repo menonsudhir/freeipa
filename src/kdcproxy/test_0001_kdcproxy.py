@@ -43,10 +43,11 @@ class TestKdcproxy(object):
 
     def test_0001_kdcproxy(self, multihost):
         """
-        test_0001_kdcproxy
-        IPA-TC: KDCProxy: Modify client krb5.conf for KDC Proxy,
-                          Run kinit / kvno / kpasswd
+        IDM-IPA-TC: KDCProxy: verify kinit, kvno success on client having KDC Proxy configured on server
         """
+        # Modify client krb5.conf for KDC Proxy,
+        # Run kinit / kvno / kpasswd
+
         # stop Firewalld on both server
         stop_firewalld(multihost.master)
         stop_firewalld(multihost.replica)
@@ -79,10 +80,12 @@ class TestKdcproxy(object):
     def test_0002_kdcproxy_server_disable(self, multihost):
         """
         test_0002_kdcproxy_server_disable
-        IPA-TC: KDCProxy: Server disable KDC Proxy
-                          Modify client krb5.conf for KDC Proxy
-                          Run kinit / kvno / kpasswd
+        IDM-IPA-TC: KDCProxy: verify kinit, kvno fails when kdcproxy disabled on server
         """
+        # Server disable KDC Proxy Modify client krb5.conf
+        # for KDC Proxy
+        # Run kinit / kvno / kpasswd
+
         # 0. Pre-requisite
         stop_firewalld(multihost.master)
         stop_firewalld(multihost.replica)
@@ -133,11 +136,12 @@ class TestKdcproxy(object):
 
     def test_0003_kdcproxy_firewall_enable(self, multihost):
         """
-        test_0003_kdcproxy_firewall_enable
-        IPA-TC: KDCProxy: Server enable firewalld
-                          Modify client krb5.conf for KDC Proxy
-                          Run kinit / kvno / kpasswd
+        IDM-IPA-TC: KDCProxy: verify kinit fails when firewalld active on server
         """
+        # Server enable firewalld
+        # Modify client krb5.conf for KDC Proxy
+        # Run kinit / kvno / kpasswd
+
         # 1. Enable Firewalld
         start_firewalld(multihost.master)
         start_firewalld(multihost.replica)
@@ -167,11 +171,12 @@ class TestKdcproxy(object):
         stop_firewalld(multihost.replica)
 
     def test_0004_kdcproxy_multiple_replica(self, multihost):
-        '''
-        test_0004_kdcproxy_multiple_replica
-        IPA-TC: KDCProxy: Modify client krb5.conf with multiple kdc
-                          Run kinit / kvno / kpasswd
-        '''
+        """
+        IDM-IPA-TC: verify kinit success with multiple KDC Proxy configured
+        """
+        # Modify client krb5.conf with multiple kdc
+        # Run kinit / kvno / kpasswd
+
         # 0. Pre-requisite
         stop_firewalld(multihost.master)
         stop_firewalld(multihost.replica)
@@ -199,12 +204,13 @@ class TestKdcproxy(object):
                            multihost.repasswd)
 
     def test_0005_kdcproxy_firewalld_multiple_replica(self, multihost):
-        '''
-        test_0005_kdcproxy_firewalld_multiple_replica
-        IPA-TC: KDCProxy: Start firewalld on master,
-                          Modify client krb5.conf with multiple kdc
-                          Run kinit / kvno / kpasswd
-        '''
+        """
+        IDM-IPA-TC: KDCProxy: verify kinit, on client success, firewall active on master, mulitple KDC Proxy configured
+        """
+        # Start firewalld on master,
+        # Modify client krb5.conf with multiple kdc
+        # Run kinit / kvno / kpasswd
+
         # 0. Pre-requisite
         stop_firewalld(multihost.master)
         stop_firewalld(multihost.replica)
@@ -244,11 +250,12 @@ class TestKdcproxy(object):
         stop_firewalld(multihost.master)
 
     def test_0006_kdcproxy_no_http_anchors(self, multihost):
-        '''
-        test_0006_kdcproxy_no_http_anchors
-        IPA-TC: KDCProxy: Modify client krb5.conf with no http_anchors
-                          Run kinit/kvno/kpasswd
-        '''
+        """
+        IDM-IPA-TC: KDCProxy: verify kinit success with no http_anchors
+        """
+        # Modify client krb5.conf with no http_anchor
+        # Run kinit/kvno/kpasswd
+
         # 0. Pre-requisite
         stop_firewalld(multihost.master)
         stop_firewalld(multihost.replica)
@@ -278,12 +285,13 @@ class TestKdcproxy(object):
                            multihost.repasswd)
 
     def test_0007_kdcproxy_no_http_anchors(self, multihost):
-        '''
-        test_0007_kdcproxy_no_http_anchors
-        IPA-TC: KDCProxy: Modify client krb5.conf with no http_anchors
-                          And not in system store
-                          Run kinit/kvno/kpasswd
-        '''
+        """
+        IDM-IPA-TC: KDCProxy: kinit fails when http_anchors removed from system restore
+        """
+        # Modify client krb5.conf with no http_anchors
+        # And not in system store
+        # Run kinit/kvno/kpasswd
+
         # 0. Pre-requisite
         stop_firewalld(multihost.master)
         stop_firewalld(multihost.replica)
@@ -318,12 +326,13 @@ class TestKdcproxy(object):
                                exp_returncode=1)
 
     def test_0008_kdcproxy_correct_http_anchor(self, multihost):
-        '''
-        test_0008_kdcproxy_correct_http_anchor
-        IPA-TC: KDCProxy: Modify client krb5.conf with http_anchors points
-                          to PEM file, trust anchor in the system store
-                          Run kinit/kvno/kpasswd
-        '''
+        """
+        IDM-IPA-TC: KDCProxy: verify kinit success when http_anchor points to PEM file and trust anchor in the system store
+        """
+        # Modify client krb5.conf with http_anchors points
+        # to PEM file, trust anchor in the system store
+        # Run kinit/kvno/kpasswd
+
         # 0. Pre-requisite
         stop_firewalld(multihost.master)
         stop_firewalld(multihost.replica)
@@ -351,13 +360,14 @@ class TestKdcproxy(object):
                            multihost.repasswd)
 
     def test_0009_kdcproxy_nonexistent_http_anchor(self, multihost):
-        '''
-        test_0009_kdcproxy_nonexistent_http_anchor
-        IPA-TC: KDCProxy: Modify client krb5.conf with http_anchors points
-                          to non-existent PEM file, no trust anchor in the
-                          system store
-                          Run kinit/kvno/kpasswd
-        '''
+        """
+        IDM-IPA-TC: KDCProxy: verify kinit fails when http_anchors points to non-existent PEM with no trust anchor
+        """
+        # Modify client krb5.conf with http_anchors points
+        # to non-existent PEM file, no trust anchor in the
+        # system store
+        # Run kinit/kvno/kpasswd
+
         # 0. Pre-requisite
         stop_firewalld(multihost.master)
         stop_firewalld(multihost.replica)
@@ -388,12 +398,13 @@ class TestKdcproxy(object):
 
     def test_0010_kdcproxy_incorrect_http_anchors(self, multihost):
         """
-        test_0010_kdcproxy_incorrect_http_anchors
-        IPA-TC: KDCProxy: Modify client krb5.conf with http_anchors points
-                          to incorrect PEM file, no trust anchor in the
-                          system store
-                          Run kinit/kvno/kpasswd
+        IDM-IPA-TC: KDCProxy: verify kinit fails when http_anchors points to incorrect PEM, no trust anchor
         """
+        # Modify client krb5.conf with http_anchors points
+        # to incorrect PEM file, no trust anchor in the
+        # system store Run
+        # kinit/kvno/kpasswd
+
         # 0. Pre-requisite
         stop_firewalld(multihost.replica)
         stop_firewalld(multihost.master)
@@ -431,12 +442,13 @@ class TestKdcproxy(object):
 
     def test_0011_kdcproxy_firewall_enable_with_https_unblock(self, multihost):
         """
-        test_0011_kdcproxy_firewall_enable_with_https_unblock
-        IPA-TC: KDCProxy: Server enable firewalld
-                          with https and http unblocked
-                          Modify client krb5.conf for KDC Proxy
-                          Run kinit / kvno / kpasswd
+        IDM-IPA-TC: KDCProxy: verify kinit fails when firewalld active and https and http unblocked on server
         """
+        # Server enable firewalld
+        # with https and http unblocked
+        # Modify client krb5.conf for KDC Proxy
+        # Run kinit / kvno / kpasswd
+
         stop_firewalld(multihost.replica)
         stop_firewalld(multihost.master)
         # 1. Revert client krb5.conf
