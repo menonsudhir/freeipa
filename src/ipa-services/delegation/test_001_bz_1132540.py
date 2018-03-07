@@ -50,7 +50,7 @@ class Test_bz_1132540(object):
 
     def test_0001_negative_expose_service_delegation(self, multihost):
         """
-        Check if IPA cli exposes service delegation rules negative
+        IDM-IPA-TC : Services : Check if IPA cli exposes service delegation rules negative
         """
         print multihost.tst_srv1_name
         multihost.master.qerun(['kdestroy', '-A'], exp_returncode=0)
@@ -65,7 +65,7 @@ class Test_bz_1132540(object):
 
     def test_0002_positive_expose_service_delegation(self, multihost):
         """
-        Check if IPA cli exposes service delegation rules positive
+        IDM-IPA-TC : Services : Check if IPA cli exposes service delegation rules positive
         """
         multihost.master.kinit_as_admin()
         multihost.master.qerun(['ipa', 'servicedelegationrule-add',

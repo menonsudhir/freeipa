@@ -21,7 +21,7 @@ class Test_bz_1204504(object):
 
     def test_0001_ipaserviceaddclient(self, multihost):
         """
-        IDM-IPA-TC : ipa service-add : ipa service-add adds the corresponding service for client
+        IDM-IPA-TC : Services : ipa service-add adds the corresponding service for client
         """
         multihost.client.run_command(['kdestroy', '-A'])
         multihost.client.run_command(['kinit', '-kt', '/etc/krb5.keytab'])
@@ -33,7 +33,7 @@ class Test_bz_1204504(object):
 
     def test_002_ipaserviceaddmaster(self, multihost):
         """
-        IDM-IPA-TC : ipa service-add : ipa service-add adds the corresponding service for master
+        IDM-IPA-TC : Services : ipa service-add adds the corresponding service for master
         """
         master_name = multihost.master.hostname
         multihost.client.run_command(['kinit', '-kt', '/etc/krb5.keytab'])
