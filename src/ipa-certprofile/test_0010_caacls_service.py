@@ -201,7 +201,7 @@ class TestCaAclService(object):
         data['op'] = 'del'
         caacl_run(data)
 
-    def test_bz1366626_caacls_fail_to_add_nonexistent_service(self, multihost):
+    def test_0063_test_bz1366626_caacls_fail_to_add_nonexistent_service(self, multihost):
         """
         :Title: IDM-IPA-TC: Certificate Profiles CA ACLs: Fail to add non-existent service to acl
 
