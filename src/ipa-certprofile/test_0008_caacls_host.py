@@ -220,7 +220,7 @@ class TestCaAclHost(object):
             multihost.master.qerun(['ipa', 'hostgroup-del', hostgroup],
                                    exp_returncode=0)
 
-    def test_0039_negative_caacls_host_create(self, multihost):
+    def test_0064_negative_caacls_host_create(self, multihost):
         """
 
         :Title: IDM-IPA-TC: Certificate Profiles CA ACLs:  Fail to add host to non-existent CA ACL
