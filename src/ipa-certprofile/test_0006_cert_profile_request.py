@@ -570,7 +570,7 @@ class TestCertProfileRequest(object):
 
     def test_0062_bz1364197_request_svc_cert_as_svc(self, multihost):
         """
-        :Title: IPA-IDM-TC: Certificate Profiles: Request service certificate as service
+        :Title: IDM-IPA-TC: Certificate Profiles: Request service certificate as service
 
         :Requirement: IDM-IPA-REQ : Cert Profile
 
