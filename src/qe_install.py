@@ -55,11 +55,8 @@ def set_etc_hosts(host, dest_host=None):
     """ Set /etc/hosts entry for host.ip host.hostname """
     etc_hosts = host.get_file_contents('/etc/hosts')
     host.put_file_contents('/etc/hosts.set_etc_hosts.backup', etc_hosts)
-    for remove in [host.ip, host.hostname]:
-        etc_hosts = re.sub(r'^.*\b%s\n.*$' % remove,
-                           '',
-                           etc_hosts,
-                           flags=re.MULTILINE)
+    for remove in [host.ip, host.hostname, host.external_hostname]:
+        etc_hosts = re.sub(r'^.*%s.*\n' % remove, '', etc_hosts, flags=re.MULTILINE)
     etc_hosts += '\n%s %s\n' % (host.ip, host.hostname)
     host.put_file_contents('/etc/hosts', etc_hosts)
     if dest_host:
