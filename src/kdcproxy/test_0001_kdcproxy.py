@@ -79,7 +79,6 @@ class TestKdcproxy(object):
 
     def test_0002_kdcproxy_server_disable(self, multihost):
         """
-        test_0002_kdcproxy_server_disable
         IDM-IPA-TC: KDCProxy: verify kinit, kvno fails when kdcproxy disabled on server
         """
         # Server disable KDC Proxy Modify client krb5.conf
