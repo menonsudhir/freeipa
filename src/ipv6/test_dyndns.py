@@ -90,7 +90,7 @@ class TestSSSDTests(object):
             break
 
     def test_sssd_0001(self, multihost):
-        """ Prepare env """
+        """ IDM-IPA-TC: IPV6: Prepare env """
         print "Install ipa-server master"
 
         params = [
@@ -200,12 +200,12 @@ class TestSSSDTests(object):
         print cmd7.stdout_text
 
     def test_sssd_0002(self, multihost):
+        """ IDM-IPA-TC: IPV6: add ipv6 to monitor """
         uninstall_client(multihost.client)
         uninstall_server(multihost.replica)
         cmdun1 = multihost.master.run_command(['ipa-server-install', '--uninstall', '-U',
                                                '--ignore-last-of-role'], raiseonerr=False)
 
-        """ add ipv6 to monitor """
         get_dev_names = check_output(['ls', '/sys/class/net'])
         dev_names = get_dev_names.split('\n')
         for dev_name in dev_names[:len(dev_names)-1]:
@@ -326,11 +326,11 @@ class TestSSSDTests(object):
         assert dns_result == 1
 
     def test_sssd_0003(self, multihost):
+        """ IDM-IPA-TC: IPV6: Test sssd dynamic update with 2 ipv6 addr """
         uninstall_client(multihost.client)
         uninstall_server(multihost.replica)
         cmdun2 = multihost.master.run_command(['ipa-server-install', '--uninstall', '-U',
                                                '--ignore-last-of-role'], raiseonerr=False)
-        """ Test sssd dynamic update with 2 ipv6 addr """
         file_hosts_content = master_ip_six + ' ' + \
             multihost.master.hostname + '\n' + \
             replica_ip_six + ' ' + \
