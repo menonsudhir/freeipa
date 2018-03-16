@@ -23,9 +23,7 @@ class TestRoleAddPositive(object):
 
     def test_0001_add_role(self, multihost):
         """
-        Test to add role
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add role
         """
         role_name = "Add Admin"
         role_desc = "--desc=Add Admin"
@@ -34,9 +32,7 @@ class TestRoleAddPositive(object):
 
     def test_0002_raw(self, multihost):
         """
-        Test to add role with option raw
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add role with option raw
         """
         role_name = "Hostgroup Admin"
         role_desc = "--desc=Hostgroup Admin"
@@ -55,9 +51,7 @@ class TestRoleAddPositive(object):
 
     def test_0003_all(self, multihost):
         """
-        Test to add  role with option all
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add  role with option all
         """
         role_name = "Netgroup Admin"
         role_desc = "--desc=Netgroup Admin"
@@ -76,9 +70,7 @@ class TestRoleAddPositive(object):
 
     def test_0004_comma(self, multihost):
         """
-        Test to add role with comma
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add role with comma
         """
         role_name = "Hostgroup, Netgroup - Admin"
         role_desc = "--desc=Hostgroup, Netgroup - Admin"
@@ -87,9 +79,7 @@ class TestRoleAddPositive(object):
 
     def test_0005_setattr(self, multihost):
         """
-        Test to add role with setattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add role with setattr
         """
         role_name = "Hostgroup Admin with see"
         role_desc = "--desc=Hostgroup Admin with seeAlso"
@@ -101,9 +91,7 @@ class TestRoleAddPositive(object):
 
     def test_0006_addattr(self, multihost):
         """
-        Test to add role with addattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add role with addattr
         """
         role_name = "Hostgroup Admin with multiple seeAlso"
         role_desc = "--desc=Hostgroup Admin with multiple seeAlso"

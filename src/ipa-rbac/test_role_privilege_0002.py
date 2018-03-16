@@ -24,9 +24,7 @@ class TestRolePrivilegeAddNegative(object):
 
     def test_0001_duplicate_privilege(self, multihost):
         """
-        Negative test to add duplicate privilege to role
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add duplicate privilege to role
         """
         privilege_name = "user administrators"
         privilege_list = "--privileges="+privilege_name
@@ -44,9 +42,7 @@ class TestRolePrivilegeAddNegative(object):
 
     def test_0002_missing_privilege(self, multihost):
         """
-        Negative test to add missing privilege to role
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add missing privilege to role
         """
         privilege_name = "nonexistent"
         privilege_list = "--privileges="+privilege_name

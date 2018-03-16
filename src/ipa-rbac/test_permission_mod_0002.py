@@ -15,9 +15,7 @@ class TestPermissionModNegative(object):
     """
     def test_0001_mod_inv_right(self, multihost):
         """
-        Function to modify permission invalid with option right
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to modify permission invalid with option right
         """
         permission_name = "PermModNeg1"
         multihost.master.kinit_as_admin()
@@ -36,9 +34,7 @@ class TestPermissionModNegative(object):
 
     def test_0002_mod_inv_type(self, multihost):
         """
-        Function to modify permission invalid with option type
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to modify permission invalid with option type
         """
         permission_name = "PermModNeg2"
         multihost.master.kinit_as_admin()

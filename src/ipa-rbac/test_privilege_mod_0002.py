@@ -25,9 +25,7 @@ class TestPrivilegeModNegative(object):
 
     def test_0001_multiple_addattr(self, multihost):
         """
-        Test to mod privilege to addattr multiple attr when only one one value is allowed
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod privilege to addattr multiple attr when only one one value is allowed
         """
         attr = "--addattr"
         add_description = "description=AnotherDescriptionNotAllowed"
@@ -40,9 +38,7 @@ class TestPrivilegeModNegative(object):
 
     def test_0002_addattr_invalid_syn(self, multihost):
         """
-        Test to mod privilege to addattr with invalid syntax
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod privilege to addattr with invalid syntax
         """
         attr = "--addattr"
         add_owner = "owner=xyz"
@@ -55,9 +51,7 @@ class TestPrivilegeModNegative(object):
 
     def test_0004_blank_rename(self, multihost):
         """
-        Test to mod privilege to use blank rename
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod privilege to use blank rename
         """
         attr = "--rename="
         expmsg = "ipa: ERROR: invalid 'rename': can't be empty"
@@ -70,9 +64,7 @@ class TestPrivilegeModNegative(object):
 
     def test_0005_same_rename(self, multihost):
         """
-        Test to mod privilege to rename to same name
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod privilege to rename to same name
         """
         attr = "--rename"
         expmsg = "ipa: ERROR: no modifications to be performed"

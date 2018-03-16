@@ -42,9 +42,7 @@ class TestPrivilegeAddPermissionNegative(object):
 
     def test_0001_nonexistent_permission_add(self, multihost):
         """
-        Test to add nonexistent permission to privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add nonexistent permission to privilege
         """
         privilege_name = "Add User"
         permission_name = "non-existent"
@@ -58,9 +56,7 @@ class TestPrivilegeAddPermissionNegative(object):
 
     def test_0002_duplicate_permission_to_privilege(self, multihost):
         """
-        Test to add duplicate permission to privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add duplicate permission to privilege
         """
         privilege_name = "Add User"
         permission_name = "Add HBAC rule"
@@ -74,9 +70,7 @@ class TestPrivilegeAddPermissionNegative(object):
 
     def test_0003_add_permission_nonexistent_privilege(self, multihost):
         """
-        Test to add permission to nonexistent privilege
-        :param multihosst:
-        :return:
+        IDM-IPA-TC : rbac : Test to add permission to nonexistent privilege
         """
         permission_name = "Add HBAC rule"
         privilege_name = "non-existent privilege"

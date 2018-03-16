@@ -56,7 +56,7 @@ class TestFunctional1(object):
                          '--all'])
 
     def test0001(self, multihost):
-        """ user added to helpdesk role cannot reset admins password"""
+        """IDM-IPA-TC : rbac : user added to helpdesk role cannot reset admins password"""
         multihost.master.kinit_as_user(self.login1,
                                        self.password1)
         new_pwd = "Secret456"
@@ -75,7 +75,7 @@ class TestFunctional1(object):
     #  but cannot add or delete this user
 
     def test0002(self, multihost):
-        """user added to helpdesk role cannot add new user"""
+        """IDM-IPA-TC : rbac : user added to helpdesk role cannot add new user"""
         login1_2 = "two"
         firstname1_2 = "two"
         lastname1_2 = "two"
@@ -99,7 +99,7 @@ class TestFunctional1(object):
         del_ipa_user(multihost.master, login1_2)
 
     def test0003(self, multihost):
-        """Helpdesk admin should be able to change a users lastname, bz817915"""
+        """IDM-IPA-TC : rbac : Helpdesk admin should be able to change a users lastname, bz817915"""
         login1_3 = "three"
         firstname1_3 = "three"
         lastname1_3 = "three"
@@ -123,7 +123,7 @@ class TestFunctional1(object):
         del_ipa_user(multihost.master, login1_3)
 
     def test0004(self, multihost):
-        """helpdesk admin should be able to change password , bz773759"""
+        """IDM-IPA-TC : rbac : helpdesk admin should be able to change password , bz773759"""
         multihost.master.kinit_as_user(self.login1, self.password1)
         login1_4 = "four"
         firstname1_4 = "four"

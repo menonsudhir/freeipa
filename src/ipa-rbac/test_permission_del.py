@@ -15,9 +15,7 @@ class TestPermissionDelete(object):
 
     def test_0001_del_continue(self, multihost):
         """
-        Function to delete permission with option continue
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to delete permission with option continue
         """
         permission_name = "fake_permission"
         exp_output = "Failed to remove: " + permission_name

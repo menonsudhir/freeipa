@@ -25,9 +25,7 @@ class TestRoleAddMemberNegative(object):
 
     def test_0001_nonexistent_user(self, multihost):
         """
-        Negative test to add nonexistent user member
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add nonexistent user member
         """
         login = "nonexistentuser"
         role_type = "--users="
@@ -42,9 +40,7 @@ class TestRoleAddMemberNegative(object):
 
     def test_0002_missing_user(self, multihost):
         """
-        Negative test to add missing user member
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add missing user member
         """
         login = ""
         role_type = "--users="
@@ -58,9 +54,7 @@ class TestRoleAddMemberNegative(object):
 
     def test_0003_nonexistent_group(self, multihost):
         """
-        Negative test to add nonexistent group member
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add nonexistent group member
         """
         group_name = "nonexistentgroup"
         role_type = "--groups="
@@ -75,9 +69,7 @@ class TestRoleAddMemberNegative(object):
 
     def test_0004_duplicate_group(self, multihost):
         """
-        Negative test to add duplicate group member
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add duplicate group member
         """
         group_name = "testgroupadmin"
         role_type = "--groups="
@@ -99,9 +91,7 @@ class TestRoleAddMemberNegative(object):
 
     def test_0005_nonexistent_host(self, multihost):
         """
-        Negative test to add nonexistent host member"
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add nonexistent host member"
         """
         host_name = "nonexistenthost."+multihost.master.domain.name
         role_type = "--hosts="
@@ -116,9 +106,7 @@ class TestRoleAddMemberNegative(object):
 
     def test_0006_nonexistent_hostgroup(self, multihost):
         """
-        Negative test to add nonexistent hostgroup member
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add nonexistent hostgroup member
         """
         hostgroup_name = "nonexistenthostgroup"
         role_type = "--hostgroups="

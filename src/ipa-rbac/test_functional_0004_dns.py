@@ -77,7 +77,7 @@ class TestFunctionalDNS(object):
         multihost.master.kinit_as_user(self.login4, self.password4)
 
     def test0001(self, multihost):
-        """ Can list zone managed by user"""
+        """IDM-IPA-TC : rbac : Can list zone managed by user"""
         multihost.master.kinit_as_user(self.login4, self.password4)
         check4_1 = multihost.master.run_command([IPA, 'dnszone-show',
                                                  "one." + multihost.master.domain.name,
@@ -89,7 +89,7 @@ class TestFunctionalDNS(object):
             print (check4_1.stdout_text)
 
     def test0002(self, multihost):
-        """Cannot list zone not managed by user"""
+        """IDM-IPA-TC : rbac : Cannot list zone not managed by user"""
         check4_2 = multihost.master.run_command([IPA, 'dnszone-show',
                                                  "two."+multihost.master.domain.name,
                                                  '--all'],
@@ -102,7 +102,7 @@ class TestFunctionalDNS(object):
             pytest.fail(check4_2.stderr_text)
 
     def test0003(self, multihost):
-        """Cannot add permission for zone not managed by user"""
+        """IDM-IPA-TC : rbac : Cannot add permission for zone not managed by user"""
         check4_3 = multihost.master.run_command([IPA, 'dnszone-add-permission',
                                                  'two.'+multihost.master.domain.name],
                                                 raiseonerr=False)
@@ -114,7 +114,7 @@ class TestFunctionalDNS(object):
             pytest.fail(check4_3.stderr_text)
 
     def test0004(self, multihost):
-        """Cannot add a new zone"""
+        """IDM-IPA-TC : rbac : Cannot add a new zone"""
         test_zone = "testzone." + multihost.master.domain.name
         check4_4 = multihost.master.run_command([IPA, 'dnszone-add', test_zone,
                                                  '--name-server='+multihost.master.hostname+'.',
@@ -127,7 +127,7 @@ class TestFunctionalDNS(object):
             pytest.fail(check4_4.stderr_text)
 
     def test0005(self, multihost):
-        """Cannot delete zone managed by user"""
+        """IDM-IPA-TC : rbac : Cannot delete zone managed by user"""
         check4_5 = multihost.master.run_command([IPA, 'dnszone-del',
                                                  'one.'+multihost.master.domain.name],
                                                 raiseonerr=False)
@@ -140,7 +140,7 @@ class TestFunctionalDNS(object):
             pytest.fail(check4_5.stderr_text)
 
     def test0006(self, multihost):
-        """Cannot edit managedBy attr for zone managed by user"""
+        """IDM-IPA-TC : rbac : Cannot edit managedBy attr for zone managed by user"""
         c = multihost.master.run_command([IPA, 'dnszone-mod',
                                           'one.'+multihost.master.domain.name,
                                           '--setattr=managedBy=uid=dnsuser2,cn=users,cn=accounts,'
@@ -152,7 +152,7 @@ class TestFunctionalDNS(object):
             pytest.fail(c.stdout_text)
 
     def test0007(self, multihost):
-        """"Can enable and disable zone managed by user"""
+        """"IDM-IPA-TC : rbac : Can enable and disable zone managed by user"""
         check4_7 = multihost.master.run_command([IPA, 'dnszone-disable',
                                                  'one.'+multihost.master.domain.name])
         check4_7a = multihost.master.run_command([IPA, 'dnszone-enable',
@@ -163,7 +163,7 @@ class TestFunctionalDNS(object):
             pytest.fail(check4_7.stderr_text+"\n"+check4_7a.stderr_text)
 
     def test0008(self, multihost):
-        """"Cannot enable and disable zone not managed by user"""
+        """"IDM-IPA-TC : rbac : Cannot enable and disable zone not managed by user"""
         check4_8 = multihost.master.run_command([IPA, 'dnszone-disable',
                                                  'two.'+multihost.master.domain.name],
                                                 raiseonerr=False)
@@ -184,7 +184,7 @@ class TestFunctionalDNS(object):
             pytest.fail(check4_8a.stderr_text)
 
     def test0009(self, multihost):
-        """Can read Global configuration but cannot modify it"""
+        """IDM-IPA-TC : rbac : Can read Global configuration but cannot modify it"""
         multihost.master.run_command([IPA, 'dnsconfig-show'])
         check4_9a = multihost.master.run_command([IPA, 'dnsconfig-mod',
                                                   '--allow-sync-ptr=TRUE'], raiseonerr=False)
@@ -206,7 +206,7 @@ class TestFunctionalDNS(object):
             pytest.fail(check4_9b.stderr_text)
 
     def test00010(self, multihost):
-        """Can add delete modify find DNS records"""
+        """IDM-IPA-TC : rbac : Can add delete modify find DNS records"""
         arecord_name = "ARecord"
         arecord = "--a-rec=1.1.1.1 --a-rec=2.2.2.2"
         arecord_ip2 = "2.2.2.2"
@@ -265,7 +265,7 @@ class TestFunctionalDNS(object):
             pytest.xfail(check4_10d.stderr_text)
 
     def test00011(self, multihost):
-        """Cannot remove permission to manage this zone"""
+        """IDM-IPA-TC : rbac : Cannot remove permission to manage this zone"""
         check4_11 = multihost.master.run_command([IPA,
                                                   'dnszone-remove-permission',
                                                   'one.'+multihost.master.domain.name],
@@ -281,7 +281,7 @@ class TestFunctionalDNS(object):
             pytest.fail(check4_11.stderr_text)
 
     def test00012(self, multihost):
-        """Verify can use dig to do DNS queries"""
+        """IDM-IPA-TC : rbac : Verify can use dig to do DNS queries"""
         # add a host with an ip
         multihost.master.kinit_as_admin()
         host1 = "hostfordnstest." + 'two.'+multihost.master.domain.name
@@ -305,7 +305,7 @@ class TestFunctionalDNS(object):
         multihost.master.kinit_as_user(self.login4, self.password4)
 
     def test00013(self, multihost):
-        """User with permission removed can no longer access the zone"""
+        """IDM-IPA-TC : rbac : User with permission removed can no longer access the zone"""
         multihost.master.kinit_as_admin()
         self.zone1 = 'one.'+multihost.master.domain.name+"."
         multihost.master.run_command([IPA, 'dnszone-remove-permission', self.zone1])

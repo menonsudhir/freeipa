@@ -24,9 +24,7 @@ class TestPrivilegeAddPositive(object):
 
     def test_0001_add_privilege(self, multihost):
         """
-        Test to add privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add privilege
         """
         privilege_name = "Add User"
         privilege_desc = "--desc=Add User"
@@ -35,9 +33,7 @@ class TestPrivilegeAddPositive(object):
 
     def test_0002_comma(self, multihost):
         """
-        Test to add privilege with comma
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add privilege with comma
         """
         privilege_name = "Add User, Group"
         privilege_desc = "--desc=Add User, Group"
@@ -46,9 +42,7 @@ class TestPrivilegeAddPositive(object):
 
     def test_0003_setattr(self, multihost):
         """
-        Test to add privilege with setattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add privilege with setattr
         """
         privilege_name = "Add User with owner"
         privilege_desc = "--desc=Add User with owner"
@@ -60,9 +54,7 @@ class TestPrivilegeAddPositive(object):
 
     def test_0004_addattr(self, multihost):
         """
-        Test to add privilege with addattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add privilege with addattr
         """
         privilege_name = "Add User with multiple owner"
         privilege_desc = "--desc=Add User with multiple owner"
@@ -74,9 +66,7 @@ class TestPrivilegeAddPositive(object):
 
     def test_0005_raw(self, multihost):
         """
-        Test to add privilege with option raw
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add privilege with option raw
         """
         privilege_name = "Modify User"
         privilege_desc = "--desc=Modify User"
@@ -95,9 +85,7 @@ class TestPrivilegeAddPositive(object):
 
     def test_0006_all(self, multihost):
         """
-        Test to add  privilege with option all
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add  privilege with option all
         """
         privilege_name = "Modify Groups"
         privilege_desc = "--desc=Modify Groups"
@@ -118,9 +106,7 @@ class TestPrivilegeAddPositive(object):
 
     def test_0007_blank_desc(self, multihost):
         """
-        Test to add privilege with blank desc
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add privilege with blank desc
         """
         privilege_name = "Add User with blank desc"
         privilege_desc = "--desc="

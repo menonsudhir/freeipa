@@ -15,9 +15,7 @@ class TestPermissionModPositive(object):
     """
     def test_0001_mod_type(self, multihost):
         """
-        Function to modify permission with option type
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to modify permission with option type
         """
         permission_name = "PermissionMod1"
         multihost.master.kinit_as_admin()
@@ -37,9 +35,7 @@ class TestPermissionModPositive(object):
 
     def test_0002_mod_rename(self, multihost):
         """
-        Function to modify permission with option rename
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to modify permission with option rename
         """
         permission_name = "PermissionMod2"
         multihost.master.kinit_as_admin()

@@ -39,9 +39,7 @@ class TestPrivilegeRemovePermissionPositive(object):
 
     def test_0001_multiple_permissions(self, multihost):
         """
-        Test remove multiple permissions to privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test remove multiple permissions to privilege
         """
         privilege_remove_permission(multihost.master, self.privilege_name,
                                     ['--permission='+self.permission_list[0],
@@ -53,9 +51,7 @@ class TestPrivilegeRemovePermissionPositive(object):
 
     def test_0002_permission_ipa_privilege(self, multihost):
         """
-        Test to remove permission from IPA defined privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to remove permission from IPA defined privilege
         """
         privilege_name = "HBAC Administrator"
         permission_name = "Add Group"

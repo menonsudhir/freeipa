@@ -23,9 +23,7 @@ class TestPrivilegeFind(object):
 
     def test_0001_name(self, multihost):
         """
-        Test to privilege find with option name
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to privilege find with option name
         """
         criteria1 = "--name=Automount Administrators"
         expmsg1 = "Privilege name: Automount Administrators"
@@ -37,9 +35,7 @@ class TestPrivilegeFind(object):
 
     def test_0002_desc_raw(self, multihost):
         """
-        Test to privilege find with options desc and raw
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to privilege find with options desc and raw
         """
         criteria2 = "--desc=Automount Administrators"
         expmsg1 = "Description: Automount Administrators"
@@ -51,27 +47,21 @@ class TestPrivilegeFind(object):
 
     def test_0003_missing_name(self, multihost):
         """
-        Test to privilege find with option missing name
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to privilege find with option missing name
         """
         privilege_find(multihost.master, None,
                        ['--name='])
 
     def test_0004_blank_desc(self, multihost):
         """
-        Test to privilege find with option blank description
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to privilege find with option blank description
         """
         privilege_find(multihost.master, None,
                        ['--desc='])
 
     def test_0005_sizelimit(self, multihost):
         """
-        Test to privilege find with option sizelimit
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to privilege find with option sizelimit
         """
         criteria5 = "--sizelimit=2"
         expmsg = "Number of entries returned 2"
@@ -82,9 +72,7 @@ class TestPrivilegeFind(object):
 
     def test_0006_pkey(self, multihost):
         """
-        pkey only test of ipa privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : pkey only test of ipa privilege
         """
         criteria6 = '--pkey-only'
         privilege_find(multihost.master, None,

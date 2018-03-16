@@ -22,9 +22,7 @@ class TestRoleAddNegative(object):
 
     def test_0001_invalid_setattr(self, multihost):
         """
-        Negative Test to add role with invalid setattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative Test to add role with invalid setattr
         """
         role_name = "Hostgroup Admin with invalid seeAlso"
         role_desc = "--desc=Hostgroup Admin with invalid seeAlso"
@@ -37,9 +35,7 @@ class TestRoleAddNegative(object):
 
     def test_0002_invalid_addattr(self, multihost):
         """
-        Negative Test to add role with invalid addattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative Test to add role with invalid addattr
         """
         role_name = "Hostgroup Admin with invalid seeAlso"
         role_desc = "--desc=Hostgroup Admin with invalid seeAlso"
@@ -52,9 +48,7 @@ class TestRoleAddNegative(object):
 
     def test_0003_missing_name(self, multihost):
         """
-        Negative test to add role with missing name
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add role with missing name
         """
         role_name = ""
         role_desc = "--desc=Host Admin"
@@ -65,9 +59,7 @@ class TestRoleAddNegative(object):
 
     def test_0004_duplicate_role(self, multihost):
         """
-        Negative test to add duplicate role
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add duplicate role
         """
         role_name = "Host Admin"
         role_desc = "--desc=Host Admin"
@@ -80,9 +72,7 @@ class TestRoleAddNegative(object):
 
     def test_0005_blank_desc(self, multihost):
         """
-        Test to add role with blank desc
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add role with blank desc
         """
         role_name = "Add User with blank desc"
         role_desc = "--desc"
@@ -93,9 +83,7 @@ class TestRoleAddNegative(object):
 
     def test_0006_blank_setattr(self, multihost):
         """
-        Test to add role with blank setattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add role with blank setattr
         """
         role_name = "Hostgroup Admin with blank seeAlso"
         role_desc = "--desc=Hostgroup Admin with blank seeAlso"

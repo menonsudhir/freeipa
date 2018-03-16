@@ -23,9 +23,7 @@ class TestRolePrivilegeAddPositive(object):
 
     def test_0001_add_all(self, multihost):
         """
-        Test to add privilege to role with option all
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add privilege to role with option all
         """
         privilege_name = "--privileges=User Administrators"
         role_name = "helpdesk"
@@ -35,9 +33,7 @@ class TestRolePrivilegeAddPositive(object):
 
     def test_0002_add_raw(self, multihost):
         """
-        Test to add multiple privileges to role with option raw
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add multiple privileges to role with option raw
         """
         privilege_name = ["--privileges=group administrators",
                           "--privileges=hbac administrator"]
@@ -47,9 +43,7 @@ class TestRolePrivilegeAddPositive(object):
 
     def test_0003_remove_multiple_privileges_raw(self, multihost):
         """
-        Test to remove multiple privileges from role with option raw
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to remove multiple privileges from role with option raw
         """
         privilege_name = ["--privileges=group administrators",
                           "--privileges=hbac administrator"]
@@ -65,9 +59,7 @@ class TestRolePrivilegeAddPositive(object):
 
     def test_0004_remove_user_privilege_all(self, multihost):
         """
-        Test to remove a user added privilege from role with option all
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to remove a user added privilege from role with option all
         """
         role_name = "helpdesk"
         privilege_name = "User Administrators"
@@ -80,9 +72,7 @@ class TestRolePrivilegeAddPositive(object):
 
     def test_0005_remove_existing_privilege(self, multihost):
         """
-        Test to remove an existing privilege from role
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to remove an existing privilege from role
         """
         role_name = "helpdesk"
         privilege_name = "Modify Group membership"

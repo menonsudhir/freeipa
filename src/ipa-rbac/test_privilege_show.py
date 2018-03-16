@@ -23,9 +23,7 @@ class TestPrivilegeShow(object):
 
     def test_0001_rights(self, multihost):
         """
-        Test to show privilege with option rights
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to show privilege with option rights
         """
         privilege_name = "Host Group Administrators"
         expmsg = "attributelevelrights: {u'cn': u'rscwo', u'businesscategory': u'rscwo', " \

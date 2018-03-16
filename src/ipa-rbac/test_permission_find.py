@@ -14,8 +14,7 @@ class TestPermissionFindPositive(object):
     """
     def test_0001_find_right(self, multihost):
         """
-        Function to find permission with option right
-        :return:
+        IDM-IPA-TC : rbac : Function to find permission with option right
         """
         permission_name = "ManageFind1"
         multihost.master.kinit_as_admin()
@@ -39,9 +38,7 @@ class TestPermissionFindPositive(object):
 
     def test_0002_find_attrs(self, multihost):
         """
-        Function to find permission with option attrs
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to find permission with option attrs
         """
         permission_name1 = "Manage Host Keytab"
         permission_name2 = "Manage Service Keytab"
@@ -58,9 +55,7 @@ class TestPermissionFindPositive(object):
 
     def test_0003_find_type(self, multihost):
         """
-        Function to findpermission with option type
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to findpermission with option type
         """
         permission_name = "ManageFind3"
         multihost.master.kinit_as_admin()
@@ -79,9 +74,7 @@ class TestPermissionFindPositive(object):
 
     def test_0004_find_memberof(self, multihost):
         """
-        Function to find permission with option memberof
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to find permission with option memberof
         """
         multihost.master.kinit_as_admin()
         permission_name = "ManageFind4"
@@ -102,9 +95,7 @@ class TestPermissionFindPositive(object):
 
     def test_0005_find_filer(self, multihost):
         """
-        Function to find permission with option filter
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to find permission with option filter
         """
         multihost.master.kinit_as_admin()
         permission_name = "ManageFind5"
@@ -124,8 +115,7 @@ class TestPermissionFindPositive(object):
 
     def test_0006_multi_attr(self, multihost):
         """
-        Function to find permission with options attrs permissions type
-        :return:
+        IDM-IPA-TC : rbac : Function to find permission with options attrs permissions type
         """
         multihost.master.kinit_as_admin()
         permission61 = "FindManageUser61"
@@ -185,9 +175,7 @@ class TestPermissionFindPositive(object):
 
     def test_0007_find_pkey_only(self, multihost):
         """
-        Function to find permission with option pkey only test of ipa permission
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to find permission with option pkey only test of ipa permission
         """
         multihost.master.kinit_as_admin()
         check7 = permission_find(multihost.master, permission_name=None,
@@ -197,9 +185,7 @@ class TestPermissionFindPositive(object):
 
     def test_0008_find_all_raw(self, multihost):
         """
-        Function to verify permission attrs after a find with option all
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to verify permission attrs after a find with option all
         """
         permission_name = "FindManageHost"
         multihost.master.kinit_as_admin()

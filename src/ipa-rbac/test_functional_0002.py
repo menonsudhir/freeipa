@@ -81,7 +81,7 @@ class TestFunctional2(object):
                      'user')
 
     def test_0001(self, multihost):
-        """Modify group desc allowed but adding user not allowed"""
+        """IDM-IPA-TC : rbac : Modify group desc allowed but adding user not allowed"""
         multihost.master.kinit_as_user(self.login2, self.password2)
         new_desc = "--desc=Updated Group One"
         check2_1 = multihost.master.run_command([IPA, 'group-mod', self.groupname2,
@@ -101,7 +101,7 @@ class TestFunctional2(object):
             pytest.fail(check2_1a.stderr_text)
 
     def test_0002(self, multihost):
-        """Add a member to the group by modifying permission of the user"""
+        """IDM-IPA-TC : rbac : Add a member to the group by modifying permission of the user"""
         multihost.master.kinit_as_admin()
         permission_mod(multihost.master, self.perm_name, ['--attrs=description',
                                                           '--attrs=member'])

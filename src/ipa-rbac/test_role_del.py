@@ -23,9 +23,7 @@ class TestRoleDel(object):
 
     def test_0001_non_existent_role(self, multihost):
         """
-        Test to delete role with option continue
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to delete role with option continue
         """
         role_name = "Non Existent Role"
         expmsg = "Failed to remove: " + role_name

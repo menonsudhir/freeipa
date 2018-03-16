@@ -23,7 +23,7 @@ class TestPermissionAddPositive(object):
 
     def test_0001_multi_attr(self, multihost):
         """
-        test to add permission for type user with multiple attr
+        IDM-IPA-TC : rbac : test to add permission for type user with multiple attr
         :return:
         """
         multihost.master.kinit_as_admin()
@@ -40,9 +40,7 @@ class TestPermissionAddPositive(object):
 
     def test_0002_multi_attr_multi_permissions(self, multihost):
         """
-        Test to add permission for type user with multiple attr and multiple permissions
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add permission for type user with multiple attr and multiple permissions
         """
         multihost.master.kinit_as_admin()
         permission_name = "ManageUser2"
@@ -60,10 +58,7 @@ class TestPermissionAddPositive(object):
 
     def test_0003_multi_attr_multi_permissions_add_attr(self, multihost):
         """
-        Test to add permission for type user with multiple attr multiple permissions and add
-        an attribute
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add permission for type user with multiple attr multiple permissions and add an attribute
         """
         permission_name = "ManageUser3"
         multihost.master.kinit_as_admin()
@@ -83,10 +78,7 @@ class TestPermissionAddPositive(object):
 
     def test_0004_multi_attr_multi_permissions_set_attr(self, multihost):
         """
-        Test to add permission for type user with multiple attr multiple permissions and set
-        an attribute
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add permission for type user with multiple attr multiple permissions and set an attribute
         """
         permission_name = "ManageUser4"
         multihost.master.kinit_as_admin()
@@ -105,10 +97,7 @@ class TestPermissionAddPositive(object):
 
     def test_0005_multi_attr_multi_permissions_add_set_attr(self, multihost):
         """
-        Test to add permission for type user with multiple attr multiple permissions
-         and add and set multivalued attribute
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add permission for type user with multiple attr multiple permissions and add and set multivalued attribute
         """
         permission_name = "ManageUser5"
         multihost.master.kinit_as_admin()
@@ -128,9 +117,7 @@ class TestPermissionAddPositive(object):
 
     def test_0006_filter_for_groups(self, multihost):
         """
-        Test to add permission using filter for groups
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add permission using filter for groups
         """
         permission_name = "ManageGroup1"
         multihost.master.kinit_as_admin()
@@ -149,9 +136,7 @@ class TestPermissionAddPositive(object):
 
     def test_0007_subtree_for_hosts(self, multihost):
         """
-        Test to add permission using subtree for hosts
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add permission using subtree for hosts
         """
         permission_name = "ManageHost1"
         multihost.master.kinit_as_admin()
@@ -170,9 +155,7 @@ class TestPermissionAddPositive(object):
 
     def test_0008_targetgroup(self, multihost):
         """
-        Test to add permission using targetgroup
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add permission using targetgroup
         """
         permission_name = "ManageGroup2"
         multihost.master.kinit_as_admin()
@@ -189,9 +172,7 @@ class TestPermissionAddPositive(object):
 
     def test_0009_type_netgroup_multiple_attr(self, multihost):
         """
-        Test to add permission for type netgroup with multiple attr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add permission for type netgroup with multiple attr
         """
         permission_name = "ManageNetgroup1"
         multihost.master.kinit_as_admin()
@@ -210,9 +191,7 @@ class TestPermissionAddPositive(object):
 
     def test_0010_dnsrecord_multiple_attr(self, multihost):
         """
-        Test to add permission for type dnsrecord with multiple attr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add permission for type dnsrecord with multiple attr
         """
         permission_name = "ManageDNSRecord1"
         multihost.master.kinit_as_admin()

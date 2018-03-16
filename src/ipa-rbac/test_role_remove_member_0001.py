@@ -24,9 +24,7 @@ class TestRoleRemoveMemberNegative(object):
 
     def test_0001_blank_hostgroup_members(self, multihost):
         """
-        Negative test to remove blank hostgroup members
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to remove blank hostgroup members
         """
         check1 = role_remove_member(multihost.master, self.role_name,
                                     ['--hostgroups='])
@@ -36,10 +34,7 @@ class TestRoleRemoveMemberNegative(object):
 
     def test_0002_missing_group_members(self, multihost):
         """
-        Negative test to remove missing group members
-        :param
-        multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to remove missing group members
         """
         check2 = role_remove_member(multihost.master, self.role_name,
                                     ['--groups='])

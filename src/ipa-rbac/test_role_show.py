@@ -24,9 +24,7 @@ class TestRoleShow(object):
 
     def test_0001_rights(self, multihost):
         """
-        Test to show role with option rights
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to show role with option rights
         """
         expmsg = "attributelevelrights:"
         check1 = role_show(multihost.master, self.role_name,
@@ -37,9 +35,7 @@ class TestRoleShow(object):
 
     def test_0002_raw(self, multihost):
         """
-        Test to role show with option raw
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to role show with option raw
         """
         role_show(multihost.master, self.role_name,
                   ['--raw'])

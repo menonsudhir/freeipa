@@ -25,9 +25,7 @@ class TestPrivilegeAddPermissionPositive(object):
 
     def test_0001_multiple_permission(self, multihost):
         """
-        Test to add multiple permissions to privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add multiple permissions to privilege
         """
         privilege_name = "Add User"
         privilege_add(multihost.master, privilege_name)
@@ -48,9 +46,7 @@ class TestPrivilegeAddPermissionPositive(object):
 
     def test_0002_add_permission_ipa_privilege(self, multihost):
         """
-        Test to add permission to IPA provided privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add permission to IPA provided privilege
         """
         privilege_name = "HBAC Administrator"
         permission_name = "Add Group"

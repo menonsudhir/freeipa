@@ -29,9 +29,7 @@ class TestBugCheck(object):
 
     def test_0018_bz893850(self, multihost):
         """
-        Test to verify bz893850 - modify permission with option permissions
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bz893850 - modify permission with option permissions
         """
         permission_name = "Permission_bz893850"
         multihost.master.kinit_as_admin()
@@ -52,10 +50,7 @@ class TestBugCheck(object):
 
     def test_0019_bz817909(self, multihost):
         """
-        Function to verify bz817909 - modify permission invalid attrs should show exact
-        reason for failure
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to verify bz817909 - modify permission invalid attrs should show exact reason for failure
         """
         permission_name = "Permission_bz817909"
         multihost.master.kinit_as_admin()
@@ -76,10 +71,7 @@ class TestBugCheck(object):
 
     def test_0020_bz837357(self, multihost):
         """
-        Function to verify bz837357 - Attributelevelrights should be same in
-        permission-show and permission-mod for the same permission
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to verify bz837357 - Attributelevelrights should be same in permission-show and permission-mod for the same permission
         """
         permission_name = "Permission_bz837357"
         multihost.master.kinit_as_admin()
@@ -103,9 +95,7 @@ class TestBugCheck(object):
 
     def test_0021_bz742327_bz893186_bz997085(self, multihost):
         """
-        Function to verify bz742327, bz893186, bz997085: Check IPA provided Privileges have
-        assigned Permissions
-        :return:
+        IDM-IPA-TC : rbac : Function to verify bz742327, bz893186, bz997085: Check IPA provided Privileges have assigned Permissions
         """
         multihost.master.kinit_as_admin()
         check21a = privilege_find(multihost.master)
@@ -120,9 +110,7 @@ class TestBugCheck(object):
 
     def test_0022_bz816574(self, multihost):
         """
-        Test to verify bz816574 - add privilege with blank setattr should work
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bz816574 - add privilege with blank setattr should work
         """
         privilege_name = "Add User with blank attr"
         privilege_desc = "--desc=Add User with blank attr"
@@ -134,9 +122,7 @@ class TestBugCheck(object):
 
     def test_0023_bz955699(self, multihost):
         """
-        Test to verify bz955699 - Host administrator privilege should have certificate access
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bz955699 - Host administrator privilege should have certificate access
         """
         privilege_name = "Host Administrators"
         check23 = privilege_show(multihost.master, privilege_name)
@@ -148,9 +134,7 @@ class TestBugCheck(object):
 
     def test_0024_bz816624(self, multihost):
         """
-        Test to verify bz816624 - add blank permission to privilege shouldn't throw internal error
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bz816624 - add blank permission to privilege shouldn't throw internal error
         """
         privilege_name = "Add User"
         expmsg = "Number of permissions added 0"
@@ -165,9 +149,7 @@ class TestBugCheck(object):
 
     def test_0025_bz797916(self, multihost):
         """
-        Test to verify bz797916 - Should be able to remove the permission from the privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bz797916 - Should be able to remove the permission from the privilege
         """
         privilege_name = "HBAC Administrator"
         permission_name = "System: Add HBAC Rule"
@@ -180,10 +162,7 @@ class TestBugCheck(object):
 
     def test_0026_bz816624(self, multihost):
         """
-        Test to verify bz816624 - remove blank permission from privilege should
-        not throw internal error
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bz816624 - remove blank permission from privilege should not throw internal error
         """
         privilege_name = "HBAC Administrator"
         expmsg = "Number of permissions removed 0"

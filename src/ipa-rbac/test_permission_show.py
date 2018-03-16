@@ -15,9 +15,7 @@ class TestPermissionShowPositive(object):
 
     def test_0001_show_rights(self, multihost):
         """
-        Function to show permission with rights
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Function to show permission with rights
         """
         permission_name = "ManageUser"
         exp_output = "attributelevelrights: {u'ipapermright': u'rscwo', u'cn': u'rscwo', " \

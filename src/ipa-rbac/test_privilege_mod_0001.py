@@ -25,9 +25,7 @@ class TestPrivilegeModPositive(object):
 
     def test_0001_desc(self, multihost):
         """
-        Test to mod desc of privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod desc of privilege
         """
         new_privilege_desc = "NetgroupsAdmin"
         attr = "--desc=" + new_privilege_desc
@@ -36,9 +34,7 @@ class TestPrivilegeModPositive(object):
 
     def test_0002_rename_privilege(self, multihost):
         """
-        Test to rename privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to rename privilege
         """
         new_privilege_name = "NetgroupsAdmin"
         attr = "--rename"
@@ -47,9 +43,7 @@ class TestPrivilegeModPositive(object):
 
     def test_0003_use_addattr(self, multihost):
         """
-        Test to mod privilege to use addattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod privilege to use addattr
         """
         privilege_name = "NetgroupsAdmin"
         attr1 = "--addattr"
@@ -62,9 +56,7 @@ class TestPrivilegeModPositive(object):
 
     def test_0004_delattr(self, multihost):
         """
-        Test to mod privilege to delattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod privilege to delattr
         """
         privilege_name = "NetgroupsAdmin"
         privilege_desc = "description=NetgroupsAdmin"
@@ -74,9 +66,7 @@ class TestPrivilegeModPositive(object):
 
     def test_0005_blank_desc(self, multihost):
         """
-        Test to mod privilege to use blank desc
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod privilege to use blank desc
         """
         attr1 = "--desc"
         privilege_desc = "Netgroups Administrators"

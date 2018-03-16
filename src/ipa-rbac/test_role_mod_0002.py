@@ -25,9 +25,7 @@ class TestRoleModNegative(object):
 
     def test_0001_multiple_addattr(self, multihost):
         """
-        Test to mod role to addattr multiple attr when only one one value is allowed
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod role to addattr multiple attr when only one one value is allowed
         """
         attr = "--addattr"
         add_description = "description=AnotherDescriptionNotAllowed"
@@ -40,9 +38,7 @@ class TestRoleModNegative(object):
 
     def test_0002_addattr_invalid_syn(self, multihost):
         """
-        Test to mod role to addattr with invalid syntax
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod role to addattr with invalid syntax
         """
         attr = "--addattr"
         add_owner = "owner=xyz"
@@ -55,9 +51,7 @@ class TestRoleModNegative(object):
 
     def test_0003_blank_desc(self, multihost):
         """
-        Negative test to mod role to use blank desc
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to mod role to use blank desc
         """
         attr = "--desc"
         check3 = role_mod(multihost.master, self.role_name,
@@ -69,9 +63,7 @@ class TestRoleModNegative(object):
 
     def test_0004_blank_rename(self, multihost):
         """
-        Test to mod role to use blank rename
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod role to use blank rename
         """
         attr = "--rename="
         expmsg = "ipa: ERROR: invalid 'rename': can't be empty"
@@ -84,9 +76,7 @@ class TestRoleModNegative(object):
 
     def test_0005_same_rename(self, multihost):
         """
-        Negative test to mod role to rename to same name
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to mod role to rename to same name
         """
         attr = "--rename"
         expmsg = "ipa: ERROR: no modifications to be performed"

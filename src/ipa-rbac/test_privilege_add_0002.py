@@ -22,9 +22,7 @@ class TestPrivilegeAddNegative(object):
 
     def test_0001_invalid_setattr(self, multihost):
         """
-        Negative Test to add privilege with invalid setattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative Test to add privilege with invalid setattr
         """
         privilege_name = "Add User with invalid attr"
         privilege_desc = "--desc=Add User with invalid attr"
@@ -37,9 +35,7 @@ class TestPrivilegeAddNegative(object):
 
     def test_0002_invalid_addattr(self, multihost):
         """
-        Negative Test to add privilege with invalid addattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative Test to add privilege with invalid addattr
         """
         privilege_name = "Add User with invalid attr"
         privilege_desc = "--desc=Add User with invalid attr"
@@ -52,9 +48,7 @@ class TestPrivilegeAddNegative(object):
 
     def test_0004_duplicate_privilege(self, multihost):
         """
-        Negative test to add duplicate privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add duplicate privilege
         """
         privilege_name = "Add User"
         privilege_desc = "--desc=Add User"

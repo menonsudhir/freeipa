@@ -23,8 +23,7 @@ class TestBugCheck(object):
 
     def test_0001_bz1186054(self, multihost):
         """
-        Test to verify Bug 1186054 - permission-add does not prompt to enter --right option in
-        interactive mode
+        IDM-IPA-TC : rbac : Test to verify Bug 1186054 - permission-add does not prompt to enter --right option in interactive mode
         """
         multihost.master.kinit_as_admin()
         cmd = 'ipa permission-add'
@@ -48,9 +47,7 @@ class TestBugCheck(object):
 
     def test_0002_bz783502(self, multihost):
         """
-        Test to verify Bug 783502 - add permission with invalid attr should fail
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify Bug 783502 - add permission with invalid attr should fail
         """
         permission_name = "BugManageUser_783502"
         multihost.master.kinit_as_admin()
@@ -66,10 +63,7 @@ class TestBugCheck(object):
 
     def test_0003_bz783475(self, multihost):
         """
-        Test to verify bug 783475- add permission using blank memberof group should not
-         fail with internal error
-        :param multihost:
-        :return:
+        TIDM-IPA-TC : rbac : est to verify bug 783475- add permission using blank memberof group should not fail with internal error
         """
         permission_name = "BugManageHost2"
         multihost.master.kinit_as_admin()
@@ -87,9 +81,7 @@ class TestBugCheck(object):
 
     def test_0004_bz783543(self, multihost):
         """
-        Test to verify Bug 783543 - add permission using blank memberof group
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify Bug 783543 - add permission using blank memberof group
         """
         permission_name = "BugManageHost3"
         multihost.master.kinit_as_admin()
@@ -107,10 +99,7 @@ class TestBugCheck(object):
 
     def test_0005_bz783502(self, multihost):
         """
-        Test to verify bug 783502: add permission for type hostgroup with multiple attr and
-         multiple permissions
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bug 783502: add permission for type hostgroup with multiple attr and multiple permissions
         """
         permission_name = "BugManageHostgroup1"
         multihost.master.kinit_as_admin()
@@ -129,9 +118,7 @@ class TestBugCheck(object):
 
     def test_0006_bz807304(self, multihost):
         """
-        Test to verify bug 807304 - invalid characters in permission name is not allowed
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bug 807304 - invalid characters in permission name is not allowed
         """
         permission_name = "Test\<807304"
         multihost.master.kinit_as_admin()
@@ -148,9 +135,7 @@ class TestBugCheck(object):
 
     def test_0007_bz783475(self, multihost):
         """
-        Test to verify bz783475 - add permission with missing target for type
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bz783475 - add permission with missing target for type
         """
         multihost.master.kinit_as_admin()
         permission_name = "BugManageUser7"
@@ -164,9 +149,7 @@ class TestBugCheck(object):
 
     def test_0008_bz783475(self, multihost):
         """
-        Test to verify bz783475 - add permission with missing target for subtree
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bz783475 - add permission with missing target for subtree
         """
         multihost.master.kinit_as_admin()
         permission_name = "BugManageUser8"
@@ -180,9 +163,7 @@ class TestBugCheck(object):
 
     def test_0009_bz783475(self, multihost):
         """
-        Test to verify bz783475 - add permission with missing target for filter
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bz783475 - add permission with missing target for filter
         """
         multihost.master.kinit_as_admin()
         permission_name = "BugManageUser9"
@@ -196,9 +177,7 @@ class TestBugCheck(object):
 
     def test_0010_bz784329(self, multihost):
         """
-        Test to verify Bug 784329 - permission add fails when memberof group does not exist
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify Bug 784329 - permission add fails when memberof group does not exist
         """
         permission_name = "BugManageHost10"
         multihost.master.kinit_as_admin()
@@ -216,11 +195,8 @@ class TestBugCheck(object):
 
     def test_0011_bz816574(self, multihost):
         """
-        Test to verify Bug bz816574 - permission add should not throw internal server error when
-        option
-        addattr or setattr is blank
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify Bug bz816574 - permission add should not throw internal server error when
+        option addattr or setattr is blank
         """
         permission_name = "BugManageHost11"
         multihost.master.kinit_as_admin()

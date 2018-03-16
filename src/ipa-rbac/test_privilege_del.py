@@ -23,9 +23,7 @@ class TestPrivilegeDel(object):
 
     def test_0001_non_existent_privilege(self, multihost):
         """
-        Test to delete privilege with option continue
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to delete privilege with option continue
         """
         privilege_name = "Non Existent Privilege"
         expmsg = "Failed to remove: " + privilege_name

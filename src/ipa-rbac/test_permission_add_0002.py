@@ -22,9 +22,7 @@ class TestPermissionAddNegative(object):
 
     def test_0001_invalid_right(self, multihost):
         """
-        Negative Test to add permission with invalid right
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative Test to add permission with invalid right
         """
         multihost.master.kinit_as_admin()
         permission_name = "ManageUser1"
@@ -40,9 +38,7 @@ class TestPermissionAddNegative(object):
 
     def test_0002_missing_right(self, multihost):
         """
-        Negative Test to add permission with missing right
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative Test to add permission with missing right
         """
         multihost.master.kinit_as_admin()
         permission_name = "ManageUser2"
@@ -58,9 +54,7 @@ class TestPermissionAddNegative(object):
 
     def test_0003_invalid_attr(self, multihost):
         """
-        Negative Test to add permission with invalid attr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative Test to add permission with invalid attr
         """
         multihost.master.kinit_as_admin()
         permission_name = "ManageUser3"
@@ -75,9 +69,7 @@ class TestPermissionAddNegative(object):
 
     def test_0004_multiple_targets_subtree(self, multihost):
         """
-        Negative Test to add permission with multiple targets type and subtree
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative Test to add permission with multiple targets type and subtree
         """
         multihost.master.kinit_as_admin()
         permission_name = "ManageUser4"
@@ -95,9 +87,7 @@ class TestPermissionAddNegative(object):
 
     def test_0005_multiple_targets_filter(self, multihost):
         """
-        Negative Test to add permission with multiple targets type and filter
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative Test to add permission with multiple targets type and filter
         """
         multihost.master.kinit_as_admin()
         permission_name = "ManageUser5"
@@ -114,9 +104,7 @@ class TestPermissionAddNegative(object):
 
     def test_0006_missing_target_type(self, multihost):
         """
-        Negative Test to add permission with missing target for type
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative Test to add permission with missing target for type
         """
         multihost.master.kinit_as_admin()
         permission_name = "ManageUser6"
@@ -130,9 +118,7 @@ class TestPermissionAddNegative(object):
 
     def test_0007_missing_target_subtree(self, multihost):
         """
-        Negative Test to add permission with missing target for subtree
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative Test to add permission with missing target for subtree
         """
         multihost.master.kinit_as_admin()
         permission_name = "ManageUser7"
@@ -146,9 +132,7 @@ class TestPermissionAddNegative(object):
 
     def test_0008_missing_target_filter(self, multihost):
         """
-        Negative Test to add permission with missing target for filter
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative Test to add permission with missing target for filter
         """
         multihost.master.kinit_as_admin()
         permission_name = "ManageUser8"
@@ -162,9 +146,7 @@ class TestPermissionAddNegative(object):
 
     def test_0009_missing_memberof(self, multihost):
         """
-        Negative Test to add permission using missing memberof group
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative Test to add permission using missing memberof group
         """
         permission_name = "ManageHost9"
         multihost.master.kinit_as_admin()
@@ -182,9 +164,7 @@ class TestPermissionAddNegative(object):
 
     def test_0010_invalid_type(self, multihost):
         """
-        Negative test to add permission using invalid type
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add permission using invalid type
         """
         permission_name = 'NegManageGroup10'
         multihost.master.kinit_as_admin()
@@ -198,9 +178,7 @@ class TestPermissionAddNegative(object):
 
     def test_0011_invalid_filter(self, multihost):
         """
-        Negative test to add permission using invalid filter
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add permission using invalid filter
         """
         permission_name = 'NegManageGroup11'
         multihost.master.kinit_as_admin()
@@ -215,9 +193,7 @@ class TestPermissionAddNegative(object):
 
     def test_0012_invalid_subtree(self, multihost):
         """
-        Negative test to add permission using invalid subtree
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add permission using invalid subtree
         """
         permission_name = 'NegManageGroup12'
         multihost.master.kinit_as_admin()
@@ -231,9 +207,7 @@ class TestPermissionAddNegative(object):
 
     def test_0013_invalid_addattr_setattr(self, multihost):
         """
-        Negative test to add permission using invalid addattr/setattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Negative test to add permission using invalid addattr/setattr
         """
         permission_name = 'NegManageGroup13'
         multihost.master.kinit_as_admin()

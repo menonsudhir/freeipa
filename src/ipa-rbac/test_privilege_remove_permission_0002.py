@@ -25,9 +25,7 @@ class TestPrivilegeRemovePermissionNegative(object):
 
     def test_0001_nonexistent_permission(self, multihost):
         """
-        Test to remove nonexistent permission from privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to remove nonexistent permission from privilege
         """
         privilege_name = "Add User"
         permission_name = "non-existent permission"
@@ -42,9 +40,7 @@ class TestPrivilegeRemovePermissionNegative(object):
 
     def test_0002_nonexistent_privilege(self, multihost):
         """
-        Test to remove permission from nonexistent privilege
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to remove permission from nonexistent privilege
         """
         privilege_name = "non-existent"
         permission_name = "Add HBAC rule"

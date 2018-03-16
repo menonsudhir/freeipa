@@ -24,9 +24,7 @@ class TestRoleModPositive(object):
 
     def test_0001_desc(self, multihost):
         """
-        Test to mod desc of role
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod desc of role
         """
         new_role_desc = "Helpdesk Updated"
         attr = "--desc=" + new_role_desc
@@ -35,9 +33,7 @@ class TestRoleModPositive(object):
 
     def test_0002_rename_role(self, multihost):
         """
-        Test to rename role
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to rename role
         """
         new_role_name = "helpdesk Updated"
         attr = "--rename"
@@ -46,9 +42,7 @@ class TestRoleModPositive(object):
 
     def test_0003_use_setattr(self, multihost):
         """
-        Test to rename role using setattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to rename role using setattr
         """
         role_name = "helpdesk Updated"
         attr = "--setattr=cn=" + self.role_name
@@ -57,9 +51,7 @@ class TestRoleModPositive(object):
 
     def test_0004_use_addattr(self, multihost):
         """
-        Test to mod role to use addattr
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod role to use addattr
         """
         attr1 = "--addattr"
         add_owner1 = "seeAlso=cn=HostgroupCLI"
@@ -71,9 +63,7 @@ class TestRoleModPositive(object):
 
     def test_0005_delattr(self, multihost):
         """
-        Test to mod role to delattr with option rights
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to mod role to delattr with option rights
         """
         role_desc = "seeAlso=cn=HostCLI"
         attr = "--delattr=" + role_desc

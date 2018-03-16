@@ -25,9 +25,7 @@ class TestBugCheck(object):
 
     def test_0012_bz785251(self, multihost):
         """
-        Test to verify Bug 785251 - permission find should not retrieve all permissions
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify Bug 785251 - permission find should not retrieve all permissions
         """
         permission_name = "BugManageUser_785251"
         multihost.master.kinit_as_admin()
@@ -53,8 +51,7 @@ class TestBugCheck(object):
 
     def test_0013_bz785257(self, multihost):
         """
-        Function to verify bz785257 - Ensure find permission with option sizelimit works
-        :return:
+        IDM-IPA-TC : rbac : Function to verify bz785257 - Ensure find permission with option sizelimit works
         """
         right = 'xyz'
         exp_output = "Number of entries returned 0"
@@ -68,9 +65,7 @@ class TestBugCheck(object):
 
     def test_0014_bz785254(self, multihost):
         """
-        Test to verify bz785254 - find permission with option subtree
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bz785254 - find permission with option subtree
         """
         multihost.master.kinit_as_admin()
         permission_name = "Manage_bz785254"
@@ -95,9 +90,7 @@ class TestBugCheck(object):
 
     def test_0015_bz893827(self, multihost):
         """
-        Test to verify bz893827 - find permission with option targetgroup
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bz893827 - find permission with option targetgroup
         """
         multihost.master.kinit_as_admin()
         permission_name = "Add User to default group"
@@ -110,9 +103,7 @@ class TestBugCheck(object):
 
     def test_0016_bz785257(self, multihost):
         """
-        Test to verify bz785257 - find permission with options attrs permissions type sizelimit
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bz785257 - find permission with options attrs permissions type sizelimit
         """
         multihost.master.kinit_as_admin()
         perm_array = ["FindManageUser161",
@@ -140,9 +131,7 @@ class TestBugCheck(object):
 
     def test_0017_bz785259(self, multihost):
         """
-        Test to verify bz785259 - permission attrs after a find with option raw
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to verify bz785259 - permission attrs after a find with option raw
         """
         permission_name = "FindManageHost17"
         multihost.master.kinit_as_admin()

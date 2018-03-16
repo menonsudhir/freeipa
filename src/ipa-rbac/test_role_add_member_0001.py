@@ -24,9 +24,7 @@ class TestRoleAddMemberPositive(object):
 
     def test_0001_user_all(self, multihost):
         """
-        Test to add one user member using option all
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add one user member using option all
         """
         login = "testuseradmin"
         firstname = "testuseradmin"
@@ -41,9 +39,7 @@ class TestRoleAddMemberPositive(object):
 
     def test_0002_group_raw(self, multihost):
         """
-        Test to add one group member using option raw
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add one group member using option raw
         """
         multihost.master.kinit_as_admin()
         group_name = "testgroupadmin"
@@ -56,9 +52,7 @@ class TestRoleAddMemberPositive(object):
 
     def test_0003_multiple_user_members(self, multihost):
         """
-        Test to add multiple user members
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add multiple user members
         """
         login_list = ["testuseradmin1", "testuseradmin2", "testuseradmin3"]
         password = "Secret123"
@@ -73,9 +67,7 @@ class TestRoleAddMemberPositive(object):
 
     def test_0004_multiple_group_members(self, multihost):
         """
-        Test to add multiple group members
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add multiple group members
         """
         multihost.master.kinit_as_admin()
         role_type = "--groups="
@@ -90,9 +82,7 @@ class TestRoleAddMemberPositive(object):
 
     def test_0005_multiple_host_members(self, multihost):
         """
-        Test to add multiple host members
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add multiple host members
         """
         host_list = ["testhostadmin1.", "testhostadmin2.", "testhostadmin3."]
         member_list = []
@@ -106,9 +96,7 @@ class TestRoleAddMemberPositive(object):
 
     def test_0006_multiple_hostgroup_members(self, multihost):
         """
-        Test to add multiple hostgroup members
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add multiple hostgroup members
         """
         hostgroup_list = ["testhostgroupadmin1", "testhostgroupadmin2", "testhostgroupadmin3"]
         member_list = []
@@ -121,9 +109,7 @@ class TestRoleAddMemberPositive(object):
 
     def test_0007_user_host_member(self, multihost):
         """
-        Test to add user and host member
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to add user and host member
         """
         login = "testuseradmin4"
         firstname = "testuseradmin4"
@@ -142,9 +128,7 @@ class TestRoleAddMemberPositive(object):
 
     def test_0008_remove_user_member(self, multihost):
         """
-        Test to remove user members
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to remove user members
         """
         login_list = ["--users=testuseradmin", "--users=testuseradmin1",
                       "--users=testuseradmin2", "--users=testuseradmin3",
@@ -155,9 +139,7 @@ class TestRoleAddMemberPositive(object):
 
     def test_0009_remove_group_member(self, multihost):
         """
-        Test to remove group members
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to remove group members
         """
         group_list = ["--groups=testgroupadmin", "--groups=testgroupadmin1",
                       "--groups=testgroupadmin2", "--groups=testgroupadmin3"]
@@ -167,9 +149,7 @@ class TestRoleAddMemberPositive(object):
 
     def test_0010_remove_host_member(self, multihost):
         """
-        Test to remove host members
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to remove host members
         """
         host_list = ["testhostadmin1.", "testhostadmin2.", "testhostadmin3.", "testhostadmin4."]
         role_type = "--hosts="
@@ -180,9 +160,7 @@ class TestRoleAddMemberPositive(object):
 
     def test_0011_remove_hostgroup_member(self, multihost):
         """
-        Test to remove hostgroup members
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to remove hostgroup members
         """
         hostgroup_list = ["--hostgroups=testhostgroupadmin1", "--hostgroups=testhostgroupadmin2",
                           "--hostgroups=testhostgroupadmin3"]

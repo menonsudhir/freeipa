@@ -23,9 +23,7 @@ class TestRoleFind(object):
 
     def test_0001_name(self, multihost):
         """
-        Test to role find with option name
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to role find with option name
         """
         criteria1 = "--name=helpdesk"
         expmsg = "Number of entries returned 1"
@@ -36,9 +34,7 @@ class TestRoleFind(object):
 
     def test_0002_desc_raw(self, multihost):
         """
-        Test to role find with options desc and raw
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to role find with options desc and raw
         """
         criteria2 = "--desc=Helpdesk"
         expmsg1 = "Number of entries returned 1"
@@ -49,9 +45,7 @@ class TestRoleFind(object):
 
     def test_0003_missing_name(self, multihost):
         """
-        Test to role find with option missing name
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to role find with option missing name
         """
         check3 = role_find(multihost.master, None,
                            ['--name'], False)
@@ -62,18 +56,14 @@ class TestRoleFind(object):
 
     def test_0004_blank_desc(self, multihost):
         """
-        Test to role find with option blank description
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to role find with option blank description
         """
         role_find(multihost.master, None,
                   ['--desc='])
 
     def test_0005_sizelimit(self, multihost):
         """
-        Test to role find with option sizelimit
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : Test to role find with option sizelimit
         """
         criteria5 = "--sizelimit=2"
         expmsg = "Number of entries returned 2"
@@ -84,9 +74,7 @@ class TestRoleFind(object):
 
     def test_0006_pkey(self, multihost):
         """
-        pkey only test of ipa role
-        :param multihost:
-        :return:
+        IDM-IPA-TC : rbac : pkey only test of ipa role
         """
         criteria6 = '--pkey-only'
         role_find(multihost.master, None,
