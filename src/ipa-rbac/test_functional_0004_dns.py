@@ -152,7 +152,7 @@ class TestFunctionalDNS(object):
             pytest.fail(c.stdout_text)
 
     def test0007(self, multihost):
-        """"IDM-IPA-TC : rbac : Can enable and disable zone managed by user"""
+        """IDM-IPA-TC : rbac : Can enable and disable zone managed by user"""
         check4_7 = multihost.master.run_command([IPA, 'dnszone-disable',
                                                  'one.'+multihost.master.domain.name])
         check4_7a = multihost.master.run_command([IPA, 'dnszone-enable',
@@ -163,7 +163,7 @@ class TestFunctionalDNS(object):
             pytest.fail(check4_7.stderr_text+"\n"+check4_7a.stderr_text)
 
     def test0008(self, multihost):
-        """"IDM-IPA-TC : rbac : Cannot enable and disable zone not managed by user"""
+        """IDM-IPA-TC : rbac : Cannot enable and disable zone not managed by user"""
         check4_8 = multihost.master.run_command([IPA, 'dnszone-disable',
                                                  'two.'+multihost.master.domain.name],
                                                 raiseonerr=False)

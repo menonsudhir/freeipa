@@ -85,7 +85,7 @@ class TestPrivilegeAddPositive(object):
 
     def test_0006_all(self, multihost):
         """
-        IDM-IPA-TC : rbac : Test to add  privilege with option all
+        IDM-IPA-TC : rbac : Test to add privilege with option all
         """
         privilege_name = "Modify Groups"
         privilege_desc = "--desc=Modify Groups"

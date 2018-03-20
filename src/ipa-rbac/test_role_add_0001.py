@@ -51,7 +51,7 @@ class TestRoleAddPositive(object):
 
     def test_0003_all(self, multihost):
         """
-        IDM-IPA-TC : rbac : Test to add  role with option all
+        IDM-IPA-TC : rbac : Test to add role with option all
         """
         role_name = "Netgroup Admin"
         role_desc = "--desc=Netgroup Admin"
