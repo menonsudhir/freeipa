@@ -4,6 +4,7 @@ conftest to setup required fixtures needed by tests:
 """
 
 import pytest
+from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_install import setup_master, uninstall_server
 
 
