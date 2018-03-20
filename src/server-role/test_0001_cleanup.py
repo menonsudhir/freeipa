@@ -3,6 +3,7 @@ This is a cleanup module to undo everything the test did.
 It should uninstall and reset configurations.
 """
 from ipa_pytests.qe_install import uninstall_server
+from ipa_pytests.qe_class import multihost
 
 
 class TestCleanup(object):

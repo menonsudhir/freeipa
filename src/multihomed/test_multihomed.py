@@ -70,7 +70,7 @@ class TestMultihomedTests(object):
         set_resolv_conf_add_server(multihost.client, master_ip_six)
 
     def test_multihomed_0001(self, multihost):
-        """ Multihomed - update of ipv6 along with ipv4 when client install """
+        """IDM-IPA-TC : Multihomed : update of ipv6 along with ipv4 when client install"""
 
         print "Install ipa-server master + ipv6"
         multihost.master.qerun([
@@ -134,8 +134,7 @@ class TestMultihomedTests(object):
         assert dns_result == 1, "Both IP in DNS updated!"
 
     def test_multihomed_0002(self, multihost):
-        """ Multihomed - remove dns record and client
-        sssd restart with dyn_update = True """
+        """IDM-IPA-TC : Multihomed : remove dns record and client sssd restart with dyn_update = True"""
         multihost.master.kinit_as_admin()
         print "remove dns record"
         multihost.master.qerun([
