@@ -230,6 +230,7 @@ def setup_replica(replica, master, **kwargs):
     setup_ca = kwargs.get('setup_ca', True)
     setup_reverse = kwargs.get('setup_reverse', True)
     setup_kra = kwargs.get('setup_kra', False)
+    skip_concheck = kwargs.get('skip_concheck', False)
 
     replica.revnet = replica.ip.split('.')[2] + '.' + \
         replica.ip.split('.')[1] + '.' + \
@@ -295,6 +296,9 @@ def setup_replica(replica, master, **kwargs):
 
     if setup_kra:
         params.append('--setup-kra')
+
+    if skip_concheck:
+        params.append('--skip-conncheck')
 
     # params.extend(['--ip-address', replica.ip])
 
@@ -370,7 +374,7 @@ def setup_client(client, master, server=None, domain=None):
                          "error code=%s" % cmd.returncode)
 
 
-def uninstall_server(host):
+def uninstall_server(host, force=False):
     """
     This is the default uninstall for a master or replica.  It merely runs
     the standard server uninstall command.
@@ -379,6 +383,11 @@ def uninstall_server(host):
         runcmd = [paths.IPASERVERINSTALL,
                   '--uninstall',
                   '-U']
+
+        if force:
+            runcmd.append('--ignore-topology-disconnect')
+            runcmd.append('--ignore-last-of-role')
+
         cmd = host.run_command(runcmd, raiseonerr=False)
         print("Uninstalling IPA server on machine [%s]" % host.hostname)
         print("STDOUT: %s" % cmd.stdout_text)
