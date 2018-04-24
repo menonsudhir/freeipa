@@ -17,7 +17,7 @@ testuser1 = "testuser1"
 testuser2 = "testuser2"
 testuser3 = "testuser3"
 testuser4 = "testuser4"
-twentyseconds = 20
+sixtyseconds = 60
 
 
 def resotre_invalid_keyring(host, backup_path):
@@ -98,7 +98,7 @@ def ipa_restore(host, backup_path, **kwargs):
     assert cmd.returncode == 0
     print(cmd.stdout_text)
     print("Success : IPA Master restored on %s"%host.hostname)
-    time.sleep(twentyseconds)
+    time.sleep(sixtyseconds)
 
 
 def restore_invalid_dirsrv_instance(host, backup_path, instance=False, backend=False):
@@ -169,7 +169,7 @@ def reinit_replica(multihost):
     print("Success : re-initialize %s from %s"%(
           multihost.replica1.hostname, multihost.master.hostname))
     # wait for replication
-    time.sleep(twentyseconds)
+    time.sleep(sixtyseconds)
 
 
 def ipa_log_check_after_restore_and_reinit(multihost):

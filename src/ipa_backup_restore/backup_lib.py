@@ -18,7 +18,7 @@ testuser1 = "testuser1"
 testuser2 = "testuser2"
 testuser3 = "testuser3"
 testuser4 = "testuser4"
-tenseconds = 10
+sixtyseconds = 60
 
 
 def  ipa_user_check(host, user):
@@ -35,7 +35,7 @@ def user_add_check_replication(host1, host2, user):
     print("creating %s on %s"%(user, host1.hostname))
     add_ipa_user(host1, user)
     # wait for replication
-    time.sleep(tenseconds)
+    time.sleep(sixtyseconds)
 
     # listing user added at host1 on host2
     ipa_user_check(host2, user)
@@ -50,7 +50,7 @@ def user_del_check_replication(host1, host2, user):
     print("deleting %s on %s"%(user, host1.hostname))
     del_ipa_user(host1, user)
     # wait for replication
-    time.sleep(tenseconds)
+    time.sleep(sixtyseconds)
 
     # listing user deleted at host1 on host2
     cmd = show_ipa_user(host2, user)
@@ -192,7 +192,9 @@ def backup(host, **kwargs):
 
     if custom_log:
         print("IPA backup with custom log")
-        args.append('--log-file=/tmp/custom_ipabackup.log')
+        tf = NamedTemporaryFile()
+        custom_log = tf.name
+        args.append('--log-file=%s'%custom_log)
 
 
     print("Running : %s"%str(args))
@@ -203,7 +205,7 @@ def backup(host, **kwargs):
     regex = re.compile('\n.*Backed\sup\sto\s(.*)\n')
 
     if custom_log:
-        file_contents = host.transport.get_file_contents('/tmp/custom_ipabackup.log')
+        file_contents = host.transport.get_file_contents(custom_log)
     else:
         file_contents = host.transport.get_file_contents(paths.IPABACKUPLOG)
     path = str(regex.search(file_contents).groups()[0])
@@ -300,7 +302,7 @@ def disable_replication_uninstall_master(multihost):
     print("running:%s"%str(arg))
     cmd = multihost.master.run_command(arg)
     assert cmd.returncode == 0
-    time.sleep(tenseconds)
+    time.sleep(sixtyseconds)
 
     # uninstall master
     print("Uninstalling IPA server: %s"%multihost.master.hostname)
