@@ -305,6 +305,9 @@ def disable_replication_uninstall_master(multihost):
     # uninstall master
     print("Uninstalling IPA server: %s"%multihost.master.hostname)
     uninstall_server(multihost.master)
+    args = "lsof -i tcp:8443 | awk 'NR!=1 {print $2}' | xargs kill"
+    print("Running : %s"%args)
+    multihost.master.run_command(args, raiseonerr=False)
 
 
 def ipa_backup_before_IPA_configured(host):
