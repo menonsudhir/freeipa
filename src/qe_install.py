@@ -536,7 +536,6 @@ def setup_master_docker(master, setup_dns=True):
                            '\n--setup-dns' +
                            '\n--forwarder=' + master.config.dns_forwarder)
         master.put_file_contents(ipaserveroptions, install_options)
-
     install_options_1 = ('\n-r ' + master.domain.realm +
                          '\n-a ' + master.config.admin_pw +
                          '\n-p ' + master.config.dirman_pw +
@@ -830,6 +829,27 @@ def setup_kra(host):
     print("RUNCMD:", ' '.join(runcmd))
     cmd = host.run_command(runcmd, raiseonerr=False)
 
+    print("STDOUT:", cmd.stdout_text)
+    print("STDERR:", cmd.stderr_text)
+    print_time()
+
+
+def setup_kra_docker(host, container):
+    """
+    Setup KRA on given host within docker
+    """
+    runcmd = ['docker',
+              'exec',
+              '-i',
+              container,
+              paths.IPAKRAINSTALL,
+              '-U',
+              '-p', host.config.admin_pw
+              ]
+    print_time()
+    print("Installing IPA KRA Server on machine [%s]" % host.hostname)
+    print("RUNCMD:", ' '.join(runcmd))
+    cmd = host.run_command(runcmd, raiseonerr=False)
     print("STDOUT:", cmd.stdout_text)
     print("STDERR:", cmd.stderr_text)
     print_time()
