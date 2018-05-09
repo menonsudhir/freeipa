@@ -460,3 +460,52 @@ def get_base_dn(host):
         for line in f:
             if 'BASE dc=' in line:
                return (line.split(" ")[1]).strip('\n')
+
+
+def sssd_cache_reset_docker(host, container):
+    """
+    Helper function to reset the sssd cache inside docker
+    :param host: hostname
+    :return:
+    """
+    docker_service_stop(host, container)
+    cmd = host.run_command([paths.DOCKER, 'exec', '-i',
+                      container,
+                      'rm', '-frv',
+                      '/var/lib/sss/{db,mc}/*'],
+                      raiseonerr=False)
+    assert cmd.returncode == 0
+    docker_service_start(host, container)
+
+
+def disable_dnssec_docker(host, container):
+    """Disable's DNSSEC and restart named-pkcs11 service inside docker"""
+    namedcfg = '/var/lib/' + container + '/etc/named.conf'
+    namedtxt = host.get_file_contents(namedcfg)
+    namedtxt = re.sub('dnssec-validation yes',
+                      'dnssec-validation no',
+                      namedtxt)
+    host.put_file_contents(namedcfg, namedtxt)
+    docker_service_restart(host, container)
+
+
+def dnsforwardzone_add_docker(host, forwardzone, forwarder, container):
+    """Add forwardzone for AD domain for docker image"""
+    cmd = host.run_command([paths.DOCKER, 'exec', '-i',
+                            container,
+                            'ipa', 'dnsforwardzone-add', forwardzone,
+                            '--forwarder', forwarder,
+                            '--forward-policy', 'only'],
+                           raiseonerr=False)
+    print("STDOUT: %s" % cmd.stdout_text)
+    print("STDERR: %s" % cmd.stderr_text)
+    assert cmd.returncode == 0
+    if 'Active zone: TRUE' in cmd.stdout_text:
+        print("DNS Forwardzone has been added sucessfully on IPA "
+              "Master [%s]" % (host.hostname))
+    elif 'already exists' in cmd.stderr_text:
+        print("DNS Forward Zone already exists")
+    else:
+        pytest.fail("Failed to add DNS Forward Zone on "
+                    "IPA master [%s]" % (host.hostname))
+    docker_service_restart(host, container)
