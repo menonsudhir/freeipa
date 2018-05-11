@@ -6,7 +6,7 @@ dirman_pw: Secret123
 dns_forwarder: 10.11.5.19
 domains:
   - name: testrelm.test
-    type: ipa
+    type: IPA 
     hosts:
       - name: master.testrelm.test
         external_hostname: hostname1
