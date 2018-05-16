@@ -188,7 +188,7 @@ class Testmaster(object):
         """
         user1 = 'testuser1'
         userpass = 'TestP@ss123'
-        tp = ui_lib.ui_driver(multihost)
+        tp = ui_lib.ui_driver(multihost.master)
         try:
             tp.setup()
             multihost.driver = tp
@@ -353,7 +353,7 @@ class Testmaster(object):
         """
         user1 = 'testuser1'
         userpass = 'TestP@ss123'
-        tp = ui_lib.ui_driver(multihost)
+        tp = ui_lib.ui_driver(multihost.master)
         try:
             tp.setup()
             multihost.driver = tp

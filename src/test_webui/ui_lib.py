@@ -23,8 +23,8 @@ import time
 
 
 class ui_driver(object):
-    def __init__(self, multihost):
-        self.multihost = multihost
+    def __init__(self, host):
+        self.host = host
         self.display = Display(visible=0, size=(800, 600))
         self.display.start()
 
@@ -48,12 +48,12 @@ class ui_driver(object):
         """
         Get Web UI related configurations and create config dictionary
         """
-        self.config['ipa_server'] = self.multihost.master.hostname
-        self.config['ipa_passwd'] = self.multihost.master.config.admin_pw
-        self.config['ipa_admin'] = self.multihost.master.config.admin_id
-        self.config['browser'] = self.multihost.master.config.browser
-        self.config['virtualdisplay'] = self.multihost.master.config.virtualdisplay
-        self.config['untrusted_certs'] = self.multihost.master.config.untrusted_certs
+        self.config['ipa_server'] = self.host.hostname
+        self.config['ipa_passwd'] = self.host.config.admin_pw
+        self.config['ipa_admin'] = self.host.config.admin_id
+        self.config['browser'] = self.host.config.browser
+        self.config['virtualdisplay'] = self.host.config.virtualdisplay
+        self.config['untrusted_certs'] = self.host.config.untrusted_certs
 
     def get_base_url(self):
         """
@@ -82,11 +82,11 @@ class ui_driver(object):
                     fp.set_preference("browser.helperApps.neverAsk.saveToDisk",
                                       "application/octet-stream")
                     untrusted_certs = self.config.get('untrusted_certs', 'False')
-
                     if untrusted_certs == 'True':
                         fp.accept_untrusted_certs = True
+                    elif untrusted_certs == 'False':
+                        fp.accept_untrusted_certs = False
                     options = fp
-
                 driver = webdriver.Firefox(firefox_profile=options)
             elif browser == 'chrome':
                 options = ChromeOptions()

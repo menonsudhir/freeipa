@@ -15,6 +15,8 @@ from ipa_pytests.shared.rpm_utils import list_rpms
 from ipa_pytests.shared.utils import get_domain_level, ipa_version_gte
 from ipa_pytests.shared.log_utils import backup_logs
 from ipa_pytests.shared.dns_utils import dns_record_add
+from ipa_pytests.shared.qe_certutils import certutil
+from ipa_pytests.shared.utils import run_pk12util
 
 
 def disable_firewall(host):
@@ -536,6 +538,7 @@ def setup_master_docker(master, setup_dns=True):
                            '\n--setup-dns' +
                            '\n--forwarder=' + master.config.dns_forwarder)
         master.put_file_contents(ipaserveroptions, install_options)
+
     install_options_1 = ('\n-r ' + master.domain.realm +
                          '\n-a ' + master.config.admin_pw +
                          '\n-p ' + master.config.dirman_pw +
@@ -896,4 +899,74 @@ def setup_master_ca_less(master, admin_passwd, http_pin, dirsrv_pin, http_cert_f
         cmdstr += "--no-pkinit"
         print("\nRuning command : %s" % cmdstr)
     cmd = master.run_command(cmdstr, raiseonerr=False)
+    return cmd
+
+
+def setup_replica_ca_less(replica, master, admin_passwd, http_pin,
+                          dirsrv_pin, http_cert_file, dirsrv_cert_file):
+    """
+    This is the default testing setup for an IPA CA less Replica.
+    """
+
+    print_time()
+    print("Installing required packages")
+    replica.yum_install(['ipa-server', 'ipa-server-dns', 'bind-dyndb-ldap',
+                         'bind-pkcs11', 'bind-pkcs11-utils'])
+
+    domain_level = get_domain_level(master)
+    if domain_level == 0:
+        print("Domain Level is 0 so we have to use prepare files")
+        print_time()
+        setup_replica_prepare_file(replica, master)
+    else:
+        print("Domain Level is 1 so we do not need a prep file")
+        master.kinit_as_admin()
+        cmd = dns_record_add(master,
+                             master.domain.name,
+                             replica.shortname,
+                             'A',
+                             [replica.ip])
+
+    sleep(5)
+    set_resolv_conf_to_master(replica, master)
+    print("Listing RPMS")
+    list_rpms(replica)
+    print("Disabling Firewall")
+    disable_firewall(replica)
+    print("Setting hostname")
+    set_hostname(replica)
+    print("Setting /etc/hosts")
+    set_etc_hosts(replica, master)
+    set_etc_hosts(master, replica)
+    print("Setting up RNGD")
+    set_rngd(replica)
+    print_time()
+    print("Installing required packages")
+    replica.yum_install(['ipa-server', 'ipa-server-dns',
+                       'bind-dyndb-ldap', 'bind-pkcs11',
+                       'bind-pkcs11-utils'])
+    print(" Installing ipa-server ")
+
+    cmdstr = "{} --http-cert-file {} " \
+             "--dirsrv-cert-file {} --ip-address {} -r {} -p {} " \
+             "--http-pin {} " \
+             "--dirsrv-pin {} -U --principal {} " \
+             "--server {} --domain {} ".format(paths.IPAREPLICAINSTALL,
+                                               http_cert_file,
+                                               dirsrv_cert_file,
+                                               replica.ip,
+                                               replica.domain.realm,
+                                               admin_passwd,
+                                               http_pin, dirsrv_pin,
+                                               master.config.admin_id,
+                                               master.hostname, master.domain.name)
+    if ipa_version_gte(replica, '4.5.0'):
+        cmdstr += "--no-pkinit"
+        print("\nRuning command : %s" % cmdstr)
+    cmd = replica.run_command(cmdstr, raiseonerr=False)
+    if cmd.returncode == 0:
+        print("CA-LESS REPLICA installed successfully")
+    else:
+        print("CA-LESS REPLICA installation failed")
+        print("STDERR:", cmd.stderr_text)
     return cmd
