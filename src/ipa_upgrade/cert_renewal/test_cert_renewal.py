@@ -237,7 +237,7 @@ class Testmaster(object):
         if cmd.returncode == 0:
             updated_version = get_rpm_version(multihost.master, rpm)  # get updated ipa version
             print "Upgraded version is %s " % updated_version  # prints upgraded version
-            if LooseVersion(updated_version) > LooseVersion(ipa_version):
+            if LooseVersion(updated_version) != LooseVersion(ipa_version):
                 print "Upgrade rpm test verified"
                 print("Upgraded Successfully")
             else:
