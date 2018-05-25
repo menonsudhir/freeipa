@@ -11,6 +11,6 @@ for testcase in root.findall('testcase'):
   print name
   testcase.set('name', name)
 tree.write(sys.argv[1:][0])
-xml_str = ('<?xml version="1.0" encoding="UTF-8"?>' + ET.tostring(tree.getroot()))
+xml_str = ('<?xml version="1.0" encoding="utf-8"?>' + ET.tostring(tree.getroot()))
 with open(sys.argv[1:][0], 'wb') as xml_file:
   xml_file.write(xml_str)
