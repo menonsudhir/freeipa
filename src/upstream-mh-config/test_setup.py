@@ -13,6 +13,8 @@ with open((sys.argv[1:])[0]) as stream:
         hosts = code['domains'][0]['hosts']
         no_of_hosts = len(hosts)
         for i in range(no_of_hosts):
+
+           #/etc/hosts setup on sut
            etchostname = "echo "+hosts[i]['name']+" > /etc/hostname"
            subprocess.call(["ssh", "-o StrictHostKeyChecking=no", "root@"+hosts[i]['ip'], etchostname])
            print(etchostname)
@@ -26,6 +28,23 @@ with open((sys.argv[1:])[0]) as stream:
            for k in range(no_of_hosts):
              print(cmd[k])
              subprocess.call(["ssh", "-o StrictHostKeyChecking=no", "root@"+hosts[i]['ip'], cmd[k]])
+
+           #Setup resolv.conf on client machine
+           if hosts[i]['role'] == "client":
+             print(hosts[i]['role'])
+             resolv = []
+             for j in range(no_of_hosts):
+               if hosts[j]['role'] != "client":
+                 if j is 0:
+                   resolv.append("echo nameserver "+hosts[j]['ip']+" > /etc/resolv.conf")
+                 else:
+                   resolv.append("echo nameserver "+hosts[j]['ip']+" >> /etc/resolv.conf")
+             print(resolv)
+             for k in range(no_of_hosts):
+               if hosts[k]['role'] == "client":
+                  for item in resolv:
+                    subprocess.call(["ssh", "-o StrictHostKeyChecking=no", "root@"+hosts[k]['ip'], item])
+
     except yaml.YAMLError as exc:
         print(exc)
 
