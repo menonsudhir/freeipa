@@ -22,10 +22,10 @@ class TestUserA(object):
 
     def test_list_certs_0001(self, multihost):
         """ list IPA certs """
-        #It fails for bz-1512952
+        # It fails for bz-1512952
         script1 = "/usr/lib/python%s/site-packages/ipa_pytests/scripts/qe_ipa_getcerts.py" % sys.version[:3]
-        script =  "/tmp/qe_ipa_getcerts.py"
-        f =  open(script1).read()
+        script = "/root/qe_ipa_getcerts.py"
+        f = open(script1).read()
         multihost.master.transport.put_file_contents(script, f)
         cmd = multihost.master.run_command(['/usr/bin/python', script])
         qe_certs.set_certs(ast.literal_eval(cmd.stdout_text))
@@ -43,7 +43,7 @@ class TestUserA(object):
                 qe_certs.set_certs(ast.literal_eval(cmd.stdout_text))
                 resubmit = qe_certs.get_resubmit_status()
                 if resubmit != 0:
-                    pytest.xfail("Failed : bz-1512952 Found..!!")
+                    pytest.fail("Failed : bz-1512952 Found..!!")
                 next_soonest = qe_certs.get_soonest_expiration()
                 if next_soonest > soonest:
                     break
