@@ -53,6 +53,8 @@ class TestKdcproxy(object):
         stop_firewalld(multihost.replica)
 
         multihost.master.kinit_as_admin()
+        # Sleep for 20 seconds
+        sleep(twentyseconds)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 2. Update /etc/krb5.conf with KdcProxy route
         update_krbv_conf(multihost)
@@ -109,6 +111,8 @@ class TestKdcproxy(object):
                                exp_returncode=0)
         # 5. Start SSSD on client
         service_control(multihost.client, 'sssd', 'start')
+        # Sleep for 20 seconds
+        sleep(twentyseconds)
         cmd = multihost.client.run_command(['kinit', multihost.testuser],
                                            stdin_text=multihost.password,
                                            raiseonerr=False)
@@ -145,6 +149,8 @@ class TestKdcproxy(object):
         start_firewalld(multihost.master)
         start_firewalld(multihost.replica)
         service_control(multihost.client, 'sssd', 'restart')
+        # Sleep for 20 seconds
+        sleep(twentyseconds)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 3. Run kinit
         cmd = multihost.client.run_command(['kinit', multihost.testuser],
@@ -183,6 +189,8 @@ class TestKdcproxy(object):
         revert_krbv_conf(multihost)
         # 2. Update krb5 with multiple replica
         update_krbv_conf(multihost, replica=True)
+        # Sleep for 20 seconds
+        sleep(twentyseconds)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 3. Run Kinit
         multihost.client.kinit_as_user(multihost.testuser, multihost.password)
@@ -303,6 +311,8 @@ class TestKdcproxy(object):
         update_krbv_conf(multihost)
         # 4. Run update-ca-trust
         multihost.client.qerun(['update-ca-trust'], exp_returncode=0)
+        # Sleep for 20 seconds
+        sleep(twentyseconds)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 5. Run kinit
         cmd = multihost.client.run_command(['kinit', multihost.testuser],
@@ -339,6 +349,8 @@ class TestKdcproxy(object):
         revert_krbv_conf(multihost)
         # 2. Update client krb5.conf using correct PEM file
         update_krbv_conf(multihost, httpanchor='FILE:/etc/ipa/ca.crt')
+        # Sleep for 20 seconds
+        sleep(twentyseconds)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 3. Run kinit
         multihost.client.kinit_as_user(multihost.testuser, multihost.password)
@@ -374,6 +386,8 @@ class TestKdcproxy(object):
         revert_krbv_conf(multihost)
         # 2. Modify Client krb5.conf using non-existent PEM file
         update_krbv_conf(multihost, httpanchor='FILE:/tmp/non-existent.crt')
+        # Sleep for 20 seconds
+        sleep(twentyseconds)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 3. Run kinit
         cmd = multihost.client.run_command(['kinit', multihost.testuser],
@@ -412,6 +426,8 @@ class TestKdcproxy(object):
         # 2. Modify Client krb5.conf using non-existent PEM file
         httpanchorfile = 'FILE:/etc/pki/tls/certs/ca-bundle.crt'
         update_krbv_conf(multihost, httpanchor=httpanchorfile)
+        # Sleep for 20 seconds
+        sleep(twentyseconds)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 3. Run kinit
         cmd = multihost.client.run_command(['kinit', multihost.testuser],
@@ -466,6 +482,7 @@ class TestKdcproxy(object):
                                    exp_returncode=0)
 
         service_control(multihost.client, 'sssd', 'restart')
+        # Sleep for 20 seconds
         sleep(twentyseconds)
         multihost.client.qerun(['kdestroy', '-A'], exp_returncode=0)
         # 5. Run kinit
