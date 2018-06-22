@@ -8,11 +8,9 @@ SetUp Requirements:
 """
 
 import pytest
-import re
 from ipa_pytests.qe_install import setup_master
 from ipa_pytests.qe_install import uninstall_server
-from ipa_pytests.qe_install import set_hostname
-from ipa_pytests.qe_install import set_etc_hosts
+
 
 class TestBugCheck(object):
     """ Test Class """
@@ -165,42 +163,6 @@ class TestBugCheck(object):
         multihost.master.qerun(['ipa', 'dnsrecord-find', zone_name],
                                exp_returncode=0,
                                exp_output=r'(.*)AAAA record: ::2, ::23, ::43(.*)')
-
-    def test_0005_bz1353940(self, multihost):
-        """
-        IDM-IPA-TC: dns-services: Verification of bz1353940 - Creation of new DNS zone without A records fails to return NS server address
-        """
-        master = multihost.master
-        uninstall_server(master)
-        domain_new = master.hostname
-        realm_new = domain_new.upper()
-        hostname_new = 'bz1353940.' + domain_new
-        # Set new hostname
-        master.put_file_contents('/etc/hostname', hostname_new)
-        master.run_command(['hostnamectl'])
-        # Set /etc/hosts
-        etc_hosts = master.get_file_contents('/etc/hosts')
-        for remove in [master.ip, master.hostname, master.external_hostname]:
-            etc_hosts = re.sub(r'^.*%s.*\n' % remove, '', etc_hosts, flags=re.MULTILINE)
-        etc_hosts += '\n%s %s\n' % (master.ip, hostname_new)
-        master.put_file_contents('/etc/hosts', etc_hosts)
-        # Install ipa server
-        multihost.master.qerun(['ipa-server-install', '--setup-dns',
-                                '--forwarder', master.config.dns_forwarder,
-                                '--domain', domain_new,
-                                '--realm', realm_new,
-                                '--admin-password', master.config.admin_pw,
-                                '--ds-password', master.config.dirman_pw,
-                                '--allow-zone-overlap','-U'])
-        master.kinit_as_admin()
-        # Verify dig retruns NS record for testrelm.test
-        cmd = ['ipa', 'dnszone-add', master.domain.name]
-        master.qerun(cmd, exp_returncode=0)
-        cmd = ['dig', '-t', 'NS', master.domain.name]
-        master.qerun(cmd, exp_returncode=0, exp_output='ANSWER: 1,')
-        set_hostname(master)
-        etc_hosts = re.sub(r'^.*%s.*\n' % hostname_new, '', etc_hosts, flags=re.MULTILINE)
-        set_etc_hosts(master)
 
     def class_teardown(self, multihost):
         """ Full suite teardown """
