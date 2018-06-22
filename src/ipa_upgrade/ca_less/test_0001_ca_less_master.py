@@ -227,6 +227,15 @@ class Testmaster(object):
         multihost.driver.init_app(username=user1, password=userpass)
         multihost.driver.teardown()
 
+    def test_bz1577805(self, multihost):
+        """
+        Test when after upgrade : it failed to back up the CA configuration.
+        bz1577805 automation
+        """
+        msg = "No such file or directory: '/var/lib/pki/pki-tomcat/conf/ca/CS.cfg'"
+        upgrade_log = multihost.master.get_file_contents(paths.IPAUPGRADELOGFILE)
+        assert msg not in upgrade_log
+
     def class_teardown(self, multihost):
         """Full suite teardown """
         pass
