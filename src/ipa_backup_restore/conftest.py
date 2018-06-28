@@ -62,4 +62,7 @@ def setup_session(request, multihost):
                    force=True)
 
         uninstall_server(multihost.master)
+        args = "lsof -i tcp:8443 | awk 'NR!=1 {print $2}' | xargs kill"
+        print("Running : %s"%args)
+        multihost.master.run_command(args, raiseonerr=False)
     request.addfinalizer(teardown_session)
