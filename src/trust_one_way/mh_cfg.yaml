@@ -12,12 +12,12 @@ domains:
         external_hostname: hostname1
         external_ip: 1.2.3.4
         role: master
-  - name: ipaad2012r2.test
+  - name: ipaad2016.test
     type: ad
     hosts:
-      - name: idm-qe-ipa-win3.ipaad2012r2.test
-        external_hostname: idm-qe-ipa-win3.ipaad2012r2.test
-        ip: 10.8.63.43
+      - name: idm-qe-ipa-ci1.ipaad2016.test
+        external_hostname: idm-qe-ipa-ci1.ipaad2016.test
+        ip: 10.8.63.38
         role: ad
         username: 'Administrator'
         password: 'Secret123'
