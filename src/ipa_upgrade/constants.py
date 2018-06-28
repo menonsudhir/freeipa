@@ -16,5 +16,6 @@ repo_urls = {
     "7.5.0": ["http://download-node-02.eng.bos.redhat.com/rel-eng/updates/RHEL-7.5/RHEL-7.5-Update-0.0/compose/Server/x86_64/os/"],
     #"7.5.a": ["http://download.eng.pnq.redhat.com/rel-eng/repos/rhel-7.5-candidate/x86_64/"],
     "7.5.a": ["http://download-node-02.eng.bos.redhat.com/rel-eng/updates/RHEL-7.5/RHEL-7.5-Update-1.1/compose/Server/x86_64/os/"],
-    "7.5.b": ["http://download.eng.pnq.redhat.com/rel-eng/repos/rhel-7.5-z-candidate/x86_64/"]           # 7.5z repo
+    "7.5.b": ["http://download.eng.pnq.redhat.com/rel-eng/repos/rhel-7.5-z-candidate/x86_64/"],           # 7.5z repo
+    "7.6.a": ["http://download-node-02.eng.bos.redhat.com/rel-eng/repos/rhel-7.6-candidate/x86_64/"]
 }
