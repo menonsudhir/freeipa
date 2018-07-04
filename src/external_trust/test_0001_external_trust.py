@@ -99,13 +99,15 @@ class TestExternalTrust(object):
         add_external_trust(multihost)
 
         # verifying user
-        id_user(multihost.master, USER1 + '@' + addomain)
+        #id_user(multihost.master, USER1 + '@' + addomain)
 
         # cleaning sssd cache
         sssd_cache_reset(multihost.master)
         print "waiting for 60 seconds"
         time.sleep(60)
 
+        # verifying user
+        id_user(multihost.master, USER1 + '@' + addomain)
         # getent passwd
         getent(multihost.master, 'passwd', USER1 + '@' + addomain, exp_output=USER1)
 
