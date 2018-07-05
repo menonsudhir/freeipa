@@ -27,19 +27,13 @@ class TestBugCheck(object):
         """
         multihost.master.kinit_as_admin()
         cmd = 'ipa permission-add'
-        import pexpect
-        op = pexpect.run(cmd,
-                         events={"Permission name: ": 'sample_permission\n',
-                                 "\[Granted rights\]: ": "read\n",
-                                 '\[Subtree\]: ': 'cn=groups,cn=accounts,'
-                                                  + multihost.master.domain.basedn.replace('"', '')
-                                                  + '\n',
-                                 '\[Member of group\]: ': 'admins\n',
-                                 '\[Target group\]: ': 'admins\n',
-                                 '\[Type\]: ': "\n"})
-        print ("###############################command run output #######################")
-        print (op)
-        if 'Added permission "sample_permission"' not in op:
+        result = multihost.master.run_command(cmd,
+                                              stdin_text=('sample_permission\n'
+                                              'read\ncn=groups,cn=accounts,'
+                                              + multihost.master.domain.basedn.replace('"', '')
+                                              + '\nadmins\nadmins\n\n'))
+
+        if 'Added permission "sample_permission"' not in result.stdout_text:
             pytest.xfail("expected output not found")
         else:
             print("COMMAND SUCCEEDED and bz1186054 Verified!")
