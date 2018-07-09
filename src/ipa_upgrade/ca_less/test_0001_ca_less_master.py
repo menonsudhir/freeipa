@@ -19,6 +19,7 @@ from ipa_pytests.qe_install import setup_master_ca_less
 from ipa_pytests.shared.user_utils import add_ipa_user, show_ipa_user
 from ipa_pytests.shared.utils import stop_firewalld
 from ipa_pytests.test_webui import ui_lib
+from ipa_pytests.shared.utils import ipa_version_gte
 
 
 class Testmaster(object):
@@ -26,6 +27,8 @@ class Testmaster(object):
 
     def class_setup(self, multihost):
         """
+        :Title: IDM-IPA-TC: Install CA-less IPA
+
         Setup for class
         """
         print("\nClass Setup")
@@ -58,7 +61,10 @@ class Testmaster(object):
 
         certs = certutil(master, nssdb_dir)
         print("\n3. Creating self-signed CA certificate")
-        certs.selfsign_cert(ca_subject, ca_nick, options=['-m', '1'])
+        if ipa_version_gte(multihost.master, '4.5.0'):
+            certs.selfsign_cert(ca_subject, ca_nick, options=['-m', '1', '--extSKID'])
+        else:
+            certs.selfsign_cert(ca_subject, ca_nick, options=['-m', '1'])
 
         print("\nSleeping for [%d] seconds" % seconds)
         time.sleep(seconds)
@@ -111,7 +117,7 @@ class Testmaster(object):
 
     def test_web_ui_0001(self, multihost):
         """
-        test for web ui testing before upgrade
+        :Title: IDM-IPA-TC: Web UI test for IPA master.
         """
         user1 = 'testuser1'
         userpass = 'TestP@ss123'
@@ -126,8 +132,8 @@ class Testmaster(object):
 
     def test_rpm_version_0002(self, multihost):
         """
-        test for automation of upgradation of packeges
-        test for rpm comparison
+        :Title: IDM-IPA-TC: Perform Upgrade and compare rpm version
+
         """
         rpm = "ipa-server"
         print "Current IPA version"
@@ -165,8 +171,8 @@ class Testmaster(object):
 
     def test_logs_0003(self, multihost):
         """
-        test for automation of upgradation of packeges
-        test for logs verification
+        :Title: IDM-IPA-TC:  Test for logs verification
+
         """
 
         str1 = 'The ipa-server-upgrade command was successful'
@@ -179,7 +185,7 @@ class Testmaster(object):
 
     def test_services_0004(self, multihost):
         """
-        test for service verification after upgrade
+        :Title: IDM-IPA-TC: Test for service verification after upgrade
         """
         # check ipactl status after upgrade
 
@@ -202,8 +208,8 @@ class Testmaster(object):
 
     def test_users_0005(self, multihost):
         """
-        test for automation of upgradation of packeges
-        test for service verification
+       :Title: IDM-IPA-TC: Test for user verification after upgrade
+
         """
         user1 = 'testuser1'
         multihost.master.kinit_as_admin()
@@ -214,7 +220,7 @@ class Testmaster(object):
 
     def test_web_ui_0006(self, multihost):
         """
-        test for web ui testing after upgrade
+        :Title: IDM-IPA-TC: Web UI test for IPA master  after upgrad.
         """
         user1 = 'testuser1'
         userpass = 'TestP@ss123'
@@ -229,6 +235,7 @@ class Testmaster(object):
 
     def test_bz1577805(self, multihost):
         """
+        :Title: IDM-IPA-TC:  Test for bz1577805 verification
         Test when after upgrade : it failed to back up the CA configuration.
         bz1577805 automation
         """
