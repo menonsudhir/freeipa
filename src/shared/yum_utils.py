@@ -12,11 +12,16 @@ from rpm_utils import check_rpm
 def add_repo(host, repo_url):
     """ add repo file"""
 
-    cmd = check_rpm(host, ['yum-utils'])
-    nogpgcheck = [paths.YUMCONFIGMANAGER, '--setopt=\*.gpgcheck=0', '--save']
-    cmd2 = host.run_command(nogpgcheck, raiseonerr=False)
-    yum_add = [paths.YUMCONFIGMANAGER, '--add-repo=%s' % repo_url]
-    cmd = host.run_command(yum_add, raiseonerr=False)
+    path = '/etc/yum.repos.d/upgrade.repo'
+    contents = '[upgrade-repo]\nname=upgrade repo\ngpgcheck=0\nenabled=1\n'
+    contents += 'baseurl=%s' % repo_url
+    host.put_file_contents(path, contents)
+    yumplugin = '/etc/yum/pluginconf.d/priorities.conf'
+    if host.transport.file_exists(yumplugin):
+        host.run_command(['mv', yumplugin,
+                          '%s.qebackup' % yumplugin])
+        conf_contents = '[main]\nenabled = 0'
+        host.put_file_contents(yumplugin, conf_contents)
 
 
 def yum_update(host, rpm_list):

@@ -1,7 +1,6 @@
 """ Conftest for server install """
 import pytest
 from ipa_pytests.qe_class import multihost
-from ipa_pytests.qe_install import uninstall_server
 from ipa_pytests.qe_class import qe_use_class_setup
 
 
@@ -20,7 +19,6 @@ def setup_session(request, multihost):
     def teardown_session():
         """ define fixture for session level teardown """
         """ This is teardown session"""
-        uninstall_server(multihost.master)
 
     request.addfinalizer(teardown_session)
 
