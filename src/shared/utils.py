@@ -510,3 +510,20 @@ def dnsforwardzone_add_docker(host, forwardzone, forwarder, container):
         pytest.fail("Failed to add DNS Forward Zone on "
                     "IPA master [%s]" % (host.hostname))
     docker_service_restart(host, container)
+
+
+def check_mod_ssl_migration(host):
+    """check for migration of IPA server to mod_ssl from mod_nss"""
+    host.kinit_as_admin()
+    cmdstr1 = [paths.IPA, 'user-show', 'admin']
+    cmd = host.run_command(cmdstr1)
+    print ("ipa user-show admin return code is: %s" % cmd.returncode)
+    cmdstr2 = [paths.IPA, 'cert-find']
+    cmd = host.run_command(cmdstr2)
+    print ("ipa cert-find return code is: %s" % cmd.returncode)
+    crt_file = '/var/lib/ipa/certs/httpd.crt'
+    if host.transport.file_exists(crt_file):
+        print("/var/lib/ipa/certs/httpd.crt file exists")
+    key_file = '/var/lib/ipa/private/httpd.key'
+    if host.transport.file_exists(key_file):
+        print("/var/lib/ipa/private/httpd.key file exists")
