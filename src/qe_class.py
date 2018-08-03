@@ -346,12 +346,12 @@ def qe_use_class_setup(request, multihost):
         except StandardError as errval:
             print str(errval)
             pytest.skip("class_setup_failed")
-        if hasattr(request.cls(), 'class_teardown'):
-            request.addfinalizer(lambda: request.cls().class_teardown(multihost))
-            request.addfinalizer(lambda: qe_newline())  # pylint: disable=unnecessary-lambda
-        else:
-            print("Missing class_teardown method for "
-                  "Test Case : %s" % request.cls().__class__.__name__)
+    if hasattr(request.cls(), 'class_teardown'):
+        request.addfinalizer(lambda: request.cls().class_teardown(multihost))
+        request.addfinalizer(lambda: qe_newline())  # pylint: disable=unnecessary-lambda
+    else:
+        print("Missing class_teardown method for "
+              "Test Case : %s" % request.cls().__class__.__name__)
 
 
 @pytest.fixture(scope="function", autouse=True)

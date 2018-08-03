@@ -58,8 +58,75 @@ def sudorule_add(host, rulename, usercat=None, hostcat=None, cmdcat=None, runasu
     if check.returncode != 0:
         print ("Error in adding sudo rule " + rulename)
     else:
-        print (rulename + " has been added successfully")
+        print (rulename + " has been added successfully\n")
 
+def sudorule_add_allow_command(host, rulename, sudocmds=None):
+    """
+    Function to allow a sudo command for rule
+    :param host: hostname
+    :param rulename: string
+    :param sudocmds: string
+    :return:
+    """
+    cmd_list = ['ipa', 'sudorule-add-allow-command', rulename]
+    if sudocmds is not None:
+        cmd_list.append('--sudocmds={}'.format(sudocmds))
+
+    check = host.run_command(cmd_list,
+                             set_env=True)
+    assert check.returncode == 0
+    print ("Sudorule allow command {} has been added successfully\n".format(sudocmds))
+
+
+def sudorule_add_deny_command(host, rulename, sudocmds=None):
+    """
+    Function to deny a sudo command
+    :param host: hostname
+    :param rulename: string
+    :param sudocmds: string
+    :return:
+    """
+    cmd_list = ['ipa', 'sudorule-add-deny-command', rulename]
+    if sudocmds is not None:
+        cmd_list.append('--sudocmds={}'.format(sudocmds))
+
+    check = host.run_command(cmd_list,
+                             set_env=True)
+    assert check.returncode == 0
+    print ("Sudorule deny command {} has been added successfully\n".format(sudocmds))
+
+
+def sudocmd_add(host, sudocmdname=None):
+    """
+    Function to add a sudo command from IDM
+    :param host: hostname: string
+    :param sudocmdname: string
+    :return:
+    """
+    cmd_list = ['ipa','sudocmd-add']
+
+    if sudocmdname is not None:
+        cmd_list.append(sudocmdname)
+
+    check = host.run_command(cmd_list)
+    assert check.returncode == 0
+    print ("Sudo command {} has been added successfully".format(sudocmdname))
+
+def sudocmd_del(host, sudocmdname=None):
+    """
+    Function to delete a sudo command from IDM
+    :param host: hostname: string
+    :param sudocmdname: string
+    :return:
+    """
+    cmd_list = ['ipa', 'sudocmd-del']
+
+    if sudocmdname is not None:
+        cmd_list.append(sudocmdname)
+
+    check = host.run_command(cmd_list)
+    assert check.returncode == 0
+    print ("Sudo command {} has been deleted successfully in teardown".format(sudocmdname))
 
 def sudorule_mod(host, rulename, usercat=None, hostcat=None, cmdcat=None, runasusercat=None, runasgroupcat=None,
                  order=None, externaluser=None, runasexternaluser=None, runasexternalgroup=None, desc=None,
