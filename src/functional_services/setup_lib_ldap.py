@@ -26,7 +26,7 @@ def setup_ldap_service(multihost):
 
 def _ldap_install_software(multihost):
     """ Install LDAP Software """
-    multihost.client.qerun(['yum', '-y', '--nogpgcheck', 'install', '389-ds-base', 'net-tools'])
+    multihost.client.qerun(['yum', '-y', '--nogpgcheck', 'install', 'net-tools', '389-ds-base-legacy-tools'])
 
 
 def _ldap_add_user(multihost):
@@ -59,6 +59,7 @@ def _ldap_initialize_instance(multihost):
     ldapcfg = re.sub('MY_VAR_CLIENT', multihost.client.hostname, ldapcfg)
     ldapcfg = re.sub('MY_VAR_PORT', '3389', ldapcfg)
     multihost.client.put_file_contents(cfgput, ldapcfg)
+    multihost.client.qerun(['semanage', 'port', '--add', '-t', 'ldap_port_t', '-p', 'tcp', '3389'])
     multihost.client.qerun(['/usr/sbin/setup-ds.pl', '--silent', '--file=' + cfgput])
     time.sleep(60)
 
@@ -152,9 +153,9 @@ def _ldap_cfg_ssl_with_cert(multihost):
     # must put to master here because that's where ldapmodify is run from
     multihost.master.put_file_contents(ldif_put, ldapcfg)
     ldapmodify_cmd(multihost.master, uri, username, password, ldif_put)
-    pin = "Internal (Software) Token:Secret123"
-    pin_file = "/etc/dirsrv/slapd-instance1/pin.txt"
-    multihost.client.put_file_contents(pin_file, pin)
+    #pin = "Internal (Software) Token:Secret123"
+    #pin_file = "/etc/dirsrv/slapd-instance1/pin.txt"
+    #multihost.client.put_file_contents(pin_file, pin)
     multihost.client.qerun(['semanage', 'port', '-a', '-t', 'ldap_port_t',
                             '-p', 'tcp', '6636'])
     service_control(multihost.client, 'dirsrv@instance1', 'restart')

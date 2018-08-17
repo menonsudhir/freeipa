@@ -35,7 +35,7 @@ class TestHttpTests(object):
     def test_0003_access_https_with_valid_creds(self, multihost):
         """ IPA-TC: Functional Services: Access https server with valid credentials """
         ipa_cert = "/etc/ipa/ca.crt"
-        url = "https://" + multihost.client.hostname + ":8443/ipatest/"
+        url = "https://" + multihost.client.hostname + ":443/ipatest/"
         multihost.client.kinit_as_user('httpuser1', 'Secret123')
         multihost.client.qerun(['curl', '-v', '--negotiate', '--cacert', ipa_cert, '-u:', url],
                                exp_output='404')
@@ -44,7 +44,7 @@ class TestHttpTests(object):
     def test_0004_access_https_without_valid_creds(self, multihost):
         """ IPA-TC: Functional Services: Access https server without valid credentials """
         ipa_cert = "/etc/ipa/ca.crt"
-        url = "https://" + multihost.client.hostname + ":8443/ipatest/"
+        url = "https://" + multihost.client.hostname + ":443/ipatest/"
         multihost.client.qerun(['kdestroy', '-A'])
         multihost.client.qerun(['curl', '-v', '--negotiate', '--cacert', ipa_cert, '-u:', url],
                                exp_output='401')

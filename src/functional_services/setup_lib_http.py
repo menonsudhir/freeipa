@@ -2,6 +2,7 @@
 import re
 from ipa_pytests.shared.user_utils import add_ipa_user
 from ipa_pytests.shared.qe_certutils import certutil
+import time
 
 
 def setup_http_service(multihost):
@@ -11,14 +12,14 @@ def setup_http_service(multihost):
     _http_add_service(multihost)
     _http_get_keytab(multihost)
     _http_setup_config(multihost)
-    _http_add_ipa_ca_cert(multihost)
+    #_http_add_ipa_ca_cert(multihost)
     _http_cfg_ssl_with_cert(multihost)
 
 
 def _http_install_software(multihost):
     """ class setup """
-    multihost.client.qerun(['yum', '-y', '--nogpgcheck', 'install', 'httpd', 'mod_nss',
-                            'mod_auth_kerb'])
+    multihost.client.qerun(['yum', '-y', '--nogpgcheck', 'install', 'httpd', 'mod_ssl',
+                            'mod_auth_gssapi'])
 
 
 def _http_add_user(multihost):
@@ -44,12 +45,11 @@ def _http_get_keytab(multihost):
 
 def _http_setup_config(multihost):
     """ configure http server """
-    cfgget = '/opt/ipa_pytests/functional_services/http-krb.conf'
-    cfgput = '/etc/httpd/conf.d/http-krb.conf'
+    cfgget = '/opt/ipa_pytests/functional_services/http-gssapi.conf'
+    cfgput = '/etc/httpd/conf.d/http-gssapi.conf'
     multihost.client.qerun(['rm', '-rf', cfgput])
-    httpcfg = multihost.client.get_file_contents(cfgget)
-    httpcfg = re.sub('MY_VAR_REALM', multihost.client.domain.realm, httpcfg)
-    multihost.client.put_file_contents(cfgput, httpcfg)
+    #multihost.client.put_file_contents(cfgput, cfgget)
+    multihost.client.qerun(['cp', cfgget, cfgput])
     multihost.client.qerun(['service', 'httpd', 'start'])
 
 
@@ -69,26 +69,23 @@ def _http_add_ipa_ca_cert(multihost):
 
 def _http_cfg_ssl_with_cert(multihost):
     """ Create Certficate for http service """
-    http_cert_db = "/etc/httpd/alias"
-    nick = multihost.client.hostname
-    trust = "u,u,u"
-    csr_file = "/tmp/http-func-services.csr"
-    crt_file = "/tmp/http-func-services.crt"
-    mycerts = certutil(multihost.client, http_cert_db)
-    subject_base = mycerts.get_ipa_subject_base(multihost.master)
-    subject = "CN=" + multihost.client.hostname + "," + subject_base
-    mycerts.request_cert(subject, csr_file)
-    multihost.client.qerun(['ipa', 'cert-request',
-                            '--principal=HTTP/' + multihost.client.hostname,
-                            csr_file])
-    multihost.client.qerun(['ipa', 'service-show',
-                            'HTTP/' + multihost.client.hostname,
-                            '--out=' + crt_file])
-    mycerts.add_cert(crt_file, nick, trust)
-    mycerts.verify_cert(nick)
-
-    nss_cfg_file = "/etc/httpd/conf.d/nss.conf"
+    multihost.client.qerun(['ipa-getcert', 'request',
+                            '-k', '/etc/pki/tls/private/server.key',
+                            '-f', '/etc/pki/tls/certs/server.crt'])
+    time.sleep(30)
+    nss_cfg_file = "/etc/httpd/conf.d/ssl.conf"
     nsscfg = multihost.client.get_file_contents(nss_cfg_file)
-    nsscfg = re.sub('Server-Cert', multihost.client.hostname, nsscfg)
+
+    CertFile = "SSLCertificateFile /etc/pki/tls/certs/localhost.crt"
+    CertNewFile = "SSLCertificateFile /etc/pki/tls/certs/server.crt"
+    nsscfg = re.sub(CertFile, CertNewFile, nsscfg)
+
+    KeyFile = "SSLCertificateKeyFile /etc/pki/tls/private/localhost.key"
+    KeyNewFile = "SSLCertificateKeyFile /etc/pki/tls/private/server.key"
+    nsscfg = re.sub(KeyFile, KeyNewFile, nsscfg)
+
+    CAFile = "#SSLCACertificateFile /etc/pki/tls/certs/ca-bundle.crt"
+    CANewFile = "SSLCACertificateFile /etc/ipa/ca.crt"
+    nsscfg = re.sub(CAFile, CANewFile, nsscfg)
     multihost.client.put_file_contents(nss_cfg_file, nsscfg)
     multihost.client.qerun(['service', 'httpd', 'restart'])

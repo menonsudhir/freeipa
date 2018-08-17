@@ -59,7 +59,8 @@ class certutil(object):
                                '-n', nick,
                                '-t', trust,
                                '-a',
-                               '-i', cert_file])
+                               '-i', cert_file,
+                               '-f', self.password_file])
 
     def list_certs(self, nick=None, db_dir=None):
         """ certutil list (-L) command """

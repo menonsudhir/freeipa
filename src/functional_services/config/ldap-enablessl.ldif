@@ -11,17 +11,13 @@ changetype: modify
 replace: nsssl3
 nsssl3: on
 -
-replace: nsssl3ciphers
-nsssl3ciphers: -rsa_null_md5,+rsa_fips_3des_sha,+rsa_fips_des_sha,+rsa_3des_sha,+rsa_rc4_128_md5,+rsa_des_sha,+rsa_rc2_40_md5,+rsa_rc4_40_md5
--
 replace: nssslclientauth
 nssslclientauth: allowed
 
 dn: cn=RSA,cn=encryption,cn=config
-changetype: add
-objectclass: top
-objectclass: nsEncryptionModule
-cn: RSA
-nsssltoken: internal (software)
+changetype: modify
+replace: nssslpersonalityssl
 nssslpersonalityssl: MY_VAR_CLIENT
-nssslactivation: on
+-
+replace: nsssltoken
+nsssltoken: internal (software)
