@@ -61,14 +61,14 @@ def remove_rpm(host, rpm_list):
     print("Removing " + "".join(rpm_list) + "from " + host.hostname)
     cmd_list = [paths.RPM, '-e']
     cmd_list.extend(rpm_list)
-    print (cmd_list)
+    print(cmd_list)
     output = host.run_command(cmd_list,
                               set_env=True,
                               raiseonerr=False)
     if output.returncode != 0:
-        print ("Error in removing packages - " + "".join(cmd_list))
+        print("Error in removing packages - " + "".join(cmd_list))
     else:
-        print ("Packages " + "".join(rpm_list) + "has been removed")
+        print("Packages " + "".join(rpm_list) + "has been removed")
 
 
 def get_rpm_version(host, rpm_list):

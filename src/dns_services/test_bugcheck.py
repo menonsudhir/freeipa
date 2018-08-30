@@ -137,7 +137,7 @@ class TestBugCheck(object):
         zone_name_dot = zone_name + '.'
         ns_add = dnszone_add + [name_server, zone_name]
         multihost.master.run_command(ns_add)
-        print ("New zone added successfully")
+        print("New zone added successfully")
 
         multihost.master.kinit_as_admin()
         # arecord add

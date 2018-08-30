@@ -201,23 +201,23 @@ def add_dnsforwarder(host, domain, ip):
     """Add DNS forwarder on AD machine for IPA domain"""
 
     cmd = host.run_command('dnscmd /ZoneInfo ' + domain, raiseonerr=False)
-    print ("Add dns forwarder return code is: %s" % cmd.returncode)
-    print cmd.stdout_text, cmd.stderr_text
+    print("Add dns forwarder return code is: %s" % cmd.returncode)
+    print(cmd.stdout_text, cmd.stderr_text)
     if cmd.returncode == 1:
         #cmd = host.run_command(['dnscmd', '/ZoneDelete', domain, '/DsDel', '/f'],
         cmd = host.run_command(['dnscmd', '/ZoneDelete', domain, '/f'],
                                raiseonerr=False)
-        print ("zone delete return code is: %s" % cmd.returncode)
-        print cmd.stdout_text, cmd.stderr_text
+        print("zone delete return code is: %s" % cmd.returncode)
+        print(cmd.stdout_text, cmd.stderr_text)
     cmd = host.run_command('dnscmd /zoneadd ' + domain + ' /forwarder ' + ip, raiseonerr=False)
-    print ("zone add return code is: %s" % cmd.returncode)
-    print cmd.stdout_text, cmd.stderr_text
+    print("zone add return code is: %s" % cmd.returncode)
+    print(cmd.stdout_text, cmd.stderr_text)
     cmd = host.run_command('ipconfig /flushdns', raiseonerr=False)
-    print ("flush dns return code is: %s" % cmd.returncode)
-    print cmd.stdout_text, cmd.stderr_text
+    print("flush dns return code is: %s" % cmd.returncode)
+    print(cmd.stdout_text, cmd.stderr_text)
     cmd = host.run_command('dnscmd /clearcache', raiseonerr=False)
-    print ("clear cache return code is: %s" % cmd.returncode)
-    print cmd.stdout_text, cmd.stderr_text
+    print("clear cache return code is: %s" % cmd.returncode)
+    print(cmd.stdout_text, cmd.stderr_text)
 
 def ipa_config_mod(multihost, opts=None):
     """
@@ -253,7 +253,7 @@ def get_domain_level(host):
         found = re.search('Current domain level: (?P<level>.+)\n',
                           cmd.stdout_text, re.MULTILINE)
         domain_level = found.group('level')
-    except StandardError as errval:
+    except Exception as errval:
         print("Unable to run domainlevel-get command: %s" % errval)
         domain_level = 0
     return int(domain_level)
@@ -517,10 +517,10 @@ def check_mod_ssl_migration(host):
     host.kinit_as_admin()
     cmdstr1 = [paths.IPA, 'user-show', 'admin']
     cmd = host.run_command(cmdstr1)
-    print ("ipa user-show admin return code is: %s" % cmd.returncode)
+    print("ipa user-show admin return code is: %s" % cmd.returncode)
     cmdstr2 = [paths.IPA, 'cert-find']
     cmd = host.run_command(cmdstr2)
-    print ("ipa cert-find return code is: %s" % cmd.returncode)
+    print("ipa cert-find return code is: %s" % cmd.returncode)
     crt_file = '/var/lib/ipa/certs/httpd.crt'
     if host.transport.file_exists(crt_file):
         print("/var/lib/ipa/certs/httpd.crt file exists")

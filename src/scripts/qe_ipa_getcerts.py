@@ -26,4 +26,4 @@ for certreq in obj_if.get_requests():
     nickname = certdata['nickname']
     certs[nickname] = certdata
 
-print certs
+print(certs)

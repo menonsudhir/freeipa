@@ -13,9 +13,9 @@ class Testipauserfind(object):
     """ Test Class """
     def class_setup(self, multihost):
         """ Setup for class """
-        print "\nClass Setup"
-        print "MASTER: ", multihost.master.hostname
-        print "CLIENT: ", multihost.client.hostname
+        print ("\nClass Setup")
+        print ("MASTER: ", multihost.master.hostname)
+        print ("CLIENT: ", multihost.client.hostname)
 
     #def test_0001_ipauserfinderror(self, multihost):
     #    """

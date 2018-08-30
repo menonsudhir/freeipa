@@ -134,14 +134,14 @@ class QeHost(pytest_multihost.host.Host):
         host.
         """
         cmd = self.run_command('hostname')
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
     def get_os_version(host):
         rel = "/etc/redhat-release"
         # Set default value
         rhel_ver_string = '72'
         # Copy contents of file in variable
-        release_text = host.transport.get_file_contents(rel)
+        release_text = host.transport.get_file_contents(rel, encoding='utf-8')
         # Form Python regex for OS version
         release_regex = re.compile(r"Red Hat.*([0-9])\.([0-9])")
         osver = release_regex.match(release_text)
@@ -160,7 +160,7 @@ class QeHost(pytest_multihost.host.Host):
         self.run_command('kdestroy -A')
         self.run_command(['kinit', user], stdin_text=passwd, raiseonerr=False)
         cmd = self.run_command('klist')
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
     def kinit_as_admin(self):
         """
@@ -179,10 +179,10 @@ class QeHost(pytest_multihost.host.Host):
         - if user arg is set, will run command as this user via su
         """
         if type(command) is list:
-            print "\nQERUN COMMAND: %s" % " ".join(command)
+            print("\nQERUN COMMAND: %s" % " ".join(command))
             su_command = ['su', '-', user, '-c', " ".join(command)]
         else:
-            print "\nQERUN COMMAND: %s" % command
+            print("\nQERUN COMMAND: %s" % command)
             su_command = 'su - %s -c "%s"' % (user, command)
 
         if user is None:
@@ -191,8 +191,8 @@ class QeHost(pytest_multihost.host.Host):
             cmd = self.run_command(su_command, stdin_text, raiseonerr=False)
 
         all_output = cmd.stdout_text + cmd.stderr_text
-        print "QERUN ALL OUTPUT:"
-        print all_output
+        print("QERUN ALL OUTPUT:")
+        print(all_output)
 
         if cmd.returncode != exp_returncode:
             msg = "\n> returncode mismatch."
@@ -201,16 +201,16 @@ class QeHost(pytest_multihost.host.Host):
             pytest.fail(msg, pytrace=False)
 
         if exp_output is None:
-            print "Not checking expected output"
+            print("Not checking expected output")
         elif not re.search(exp_output, all_output):
             msg = "\n> expected output not found."
             msg += "\n> GOT: {}".format(all_output.rstrip('\n'))
             msg += "\n> EXPECTED: {}".format(exp_output)
             pytest.fail(msg, pytrace=False)
         else:
-            print "GOT: %s" % exp_output
+            print("GOT: %s" % exp_output)
 
-        print "QERUN COMMAND SUCCEEDED!"
+        print("QERUN COMMAND SUCCEEDED!")
 
     def yum_install(self, packages):
         """
@@ -222,7 +222,7 @@ class QeHost(pytest_multihost.host.Host):
         yum_command = [paths.YUM, '-y', '--nogpgcheck', 'install'] + packages
         cmd = self.run_command(yum_command, raiseonerr=False)
 
-        print "yum install output in {}".format(yum_output)
+        print("yum install output in {}".format(yum_output))
 
         with open(yum_output, 'w') as yum_out:
             yum_out.write('YUMCMD: {}'.format(' '.join(yum_command)))
@@ -246,17 +246,17 @@ class QeHost(pytest_multihost.host.Host):
         exp_file = "/tmp/qe_pytest_expect_file" + rand_tag
         self.put_file_contents(exp_file, expect_script)
 
-        print "----expect script start----"
-        print expect_script
-        print "----expect script end----"
-        print "remote side expect script filename: " + exp_file
+        print("----expect script start----")
+        print(expect_script)
+        print("----expect script end----")
+        print("remote side expect script filename: " + exp_file)
 
         # Next run expect
         cmd = self.run_command(['expect', '-f', exp_file], raiseonerr=False)
-        print "----expect output start----"
-        print cmd.stdout_text
-        print cmd.stderr_text
-        print "----expect output end----"
+        print("----expect output start----")
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
+        print("----expect output end----")
         return cmd
 
     def rpm_install_check(self, package):
@@ -271,6 +271,18 @@ class QeHost(pytest_multihost.host.Host):
         else:
             print("Package [%s] is not installed" % (package))
             return 1
+
+    def get_file_contents(self, filename, encoding=None):
+        """
+        :param filename:
+        :param encoding:
+        :return:
+        """
+        if encoding is None:
+            encoding = 'utf-8'
+        contents = self.transport.get_file_contents(filename, encoding=encoding)
+        return contents
+
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -338,13 +350,13 @@ def qe_use_class_setup(request, multihost):
     """ fixture to add specific class setup method name """
     def qe_newline():
         """ extra print after finalizer to cleanup output format """
-        print
+        print()
 
     if hasattr(request.cls(), 'class_setup'):
         try:
             request.cls().class_setup(multihost)
-        except StandardError as errval:
-            print str(errval)
+        except Exception as errval:
+            print(str(errval))
             pytest.skip("class_setup_failed")
     if hasattr(request.cls(), 'class_teardown'):
         request.addfinalizer(lambda: request.cls().class_teardown(multihost))

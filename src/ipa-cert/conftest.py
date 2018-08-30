@@ -12,9 +12,9 @@ def setup_session(request, multihost):
     """ Setup session """
     try:
         setup_master(multihost.master)
-        print ("Setup done")
+        print("Setup done")
 
-    except StandardError as errval:
+    except Exception as errval:
         print("Error in setup_session %s" % (str(errval.args[0])))
         pytest.skip("setup_session_skip")
 

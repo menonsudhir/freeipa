@@ -114,9 +114,9 @@ class TestExternalCA(object):
         openssl_util(master, cmd)
         out_der_file = "%s/external.crt" % (nssdb_dir)
         rpm = "ipa-server"
-        print "Current IPA version"
+        print ("Current IPA version")
         ipa_version = get_rpm_version(multihost.master, rpm)
-        print ipa_version
+        print (ipa_version)
         if ipa_version_gte(multihost.master, '4.5.0'):
             print("Ipa version is %s" % ipa_version, "using extSKID option installing Ipa server ")
             certs.sign_csr(cert_der_file, out_der_file, ca_nick, options=['--extSKID'])

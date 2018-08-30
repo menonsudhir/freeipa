@@ -572,7 +572,7 @@ def setup_master_docker(master, setup_dns=True):
         raise ValueError("atomic install for ipaserver failed with "
                          "error code=%s" % cmd.returncode)
     else:
-        print ("IPA MASTER install using docker image successful.")
+        print("IPA MASTER install using docker image successful.")
 
     print('Starting ipadocker container')
     runcmd2 = [paths.DOCKER , 'run', '--net=host',
@@ -588,7 +588,7 @@ def setup_master_docker(master, setup_dns=True):
         raise ValueError("ipa-docker start failed with "
                          "error code=%s" % cmd2.returncode)
     else:
-        print ("IPA MASTER container start using docker image successful.")
+        print("IPA MASTER container start using docker image successful.")
 
 
 def uninstall_master_docker(master):
@@ -645,7 +645,7 @@ def setup_client_docker(client, master):
     print("STDOUT:", cmd.stdout_text)
     print("STDERR:", cmd.stderr_text)
     if cmd.returncode == 0:
-        print ("IPA client within docker install successfull.")
+        print("IPA client within docker install successfull.")
     else:
         pytest.fail("IPA client within docker install not successful.")
     if not client.transport.file_exists('/etc/systemd/system/sssd.service'):
@@ -747,7 +747,7 @@ def setup_replica_docker(replica, master, setup_dns=True, setup_ca=True, setup_r
         raise ValueError("ipa-replica-docker failed with "
                          "error code=%s" % cmd.returncode)
     else:
-        print ("IPA Replica install using docker image successful.")
+        print("IPA Replica install using docker image successful.")
 
     runcmd2 = [paths.DOCKER , 'run', '--net=host',
                '-d', '--name', 'replicadocker',
@@ -762,7 +762,7 @@ def setup_replica_docker(replica, master, setup_dns=True, setup_ca=True, setup_r
         raise ValueError("docker run command for ipa-replica-docker failed with "
                          "error code=%s" % cmd2.returncode)
     else:
-        print ("IPA Replica container start using docker image successful.")
+        print("IPA Replica container start using docker image successful.")
 
 
 def uninstall_replica_docker(replica, master):

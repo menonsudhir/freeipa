@@ -36,9 +36,9 @@ def hbacrule_add(host, rulename, usercat=None, hostcat=None, servicecat=None, de
                              set_env=True,
                              raiseonerr=False)
     if check.returncode != 0:
-        print ("Error in adding hbac rule" + rulename)
+        print("Error in adding hbac rule" + rulename)
     else:
-        print (rulename + "has been added successfully")
+        print(rulename + "has been added successfully")
 
 
 def hbacrule_del(host, rulename):

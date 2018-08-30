@@ -43,7 +43,7 @@ for ts in tree.iter('testsuite'):
         if pkg is not None:
             pkg_name = pkg
         elif pkg_name is "":
-            print "Unknown package.  Please specify on the command line"
+            print("Unknown package.  Please specify on the command line")
             exit()
 
         if suite is not None:
@@ -62,11 +62,11 @@ for ts in tree.iter('testsuite'):
         try:
             my_mod = importlib.import_module(pkg_name + '.' + suite_name + '.' + module_name)
         except ValueError:
-            print "Missing information for importing module to find docstring"
+            print("Missing information for importing module to find docstring")
             exit()
-        except ImportError, e:
+        except ImportError as e:
             print(e)
-            print "Invalid Module Path: %s" % pkg_name + '.' + suite_name + '.' + module_name
+            print("Invalid Module Path: %s" % pkg_name + '.' + suite_name + '.' + module_name)
             exit()
 
         my_class = getattr(my_mod, class_name)
@@ -78,4 +78,4 @@ for ts in tree.iter('testsuite'):
 
 tree.write(output_file)
 
-print "New file written to " + output_file
+print("New file written to " + output_file)

@@ -237,7 +237,7 @@ class TestIPAReplicaPromotion(object):
         print("CMD STDERR :> " + cmd.stderr_text)
         assert cmd.returncode == 0
         assert testuser in cmd.stdout_text
-        
+
         uninstall_server(multihost.replica)
         server_del(multihost.master,
                        hostname=multihost.replica.hostname,
@@ -425,7 +425,7 @@ class TestIPAReplicaPromotion(object):
     def class_teardown(self, multihost):
         """ Teardown for class """
         print("Class teardown for IPA Replica Promotion")
-        for i in xrange(1, 9):
+        for i in range(1, 9):
             user = "test_000{0}_testuser1".format(i)
             cmd = find_ipa_user(multihost.master, user)
             if cmd.returncode == 0:

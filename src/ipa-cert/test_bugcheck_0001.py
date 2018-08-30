@@ -56,7 +56,7 @@ class TestBugCheck(object):
             openssl_util(multihost.master, arg_list)
 
             ipa_cert_request(multihost.master, csr_file, add=True, principal=new_user, profile_id='IECUserRoles')
-        except StandardError as errval:
+        except Exception as errval:
             print("Error %s" % (str(errval.args[0])))
             pytest.skip("test_0001_bz1254641")
 

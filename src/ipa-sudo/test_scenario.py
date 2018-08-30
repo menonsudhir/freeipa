@@ -19,7 +19,7 @@ class TestSudoRule(object):
         Setup for class
         """
         print("\nClass Setup")
-        print"MASTER: ", multihost.master.hostname
+        print("MASTER: ", multihost.master.hostname)
 
     def test_adding_sudorule(self, multihost):
         """

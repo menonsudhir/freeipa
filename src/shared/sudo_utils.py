@@ -56,9 +56,9 @@ def sudorule_add(host, rulename, usercat=None, hostcat=None, cmdcat=None, runasu
                              set_env=True,
                              raiseonerr=False)
     if check.returncode != 0:
-        print ("Error in adding sudo rule " + rulename)
+        print("Error in adding sudo rule " + rulename)
     else:
-        print (rulename + " has been added successfully\n")
+        print(rulename + " has been added successfully\n")
 
 def sudorule_add_allow_command(host, rulename, sudocmds=None):
     """
@@ -75,7 +75,7 @@ def sudorule_add_allow_command(host, rulename, sudocmds=None):
     check = host.run_command(cmd_list,
                              set_env=True)
     assert check.returncode == 0
-    print ("Sudorule allow command {} has been added successfully\n".format(sudocmds))
+    print("Sudorule allow command {} has been added successfully\n".format(sudocmds))
 
 
 def sudorule_add_deny_command(host, rulename, sudocmds=None):
@@ -93,7 +93,7 @@ def sudorule_add_deny_command(host, rulename, sudocmds=None):
     check = host.run_command(cmd_list,
                              set_env=True)
     assert check.returncode == 0
-    print ("Sudorule deny command {} has been added successfully\n".format(sudocmds))
+    print("Sudorule deny command {} has been added successfully\n".format(sudocmds))
 
 
 def sudocmd_add(host, sudocmdname=None):
@@ -110,7 +110,7 @@ def sudocmd_add(host, sudocmdname=None):
 
     check = host.run_command(cmd_list)
     assert check.returncode == 0
-    print ("Sudo command {} has been added successfully".format(sudocmdname))
+    print("Sudo command {} has been added successfully".format(sudocmdname))
 
 def sudocmd_del(host, sudocmdname=None):
     """
@@ -126,7 +126,7 @@ def sudocmd_del(host, sudocmdname=None):
 
     check = host.run_command(cmd_list)
     assert check.returncode == 0
-    print ("Sudo command {} has been deleted successfully in teardown".format(sudocmdname))
+    print("Sudo command {} has been deleted successfully in teardown".format(sudocmdname))
 
 def sudorule_mod(host, rulename, usercat=None, hostcat=None, cmdcat=None, runasusercat=None, runasgroupcat=None,
                  order=None, externaluser=None, runasexternaluser=None, runasexternalgroup=None, desc=None,
@@ -178,9 +178,9 @@ def sudorule_mod(host, rulename, usercat=None, hostcat=None, cmdcat=None, runasu
                              set_env=True,
                              raiseonerr=False)
     if check.returncode != 0:
-        print ("Error in modifying sudo rule " + rulename)
+        print("Error in modifying sudo rule " + rulename)
     else:
-        print (rulename + " has been modified successfully")
+        print(rulename + " has been modified successfully")
 
 
 def sudorule_add_option(host, rulename, sudooption):

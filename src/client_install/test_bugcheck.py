@@ -27,8 +27,8 @@ class TestBugCheck(object):
         """
         check_rpm(multihost.client, ['ipa-client'])
         dbus_remove_cmd = multihost.client.run_command([paths.YUM, 'remove', 'dbus-python', '-y'])
-        print ("STDOUT:", dbus_remove_cmd.stdout_text)
-        print ("STDERR:", dbus_remove_cmd.stderr_text)
+        print("STDOUT:", dbus_remove_cmd.stdout_text)
+        print("STDERR:", dbus_remove_cmd.stderr_text)
         if "ipa-client" in dbus_remove_cmd.stdout_text:
             multihost.client.qerun(['ipa-client-install'], exp_returncode=127)
             multihost.client.qerun([paths.RPM, '-q', 'ipa-client'], exp_returncode=1)
@@ -37,7 +37,7 @@ class TestBugCheck(object):
         multihost.client.run_command([paths.YUM, 'install', 'subscription-manager', '-y'])
 
     def test_0002(self, multihost):
-        """ 
+        """
         IDM-IPA-TC: client install : coverage for bz1196656 and bz1284025 and bz1205160
         """
         sshd_conf = multihost.client.get_file_contents('/etc/ssh/sshd_config')
@@ -74,7 +74,7 @@ class TestBugCheck(object):
             pytest.xfail("IPA client is not installed, BZ1196656 FAILED")
 
     def test_0003(self, multihost):
-        """ 
+        """
         IDM-IPA-TC: client install : bz1215200 and bz1211708 ipa-client-install with IPA server with no ntp
         """
         uninstall_client(multihost.client)
@@ -91,8 +91,8 @@ class TestBugCheck(object):
                                             '--ds-password', multihost.master.config.dirman_pw,
                                             '--no-ntp',
                                             '-U'], raiseonerr=False)
-        print ("STDOUT:", cmd.stdout_text)
-        print ("STDERR:", cmd.stderr_text)
+        print("STDOUT:", cmd.stdout_text)
+        print("STDERR:", cmd.stderr_text)
         if cmd.returncode != 0:
             raise ValueError("ipa-server-install failed with error code=%s" % cmd.returncode)
         check5 = multihost.master.run_command('ipactl status | grep RUNNING')
@@ -108,7 +108,7 @@ class TestBugCheck(object):
                 pytest.xfail("IPA client is not installed, BZ1215200 and BZ1211708 FAILED")
 
     def test_0004(self, multihost):
-        """ 
+        """
         IDM-IPA-TC: client install : bz1215197 ipa-client-install does not ignores --ntp-server option during time sync
         """
         uninstall_client(multihost.client)
@@ -120,8 +120,8 @@ class TestBugCheck(object):
                                             '--ntp-server', '1.rhel.pool.ntp.org',
                                             '--force-ntpd',
                                             '-U'], raiseonerr=False)
-        print ("STDOUT:", cmd.stdout_text)
-        print ("STDERR:", cmd.stderr_text)
+        print("STDOUT:", cmd.stdout_text)
+        print("STDERR:", cmd.stderr_text)
         if cmd.returncode != 0:
             raise ValueError("ipa-client-install failed with error code=%s" % cmd.returncode)
         check7 = multihost.client.run_command('grep rhel.pool.ntp.org /etc/ntp.conf')
@@ -142,9 +142,9 @@ class TestBugCheck(object):
                                            raiseonerr=False)
         output1 = 'EOFError: EOF when reading a line'
         if output1 not in cmd.stdout_text:
-            print "bz1337484 doesnot exists"
+            print("bz1337484 doesnot exists")
         elif output1 in cmd.stdout_text:
-            print "EOF is not handled for ipa-client-install command"
+            print("EOF is not handled for ipa-client-install command")
         else:
             pytest.xfail("FAIL")
 
