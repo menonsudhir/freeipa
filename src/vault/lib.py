@@ -5,7 +5,7 @@ Vault tests library
 from ipa_pytests.qe_install import setup_master  # pylint: disable=unused-import
 from ipa_pytests.qe_install import setup_replica  # pylint: disable=unused-import
 from ipa_pytests.shared.user_utils import add_ipa_user
-import data  # pylint: disable=relative-import
+from . import data  # pylint: disable=relative-import
 import re
 
 
@@ -136,7 +136,7 @@ def find_vault_containers(host, vault_type='users'):
     cmd = host.run_command(search, raiseonerr=False)
 
     if cmd.returncode != 0:
-        print "WARNING: ldapsearch failed...returning empty list"
+        print("WARNING: ldapsearch failed...returning empty list")
         return []
 
     output = cmd.stdout_text.split('\n')
@@ -169,7 +169,7 @@ def safe_setup_master(master):
         setup_master(master)
         master.put_file_contents(fin, 'x')
     else:
-        print "IPA Master Setup has already run.  Skipping"
+        print("IPA Master Setup has already run.  Skipping")
 
 
 def safe_setup_replica(replica, master):
@@ -179,7 +179,7 @@ def safe_setup_replica(replica, master):
         setup_replica(replica, master)
         replica.put_file_contents(fin, 'x')
     else:
-        print "IPA Replica Setup has already run.  Skipping"
+        print("IPA Replica Setup has already run.  Skipping")
 
 
 def safe_setup_master_kra(master):
@@ -189,4 +189,4 @@ def safe_setup_master_kra(master):
         master.qerun(['ipa-kra-install', '-U', '-p', master.config.dirman_pw])
         master.put_file_contents(fin, 'x')
     else:
-        print "IPA Master KRA Setup has already run.  Skipping"
+        print("IPA Master KRA Setup has already run.  Skipping")

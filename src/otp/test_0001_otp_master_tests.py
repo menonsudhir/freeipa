@@ -7,7 +7,7 @@ from .lib import (add_user, mod_otp_user, add_otptoken,
                   delete_otptoken)
 from ipa_pytests.shared.rpm_utils import check_rpm
 import pytest
-import otp_lib as lib
+from . import otp_lib as lib
 import time
 
 
@@ -64,8 +64,8 @@ class TestOTPfunction(object):
         cmd = multihost.master.run_command([
               'kinit', '-T', krb_cache, multihost.testuser
                ], stdin_text=krbotp, raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         if cmd.returncode != 0:
             pytest.xfail("krb auth with otp failed")
 
@@ -73,7 +73,7 @@ class TestOTPfunction(object):
 
         time.sleep(60)
         base_dn = get_base_dn(multihost.master)
-        print base_dn
+        print(base_dn)
 
         ldapotp = str(multihost.master.config.admin_pw + lib.get_otp(multihost, otp)).strip('\n')
 
@@ -87,8 +87,8 @@ class TestOTPfunction(object):
         cmd = multihost.master.run_command(search, raiseonerr=False)
         if cmd.returncode != 0:
             pytest.xfail("ldapauth with otp failed")
-        print cmd.stdout_text
-        print cmd.stderr_text
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         #   delete otp user
         del_ipa_user(multihost.master, multihost.testuser)
 
@@ -225,14 +225,14 @@ class TestOTPfunction(object):
                                 '--owner=%s' % multihost.testuser],
                                exp_returncode=0,
                                exp_output='Type: TOTP')
-        print "\n***** TOTP token added successfully *****\n"
+        print("\n***** TOTP token added successfully *****\n")
 
         #   Add HOTP token as admin
         multihost.master.qerun(['ipa', 'otptoken-add',
                                 '--type=hotp', '--no-qrcode',
                                 '--owner=%s' % multihost.testuser],
                                exp_returncode=0, exp_output='Type: HOTP')
-        print "\n*****    HOTP token also added successfully    *****\n"
+        print("\n*****    HOTP token also added successfully    *****\n")
 
         #   delete otp user
         del_ipa_user(multihost.master, multihost.testuser)
@@ -251,7 +251,7 @@ class TestOTPfunction(object):
 
         #   delete otptoken
         delete_otptoken(multihost)
-        print "\n*****   Token deleted successfully   *****\n"
+        print("\n*****   Token deleted successfully   *****\n")
 
         #   delete otp user
         del_ipa_user(multihost.master, multihost.testuser)

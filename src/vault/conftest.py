@@ -18,7 +18,7 @@ from .lib import delete_all_vault_containers
 from .lib import safe_setup_master
 from .lib import safe_setup_replica
 from .lib import safe_setup_master_kra
-import data  # pylint: disable=relative-import
+from . import data  # pylint: disable=relative-import
 
 from ipa_pytests.qe_class import pytest_runtest_makereport
 
@@ -45,13 +45,13 @@ def make_vault_name(request):
       in the pytest.count global var we create from pytest_namespace
       above.
     """
-    request.function.func_globals['VAULT_NAME'] = "idmqe_vault_%s" % pytest.count  # pylint: disable=E1101
+    request.function.__globals__['VAULT_NAME'] = "idmqe_vault_%s" % pytest.count  # pylint: disable=E1101
 
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_session(request, multihost):  # pylint: disable=W0621
     """ define fixture for session level setup """
-    print "\nSETUP_SESSION RUNNING....\n"
+    print("\nSETUP_SESSION RUNNING....\n")
     multihost.replica = multihost.replicas[0]
 
     safe_setup_master(multihost.master)
@@ -71,7 +71,7 @@ def setup_session(request, multihost):  # pylint: disable=W0621
     chk = multihost.master.run_command(['ipa', 'service-show', data.SERVICE1],
                                        raiseonerr=False)
     if chk.returncode != 0:
-        print "Adding service...{}".format(chk.returncode)
+        print("Adding service...{}".format(chk.returncode))
         multihost.master.qerun(['ipa', 'service-add', data.SERVICE1])
 
     openssl_genrsa(multihost.master, data.PRVKEY_FILE, data.PUBKEY_FILE)
@@ -84,7 +84,7 @@ def setup_session(request, multihost):  # pylint: disable=W0621
 
     def teardown_session():
         """ define fixture for session level teardown """
-        print "\nTEARDOWN_SESSION RUNNING...\n"
+        print("\nTEARDOWN_SESSION RUNNING...\n")
         delete_all_vaults(multihost.master)
         delete_all_vault_containers(multihost.master)
         multihost.master.qerun(['ipa', 'user-del', data.USER1])

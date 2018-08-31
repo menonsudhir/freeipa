@@ -14,10 +14,10 @@ class Test_bz_1132540(object):
     """ Test Class for service add """
     def class_setup(self, multihost):
         """ Setup for class """
-        print "\nClass Setup"
+        print("\nClass Setup")
         master_name = multihost.master.hostname
-        print "MASTER: ", master_name
-        print "CLIENT: ", multihost.client.hostname
+        print("MASTER: ", master_name)
+        print("CLIENT: ", multihost.client.hostname)
         multihost.tst_srv1 = 'EXAMPLE1'
         multihost.tst_srv2 = 'EXAMPLE2'
         multihost.tst_srv1_name = multihost.tst_srv1 + '/' + master_name
@@ -52,7 +52,7 @@ class Test_bz_1132540(object):
         """
         IDM-IPA-TC : Services : Check if IPA cli exposes service delegation rules negative
         """
-        print multihost.tst_srv1_name
+        print(multihost.tst_srv1_name)
         multihost.master.qerun(['kdestroy', '-A'], exp_returncode=0)
         multihost.master.qerun(['kinit', '-kt', multihost.tst_srv1_keytab,
                                 multihost.tst_srv1_name],

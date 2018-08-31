@@ -64,9 +64,9 @@ class TestBugzilla(object):
         setup_master(multihost.master)
 
         ipa_version = get_rpm_version(multihost.master, 'ipa-server')
-        print ipa_version
+        print(ipa_version)
 
-        print ("\n IPA Server Before Updation")
+        print("\n IPA Server Before Updation")
 
         # checking for ipactl command output before updation
         multihost.master.kinit_as_admin()
@@ -79,27 +79,27 @@ class TestBugzilla(object):
         #Diabling IPv6
         str1 = 'inet6'
         cmd = multihost.master.run_command('ip addr | grep inet6',
-                                           raiseonerr=False) 
+                                           raiseonerr=False)
         if str1 in cmd.stdout_text:
             print("IPV6 not disabled")
 
         file1 = '/etc/sysctl.conf'
-        content1 = 'net.ipv6.conf.all.disable_ipv6 = 1' 
+        content1 = 'net.ipv6.conf.all.disable_ipv6 = 1'
         multihost.master.put_file_contents(file1, content1)
         cmd = multihost.master.run_command(['cat', file1],
-                                           raiseonerr=False) 
+                                           raiseonerr=False)
 
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         cmd = multihost.master.run_command('sysctl -p',
-                                           raiseonerr=False) 
+                                           raiseonerr=False)
         if cmd.returncode == 0:
             print("sysctl command ran Successfully")
         else:
             print("sysctl did not run successfully")
 
         cmd = multihost.master.run_command('ip addr | grep inet6',
-                                           raiseonerr=False) 
-        print cmd.stdout_text
+                                           raiseonerr=False)
+        print(cmd.stdout_text)
         if str1 in cmd.stdout_text:
             pytest.fail("IPV6 not disabled")
         else:
@@ -111,10 +111,10 @@ class TestBugzilla(object):
         test for rpm comparison
         """
         rpm = "ipa-server"
-        print "Current IPA version"
+        print("Current IPA version")
         ipa_version = get_rpm_version(multihost.master, rpm)
 
-        print ipa_version
+        print(ipa_version)
 
         # get current ipa version
 
@@ -132,15 +132,15 @@ class TestBugzilla(object):
 
 
         cmd = upgrade(multihost.master)    # upgrade starts at this point
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
         rpm = "ipa-server"
         str1 = 'The ipa-server-upgrade command was successful'
         str2 = 'ERROR IPv6 stack is enabled in the kernel but there is no interface'
         log2 = multihost.master.run_command(['tail', paths.IPAUPGRADELOGFILE], raiseonerr=False)
-        print log2.stdout_text
+        print(log2.stdout_text)
         if str1 not in log2.stdout_text and str2 in log2.stdout_text:
-            print "Expected upgrade to fail, BZ1477367 verified"
+            print("Expected upgrade to fail, BZ1477367 verified")
         else:
             pytest.xfail("Bz1477367 verification test failed")
 

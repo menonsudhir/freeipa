@@ -64,7 +64,7 @@ class TestBugzilla(object):
         setup_master(multihost.master)
 
         ipa_version = get_rpm_version(multihost.master, 'ipa-server')
-        print ipa_version
+        print(ipa_version)
 
         print ("\n IPA Server Before Updation")
 
@@ -81,12 +81,12 @@ class TestBugzilla(object):
         password = 'Secret123'
         runcmd = ['ldapsearch', '-xLLL', '-D', username, '-w', password, '-b', cn, 'dn',
                   'ipaCertIssuerSerial']
-        print runcmd
+        print(runcmd)
 
         # Check ldapsearch
         cmd = multihost.master.run_command(runcmd, raiseonerr=False)
         exp_output = 'ipaCertIssuerSerial'
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if exp_output in cmd.stdout_text:
             print("String Found")
 
@@ -100,19 +100,19 @@ class TestBugzilla(object):
 
         # Import LDIF file
         runcmd = ['ldapmodify', '-D', username, '-w', password, '-f', '/tmp/modrdn.ldif']
-        print runcmd
+        print(runcmd)
         cmd = multihost.master.run_command(runcmd, raiseonerr=False)
 
         # Check if LDIF imported correctly
         cn = 'cn=CA 1,cn=certificates,cn=ipa,cn=etc,dc=testrelm,dc=test'
         runcmd = ['ldapsearch', '-xLLL', '-D', username, '-w', password, '-b', cn, 'dn',
                   'ipaCertIssuerSerial']
-        print runcmd
+        print(runcmd)
 
         #Check ldap search
         cmd = multihost.master.run_command(runcmd, raiseonerr=False)
         exp_output = 'CA 1'
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if exp_output in cmd.stdout_text:
             print("String Found after ldapmodify")
 
@@ -121,10 +121,10 @@ class TestBugzilla(object):
         IDM-IPA-TC : IPA Upgrade : Verification for bugzilla bz1480102 after upgrade
         """
         rpm = "ipa-server"
-        print "Current IPA version"
+        print("Current IPA version")
         ipa_version = get_rpm_version(multihost.master, rpm)
 
-        print ipa_version
+        print(ipa_version)
 
         # get current ipa version before upgrade
         upgrade_from = '7.3.b'
@@ -141,23 +141,23 @@ class TestBugzilla(object):
 
         # Upgrade IPA
         cmd = upgrade(multihost.master)    # upgrade starts at this point
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
         # Verify Upgrade
         rpm = "ipa-server"
         str1 = 'The ipa-server-upgrade command was successful'
         log2 = multihost.master.run_command(['tail', paths.IPAUPGRADELOGFILE], raiseonerr=False)
-        print log2.stdout_text
+        print(log2.stdout_text)
         if str1 in log2.stdout_text:
-            print "Upgrade Successful, Proceeding"
+            print("Upgrade Successful, Proceeding")
         else:
             pytest.xfail("Upgrade Failed")
 
         # get current ipa version after upgrade
         rpm = "ipa-server"
-        print "Current IPA version"
+        print("Current IPA version")
         ipa_version = get_rpm_version(multihost.master, rpm)
-        print ipa_version
+        print(ipa_version)
 
         # checking for ipactl command output after updation
         multihost.master.kinit_as_admin()
@@ -173,10 +173,10 @@ class TestBugzilla(object):
         password = 'Secret123'
         runcmd = ['ldapsearch', '-xLLL', '-D', username, '-w', password, '-b', cn, 'dn',
                   'ipaCertIssuerSerial']
-        print runcmd
+        print(runcmd)
         cmd = multihost.master.run_command(runcmd, raiseonerr=False)
         exp_output = 'IPA CA'
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if exp_output in cmd.stdout_text:
             print("String Found, thus Bz1480102 Verified")
         else:

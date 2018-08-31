@@ -172,7 +172,7 @@ class TestRadiusfunction(object):
                                 multihost.radiusproxy],
                                exp_returncode=1,
                                exp_output='ipa: ERROR: Insufficient access:')
-        print "\n########### radius Proxy not deleted ###########\n"
+        print("\n########### radius Proxy not deleted ###########\n")
 
         # cleanup
         del_ipa_user(multihost.master, multihost.testuser)
@@ -196,7 +196,7 @@ class TestRadiusfunction(object):
                                 multihost.radiusproxy],
                                exp_returncode=0,
                                exp_output=multihost.expoutput)
-        print "########### radius proxy deleted successfully ###########\n"
+        print("########### radius proxy deleted successfully ###########\n")
 
     def test_radius_0006(self, multihost):
         """
@@ -240,7 +240,7 @@ class TestRadiusfunction(object):
         expect_script += 'expect "Modified RADIUS proxy server"\n'
         expect_script += 'expect EOF\n'
         output = multihost.master.expect(expect_script)
-        print "########### radius proxy rename successfully ###########\n"
+        print("########### radius proxy rename successfully ###########\n")
 
         # Cleanup
         multihost.radiusproxy = users[0]

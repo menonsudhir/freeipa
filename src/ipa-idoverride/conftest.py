@@ -20,8 +20,8 @@ def pytest_namespace():
 def setup_session(request, multihost):
     try:
         multihost.client = multihost.clients[0]
-    except StandardError, errval:
-        print str(errval.args[0])
+    except Exception as errval:
+        print(str(errval.args[0]))
         pytest.skip("setup_session_skip")
 
     def teardown_session():

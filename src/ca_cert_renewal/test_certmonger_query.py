@@ -48,12 +48,12 @@ class TestUserA(object):
                 if next_soonest > soonest:
                     break
 
-            print "certs: ", qe_certs.certs
-            print "current: ", time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(current))
-            print "local: ", time.strftime('%m%d%H%M%Y', time.localtime(current))
-            print "soonest: ", time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(soonest))
-            print "latest: ", time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(latest))
-            print "resubmit: ", resubmit
+            print("certs: ", qe_certs.certs)
+            print("current: ", time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(current)))
+            print("local: ", time.strftime('%m%d%H%M%Y', time.localtime(current)))
+            print("soonest: ", time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(soonest)))
+            print("latest: ", time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(latest)))
+            print("resubmit: ", resubmit)
 
     def class_teardown(self, multihost):
         """ teardown for class """

@@ -25,10 +25,10 @@ class Testsubidview(object):
 
     def class_setup(self, multihost):
         """ Setup for class """
-        print "\nClass Setup"
+        print("\nClass Setup")
         multihost.client = multihost.clients[0]
-        print "MASTER: ", multihost.master.hostname
-        print "CLIENT: ", multihost.client.hostname
+        print("MASTER: ", multihost.master.hostname)
+        print("CLIENT: ", multihost.client.hostname)
         setup_master(multihost.master)
         setup_client(multihost.client, multihost.master)
 
@@ -52,7 +52,7 @@ class Testsubidview(object):
 
         cmd = multihost.master.run_command('dig +short SRV _ldap._tcp.' +
                                            forwardzone, raiseonerr=False)
-        print cmd.stdout_text, cmd.stderr_text
+        print(cmd.stdout_text, cmd.stderr_text)
         if ad1.hostname in cmd.stdout_text:
             print("dns resolution passed for ad domain")
         else:
@@ -60,7 +60,7 @@ class Testsubidview(object):
         cmd = multihost.master.run_command('dig +short SRV @' + ad1.ip +
                                            ' _ldap._tcp.' + domain,
                                            raiseonerr=False)
-        print cmd.stdout_text, cmd.stderr_text
+        print(cmd.stdout_text, cmd.stderr_text)
         if domain in cmd.stdout_text:
             print("dns resolution passed for ipa domain")
         else:
@@ -88,9 +88,9 @@ class Testsubidview(object):
         multihost.master.transport.put_file('test1.exp', '/tmp/test1.exp')
         output = multihost.master.run_command(['expect', '/tmp/test1.exp'], raiseonerr=False)
         if output.returncode != 0:
-            print output.stderr_text
+            print(output.stderr_text)
         else:
-            print output.stdout_text
+            print(output.stdout_text)
 
     def test_useradd_subdomain(self, multihost):
         multihost.master.kinit_as_admin()
@@ -99,9 +99,9 @@ class Testsubidview(object):
                                             multihost.master.config.ad_user + '@' + multihost.master.config.ad_sub_domain],
                                            stdin_text=multihost.master.config.ad_pwd,
                                            raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
-        print cmd.returncode
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
+        print(cmd.returncode)
         if cmd.returncode == 1:
             for i in range(30):
                 cmd = multihost.master.run_command(['adcli', 'create-user',
@@ -498,9 +498,9 @@ class Testsubidview(object):
                                             multihost.master.config.ad_user + '@' + multihost.master.config.ad_sub_domain],
                                            stdin_text=multihost.master.config.ad_pwd,
                                            raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
-        print cmd.returncode
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
+        print(cmd.returncode)
         if cmd.returncode == 1:
             for i in range(30):
                 cmd = multihost.master.run_command(['adcli', 'delete-user',

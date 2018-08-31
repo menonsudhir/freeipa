@@ -23,10 +23,10 @@ class TestBugCheck(object):
         multihost.replica = multihost.replicas[0]
         print("\nClass Setup")
         os.environ['DOMAIN_LEVEL'] = '0'
-        print os.environ['DOMAIN_LEVEL']
+        print(os.environ['DOMAIN_LEVEL'])
         setup_master(multihost.master,setup_kra=True)
-        print ("Master: ", multihost.master.hostname)
-        print (" %s is installed on domain-level 0 " % multihost.master.hostname)
+        print("Master: ", multihost.master.hostname)
+        print(" %s is installed on domain-level 0 " % multihost.master.hostname)
         print("REPLICA: ", multihost.replica.hostname)
         print("\nChecking IPA server package whether installed on REPLICA")
         rpm_list = ['ipa-server']

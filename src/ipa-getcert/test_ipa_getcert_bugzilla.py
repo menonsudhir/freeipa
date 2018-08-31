@@ -24,19 +24,19 @@ class Testmaster(object):
             cmd = multihost.master.run_command([paths.OPENSSL, 'pkcs12', '-in', file1, '-out', file2,
                                                 '-nokeys', '-nodes', '-passin', 'pass:'],
                                      raiseonerr=False)
-            print cmd.stderr_text
-            print cmd.stdout_text
+            print(cmd.stderr_text)
+            print(cmd.stdout_text)
             if cmd.returncode != 0:
                 pytest.xfail("Openssl command failed to create CA.PEM file.")
             print("Editing CA.pem file")
             cmd = multihost.master.run_command(['sed', '-i', '1,5d', file2],
                                      raiseonerr=False)
-            print cmd.stdout_text
+            print(cmd.stdout_text)
             cmd = multihost.master.run_command([paths.OPENSSL, 'asn1parse', '-in', file2,
                                                '-inform', 'pem'],
                                                raiseonerr=False)
-            print cmd.stderr_text
-            print cmd.stdout_text
+            print(cmd.stderr_text)
+            print(cmd.stdout_text)
             string = '30030101FF'
             if string in cmd.stdout_text:
                 print('BZ1560961 verified successfully')

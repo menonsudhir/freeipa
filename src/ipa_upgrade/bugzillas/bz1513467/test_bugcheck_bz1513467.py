@@ -64,7 +64,7 @@ class TestBugzilla(object):
         setup_master(multihost.master)
 
         ipa_version = get_rpm_version(multihost.master, 'ipa-server')
-        print ipa_version
+        print(ipa_version)
 
         print ("\n IPA Server Before Updation")
 
@@ -74,7 +74,7 @@ class TestBugzilla(object):
         if check5.returncode != 0:
             print("IPA server service not RUNNING.Kindly debug")
         else:
-            print("IPA service is running, continuing") 
+            print("IPA service is running, continuing")
         #Checking Plugin for Replication before upgrade
         search = ['ldapsearch', '-xLLL',
                   '-D', multihost.master.config.dirman_id,
@@ -84,8 +84,8 @@ class TestBugzilla(object):
         string = 'Legacy Replication Plugin'
 
         cmd = multihost.master.run_command(search, raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         if string in cmd.stdout_text:
             print("Replication plugin found as expected")
         else:
@@ -97,10 +97,10 @@ class TestBugzilla(object):
         test for rpm comparison
         """
         rpm = "ipa-server"
-        print "Current IPA version"
+        print("Current IPA version")
         ipa_version = get_rpm_version(multihost.master, rpm)
 
-        print ipa_version
+        print(ipa_version)
 
         # get current ipa version
         upgrade_from = '7.3.b'
@@ -117,15 +117,15 @@ class TestBugzilla(object):
 
 
         cmd = upgrade(multihost.master)   # upgrade starts at this point
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
         rpm = "ipa-server"
         updated_version = get_rpm_version(multihost.master, rpm)      # get updated ipa version
-        print "Upgraded version is %s " % updated_version             # prints upgraded version
+        print("Upgraded version is %s " % updated_version)             # prints upgraded version
 
         str1 = 'The ipa-server-upgrade command was successful'
         log2 = multihost.master.run_command(['tail', paths.IPAUPGRADELOGFILE], raiseonerr=False)
-        print log2.stdout_text
+        print(log2.stdout_text)
         if str1 in log2.stdout_text:
             print("Upgraded Successfully")
         else:
@@ -156,8 +156,8 @@ class TestBugzilla(object):
         string = 'Legacy Replication Plugin'
 
         cmd = multihost.master.run_command(search, raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         if string not in cmd.stdout_text:
             print("Replication plugin not found, expected. BZ1513467 verified successfully")
         else:

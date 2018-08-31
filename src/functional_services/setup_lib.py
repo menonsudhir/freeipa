@@ -28,7 +28,7 @@ class TestPrep(object):
             setup_ipa_env(self.multihost)
             self.multihost.client.put_file_contents(fin, 'x')
         else:
-            print "IPA Server Setup has already run.  Skipping"
+            print("IPA Server Setup has already run.  Skipping")
 
     def teardown(self):
         """

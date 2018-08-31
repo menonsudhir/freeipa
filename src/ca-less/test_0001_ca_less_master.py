@@ -71,8 +71,8 @@ class Testmaster(object):
         # Install ipa-server using self-signed CA and Server certificates
         cmd1 = setup_master_ca_less(multihost.master, passwd, passwd, passwd,
                                     server_cert_file, server_cert_file)
-        print cmd1.stdout_text
-        print cmd1.stderr_text
+        print(cmd1.stdout_text)
+        print(cmd1.stderr_text)
 
         replica_cert_file = '/root/replica.p12'
         certs.create_server_cert(server2_subject, 'replica', ca_nick)
@@ -93,8 +93,8 @@ class Testmaster(object):
         # Install CA-less replica
         cmd2 = setup_replica_ca_less(replica, master, passwd, passwd, passwd,
                                      cert_file, cert_file)
-        print cmd2.stdout_text
-        print cmd2.stderr_text
+        print(cmd2.stdout_text)
+        print(cmd2.stderr_text)
 
     def test_users_001(self, multihost):
         """IDM-IPA-TC : ca-less : Add and verify users on master and replica"""
@@ -117,7 +117,7 @@ class Testmaster(object):
         try:
             tp.setup()
             multihost.driver = tp
-        except StandardError as errval:
+        except Exception as errval:
             pytest.skip("setup_session_skip : %s" % (errval.args[0]))
         multihost.driver.init_app(username=user1, password=userpass)
         multihost.driver.teardown()
@@ -132,7 +132,7 @@ class Testmaster(object):
         try:
             tp.setup()
             multihost.driver = tp
-        except StandardError as errval:
+        except Exception as errval:
             pytest.skip("setup_session_skip : %s" % (errval.args[0]))
         multihost.driver.init_app(username=user1, password=userpass)
         multihost.driver.teardown()

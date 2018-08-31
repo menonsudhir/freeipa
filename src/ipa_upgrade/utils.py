@@ -15,13 +15,13 @@ def is_allowed_to_update(update_to, update_from):
 def upgrade(host):
     """IPA upgrading"""
     rpm = get_rpm_version(host, 'ipa-server')
-    print "IPA version before updating packages"
-    print rpm
-    print "starting upgrade"
+    print("IPA version before updating packages")
+    print(rpm)
+    print("starting upgrade")
     rpms = ['ipa*', 'sssd']
     cmdupdate = yum_update(host, rpms)
-    print cmdupdate.stdout_text
-    print cmdupdate.stderr_text
+    print(cmdupdate.stdout_text)
+    print(cmdupdate.stderr_text)
     return cmdupdate
 
 

@@ -26,9 +26,9 @@ class TestBugCheck(object):
         multihost.replica = multihost.replicas[0]
         print("\nClass Setup")
         os.environ['DOMAIN_LEVEL'] = '1'
-        print os.environ['DOMAIN_LEVEL']
+        print(os.environ['DOMAIN_LEVEL'])
         setup_master(multihost.master,setup_kra=False)
-        print ("Master: ", multihost.master.hostname)
+        print("Master: ", multihost.master.hostname)
         print("REPLICA: ", multihost.replica.hostname)
         print("\nChecking IPA server package whether installed on REPLICA")
         rpm_list = ['ipa-server']
@@ -51,9 +51,9 @@ class TestBugCheck(object):
         string = "Configuration of client side components failed"
         cmd1 = multihost.replicas[0].run_command(cmd, raiseonerr=False)
         if cmd1.returncode==1 and string in cmd1.stderr_text:
-           print "bz1283890 passed"
+           print("bz1283890 passed")
         else:
-           print "bz1283890 failed"
+           print("bz1283890 failed")
 
     def test_0003_bz_1242036(self, multihost):
         """

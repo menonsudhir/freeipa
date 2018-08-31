@@ -128,9 +128,9 @@ class TestExternalCA(object):
         openssl_util(master, cmd)
         out_der_file = "%s/external.crt" % (nssdb_dir)
         rpm = "ipa-server"
-        print "Current IPA version"
+        print("Current IPA version")
         ipa_version = get_rpm_version(multihost.master, rpm)
-        print ipa_version
+        print(ipa_version)
         if ipa_version_gte(multihost.master, '4.5.0'):
             print("Ipa version is %s" % ipa_version, "using extSKID option installing Ipa server ")
             certs.sign_csr(cert_der_file, out_der_file, ca_nick, options=['--extSKID'])
@@ -165,7 +165,7 @@ class TestExternalCA(object):
         print("Successfully installed IPA Server using --external-ca")
 
         ipa_version = get_rpm_version(multihost.master, 'ipa-server')
-        print ipa_version
+        print(ipa_version)
 
         print ("\n IPA Server Before Updation")
         # checking for ipactl command output before updation
@@ -203,10 +203,10 @@ class TestExternalCA(object):
 
         """
         rpm = "ipa-server"
-        print "Current IPA version"
+        print("Current IPA version")
         ipa_version = get_rpm_version(multihost.master, rpm)
 
-        print ipa_version
+        print(ipa_version)
 
         # get current ipa version
         # upgrade_from = os.getenv('UPGRADE_FROM', multihost.master.config.upgrade_from)
@@ -230,9 +230,9 @@ class TestExternalCA(object):
         cmd = upgrade(multihost.master)  # upgrade starts at this point
         if cmd.returncode == 0:
             updated_version = get_rpm_version(multihost.master, rpm)  # get updated ipa version
-            print "Upgraded version is %s " % updated_version  # prints upgraded version
+            print("Upgraded version is %s " % updated_version)  # prints upgraded version
             if updated_version != ipa_version:
-                print "Upgrade rpm test verified"
+                print("Upgrade rpm test verified")
                 print("Upgraded Successfully")
             else:
                 pytest.xfail("rpm version check failed  on %s " % multihost.master.hostname)
@@ -245,9 +245,9 @@ class TestExternalCA(object):
         """
         str1 = 'The ipa-server-upgrade command was successful'
         log2 = multihost.master.run_command(['tail', paths.IPAUPGRADELOGFILE], raiseonerr=True)
-        print log2.stdout_text
+        print(log2.stdout_text)
         if str1 in log2.stdout_text:
-            print "Log test verified, continuing to next test"
+            print("Log test verified, continuing to next test")
         else:
             pytest.xfail("Log test failed")
 
@@ -265,7 +265,7 @@ class TestExternalCA(object):
             print("IPA service is running, continuing")
 
         restart = multihost.master.run_command('ipactl restart', raiseonerr=False)
-        print restart.stdout_text
+        print(restart.stdout_text)
 
         status1 = multihost.master.run_command('ipactl status | grep RUNNING')
         if status1.returncode != 0:

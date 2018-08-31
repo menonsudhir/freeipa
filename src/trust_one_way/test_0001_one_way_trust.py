@@ -39,7 +39,7 @@ class TestOneWay(object):
 
         cmd = multihost.master.run_command('dig +short SRV _ldap._tcp.' +
                                            forwardzone, raiseonerr=False)
-        print cmd.stdout_text, cmd.stderr_text
+        print(cmd.stdout_text, cmd.stderr_text)
         if ad1.hostname in cmd.stdout_text:
             print("dns resolution passed for ad domain")
         else:
@@ -47,7 +47,7 @@ class TestOneWay(object):
         cmd = multihost.master.run_command('dig +short SRV @' + ad1.ip +
                                            ' _ldap._tcp.' + domain,
                                            raiseonerr=False)
-        print cmd.stdout_text, cmd.stderr_text
+        print(cmd.stdout_text, cmd.stderr_text)
         if domain in cmd.stdout_text:
             print("dns resolution passed for ipa domain")
         else:
@@ -68,26 +68,26 @@ class TestOneWay(object):
                                             '--type=ad'],
                                            stdin_text=ad1.ssh_password,
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if "Trust direction: Trusting forest" in cmd.stdout_text:
-            print "One way trust established successfully"
+            print("One way trust established successfully")
         else:
             pytest.xfail("One way trust addition failed")
-        print cmd.stderr_text
-        print "waiting for 60 seconds"
+        print(cmd.stderr_text)
+        print("waiting for 60 seconds")
         time.sleep(60)
         cmd = multihost.master.run_command('ipactl restart', raiseonerr=False)
-        print cmd.stdout_text
-        print "waiting for 60 seconds"
+        print(cmd.stdout_text)
+        print("waiting for 60 seconds")
         time.sleep(60)
         sssd_cache_reset(multihost.master)
         time.sleep(10)
         cmd = multihost.master.run_command(['id', aduser + '@' + forwardzone],
                                            raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         if aduser in cmd.stdout_text:
-            print "AD user resolved on IPA"
+            print("AD user resolved on IPA")
         else:
             pytest.xfail("AD user not resolved on IPA ")
 
@@ -101,11 +101,11 @@ class TestOneWay(object):
         cmd = multihost.master.run_command(['kvno', '-S', 'cifs',
                                             ad1.external_hostname],
                                            raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         exp_output = "not found in Kerberos database while getting credentials for cifs"
         if exp_output in cmd.stderr_text:
-            print "krb tkt for IPA user not granted from AD domain"
+            print("krb tkt for IPA user not granted from AD domain")
         else:
             pytest.xfail(" krb tkt for IPA user granted from AD domain ")
 
@@ -126,45 +126,45 @@ class TestOneWay(object):
         cmd = multihost.master.run_command(['ipa', 'idrange-show',
                                             root_domain_id_range],
                                            raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         if "Range type: Active Directory domain range" in cmd.stdout_text:
-            print "id range found for root domain"
+            print("id range found for root domain")
         else:
             pytest.xfail("id range not found for root domain")
 
         cmd = multihost.master.run_command(['ipa', 'idrange-show',
                                             child_domain_id_range],
                                            raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         if "Range type: Active Directory domain range" in cmd.stdout_text:
-            print "id range found for child domain "
+            print("id range found for child domain ")
         else:
             pytest.xfail("Bugzilla 1250190 found")
 
         cmd = multihost.master.run_command(['getent', 'passwd', aduser + '@' +
                                             root_domain], raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if aduser in cmd.stdout_text:
-            print "gentent working fine for root domain"
+            print("gentent working fine for root domain")
         else:
             pytest.xfail("getent failed for root domain")
 
         cmd = multihost.master.run_command(['getent', 'passwd', aduser + '@' +
                                             child_domain], raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if aduser in cmd.stdout_text:
-            print "gentent working fine for child domain"
+            print("gentent working fine for child domain")
         else:
             pytest.xfail("Bugzilla 1250190 found")
 
         # Deleting trust-added
         cmd = multihost.master.run_command(['ipa', 'trust-del', forwardzone],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if "Deleted trust" in cmd.stdout_text:
-            print "One way trust deleted successfully"
+            print("One way trust deleted successfully")
         else:
             pytest.xfail("One way trust deletion failed")
 
@@ -177,20 +177,20 @@ class TestOneWay(object):
                                             '--two-way=True'],
                                            stdin_text=ad1.ssh_password,
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
         cmd = multihost.master.run_command(['ipa', 'trust-show', forwardzone],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if "Trust direction: Two-way trust" in cmd.stdout_text:
-            print "Two way trust establised successfully"
+            print("Two way trust establised successfully")
         else:
             pytest.xfail("Two way trust addition failed")
-        print "waiting for 60 seconds"
+        print("waiting for 60 seconds")
         time.sleep(60)
         cmd = multihost.master.run_command('ipactl restart', raiseonerr=False)
-        print cmd.stdout_text
-        print "waiting for 60 seconds"
+        print(cmd.stdout_text)
+        print("waiting for 60 seconds")
         time.sleep(60)
 
         # Following section tries that krb tkts issued to IPA users from AD in two way trust scenario
@@ -204,20 +204,20 @@ class TestOneWay(object):
                                       ad1.external_hostname],
                                      raiseonerr=False)
         cmd = multihost.master.run_command(['klist'], raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         exp_output = "krbtgt/" + forwardzone.upper() + '@' + realm
         if exp_output in cmd.stdout_text:
-            print "krb tkt for IPA user granted from AD domain"
+            print("krb tkt for IPA user granted from AD domain")
         else:
             pytest.xfail(" krb tkt for IPA user not granted from AD domain ")
 
         # Cleanup
         cmd = multihost.master.run_command(['ipa', 'trust-del', forwardzone],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if "Deleted trust" in cmd.stdout_text:
-            print "Two way trust deleted successfully"
+            print("Two way trust deleted successfully")
         else:
             pytest.xfail("Two way trust deletion failed")
 
@@ -236,20 +236,20 @@ class TestOneWay(object):
                                             '--two-way=True'],
                                            stdin_text=ad1.ssh_password,
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
         cmd = multihost.master.run_command(['ipa', 'trust-show', forwardzone],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if "Trust direction: Two-way trust" in cmd.stdout_text:
-            print "Two way trust establised successfully"
+            print("Two way trust establised successfully")
         else:
             pytest.xfail("Two way trust addition failed")
-        print "waiting for 60 seconds"
+        print("waiting for 60 seconds")
         time.sleep(60)
         cmd = multihost.master.run_command('ipactl restart', raiseonerr=False)
-        print cmd.stdout_text
-        print "waiting for 60 seconds"
+        print(cmd.stdout_text)
+        print("waiting for 60 seconds")
         time.sleep(60)
 
         # Following section tries that krb tkts issued to AD users from IPA in two way trust scenario
@@ -263,11 +263,11 @@ class TestOneWay(object):
                                       multihost.master.hostname],
                                      raiseonerr=False)
         cmd = multihost.master.run_command(['klist'], raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         exp_output = "krbtgt/" + realm + '@' + forwardzone.upper()
         if exp_output in cmd.stdout_text:
-            print "krb tkt for AD user granted from IPA domain"
+            print("krb tkt for AD user granted from IPA domain")
         else:
             pytest.xfail(" krb tkt for AD user not granted from IPA domain ")
 
@@ -275,9 +275,9 @@ class TestOneWay(object):
         multihost.master.kinit_as_admin()
         cmd = multihost.master.run_command(['ipa', 'trust-del', forwardzone],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if "Deleted trust" in cmd.stdout_text:
-            print "Two way trust deleted successfully"
+            print("Two way trust deleted successfully")
         else:
             pytest.xfail("Two way trust deletion failed")
 
@@ -289,17 +289,17 @@ class TestOneWay(object):
                                             '--type=ad'],
                                            stdin_text=ad1.ssh_password,
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if "Trust direction: Trusting forest" in cmd.stdout_text:
-            print "One way trust establised successfully"
+            print("One way trust establised successfully")
         else:
             pytest.xfail("One way trust addition failed")
-        print cmd.stderr_text
-        print "waiting for 60 seconds"
+        print(cmd.stderr_text)
+        print("waiting for 60 seconds")
         time.sleep(60)
         cmd = multihost.master.run_command('ipactl restart', raiseonerr=False)
-        print cmd.stdout_text
-        print "waiting for 60 seconds"
+        print(cmd.stdout_text)
+        print("waiting for 60 seconds")
         time.sleep(60)
 
         # Following section tries that krb tkts issued to AD users from IPA domain in one way trust scenario
@@ -313,11 +313,11 @@ class TestOneWay(object):
                                       multihost.master.hostname],
                                      raiseonerr=False)
         cmd = multihost.master.run_command(['klist'], raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         exp_output = "krbtgt/" + realm + '@' + forwardzone.upper()
         if exp_output in cmd.stdout_text:
-            print "krb tkt for AD user granted from IPA domain"
+            print("krb tkt for AD user granted from IPA domain")
         else:
             pytest.xfail(" krb tkt for AD user not granted from IPA domain ")
 
@@ -326,9 +326,9 @@ class TestOneWay(object):
         multihost.master.kinit_as_admin()
         cmd = multihost.master.run_command(['ipa', 'trust-del', forwardzone],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if "Deleted trust" in cmd.stdout_text:
-            print "One way trust deleted successfully"
+            print("One way trust deleted successfully")
         else:
             pytest.xfail("One way trust deletion failed")
 

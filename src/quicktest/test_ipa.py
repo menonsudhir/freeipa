@@ -9,11 +9,11 @@ class TestQuick(object):
     """ Test Class """
     def class_setup(self, multihost):
         """ Setup for class """
-        print "\nClass Setup"
-        print "MASTER: ", multihost.master.hostname
-        print "REPLICA: ", multihost.replica.hostname
-        print "CLIENT: ", multihost.client.hostname
-        print "DNSFORWARD: ", multihost.config.dns_forwarder
+        print("\nClass Setup")
+        print("MASTER: ", multihost.master.hostname)
+        print("REPLICA: ", multihost.replica.hostname)
+        print("CLIENT: ", multihost.client.hostname)
+        print("DNSFORWARD: ", multihost.config.dns_forwarder)
 
     def test_0001_setup_master(self, multihost):
         """ Test IPA Master installation """
@@ -57,8 +57,8 @@ class TestQuick(object):
 
     def class_teardown(self, multihost):
         """ Teardown for class """
-        print "CLASS_TEARDOWN"
-        print "MASTER: ", multihost.master.hostname
-        print "REPLICA: ", multihost.replica.hostname
-        print "CLIENT: ", multihost.client.hostname
-        print "DNSFORWARD: ", multihost.config.dns_forwarder
+        print("CLASS_TEARDOWN")
+        print("MASTER: ", multihost.master.hostname)
+        print("REPLICA: ", multihost.replica.hostname)
+        print("CLIENT: ", multihost.client.hostname)
+        print("DNSFORWARD: ", multihost.config.dns_forwarder)

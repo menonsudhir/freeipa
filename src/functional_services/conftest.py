@@ -33,8 +33,8 @@ def setup_session(request, multihost):
     tp = setup_lib.TestPrep(multihost)
     try:
         tp.setup()
-    except StandardError as errval:
-        print str(errval.args[0])
+    except Exception as errval:
+        print(str(errval.args[0]))
         pytest.skip("setup_session_skip")
 
     def teardown_session():

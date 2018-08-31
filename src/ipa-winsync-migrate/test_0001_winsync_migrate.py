@@ -189,7 +189,7 @@ class TestWinSyncMigrate(object):
         cmd = master1.run_command(cmdstr,
                                   stdin_text=ad1.password,
                                   raiseonerr=False)
-        print cmd.stdout_text, cmd.stderr_text
+        print(cmd.stdout_text, cmd.stderr_text)
         if cmd.returncode != 0:
             pytest.fail("Failed to add AD trust between AD Server [%s] "
                         " and IPA server [%s]"
@@ -217,7 +217,7 @@ class TestWinSyncMigrate(object):
         adrelm = ad1.domain.name.upper()
         cmdstr = ["ipa-winsync-migrate", "--server={}".format(adserver), "--realm={}".format(adrelm)]
         cmd = master1.run_command(cmdstr, raiseonerr=False)
-        print cmd.stdout_text, cmd.stderr_text
+        print(cmd.stdout_text, cmd.stderr_text)
         if cmd.returncode != 0:
             pytest.fail("Failed to run [%s] " % " ".join(cmdstr))
 

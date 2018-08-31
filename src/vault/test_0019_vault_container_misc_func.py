@@ -6,7 +6,7 @@ Vault Container Miscellaneous Functional tests
 
 from ipa_pytests.shared.user_utils import add_ipa_user
 from .lib import setup_test_prereqs, teardown_test_prereqs
-import data  # pylint: disable=relative-import
+from . import data  # pylint: disable=relative-import
 
 data.PREFIX = ''
 data.DNE_VAULT = []

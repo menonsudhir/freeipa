@@ -19,16 +19,16 @@ class TestIPv6Tests(object):
         master_ip_six = get_ipv6_ip(multihost.master)
         replica_ip_six = get_ipv6_ip(multihost.replica)
         client_ip_six = get_ipv6_ip(multihost.client)
-        print "Master ip :"
-        print master_ip_six
+        print("Master ip :")
+        print(master_ip_six)
 
-        print "Replica ip :"
-        print replica_ip_six
+        print("Replica ip :")
+        print(replica_ip_six)
 
-        print "Client ip :"
-        print client_ip_six
+        print("Client ip :")
+        print(client_ip_six)
 
-        print "changing variables"
+        print("changing variables")
         multihost.master.ip = master_ip_six
         multihost.master.external_hostname = master_ip_six
         multihost.replica.ip = replica_ip_six
@@ -36,7 +36,7 @@ class TestIPv6Tests(object):
         multihost.client.ip = client_ip_six
         multihost.client.external_hostname = client_ip_six
 
-        print "uninstall"
+        print("uninstall")
         """ Uninstall if ipa installed """
         uninstall_client(multihost.client)
         uninstall_server(multihost.replica)
@@ -51,7 +51,7 @@ class TestIPv6Tests(object):
         """
         IDM-IPA-TC: IPV6: Install ipa-server
         """
-        print "Install ipa-server"
+        print("Install ipa-server")
         params1 = [
             'ipa-server-install',
             '--setup-dns',
@@ -70,7 +70,7 @@ class TestIPv6Tests(object):
         """
         IDM-IPA-TC: IPV6: Install ipa-server replica
         """
-        print "Prepare replica - install client"
+        print("Prepare replica - install client")
         multihost.master.kinit_as_admin()
         multihost.master.run_command([
             'ipa',
@@ -87,7 +87,7 @@ class TestIPv6Tests(object):
         print("RUNCMD:", ' '.join(params2))
         cmd2 = multihost.replica.run_command(params2, raiseonerr=False)
 
-        print "Install replica - promote"
+        print("Install replica - promote")
         params3 = [
             'ipa-replica-install',
             '--setup-dns',
@@ -103,7 +103,7 @@ class TestIPv6Tests(object):
         """
         IDM-IPA-TC: IPV6: Install ipa-client
         """
-        print "Install ipa-client and join"
+        print("Install ipa-client and join")
         params4 = [
             'ipa-client-install',
             '--domain', multihost.master.domain.name,
@@ -121,7 +121,7 @@ class TestIPv6Tests(object):
         """
         IDM-IPA-TC: IPV6: create user on master and edit on replica and login
         """
-        print "Create user on master"
+        print("Create user on master")
         multihost.master.kinit_as_admin()
         cmd_prepare = multihost.master.run_command([
             'ipa', 'user-add',
@@ -129,43 +129,43 @@ class TestIPv6Tests(object):
             '--last', 'User',
             tuser])
 
-        print "Edit user on replica"
+        print("Edit user on replica")
         multihost.replica.kinit_as_admin()
         cmd = multihost.replica.run_command([
             'ipa', 'user-mod',
             '--password', tuser],
             stdin_text=tpassword)
-        print "Login with test user from client"
+        print("Login with test user from client")
         ldap_exp_change = "dn: uid=" + tuser + \
             ",cn=users,cn=accounts,dc=testrelm,dc=test" + '\n' \
             "changetype: modify" + '\n' \
             "replace: krbPasswordExpiration" + '\n' \
             "krbPasswordExpiration: 20201231011529Z" + '\n'
-        print ldap_exp_change
+        print(ldap_exp_change)
         multihost.master.kinit_as_admin()
         ldap_change = multihost.master.run_command([
             'ldapmodify', '-x',
             '-D', 'cn=directory manager',
             '-w', multihost.master.config.dirman_pw],
             stdin_text=ldap_exp_change)
-        print "kinit"
+        print("kinit")
         cmd1 = multihost.client.kinit_as_user(tuser, tpassword)
 
     def test_ipv6_0005(self, multihost):
         """
         IDM-IPA-TC: IPV6: remove user on replica
         """
-        print "remove user"
+        print("remove user")
         cmd = multihost.replica.run_command(['ipa', 'user-del', tuser])
 
     def test_ipv6_0006(self, multihost):
         """
         IDM-IPA-TC: IPV6: Uninstall client and re-install client and join
         """
-        print "Uninstall client"
+        print("Uninstall client")
         cmd_uninstall = multihost.client.run_command(['ipa-client-install',
                                                       '--uninstall', '-U'])
-        print "REinstall client"
+        print("REinstall client")
         params5 = [
             'ipa-client-install',
             '--domain', multihost.master.domain.name,

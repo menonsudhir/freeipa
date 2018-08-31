@@ -41,7 +41,7 @@ def ldap_sasl_check_negative(host, uri, expected_message):
     if not re.search(expected_message, output):
         raise ValueError('[Fail]: sasl bind did not fail as expected')
     else:
-        print "Failed as expected: \n%s" % output
+        print("Failed as expected: \n%s" % output)
 
 
 def ldap_sasl_check_negative_py(uri, expected_message):
@@ -54,9 +54,9 @@ def ldap_sasl_check_negative_py(uri, expected_message):
     auth = ldap.sasl.gssapi('')
     try:
         ldapobj.sasl_interactive_bind_s('ldapuser1', auth)
-    except ldap.LOCAL_ERROR, errval:
+    except ldap.LOCAL_ERROR as errval:
         if not re.search(expected_message, errval.args[0]['info']):
-            print "ERROR: ", errval.args[0]['info']
+            print("ERROR: ", errval.args[0]['info'])
             raise ValueError('[Fail]: sasl bind did not fail as expected')
     else:
         raise ValueError('[Fail]: sasl bind passed when it should fail')
@@ -92,12 +92,12 @@ def check_revoked(host, cert_dir):
     for _ in range(max_checks):
         cmd = host.run_command([ocspcmd, '-S', host.hostname, '-d', cert_dir])
         if 'Certificate has been revoked' in cmd.stdout_text:
-            print "stdout: %s" % cmd.stdout_text
+            print("stdout: %s" % cmd.stdout_text)
             return
         else:
-            print "There was an error.   Checking again to be sure"
-            print "stdout: %s" % cmd.stdout_text
-            print "stderr: %s" % cmd.stderr_text
+            print("There was an error.   Checking again to be sure")
+            print("stdout: %s" % cmd.stdout_text)
+            print("stderr: %s" % cmd.stderr_text)
 
     raise ValueError('Certificate not revoked or unable to check')
 
@@ -110,10 +110,10 @@ def is_redundant_ca_dns_supported(host, service):
     host.run_command(['ipa', 'cert-show', serial_number, '--out=/tmp/cert_to_check.crt'])
     cmd = host.run_command(['openssl', 'x509', '-text', '-in', '/tmp/cert_to_check.crt'])
     if re.search('OCSP.*URI.*http://ipa-ca', cmd.stdout_text):
-        print "ipa-ca redundant dns URI found"
+        print("ipa-ca redundant dns URI found")
         return True
     else:
-        print "ipa-ca redundant dns URI not found"
+        print("ipa-ca redundant dns URI not found")
         return False
 
 
@@ -126,7 +126,7 @@ def wait_for_ldap(host, port):
         cmd = host.run_command(['netstat', '-an'])
         result = re.search(search_string, cmd.stdout_text)
         if result is None:
-            print "LDAP does not appear to be running yet...waiting"
+            print("LDAP does not appear to be running yet...waiting")
             time.sleep(60)
             attempt += 1
         else:

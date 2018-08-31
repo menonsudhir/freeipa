@@ -24,9 +24,9 @@ class Testidview(object):
 
     def class_setup(self, multihost):
         """ Setup for class """
-        print "\nClass Setup"
-        print "MASTER: ", multihost.master.hostname
-        print "CLIENT: ", multihost.client.hostname
+        print("\nClass Setup")
+        print("MASTER: ", multihost.master.hostname)
+        print("CLIENT: ", multihost.client.hostname)
         setup_master(multihost.master)
         setup_client(multihost.client, multihost.master)
 
@@ -51,7 +51,7 @@ class Testidview(object):
 
         cmd = multihost.master.run_command('dig +short SRV _ldap._tcp.' +
                                            forwardzone, raiseonerr=False)
-        print cmd.stdout_text, cmd.stderr_text
+        print(cmd.stdout_text, cmd.stderr_text)
         if ad1.hostname in cmd.stdout_text:
             print("dns resolution passed for ad domain")
         else:
@@ -59,7 +59,7 @@ class Testidview(object):
         cmd = multihost.master.run_command('dig +short SRV @' + ad1.ip +
                                            ' _ldap._tcp.' + domain,
                                            raiseonerr=False)
-        print cmd.stdout_text, cmd.stderr_text
+        print(cmd.stdout_text, cmd.stderr_text)
         if domain in cmd.stdout_text:
             print("dns resolution passed for ipa domain")
         else:
@@ -87,9 +87,9 @@ class Testidview(object):
         multihost.master.transport.put_file('test1.exp', '/tmp/test1.exp')
         output = multihost.master.run_command(['expect', '/tmp/test1.exp'], raiseonerr=False)
         if output.returncode != 0:
-            print output.stderr_text
+            print(output.stderr_text)
         else:
-            print output.stdout_text
+            print(output.stdout_text)
 
     def test_useradd_domain(self, multihost):
         multihost.master.kinit_as_admin()
@@ -99,9 +99,9 @@ class Testidview(object):
                                            stdin_text=multihost.master.config.ad_pwd,
                                            raiseonerr=False)
 
-        print cmd.stdout_text
-        print cmd.stderr_text
-        print cmd.returncode
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
+        print(cmd.returncode)
         if cmd.returncode == 1:
             for i in range(30):
                 cmd = multihost.master.run_command(['adcli', 'create-user',
@@ -121,9 +121,9 @@ class Testidview(object):
                                            stdin_text=multihost.master.config.ad_pwd,
                                            raiseonerr=False)
 
-        print cmd.stdout_text
-        print cmd.stderr_text
-        print cmd.returncode
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
+        print(cmd.returncode)
         if cmd.returncode == 1:
             for i in range(20):
                 cmd = multihost.master.run_command(['adcli', 'create-group',
@@ -148,75 +148,75 @@ class Testidview(object):
         multihost.master.transport.put_file('test2.exp', '/tmp/test2.exp')
         output = multihost.master.run_command(['expect', '/tmp/test2.exp'], raiseonerr=False)
         if output.returncode != 0:
-            print output.stderr_text
+            print(output.stderr_text)
         else:
-            print output.stdout_text
+            print(output.stdout_text)
 
     def test_0071_addwithoutoptions(self, multihost):
         """Adding view using idview-add command"""
         multihost.master.kinit_as_admin()
         cmd = idview_add(multihost.master, viewname='TestView2')
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         assert 'Added ID View "TestView2"' in cmd.stdout_text
 
     def test_0072_adddescription(self, multihost):
         """Adding view using idview-add command and desc option"""
         cmd = idview_add(multihost.master, viewname='TestView6', desc='view6')
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         assert 'Description: view6' in cmd.stdout_text
 
     def test_0073_addsameviewagain(self, multihost):
         """Adding view which already exists"""
         cmd = idview_add(multihost.master, viewname='TestView6', desc='view6')
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         assert 'ipa: ERROR: ID View with name "TestView6" already exists' in cmd.stderr_text
 
     def test_0074_differentcase(self, multihost):
         """Adding view which already exists but with differentcase"""
         cmd = idview_add(multihost.master, viewname='TESTVIEW6', desc='view6')
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         assert 'ipa: ERROR: ID View with name "TESTVIEW6" already exists' in cmd.stderr_text
 
     def test_0090_findname(self, multihost):
         """Find a specific view using idview-find command"""
         cmd = idview_find(multihost.master, viewname='TestView6')
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         assert 'Number of entries returned 1' in cmd.stdout_text
 
     def test_0091_finddesc(self, multihost):
         """Find a specific view using  desc option"""
         cmd = idview_find(multihost.master, viewname='TestView6', desc='view6')
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         assert 'Number of entries returned 1' in cmd.stdout_text
 
     def test_0092_findall(self, multihost):
         """Find all views on the IPA  box"""
         cmd = idview_find(multihost.master, alloption='all')
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         assert '4 ID Views matched' in cmd.stdout_text
 
     def test_0093_findraw(self, multihost):
         """find view with raw option"""
         cmd = idview_find(multihost.master, raw='raw')
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         assert '4 ID Views matched' in cmd.stdout_text
 
     def test_0094_findallraw(self, multihost):
         """Find views using all and raw option"""
         cmd = idview_find(multihost.master, allraw='allraw')
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         assert '4 ID Views matched' in cmd.stdout_text
 
     def test_0095_findsizelimit(self, multihost):
         """Find idview with specified sizelimit """
         cmd = idview_find(multihost.master, sizelimit='2')
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         assert '2 ID Views matched' in cmd.stdout_text
 
     def test_0096_findcaseinsensitive(self, multihost):
         """Find idview  as case insensitive option"""
         cmd = idview_find(multihost.master, viewname='TESTVIEW2')
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         assert '1 ID View matched' in cmd.stdout_text
 
     def test_0098_modrename(self, multihost):
@@ -718,7 +718,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user)
         idview_add(multihost.master, viewname)
         cmd = idoverrideuser_add(multihost.master, viewname, user, uid)
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'UID: 77777' in cmd.stdout_text
 
     def test_views_ipa_0002(self, multihost):
@@ -731,7 +731,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user)
         idview_add(multihost.master, viewname)
         cmd = idoverrideuser_add(multihost.master, viewname, user, uid, gid)
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'UID: 1234567' in cmd.stdout_text
         assert 'GID: 1234567' in cmd.stdout_text
 
@@ -745,7 +745,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user)
         idview_add(multihost.master, viewname)
         cmd = idoverrideuser_add(multihost.master, viewname, user, uid, gid)
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'UID: 1234567' in cmd.stdout_text
         assert 'GID: 1234568' in cmd.stdout_text
 
@@ -759,7 +759,7 @@ class Testidview(object):
         idview_add(multihost.master, viewname)
         cmd = idoverrideuser_add(multihost.master, viewname='view4',
                                  user='vuser4', uid='11111', login='user4')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'User login: user4' in cmd.stdout_text
         assert 'UID: 11111' in cmd.stdout_text
 
@@ -773,7 +773,7 @@ class Testidview(object):
         idview_add(multihost.master, viewname)
         cmd = idoverrideuser_add(multihost.master, viewname='view5',
                                  user='vuser5', uid='11112', gecos='test5')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'GECOS: test5' in cmd.stdout_text
         assert 'UID: 11112' in cmd.stdout_text
 
@@ -788,7 +788,7 @@ class Testidview(object):
         cmd = idoverrideuser_add(multihost.master, viewname='view6',
                                  user='vuser6', uid='11113',
                                  homedir='/home/test6')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'UID: 11113' in cmd.stdout_text
         assert 'Home directory: /home/test6' in cmd.stdout_text
 
@@ -802,7 +802,7 @@ class Testidview(object):
         idview_add(multihost.master, viewname)
         cmd = idoverrideuser_add(multihost.master, viewname='view7',
                                  user='vuser7', uid='11114', shell='/bin/bash')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'UID: 11114' in cmd.stdout_text
         assert 'Login shell: /bin/bash' in cmd.stdout_text
 
@@ -816,7 +816,7 @@ class Testidview(object):
         idview_add(multihost.master, viewname)
         cmd = idoverrideuser_add(multihost.master, viewname='view9',
                                  user='vuser9', uid='11116', desc='testing')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'UID: 11116' in cmd.stdout_text
         assert 'Description: testing' in cmd.stdout_text
 
@@ -830,11 +830,11 @@ class Testidview(object):
         idview_add(multihost.master, viewname)
         cmd1 = idoverrideuser_add(multihost.master, viewname='view10',
                                   user='vuser10', desc='test')
-        print (cmd1.stdout_text)
+        print(cmd1.stdout_text)
         assert 'Added User ID override "vuser10"' in cmd1.stdout_text
         cmd2 = idoverrideuser_mod(multihost.master, viewname, user,
                                   desc='changing desc')
-        print (cmd2.stdout_text)
+        print(cmd2.stdout_text)
         assert 'Description: changing desc' in cmd2.stdout_text
 
     def test_views_ipa_0034(self, multihost):
@@ -847,11 +847,11 @@ class Testidview(object):
         idview_add(multihost.master, viewname)
         cmd1 = idoverrideuser_add(multihost.master, viewname='view11',
                                   user='vuser11', login='vuser')
-        print (cmd1.stdout_text)
+        print(cmd1.stdout_text)
         assert 'Added User ID override "vuser11"' in cmd1.stdout_text
         cmd2 = idoverrideuser_mod(multihost.master, viewname, user,
                                   login='user11')
-        print (cmd2.stdout_text)
+        print(cmd2.stdout_text)
         assert 'User login: user11' in cmd2.stdout_text
 
     def test_views_ipa_0035(self, multihost):
@@ -864,10 +864,10 @@ class Testidview(object):
         idview_add(multihost.master, viewname)
         cmd1 = idoverrideuser_add(multihost.master, viewname='view12',
                                   user='vuser12', uid='77777')
-        print (cmd1.stdout_text)
+        print(cmd1.stdout_text)
         assert 'Added User ID override "vuser12"' in cmd1.stdout_text
         cmd2 = idoverrideuser_mod(multihost.master, viewname, user, uid)
-        print (cmd2.stdout_text)
+        print(cmd2.stdout_text)
         assert 'UID: 55555' in cmd2.stdout_text
 
     def test_views_ipa_0036(self, multihost):
@@ -880,11 +880,11 @@ class Testidview(object):
         idview_add(multihost.master, viewname)
         cmd1 = idoverrideuser_add(multihost.master, viewname='view13',
                                   user='vuser13', gecos='test')
-        print (cmd1.stdout_text)
+        print(cmd1.stdout_text)
         assert 'Added User ID override "vuser13"' in cmd1.stdout_text
         cmd2 = idoverrideuser_mod(multihost.master, viewname, user,
                                   gecos='testing gecos')
-        print (cmd2.stdout_text)
+        print(cmd2.stdout_text)
         assert 'GECOS: testing gecos' in cmd2.stdout_text
 
     def test_views_ipa_0037(self, multihost):
@@ -897,11 +897,11 @@ class Testidview(object):
         idview_add(multihost.master, viewname)
         cmd1 = idoverrideuser_add(multihost.master, viewname='view14',
                                   user='vuser14', gid='88888')
-        print (cmd1.stdout_text)
+        print(cmd1.stdout_text)
         assert 'Added User ID override "vuser14"' in cmd1.stdout_text
         cmd2 = idoverrideuser_mod(multihost.master, viewname, user,
                                   gid='77777')
-        print (cmd2.stdout_text)
+        print(cmd2.stdout_text)
         assert 'GID: 77777' in cmd2.stdout_text
 
     def test_views_ipa_0038(self, multihost):
@@ -914,11 +914,11 @@ class Testidview(object):
         idview_add(multihost.master, viewname)
         cmd1 = idoverrideuser_add(multihost.master, viewname='view15',
                                   user='vuser15', homedir='/home/test15')
-        print (cmd1.stdout_text)
+        print(cmd1.stdout_text)
         assert 'Added User ID override "vuser15"' in cmd1.stdout_text
         cmd2 = idoverrideuser_mod(multihost.master, viewname,
                                   user, homedir='/home/vuser15')
-        print (cmd2.stdout_text)
+        print(cmd2.stdout_text)
         assert 'Home directory: /home/vuser15' in cmd2.stdout_text
 
     def test_views_ipa_0039(self, multihost):
@@ -931,11 +931,11 @@ class Testidview(object):
         idview_add(multihost.master, viewname)
         cmd1 = idoverrideuser_add(multihost.master, viewname='view16',
                                   user='vuser16', shell='/bin/sh')
-        print (cmd1.stdout_text)
+        print(cmd1.stdout_text)
         assert 'Added User ID override "vuser16"' in cmd1.stdout_text
         cmd2 = idoverrideuser_mod(multihost.master, viewname,
                                   user, shell='/bin/bash')
-        print (cmd2.stdout_text)
+        print(cmd2.stdout_text)
         assert 'Login shell: /bin/bash' in cmd2.stdout_text
 
     def test_views_ipa_0042(self, multihost):
@@ -946,7 +946,7 @@ class Testidview(object):
         add_ipa_group(multihost.master, groupname)
         idview_add(multihost.master, viewname)
         cmd = idoverridegroup_add(multihost.master, viewname, groupname)
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'Added Group ID override "ipagroup1"' in cmd.stdout_text
 
     def test_views_ipa_0043(self, multihost):
@@ -958,7 +958,7 @@ class Testidview(object):
         add_ipa_group(multihost.master, groupname)
         idview_add(multihost.master, viewname)
         cmd = idoverridegroup_add(multihost.master, viewname, groupname, gid)
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'GID: 99998' in cmd.stdout_text
 
     def test_views_ipa_0044(self, multihost):
@@ -971,7 +971,7 @@ class Testidview(object):
         idview_add(multihost.master, viewname)
         cmd = idoverridegroup_add(multihost.master, viewname,
                                   groupname, desc='testing desc')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'Description: testing desc' in cmd.stdout_text
 
     def test_views_ipa_0045(self, multihost):
@@ -983,7 +983,7 @@ class Testidview(object):
         add_ipa_group(multihost.master, groupname)
         idview_add(multihost.master, viewname)
         cmd = idoverridegroup_add(multihost.master, viewname, groupname, gid)
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'Anchor to override: ipagroup4' in cmd.stdout_text
         assert 'GID: 123456' in cmd.stdout_text
 
@@ -994,13 +994,13 @@ class Testidview(object):
         gid = '111111'
         multihost.master.kinit_as_admin()
         cmd = add_ipa_group(multihost.master, groupname)
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         idview_add(multihost.master, viewname)
         idoverridegroup_add(multihost.master, viewname, groupname)
         cmd1 = idoverridegroup_mod(multihost.master, viewname='gview5',
                                    groupname='ipagroup5', gid='111111')
-        print (cmd1.stdout_text)
-        print (cmd1.stderr_text)
+        print(cmd1.stdout_text)
+        print(cmd1.stderr_text)
         assert 'GID: 111111' in cmd1.stdout_text
 
     def test_views_ipa_0047(self, multihost):
@@ -1010,16 +1010,16 @@ class Testidview(object):
         viewname = 'gview6'
         multihost.master.kinit_as_admin()
         cmd = add_ipa_group(multihost.master, groupname)
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         idview_add(multihost.master, viewname)
         idoverridegroup_add(multihost.master, viewname, groupname)
-        print (cmd.stdout_text)
-        print (cmd.stderr_text)
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         add_ipa_group(multihost.master, groupname1)
         cmd1 = idoverridegroup_mod(multihost.master, viewname, groupname,
                                    newgrp='ipagroup66')
-        print (cmd1.stdout_text)
-        print (cmd1.stderr_text)
+        print(cmd1.stdout_text)
+        print(cmd1.stderr_text)
         assert 'Modified an Group ID override "ipagroup6"' in cmd1.stdout_text
         assert 'Group name: ipagroup66' in cmd1.stdout_text
 
@@ -1031,16 +1031,16 @@ class Testidview(object):
         viewname = 'gview7'
         multihost.master.kinit_as_admin()
         cmd = add_ipa_group(multihost.master, groupname)
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         idview_add(multihost.master, viewname)
         idoverridegroup_add(multihost.master, viewname, groupname)
-        print (cmd.stdout_text)
-        print (cmd.stderr_text)
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         add_ipa_group(multihost.master, groupname1)
         cmd1 = idoverridegroup_mod(multihost.master, viewname, groupname,
                                    gid='111112', newgrp='ipagroup77')
-        print (cmd1.stdout_text)
-        print (cmd1.stderr_text)
+        print(cmd1.stdout_text)
+        print(cmd1.stderr_text)
         assert 'Modified an Group ID override "ipagroup7"' in cmd1.stdout_text
         assert 'Group name: ipagroup77' in cmd1.stdout_text
         assert 'GID: 111112' in cmd1.stdout_text
@@ -1052,27 +1052,27 @@ class Testidview(object):
         viewname = 'gview8'
         multihost.master.kinit_as_admin()
         cmd = add_ipa_group(multihost.master, groupname)
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         idview_add(multihost.master, viewname)
         cmd1 = idoverridegroup_add(multihost.master, viewname, groupname)
-        print (cmd1.stdout_text)
-        print (cmd1.stderr_text)
+        print(cmd1.stdout_text)
+        print(cmd1.stderr_text)
         cmd2 = idoverridegroup_mod(multihost.master, viewname, groupname,
                                    desc='testing desc')
-        print (cmd2.stdout_text)
-        print (cmd2.stderr_text)
+        print(cmd2.stdout_text)
+        print(cmd2.stderr_text)
         assert 'Description: testing desc' in cmd2.stdout_text
 
     def test_views_ipa_0141(self, multihost):
         """idoverridegroup-find with anchor option"""
         cmd1 = add_ipa_group(multihost.master, groupname='idviewgroup1')
-        print cmd1.stdout_text
+        print(cmd1.stdout_text)
         cmd2 = idview_add(multihost.master, viewname='groupview1')
-        print cmd2.stdout_text
+        print(cmd2.stdout_text)
         cmd3 = idoverridegroup_add(multihost.master, viewname='groupview1', groupname='idviewgroup1')
-        print cmd3.stdout_text
+        print(cmd3.stdout_text)
         cmd4 = idoverridegroup_find(multihost.master, viewname='groupview1', anchor='idviewgroup1')
-        print cmd4.stdout_text
+        print(cmd4.stdout_text)
         assert '1 Group ID override matched' in cmd4.stdout_text
 
     def test_views_0049(self, multihost):
@@ -1081,8 +1081,8 @@ class Testidview(object):
         viewname = 'view9'
         desc = 'testing'
         cmd = idoverrideuser_find(multihost.master, viewname, desc)
-        print (cmd.stdout_text)
-        print (cmd.stderr_text)
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         assert 'Description: testing' in cmd.stdout_text
 
     def test_views_0050(self, multihost):
@@ -1091,8 +1091,8 @@ class Testidview(object):
         viewname = 'view4'
         login = 'user4'
         cmd = idoverrideuser_find(multihost.master, viewname, login)
-        print (cmd.stdout_text)
-        print (cmd.stderr_text)
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         assert 'User login: user4' in cmd.stdout_text
 
     def test_views_ipa_0008(self, multihost):
@@ -1106,7 +1106,7 @@ class Testidview(object):
                                      '1NBrKo0QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1'
                                      'lDHo522tIhiQCKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIj'
                                      'l9JnG/9ecuMWAhiZq9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser8@localhost')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'UID: 10001' in cmd.stdout_text
         assert 'SSH public key: ssh-rsa' in cmd.stdout_text
 
@@ -1116,7 +1116,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser9')
         idview_add(multihost.master, viewname='ipaview9')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview9', user='ipauser9', gid='10002')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'GID: 10002' in cmd.stdout_text
 
     def test_views_ipa_0011(self, multihost):
@@ -1125,7 +1125,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser10')
         idview_add(multihost.master, viewname='ipaview10')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview10', user='ipauser10', gid='10003', login='user10')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'User login: user10' in cmd.stdout_text
 
     def test_views_ipa_0012(self, multihost):
@@ -1134,7 +1134,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser11')
         idview_add(multihost.master, viewname='ipaview11')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview11', user='ipauser11', gid='10004', gecos='user11')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'GECOS: user11' in cmd.stdout_text
 
     def test_views_ipa_0013(self, multihost):
@@ -1143,7 +1143,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser12')
         idview_add(multihost.master, viewname='ipaview12')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview12', user='ipauser12', gid='10005', homedir='/home/ipauser12')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'Home directory: /home/ipauser12' in cmd.stdout_text
 
     def test_views_ipa_0014(self, multihost):
@@ -1152,7 +1152,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser13')
         idview_add(multihost.master, viewname='ipaview13')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview13', user='ipauser13', gid='10006', shell='/bin/sh')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'Login shell: /bin/sh' in cmd.stdout_text
 
     def test_views_ipa_0015(self, multihost):
@@ -1166,7 +1166,7 @@ class Testidview(object):
                                      'BrKo0QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDH'
                                      'o522tIhiQCKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIjl9Jn'
                                      'G/9ecuMWAhiZq9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser14@localhost')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'GID: 10007' in cmd.stdout_text
         assert 'SSH public key: ssh-rsa' in cmd.stdout_text
 
@@ -1176,7 +1176,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser15')
         idview_add(multihost.master, viewname='ipaview15')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview15', user='ipauser15', login='user15')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'User login: user15' in cmd.stdout_text
 
     def test_views_ipa_0017(self, multihost):
@@ -1185,7 +1185,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser16')
         idview_add(multihost.master, viewname='ipaview16')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview16', user='ipauser16', login='user16', gecos='ipauser16')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'User login: user16' in cmd.stdout_text
         assert 'GECOS: ipauser16' in cmd.stdout_text
 
@@ -1195,7 +1195,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser17')
         idview_add(multihost.master, viewname='ipaview17')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview17', user='ipauser17', login='user17', homedir='/home/user17')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'User login: user17' in cmd.stdout_text
         assert 'Home directory: /home/user17' in cmd.stdout_text
 
@@ -1205,7 +1205,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser18')
         idview_add(multihost.master, viewname='ipaview18')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview18', user='ipauser18', login='user18', shell='/bin/sh')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'User login: user18' in cmd.stdout_text
         assert 'Login shell: /bin/sh' in cmd.stdout_text
 
@@ -1220,7 +1220,7 @@ class Testidview(object):
                                  'QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDHo522tIhiQ'
                                  'CKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIjl9JnG/9ecuMWAhiZq'
                                  '9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser20@localhost')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'User login: user19' in cmd.stdout_text
         assert 'SSH public key: ssh-rsa' in cmd.stdout_text
 
@@ -1230,7 +1230,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser20')
         idview_add(multihost.master, viewname='ipaview20')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview20', user='ipauser20', gecos='user20')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'GECOS: user20' in cmd.stdout_text
 
     def test_views_ipa_0022(self, multihost):
@@ -1239,7 +1239,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser21')
         idview_add(multihost.master, viewname='ipaview21')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview21', user='ipauser21', gecos='user21', homedir='/home/user21')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'GECOS: user21' in cmd.stdout_text
         assert 'Home directory: /home/user21' in cmd.stdout_text
 
@@ -1249,7 +1249,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser22')
         idview_add(multihost.master, viewname='ipaview22')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview22', user='ipauser22', gecos='user22', shell='/bin/bash')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'GECOS: user22' in cmd.stdout_text
         assert 'Login shell: /bin/bash' in cmd.stdout_text
 
@@ -1264,7 +1264,7 @@ class Testidview(object):
                                  'QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDHo522tIhiQ'
                                  'CKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIjl9JnG/9ecuMWAhiZq'
                                  '9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser19@localhost')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'GECOS: ipausr19' in cmd.stdout_text
         assert 'SSH public key: ssh-rsa' in cmd.stdout_text
 
@@ -1274,7 +1274,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser23')
         idview_add(multihost.master, viewname='ipaview23')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview23', user='ipauser23', homedir='/home/ipauser23')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'Home directory: /home/ipauser23' in cmd.stdout_text
 
     def test_views_ipa_0026(self, multihost):
@@ -1283,7 +1283,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser24')
         idview_add(multihost.master, viewname='ipaview24')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview24', user='ipauser24', shell='/bin/bash')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'Login shell: /bin/bash' in cmd.stdout_text
 
     def test_views_ipa_0027(self, multihost):
@@ -1297,7 +1297,7 @@ class Testidview(object):
                                  'QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDHo522tIhiQ'
                                  'CKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIjl9JnG/9ecuMWAhiZq'
                                  '9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser25@localhost')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'Home directory: /home/ipauser25' in cmd.stdout_text
         assert 'SSH public key: ssh-rsa' in cmd.stdout_text
 
@@ -1307,7 +1307,7 @@ class Testidview(object):
         add_ipa_user(multihost.master, user='ipauser26')
         idview_add(multihost.master, viewname='ipaview26')
         cmd = idoverrideuser_add(multihost.master, viewname='ipaview26', user='ipauser26', shell='/bin/sh')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'Login shell: /bin/sh' in cmd.stdout_text
 
     def test_views_ipa_0029(self, multihost):
@@ -1321,7 +1321,7 @@ class Testidview(object):
                                  'QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDHo522tIhiQ'
                                  'CKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIjl9JnG/9ecuMWAhiZq'
                                  '9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser27@localhost')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'Login shell: /bin/bash' in cmd.stdout_text
         assert 'SSH public key: ssh-rsa' in cmd.stdout_text
 
@@ -1336,7 +1336,7 @@ class Testidview(object):
                                  'QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDHo522tIhiQ'
                                  'CKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE1qo4+lU+8SIKpFkhJIjl9JnG/9ecuMWAhiZq'
                                  '9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser28@localhost')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'SSH public key: ssh-rsa' in cmd.stdout_text
 
     def test_views_ipa_0031(self, multihost):
@@ -1351,7 +1351,7 @@ class Testidview(object):
                                  'QTk5fCSSGN3kKuMUCgcqQw/9ea39dFAI96szAVfk+Y1eg1E84iOg1a/usFft0r+UuOd6bxzu/1lDHo522tIhiQ'
                                  'CKAAyxOGij3w6Zw4mfFu/99l3LKm+ACAFpeAWkJqCjfku2WIkE23o4+lU+8SIKpFkhJIjl9JnG/9ecuMWAhiZq'
                                  '9Ny4lypXogbVOPZThd2nAP3x+//t7+Vrq+VXjCQ== ipauser29@localhost')
-        print (cmd.stdout_text)
+        print(cmd.stdout_text)
         assert 'Description: testuser' in cmd.stdout_text
         assert 'User login: user29' in cmd.stdout_text
         assert 'UID: 213313' in cmd.stdout_text
@@ -1368,9 +1368,9 @@ class Testidview(object):
                                            stdin_text=multihost.master.config.ad_pwd,
                                            raiseonerr=False)
 
-        print cmd.stdout_text
-        print cmd.stderr_text
-        print cmd.returncode
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
+        print(cmd.returncode)
         if cmd.returncode == 1:
             for i in range(30):
                 cmd = multihost.master.run_command(['adcli', 'delete-user',

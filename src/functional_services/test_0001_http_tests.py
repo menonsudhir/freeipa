@@ -15,7 +15,7 @@ class TestHttpTests(object):
             setup_lib_http.setup_http_service(multihost)
             multihost.client.put_file_contents(fin, 'x')
         else:
-            print "setup_http_service has already run...skipping"
+            print("setup_http_service has already run...skipping")
 
     @pytest.mark.tier1
     def test_0001_access_http_with_valid_creds(self, multihost):

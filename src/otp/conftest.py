@@ -4,7 +4,7 @@ conftest to setup required fixtures needed by tests:
 - config for multihost plugin
 """
 
-from __future__ import print_function
+
 import pytest
 from ipa_pytests.qe_install import setup_master, setup_client
 from ipa_pytests.shared.rpm_utils import check_rpm
@@ -29,7 +29,7 @@ def setup_session(request, multihost):
         setup_client(multihost.client, multihost.master)
         multihost.master.yum_install(['expect'])
 
-    except StandardError as errval:
+    except Exception as errval:
         print("Error in setup_session %s" % (str(errval.args[0])))
         pytest.skip("setup_session_skip")
 

@@ -4,7 +4,7 @@ Vault Find tests
 
 # pylint: disable=too-many-public-methods,no-self-use,global-statement,too-many-statements
 
-import data  # pylint: disable=relative-import
+from . import data  # pylint: disable=relative-import
 
 
 class TestVaultFind(object):

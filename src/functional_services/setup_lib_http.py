@@ -64,7 +64,7 @@ def _http_add_ipa_ca_cert(multihost):
     multihost.client.put_file_contents(crtput, crtdata)
     mycerts = certutil(multihost.client, http_cert_db)
     mycerts.add_cert(crtput, nick, trust)
-    print mycerts.list_certs()[0]
+    print(mycerts.list_certs()[0])
 
 
 def _http_cfg_ssl_with_cert(multihost):

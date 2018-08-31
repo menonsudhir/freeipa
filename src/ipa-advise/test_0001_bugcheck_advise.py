@@ -13,8 +13,8 @@ class Testipaadvise(object):
     """ Test Class """
     def class_setup(self, multihost):
         """ Setup for class """
-        print "\nClass Setup"
-        print "MASTER: ", multihost.master.hostname
+        print("\nClass Setup")
+        print("MASTER: ", multihost.master.hostname)
 
     def test_0001_ipa_advise(self, multihost):
         """
@@ -27,9 +27,9 @@ class Testipaadvise(object):
         var1 = multihost.master.run_command(['ipa-advise'])
 
         if var1.stdout_text.find(exp_output):
-            print "test_0001_ipa_advise verified"
+            print("test_0001_ipa_advise verified")
         else:
-            print "bugzilla 1353899 found"
+            print("bugzilla 1353899 found")
 
     def class_teardown(self, multihost):
         """ Class Teardown """

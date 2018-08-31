@@ -37,14 +37,14 @@ class TestSSSDTests(object):
         master_ip_six = get_ipv6_ip(multihost.master)
         replica_ip_six = get_ipv6_ip(multihost.replica)
         client_ip_six = get_ipv6_ip(multihost.client)
-        print "Master ip :"
-        print master_ip_six
+        print("Master ip :")
+        print(master_ip_six)
 
-        print "Replica ip :"
-        print replica_ip_six
+        print("Replica ip :")
+        print(replica_ip_six)
 
-        print "Client ip :"
-        print client_ip_six
+        print("Client ip :")
+        print(client_ip_six)
 
         multihost.master.yum_install(['ipa-server', 'ipa-server-dns'])
         multihost.replica.yum_install(['ipa-server', 'ipa-server-dns'])
@@ -91,7 +91,7 @@ class TestSSSDTests(object):
 
     def test_sssd_0001(self, multihost):
         """ IDM-IPA-TC: IPV6: Prepare env """
-        print "Install ipa-server master"
+        print("Install ipa-server master")
 
         params = [
             'ipa-server-install',
@@ -107,7 +107,7 @@ class TestSSSDTests(object):
         print("RUNCMD:", ' '.join(params))
         cmd1 = multihost.master.run_command(params, raiseonerr=False)
 
-        print "Prepare replica - install client"
+        print("Prepare replica - install client")
         multihost.master.kinit_as_admin()
         multihost.master.run_command([
             'ipa',
@@ -124,7 +124,7 @@ class TestSSSDTests(object):
             '-U']
         print("RUNCMD:", ' '.join(params1))
         cmd2 = multihost.replica.run_command(params1, raiseonerr=False)
-        print "Install replica - promote to replica"
+        print("Install replica - promote to replica")
 
         cmd = dns_record_add(multihost.master,
                              multihost.master.domain.name,
@@ -145,7 +145,7 @@ class TestSSSDTests(object):
         print("RUNCMD:", ' '.join(cmdstr))
         cmd3 = multihost.replica.run_command(cmdstr, raiseonerr=False)
 
-        print "Prepare client"
+        print("Prepare client")
 
         cmd4 = multihost.client.run_command([
             'ip', 'addr', 'add', client_ip2,
@@ -197,7 +197,7 @@ class TestSSSDTests(object):
         else:
             dns_result = 0
             assert 1 == dns_result
-        print cmd7.stdout_text
+        print(cmd7.stdout_text)
 
     def test_sssd_0002(self, multihost):
         """ IDM-IPA-TC: IPV6: add ipv6 to monitor """
@@ -238,7 +238,7 @@ class TestSSSDTests(object):
         set_resolv_conf_add_server(multihost.replica, master_ip_six)
         set_resolv_conf_add_server(multihost.client, master_ip_six)
 
-        print "Install ipa-server master - multihomed"
+        print("Install ipa-server master - multihomed")
         params2 = [
             'ipa-server-install',
             '--setup-dns', '--no-forwarders',
@@ -254,7 +254,7 @@ class TestSSSDTests(object):
         print("RUNCMD:", ' '.join(params2))
         cmd1 = multihost.master.run_command(params2, raiseonerr=False)
 
-        print "Prepare replica - install client"
+        print("Prepare replica - install client")
 
         multihost.master.kinit_as_admin()
 
@@ -273,7 +273,7 @@ class TestSSSDTests(object):
         print("RUNCMD:", ' '.join(params3))
         cmd2 = multihost.replica.run_command(params3, raiseonerr=False)
 
-        print "Install replica - promote to replica"
+        print("Install replica - promote to replica")
         time.sleep(5)
         set_resolv_conf_to_master(multihost.replica, multihost.master)
         params4 = [
@@ -287,7 +287,7 @@ class TestSSSDTests(object):
         print("RUNCMD:", ' '.join(params4))
         cmd3 = multihost.replica.run_command(params4, raiseonerr=False)
 
-        print "Prepare client"
+        print("Prepare client")
 
         params5 = [
             'ipa-client-install',
@@ -322,7 +322,7 @@ class TestSSSDTests(object):
             dns_result = 1
         else:
             dns_result = 0
-        print cmd5.stdout_text
+        print(cmd5.stdout_text)
         assert dns_result == 1
 
     def test_sssd_0003(self, multihost):
@@ -362,7 +362,7 @@ class TestSSSDTests(object):
         set_resolv_conf_to_master(multihost.client, multihost.master)
         set_resolv_conf_to_master(multihost.replica, multihost.master)
 
-        print "removing ipv4"
+        print("removing ipv4")
         hosts = {multihost.master, multihost.replica, multihost.client}
         for host in hosts:
             get_dev_names = host.run_command(['ls', '/sys/class/net'],
@@ -373,11 +373,11 @@ class TestSSSDTests(object):
                     remove_ip4_cmd = host.run_command([
                          'ip', '-4', 'addr', 'flush', 'dev', dev_name])
                     if remove_ip4_cmd.returncode == 0:
-                        print "ipv4 address removed"
+                        print("ipv4 address removed")
                     else:
                         pytest.fail("not able to remove ipv4 address")
 
-        print "Install ipa-server master ipv6 only"
+        print("Install ipa-server master ipv6 only")
 
         params6 = [
             'ipa-server-install',
@@ -393,7 +393,7 @@ class TestSSSDTests(object):
         print("RUNCMD:", ' '.join(params6))
         cmd1 = multihost.master.run_command(params6, raiseonerr=False)
 
-        print "Prepare replica - install client"
+        print("Prepare replica - install client")
         multihost.master.kinit_as_admin()
         multihost.master.run_command([
             'ipa',
@@ -411,7 +411,7 @@ class TestSSSDTests(object):
         print("RUNCMD:", ' '.join(params7))
         cmd2 = multihost.replica.run_command(params7, raiseonerr=False)
 
-        print "Install replica - promote to replica"
+        print("Install replica - promote to replica")
 
         params8 = [
             'ipa-replica-install',
@@ -424,7 +424,7 @@ class TestSSSDTests(object):
         print("RUNCMD:", ' '.join(params8))
         cmd3 = multihost.replica.run_command(params8,raiseonerr=False)
 
-        print "Prepare client"
+        print("Prepare client")
         cmd4 = multihost.client.run_command([
             'ip', 'addr', 'add', client_ip_six_two, 'dev', nic_client_device])
 
@@ -460,7 +460,7 @@ class TestSSSDTests(object):
         else:
             dns_result = 0
         assert dns_result == 1, "ip not in dns"
-        print cmd6.stdout_text
+        print(cmd6.stdout_text)
 
     def class_teardown(self, multihost):
         """ let ipv6 only envirnment for next modules """

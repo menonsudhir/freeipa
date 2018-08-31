@@ -68,8 +68,8 @@ class Testmaster1(object):
 
     def class_teardown(self, multihost):
         """ Full suite teardown """
-        print "CLASS_TEARDOWN"
-        print "MASTER: ", multihost.master.hostname
-        print "REPLICA: ", multihost.replicas[0].hostname
+        print("CLASS_TEARDOWN")
+        print("MASTER: ", multihost.master.hostname)
+        print("REPLICA: ", multihost.replicas[0].hostname)
         uninstall_server(multihost.master)
         uninstall_server(multihost.replicas[0])

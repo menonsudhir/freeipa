@@ -1,7 +1,7 @@
 '''
 Helper functions required for test_kdcproxy
 '''
-from __future__ import print_function
+
 from ipa_pytests.shared.user_utils import add_ipa_user
 import pexpect
 

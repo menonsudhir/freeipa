@@ -5,7 +5,7 @@ Vault Admin Privilege tests
 # pylint: disable=too-many-public-methods,no-self-use,global-statement,too-many-statements
 
 from .lib import setup_test_prereqs, teardown_test_prereqs
-import data  # pylint: disable=relative-import
+from . import data  # pylint: disable=relative-import
 import pytest
 
 VADMIN = ''

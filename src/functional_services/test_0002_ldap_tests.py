@@ -21,7 +21,7 @@ class TestLdap(object):
             setup_ldap_service(multihost)
             multihost.client.put_file_contents(fin, 'x')
         else:
-            print "setup_ldap_service has already run...skipping"
+            print("setup_ldap_service has already run...skipping")
 
     @pytest.mark.tier1
     def test_0001_access_ldap_with_creds(self, multihost):
@@ -77,7 +77,7 @@ class TestLdap(object):
         errstr = ""
         try:
             check_revoked(multihost.client, '/etc/dirsrv/slapd-instance1')
-        except ValueError, errval:
+        except ValueError as errval:
             errstr = str(errval.args[0])
         multihost.master.qerun(['ipactl', 'start'])
         check_revoked(multihost.client, '/etc/dirsrv/slapd-instance1')
@@ -94,7 +94,7 @@ class TestLdap(object):
         errstr = ""
         try:
             check_revoked(multihost.client, '/etc/dirsrv/slapd-instance1')
-        except ValueError, errval:
+        except ValueError as errval:
             errstr = str(errval.args[0])
         multihost.replica.qerun(['ipactl', 'start'])
         check_revoked(multihost.client, '/etc/dirsrv/slapd-instance1')

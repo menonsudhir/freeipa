@@ -18,7 +18,7 @@ def ssh_from_client(multihost):
     # cleaning sssd cache
     sssd_cache_reset(multihost.master)
 
-    print "waiting for 60 seconds"
+    print("waiting for 60 seconds")
     time.sleep(60)
 
     expect_script = 'set timeout 15\n'
@@ -31,4 +31,4 @@ def ssh_from_client(multihost):
     expect_script += 'expect "uid=*"\n'
     expect_script += 'expect EOF\n'
     output = multihost.client.expect(expect_script)
-    print "ssh successfully from client"
+    print("ssh successfully from client")

@@ -1,5 +1,5 @@
 """ Authentication Indicators Test Suite """
-import otp_lib as lib
+from . import otp_lib as lib
 from ipa_pytests.shared.user_utils import mod_ipa_user
 from ipa_pytests.shared.service_utils import service_mod, service_show
 from ipa_pytests.shared.host_utils import host_mod

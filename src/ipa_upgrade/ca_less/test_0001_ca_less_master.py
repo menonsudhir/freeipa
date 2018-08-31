@@ -98,7 +98,7 @@ class Testmaster(object):
             print("\nIPA server installed successfully")
 
         ipa_version = get_rpm_version(multihost.master, 'ipa-server')
-        print ipa_version
+        print(ipa_version)
 
         print ("\n IPA Server Before Updation")
         # checking for ipactl command output before updation
@@ -125,7 +125,7 @@ class Testmaster(object):
         try:
             tp.setup()
             multihost.driver = tp
-        except StandardError as errval:
+        except Exception as errval:
             pytest.skip("setup_session_skip : %s" % (errval.args[0]))
         multihost.driver.init_app(username=user1, password=userpass)
         multihost.driver.teardown()
@@ -136,10 +136,10 @@ class Testmaster(object):
 
         """
         rpm = "ipa-server"
-        print "Current IPA version"
+        print("Current IPA version")
         ipa_version = get_rpm_version(multihost.master, rpm)                      # get current ipa version
 
-        print ipa_version
+        print(ipa_version)
 
         upgrade_from = os.getenv('UPGRADE_FROM', multihost.master.config.upgrade_from)
         upgrade_to = os.getenv('UPGRADE_TO', multihost.master.config.upgrade_to)
@@ -160,9 +160,9 @@ class Testmaster(object):
         cmd = upgrade(multihost.master)  # upgrade starts at this point
         if cmd.returncode == 0:
             updated_version = get_rpm_version(multihost.master, rpm)  # get updated ipa version
-            print "Upgraded version is %s " % updated_version  # prints upgraded version
+            print("Upgraded version is %s " % updated_version)  # prints upgraded version
             if LooseVersion(updated_version) != LooseVersion(ipa_version):
-                print "Upgrade rpm test verified"
+                print("Upgrade rpm test verified")
                 print("Upgraded Successfully")
             else:
                 pytest.xfail("rpm version check failed  on %s " % multihost.master.hostname)
@@ -177,9 +177,9 @@ class Testmaster(object):
 
         str1 = 'The ipa-server-upgrade command was successful'
         log2 = multihost.master.run_command(['tail', paths.IPAUPGRADELOGFILE], raiseonerr=True)
-        print log2.stdout_text
+        print(log2.stdout_text)
         if str1 in log2.stdout_text:
-            print "Log test verified, continuing to next test"
+            print("Log test verified, continuing to next test")
         else:
             pytest.xfail("Log test failed")
 
@@ -198,7 +198,7 @@ class Testmaster(object):
             print("IPA service is running, continuing")
 
         restart = multihost.master.run_command('ipactl restart', raiseonerr=False)
-        print restart.stdout_text
+        print(restart.stdout_text)
 
         status1 = multihost.master.run_command('ipactl status | grep RUNNING')
         if status1.returncode != 0:
@@ -228,7 +228,7 @@ class Testmaster(object):
         try:
             tp.setup()
             multihost.driver = tp
-        except StandardError as errval:
+        except Exception as errval:
             pytest.skip("setup_session_skip : %s" % (errval.args[0]))
         multihost.driver.init_app(username=user1, password=userpass)
         multihost.driver.teardown()

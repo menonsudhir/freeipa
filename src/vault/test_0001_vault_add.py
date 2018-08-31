@@ -6,7 +6,7 @@ Vault Add tests
 
 import pytest
 import base64
-import data  # pylint: disable=relative-import
+from . import data  # pylint: disable=relative-import
 from .lib import delete_all_vaults
 
 

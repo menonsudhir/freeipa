@@ -13,8 +13,8 @@ class Testserverdel(object):
     """ Test Class """
     def class_setup(self, multihost):
         """ Setup for class """
-        print "\nClass Setup"
-        print "MASTER: ", multihost.master.hostname
+        print("\nClass Setup")
+        print("MASTER: ", multihost.master.hostname)
 
     def test_0001_ipaserverdel(self, multihost):
         """
@@ -26,9 +26,9 @@ class Testserverdel(object):
         cmd = multihost.master.run_command(['ipa', 'server-del'],
                                            stdin_text='\r',
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         exp_output = "ipa: ERROR: 'cn' is required"
         if exp_output in cmd.stderr_text:
-            print "Server name needs to be specified"
+            print("Server name needs to be specified")
         else:
             pytest.xfail("FAIL")

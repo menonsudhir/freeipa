@@ -116,10 +116,10 @@ class Testmaster(object):
 
         out_der_file = "%s/external.crt" % nssdb_dir
 
-        print "Current IPA version"
+        print("Current IPA version")
         rpm = "ipa-server"
         ipa_version = get_rpm_version(multihost.master, rpm)
-        print ipa_version
+        print(ipa_version)
         if ipa_version_gte(multihost.master, '4.5.0'):
             print("Ipa version is %s" % ipa_version, "using extSKID option installing Ipa server ")
             certs.sign_csr(cert_der_file, out_der_file, ca_nick, options=['--extSKID'])
@@ -144,9 +144,9 @@ class Testmaster(object):
 
         # List all Cert before renew
         master.kinit_as_admin()
-        print "List all Certs before renew"
+        print("List all Certs before renew")
         stdout, stderr = certs.list_certs(db_dir='/etc/pki/pki-tomcat/alias')
-        print stdout
+        print(stdout)
 
         cmd = [paths.IPACACERTMANAGE, 'renew', '--external-cert-file=%s' % chain_cert_file]
         print("Running : {0}".format(" ".join(cmd)))
@@ -159,9 +159,9 @@ class Testmaster(object):
         cmd = ipa_ca_cert_update(master)
         assert cmd.returncode == 0
 
-        print "List all Certs after cert-update"
+        print("List all Certs after cert-update")
         stdout1, stderr1 = certs.list_certs(db_dir='/etc/pki/pki-tomcat/alias')
-        print stdout1
+        print(stdout1)
 
         print ("\n IPA Server Before upgrade")
         # checking for ipactl command output before upgrade
@@ -180,7 +180,7 @@ class Testmaster(object):
         assert cmd.returncode == 0
 
         ipa_version = get_rpm_version(multihost.master, 'ipa-server')
-        print ipa_version
+        print(ipa_version)
 
     def test_web_ui_0001(self, multihost):
         """
@@ -192,7 +192,7 @@ class Testmaster(object):
         try:
             tp.setup()
             multihost.driver = tp
-        except StandardError as errval:
+        except Exception as errval:
             pytest.skip("setup_session_skip : %s" % (errval.args[0]))
         multihost.driver.init_app(username=user1, password=userpass)
         multihost.driver.teardown()
@@ -203,10 +203,10 @@ class Testmaster(object):
         test for rpm comparison
         """
         rpm = "ipa-server"
-        print "Current IPA version"
+        print("Current IPA version")
         ipa_version = get_rpm_version(multihost.master, rpm)                      # get current ipa version
 
-        print ipa_version
+        print(ipa_version)
 
         upgrade_from = os.getenv('UPGRADE_FROM', multihost.master.config.upgrade_from)
         upgrade_to = os.getenv('UPGRADE_TO', multihost.master.config.upgrade_to)
@@ -229,16 +229,16 @@ class Testmaster(object):
         certs = certutil(multihost.master, nssdb_dir)
         stdout1, stderr1 = certs.list_certs(db_dir='/etc/pki/pki-tomcat/alias')
 
-        print "certificates before upgrade"
-        print stdout1
-        print stderr1
+        print("certificates before upgrade")
+        print(stdout1)
+        print(stderr1)
 
         cmd = upgrade(multihost.master)                                                   # upgrade starts at this point
         if cmd.returncode == 0:
             updated_version = get_rpm_version(multihost.master, rpm)  # get updated ipa version
-            print "Upgraded version is %s " % updated_version  # prints upgraded version
+            print("Upgraded version is %s " % updated_version)  # prints upgraded version
             if LooseVersion(updated_version) != LooseVersion(ipa_version):
-                print "Upgrade rpm test verified"
+                print("Upgrade rpm test verified")
                 print("Upgraded Successfully")
             else:
                 pytest.xfail("rpm version check failed  on %s " % multihost.master.hostname)
@@ -249,12 +249,12 @@ class Testmaster(object):
         certs2 = certutil(multihost.master, nssdb_dir)
         stdout2, stderr2 = certs2.list_certs(db_dir='/etc/pki/pki-tomcat/alias')
 
-        print "certificates before upgrade"
-        print stdout1
-        print stderr1
-        print "certificates after upgrade"
-        print stdout2
-        print stderr2
+        print("certificates before upgrade")
+        print(stdout1)
+        print(stderr1)
+        print("certificates after upgrade")
+        print(stdout2)
+        print(stderr2)
 
     def test_services_verification_0003(self, multihost):
         """
@@ -271,7 +271,7 @@ class Testmaster(object):
             print("IPA service is running, continuing")
 
         restart = multihost.master.run_command('ipactl restart', raiseonerr=False)
-        print restart.stdout_text
+        print(restart.stdout_text)
 
         status1 = multihost.master.run_command('ipactl status | grep RUNNING')
         if status1.returncode != 0:
@@ -287,9 +287,9 @@ class Testmaster(object):
 
         str1 = 'The ipa-server-upgrade command was successful'
         log2 = multihost.master.run_command(['tail', paths.IPAUPGRADELOGFILE], raiseonerr=True)
-        print log2.stdout_text
+        print(log2.stdout_text)
         if str1 in log2.stdout_text:
-            print "Log test verified, continuing to next test"
+            print("Log test verified, continuing to next test")
         else:
             pytest.xfail("Log test failed")
 
@@ -312,8 +312,8 @@ class Testmaster(object):
         nssdb_dir = '/tmp/nssdb'
         certs = certutil(multihost.master, nssdb_dir)
         stdout1, stderr1 = certs.list_certs(db_dir='/etc/pki/pki-tomcat/alias')
-        print stdout1
-        print stderr1
+        print(stdout1)
+        print(stderr1)
 
         cmd = [paths.IPACACERTMANAGE, 'renew', '--self-signed']
         print("Running : {0}".format(" ".join(cmd)))
@@ -324,8 +324,8 @@ class Testmaster(object):
         cmd = ipa_ca_cert_update(multihost.master)
         assert cmd.returncode == 0
         stdout2, stderr2 = certs.list_certs(db_dir='/etc/pki/pki-tomcat/alias')
-        print stdout2
-        print stderr2
+        print(stdout2)
+        print(stderr2)
 
     def test_cert_services_verification_0007(self, multihost):
         """
@@ -339,7 +339,7 @@ class Testmaster(object):
             print("IPA service is running, continuing")
 
         restart = multihost.master.run_command('ipactl restart', raiseonerr=False)
-        print restart.stdout_text
+        print(restart.stdout_text)
 
         status3 = multihost.master.run_command('ipactl status | grep RUNNING')
         if status3.returncode != 0:
@@ -357,7 +357,7 @@ class Testmaster(object):
         try:
             tp.setup()
             multihost.driver = tp
-        except StandardError as errval:
+        except Exception as errval:
             pytest.skip("setup_session_skip : %s" % (errval.args[0]))
         multihost.driver.init_app(username=user1, password=userpass)
         multihost.driver.teardown()

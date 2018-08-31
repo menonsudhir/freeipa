@@ -58,12 +58,12 @@ class TestFineGrainedOTP(object):
         expect_script += 'expect "Second Factor (optional):"\n'
         expect_script += 'expect EOF\n'
         output = multihost.master.expect(expect_script)
-        print "\n Credentials are promoted successfully" \
-                " from 1FA to 2FA by calling 'su' "
+        print("\n Credentials are promoted successfully" \
+                " from 1FA to 2FA by calling 'su' ")
 
         #   delete otptoken
         delete_otptoken(multihost)
-        print "\n*****   Token deleted successfully   *****\n"
+        print("\n*****   Token deleted successfully   *****\n")
 
         #   delete user
         del_ipa_user(multihost.master, multihost.testuser)

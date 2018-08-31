@@ -13,7 +13,7 @@ class Testnismanage(object):
     """ Test Class """
     def class_setup(self, multihost):
         """ Setup for class """
-        print "\nClass Setup"
+        print("\nClass Setup")
 
     def test_0001_bz1329275(self, multihost):
         """
@@ -23,10 +23,10 @@ class Testnismanage(object):
         multihost.master.kinit_as_admin()
         cmd = multihost.master.run_command(['ipa-nis-manage', '--help'],
                                            raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         if 'status' in cmd.stdout_text:
-            print "status option is available"
+            print("status option is available")
         else:
             pytest.xfail("bz1329275 exists")
 
@@ -39,9 +39,9 @@ class Testnismanage(object):
                                            stdin_text=multihost.master.config.admin_pw,
                                            raiseonerr=False)
         if cmd.stdout_text == 'Plugin is enabled':
-            print "plugin is already enabled"
+            print("plugin is already enabled")
         elif cmd.stdout_text == 'Plugin is not enabled':
-            print "plugin is not enabled"
+            print("plugin is not enabled")
 
     def test_002_enableplugin(self, multihost):
         """
@@ -51,11 +51,11 @@ class Testnismanage(object):
         cmd = multihost.master.run_command(['ipa-nis-manage', 'enable'],
                                            stdin_text=multihost.master.config.admin_pw,
                                            raiseonerr=False)
-        print cmd.stdout_text
-        print cmd.stderr_text
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
         exp_output = "Enabling plugin"
         if exp_output in cmd.stdout_text:
-            print "nis manage plugin is enabled"
+            print("nis manage plugin is enabled")
         else:
             pytest.xfail("FAIL")
 
@@ -67,10 +67,10 @@ class Testnismanage(object):
         cmd = multihost.master.run_command(['ipa-nis-manage', 'disable'],
                                            stdin_text=multihost.master.config.admin_pw,
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         exp_output = "This setting will not take effect"
         if exp_output in cmd.stdout_text:
-            print "nis manage plugin is disabled"
+            print("nis manage plugin is disabled")
         elif cmd.stdout_text == "Enabling plugin":
             print("Plugin is enabled")
         else:

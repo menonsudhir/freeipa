@@ -430,15 +430,15 @@ class Testmaster(object):
         cmd = multihost.master.run_command(['curl', '-v', '--negotiate', '-u:', url],
                                            raiseonerr=False)
 
-        print cmd.stderr_text
+        print(cmd.stderr_text)
         if 'mod_auth_gssapi' in cmd.stderr_text:
-            print "IPA server using mod_auth_gssapi instead of mod_auth_kerb"
+            print("IPA server using mod_auth_gssapi instead of mod_auth_kerb")
         else:
             pytest.xfail("mod_auth_gssapi not used by IPA server")
 
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if '404 Not Found' in cmd.stdout_text:
-            print "Expected output found"
+            print("Expected output found")
         else:
             pytest.xfail("Expected output not found")
 
