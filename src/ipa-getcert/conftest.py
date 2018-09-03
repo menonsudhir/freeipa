@@ -15,7 +15,7 @@ def setup_session(request, multihost):
     try:
         print("Bug verify 1560961")
 
-    except StandardError as errval:
+    except Exception as errval:
         print("Error in setup_session %s" % (str(errval.args[0])))
         pytest.skip("setup_session_skip")
 

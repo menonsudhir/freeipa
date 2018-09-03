@@ -5,7 +5,7 @@ Helper functions required for trust
 import pytest
 import time
 from datetime import datetime, timedelta
-import paths
+from ipa_pytests.shared import paths
 
 
 def ipa_trust_show(host, domain, options_list=None, raiseonerr=True):

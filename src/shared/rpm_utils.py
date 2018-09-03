@@ -7,7 +7,7 @@ rpm - shared support utility functions
 
 import time
 import pytest
-import paths
+from ipa_pytests.shared import paths
 
 
 def list_rpms(host):

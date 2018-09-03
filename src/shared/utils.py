@@ -13,7 +13,7 @@ import re
 import pytest
 import os
 import tempfile
-import paths
+from ipa_pytests.shared import paths
 import array
 import string
 import random

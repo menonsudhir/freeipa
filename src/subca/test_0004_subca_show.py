@@ -2,7 +2,7 @@
 Testsuite for IPA Lightweight Sub CA - ca-show
 """
 from ipa_pytests.shared.ca_utils import ca_add, ca_show, ca_del
-from lib import check_ca_add_output, check_ca_show_output, check_ca_del_output
+from ipa_pytests.subca.lib import check_ca_add_output, check_ca_show_output, check_ca_del_output
 
 
 class TestSubCAShow(object):

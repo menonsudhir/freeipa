@@ -36,13 +36,13 @@ class certutil(object):
         if not self.host.transport.file_exists(self.password_file):
             self.db_password = ''.join([random.choice(string.ascii_letters +
                                                       string.digits)
-                                        for _ in xrange(32)])
+                                        for _ in range(32)])
             self.host.put_file_contents(self.password_file, self.db_password)
 
         if not self.host.transport.file_exists(self.noise_file):
             self.db_noise = ''.join([random.choice(string.ascii_letters +
                                                    string.digits)
-                                     for _ in xrange(32)])
+                                     for _ in range(32)])
             self.host.put_file_contents(self.noise_file, self.db_noise)
 
         if not self.host.transport.file_exists(self.db_file):

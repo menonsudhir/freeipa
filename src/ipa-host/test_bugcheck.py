@@ -49,7 +49,7 @@ class TestBugChecks(object):
             multihost.master.qerun(['ipa', 'host-find', '--hostname=' + fakehost], exp_returncode=0,
                                    exp_output="1 host matched")
 
-        except StandardError as errval:
+        except Exception as errval:
             print("Error %s" % (str(errval.args[0])))
             pytest.skip("test_find_host_name")
 

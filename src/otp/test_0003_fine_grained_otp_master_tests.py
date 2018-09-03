@@ -2,8 +2,8 @@
 Fine-grained OTP authentication testcases
 """
 from ipa_pytests.shared.user_utils import del_ipa_user
-from .lib import (add_user, add_otptoken,
-                  delete_otptoken)
+from ipa_pytests.otp.lib import (add_user, add_otptoken,
+                                 delete_otptoken)
 
 
 class TestFineGrainedOTP(object):

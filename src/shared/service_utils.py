@@ -4,7 +4,7 @@ Shared support for ipa service control
 - service_show - show service info if exist
 """
 
-import paths
+from ipa_pytests.shared import paths
 
 def service_mod(host, service, options=None, raiseonerr=True):
     """

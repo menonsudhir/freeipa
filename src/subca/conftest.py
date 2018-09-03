@@ -33,7 +33,7 @@ def setup_session(request, multihost):
         multihost.replica.kinit_as_admin()
         cmd = 'ipa-ca-install -p {0} -w {1}'.format(passwd, passwd)
         multihost.replica.run_command(cmd, raiseonerr=False)
-    except StandardError as errval:
+    except Exception as errval:
         print("Error in setup_session %s" % (str(errval.args[0])))
         pytest.skip("setup_session_skip")
 

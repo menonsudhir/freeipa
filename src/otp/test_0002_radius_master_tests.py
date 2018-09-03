@@ -1,10 +1,10 @@
 """
 Radius testcases
 """
-from .lib import (add_user, add_radiusproxy,
-                  mod_radius_user, add_info, user_login,
-                  verify_user_login, delete_radiusproxy,
-                  user_failed_login, print_output)
+from ipa_pytests.otp.lib import (add_user, add_radiusproxy,
+                                 mod_radius_user, add_info, user_login,
+                                 verify_user_login, delete_radiusproxy,
+                                 user_failed_login, print_output)
 from ipa_pytests.shared.user_utils import del_ipa_user
 import os
 import pexpect

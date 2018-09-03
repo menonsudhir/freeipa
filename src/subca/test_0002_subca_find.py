@@ -3,7 +3,7 @@ Testsuite for IPA Lightweight Sub CA - ca-find
 """
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.ca_utils import ca_find, ca_add, ca_del
-from lib import check_ca_add_output, check_ca_find_output, check_ca_del_output
+from ipa_pytests.subca.lib import check_ca_add_output, check_ca_find_output, check_ca_del_output
 
 
 class TestSubCAFind(object):

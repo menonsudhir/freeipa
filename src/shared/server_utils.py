@@ -1,7 +1,7 @@
 """
 Shared support for ipa server control
 """
-import paths
+from ipa_pytests.shared import paths
 
 
 def server_del(host, hostname=None, force=True, raiseonerr=False):

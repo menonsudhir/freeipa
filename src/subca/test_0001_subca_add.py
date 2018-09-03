@@ -6,8 +6,8 @@ import time
 from ipa_pytests.shared.ca_utils import (ca_acl_add_ca, ca_acl_find, ca_add,
                                          ca_del, ca_find)
 from ipa_pytests.shared.utils import mkdtemp, chcon
-from lib import (check_ca_add_output, check_ca_del_output,
-                 check_ca_find_output)
+from ipa_pytests.subca.lib import (check_ca_add_output, check_ca_del_output,
+                                   check_ca_find_output)
 
 
 class TestSubCAAdd(object):

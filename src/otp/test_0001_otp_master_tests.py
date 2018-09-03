@@ -3,11 +3,11 @@ OTP testcases
 """
 from ipa_pytests.shared.utils import (kinit_as_user, get_base_dn)
 from ipa_pytests.shared.user_utils import del_ipa_user
-from .lib import (add_user, mod_otp_user, add_otptoken,
-                  delete_otptoken)
+from ipa_pytests.otp.lib import (add_user, mod_otp_user, add_otptoken,
+                                 delete_otptoken)
 from ipa_pytests.shared.rpm_utils import check_rpm
 import pytest
-from . import otp_lib as lib
+from ipa_pytests.otp import otp_lib as lib
 import time
 
 

@@ -2,7 +2,7 @@
 Shared support for ipa host control
 """
 
-import paths
+from ipa_pytests.shared import paths
 
 
 def host_mod(host, hostname, options=None, raiseonerr=True):

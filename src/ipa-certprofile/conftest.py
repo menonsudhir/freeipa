@@ -24,7 +24,7 @@ def setup_session(request, multihost):
     try:
         setup_master(multihost.master)
         setup_replica(multihost.replicas[0], multihost.master)
-    except StandardError as errval:
+    except Exception as errval:
         print("\nError in setup_session %s" % (str(errval.args[0])))
         pytest.skip("setup_session_skip")
 

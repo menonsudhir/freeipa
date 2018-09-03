@@ -28,7 +28,7 @@ def setup_session(request, multihost):
         tp.setup()
         setup_master(multihost.master)
         multihost.driver = tp
-    except StandardError as errval:
+    except Exception as errval:
         pytest.skip("setup_session_skip : %s" % (errval.args[0]))
 
     def teardown_session():

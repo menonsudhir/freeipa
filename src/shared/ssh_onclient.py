@@ -5,7 +5,7 @@ Helper functions required for ssh from client machine
 from ipa_pytests.shared.utils import (sssd_cache_reset)
 import pytest
 import time
-import paths
+from ipa_pytests.shared import paths
 
 
 def ssh_from_client(multihost):

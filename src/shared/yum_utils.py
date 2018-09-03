@@ -5,8 +5,8 @@ yum - shared support utility functions
 - remove_rpm - Helper function to remove installed rpms
 """
 
-import paths
-from rpm_utils import check_rpm
+from ipa_pytests.shared import paths
+from ipa_pytests.shared.rpm_utils import check_rpm
 
 
 def add_repo(host, repo_url):

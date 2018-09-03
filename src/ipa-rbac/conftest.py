@@ -18,7 +18,7 @@ def setup_session(request, multihost):
         multihost.master.kinit_as_admin()
         multihost.master.qerun('ipa group-add groupone --desc=groupone', exp_returncode=0)
 
-    except StandardError as errval:
+    except Exception as errval:
         print("Error in setup_session %s" % (str(errval.args[0])))
         pytest.skip("setup_session_skip")
 
