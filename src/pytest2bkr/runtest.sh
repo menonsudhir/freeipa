@@ -30,14 +30,13 @@
 . /usr/share/beakerlib/beakerlib.sh || exit 1
 . /etc/pytest_env.sh
 
-PACKAGES="ipa-server ipa-server-dns selinux-policy pki-server firefox xorg-x11-server-Xvfb PyYAML"
+PACKAGES="selinux-policy firefox xorg-x11-server-Xvfb PyYAML"
 pytest_location=/root/ipa-pytests
 mh_cfg=$MH_CONF_FILE
 junit_xml=${PYCONF_DIR}/${TESTCASE}.xml
 gecko_driver=https://github.com/mozilla/geckodriver/releases/download/v0.12.0/geckodriver-v0.12.0-linux64.tar.gz
-pytest_ver=3.2.1
+pytest_ver=3.4.2
 selenium_ver=3.4.3
-pytest_multihost_ver=1.1.1
 
 install_pytest() {
     rlPhaseStartTest "Installing Pytest and required dependencies"
@@ -72,13 +71,13 @@ install_pytest() {
 
         rlLog "Install Pytest and dependencies"
         rlLog "Going to install : pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver"
-        easy_install pip
-        pip install pytest==$pytest_ver pytest-multihost==$pytest_multihost_ver pyvirtualdisplay selenium==$selenium_ver PyYAML pexpect --index https://pypi.org/simple/
+        easy_install-3.6 pip
+        pip3 install pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver PyYAML pexpect --index https://pypi.org/simple/
         if [ $? -eq 0 ]; then
             if [ -d ${pytest_location} ]; then
                 pushd `pwd`
                 cd ${pytest_location}
-                python setup.py install
+                python3.6 setup.py install
                 if [ $? -eq 0 ]; then
                     rlPass "Successfully install Pytest"
                 else
