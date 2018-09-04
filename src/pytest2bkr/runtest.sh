@@ -30,7 +30,7 @@
 . /usr/share/beakerlib/beakerlib.sh || exit 1
 . /etc/pytest_env.sh
 
-PACKAGES="selinux-policy firefox xorg-x11-server-Xvfb PyYAML"
+PACKAGES="selinux-policy firefox xorg-x11-server-Xvfb "
 pytest_location=/root/ipa-pytests
 mh_cfg=$MH_CONF_FILE
 junit_xml=${PYCONF_DIR}/${TESTCASE}.xml
