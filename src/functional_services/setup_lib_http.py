@@ -48,9 +48,7 @@ def _http_setup_config(multihost):
     cfgget = '/opt/ipa_pytests/functional_services/http-gssapi.conf'
     cfgput = '/etc/httpd/conf.d/http-gssapi.conf'
     multihost.client.qerun(['rm', '-rf', cfgput])
-    #multihost.client.put_file_contents(cfgput, cfgget)
     multihost.client.qerun(['cp', cfgget, cfgput])
-    multihost.client.qerun(['service', 'httpd', 'start'])
 
 
 def _http_add_ipa_ca_cert(multihost):
@@ -71,8 +69,17 @@ def _http_cfg_ssl_with_cert(multihost):
     """ Create Certficate for http service """
     multihost.client.qerun(['ipa-getcert', 'request',
                             '-k', '/etc/pki/tls/private/server.key',
-                            '-f', '/etc/pki/tls/certs/server.crt'])
-    time.sleep(30)
+                            '-f', '/etc/pki/tls/certs/server.crt',
+                            '-I', 'testing'])
+    time.sleep(60)
+    output = multihost.client.run_command(['ipa-getcert', 'list',
+                                           '-i', 'testing'])
+    while 'MONITORING' not in output.stdout_text :
+        print("waiting for cert to be issued")
+        time.sleep(30)
+        output = multihost.client.run_command(['ipa-getcert', 'list',
+                                               '-i', 'testing'])
+
     nss_cfg_file = "/etc/httpd/conf.d/ssl.conf"
     nsscfg = multihost.client.get_file_contents(nss_cfg_file)
 
