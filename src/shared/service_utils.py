@@ -16,7 +16,7 @@ def service_mod(host, service, options=None, raiseonerr=True):
     if not options:
         options = {}
     cmd = [paths.IPA, 'service-mod']
-    for key, value in options.iteritems():
+    for key, value in options.items():
         key = "--" + key
         if isinstance(value, (tuple, list)):
             for item in value:

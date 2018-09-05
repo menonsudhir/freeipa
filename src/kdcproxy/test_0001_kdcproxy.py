@@ -6,8 +6,8 @@ from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.user_utils import add_ipa_user, del_ipa_user
 from ipa_pytests.shared.utils import (service_control, start_firewalld,
                                       stop_firewalld)
-from lib import (update_krbv_conf, revert_krbv_conf,
-                 change_user_passwd, pwpolicy_mod)
+from ipa_pytests.kdcproxy.lib import (update_krbv_conf, revert_krbv_conf,
+                                      change_user_passwd, pwpolicy_mod)
 from ipa_pytests.qe_install import set_etc_hosts, sleep
 import time
 twentyseconds = 20

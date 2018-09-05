@@ -15,7 +15,7 @@ def host_mod(host, hostname, options=None, raiseonerr=True):
     if not options:
         options = {}
     cmd = [paths.IPA, 'host-mod']
-    for key, value in options.iteritems():
+    for key, value in options.items():
         key = "--" + key
         if value == '':
             cmd.append(key)
@@ -45,7 +45,7 @@ def host_add(host, hostname, options={}, raiseonerr=False):
 
     cmd = [paths.IPA, 'host-add']
     cmd.append(hostname)
-    for key, value in options.iteritems():
+    for key, value in options.items():
         key = "--" + key
         if value == '':
             cmd.append(key)
@@ -66,7 +66,7 @@ def hostgroup_member_add(host, hg=None, options={}, raiseonerr=False):
     :param options: options without --
     """
     cmd = [paths.IPA, 'hostgroup-add-member']
-    for key, value in options.iteritems():
+    for key, value in options.items():
         key = "--" + key
         if value == '':
             cmd.append(key)

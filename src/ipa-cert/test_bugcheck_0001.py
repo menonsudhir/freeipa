@@ -143,7 +143,7 @@ class TestBugCheck(object):
         cmd = ['ipa', 'cert-request', csr_file, '--principal', user]
         multihost.master.run_command(cmd, raiseonerr=False)
         runcmd = ['ipa', 'user-show', user, '--out', crt_file]
-	multihost.master.run_command(runcmd, raiseonerr=False)
+        multihost.master.run_command(runcmd, raiseonerr=False)
         runcmd = ['openssl', 'x509', '-serial', '-noout', '-in', crt_file]
         cmd = multihost.master.run_command(runcmd)
         serial = cmd.stdout_text.replace('serial=', '')

@@ -55,10 +55,8 @@ class TestBugzilla(object):
 
         print_time()
         print("Installing required packages")
-        master.yum_install(['ipa-server', 'ipa-server-dns',
-                        'bind-dyndb-ldap', 'bind-pkcs11',
-                        'bind-pkcs11-utils'])
-
+        cmd = ['dnf', '-y', 'module', 'install', 'idm:4']
+        master.qerun(cmd, exp_returncode=0)
         print_time()
 
         setup_master(multihost.master)
