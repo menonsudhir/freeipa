@@ -22,7 +22,7 @@
 #   along with this program. If not, see http://www.gnu.org/licenses/.
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-TESTBASE=/ipa-server/rhel75/pytest2bkr
+TESTBASE=/ipa-server/rhel80/pytest2bkr
 export TEST=$(TESTBASE)$(if $(RELEASE),,/$(USER))
 export TESTVERSION=$(shell echo -n `date +%Y%m%d%H%M%S`)
 
