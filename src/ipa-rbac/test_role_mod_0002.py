@@ -56,7 +56,7 @@ class TestRoleModNegative(object):
         attr = "--desc"
         check3 = role_mod(multihost.master, self.role_name,
                           [attr], False)
-        expmsg = "ipa: error: --desc option requires an argument"
+        expmsg = "ipa: error: --desc option requires 1 argument"
         if expmsg not in check3.stderr_text:
             print(check3.stderr_text)
             pytest.fail("role mod with blank decription should have failed")

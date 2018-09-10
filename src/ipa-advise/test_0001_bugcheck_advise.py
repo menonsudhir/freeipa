@@ -6,6 +6,7 @@ Test suite to verify ipa-advise output
 import pytest
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_class import qe_use_class_setup
+from ipa_pytests.qe_install import setup_master
 
 
 class Testipaadvise(object):
@@ -21,6 +22,7 @@ class Testipaadvise(object):
         Test to verify Bugzilla 1353899 - ipa-advise
          object of type 'type' has no len()
         """
+        setup_master(multihost.master)
         realm = multihost.master.domain.realm
         multihost.master.kinit_as_admin()
         exp_output = "Instructions for configuring a system"
@@ -29,7 +31,7 @@ class Testipaadvise(object):
         if var1.stdout_text.find(exp_output):
             print("test_0001_ipa_advise verified")
         else:
-            print("bugzilla 1353899 found")
+            pytest.fail("bugzilla 1353899 found")
 
     def class_teardown(self, multihost):
         """ Class Teardown """

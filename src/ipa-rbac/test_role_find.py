@@ -49,7 +49,7 @@ class TestRoleFind(object):
         """
         check3 = role_find(multihost.master, None,
                            ['--name'], False)
-        expmsg = "ipa: error: --name option requires an argument"
+        expmsg = "ipa: error: --name option requires 1 argument"
         if expmsg not in check3.stderr_text:
             print(check3.stderr_text)
             pytest.fail("This test should have failed")

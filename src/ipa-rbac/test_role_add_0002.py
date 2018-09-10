@@ -77,7 +77,7 @@ class TestRoleAddNegative(object):
         role_name = "Add User with blank desc"
         role_desc = "--desc"
         check5 = role_add(multihost.master, role_name, [role_desc], False)
-        expmsg = "ipa: error: --desc option requires an argument"
+        expmsg = "ipa: error: --desc option requires 1 argument"
         if expmsg not in check5.stderr_text:
             pytest.fail("Privilege add with blank desc should have failed")
 
@@ -88,7 +88,7 @@ class TestRoleAddNegative(object):
         role_name = "Hostgroup Admin with blank seeAlso"
         role_desc = "--desc=Hostgroup Admin with blank seeAlso"
         attr = "--setattr"
-        expmsg = 'ipa: error: --setattr option requires an argument'
+        expmsg = 'ipa: error: --setattr option requires 1 argument'
         check6 = role_add(multihost.master, role_name,
                           [role_desc,
                            attr], False)

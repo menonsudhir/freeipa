@@ -26,11 +26,11 @@ class TestPrivilegeShow(object):
         IDM-IPA-TC : rbac : Test to show privilege with option rights
         """
         privilege_name = "Host Group Administrators"
-        expmsg = "attributelevelrights: {u'cn': u'rscwo', u'businesscategory': u'rscwo', " \
-                 "u'objectclass': u'rscwo', u'memberof': u'rsc', u'aci': u'rscwo', " \
-                 "u'description': u'rscwo', u'o': u'rscwo', u'member': u'rscwo', " \
-                 "u'owner': u'rscwo', u'ou': u'rscwo', u'nsaccountlock': u'rscwo', " \
-                 "u'seealso': u'rscwo'}"
+
+        expmsg = "attributelevelrights: {'objectclass': 'rscwo', 'aci': 'rscwo', 'cn': 'rscwo', 'member': " \
+                  "'rscwo', 'businesscategory': 'rscwo', 'seealso': 'rscwo', 'owner': 'rscwo', 'ou': 'rscwo', " \
+                  "'o': 'rscwo', 'description': 'rscwo', 'memberof': 'rsc', 'nsaccountlock': 'rscwo'}"
+
         check1 = privilege_show(multihost.master, privilege_name,
                                 options_list=['--all',
                                               '--rights'])
