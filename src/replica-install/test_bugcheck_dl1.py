@@ -31,8 +31,8 @@ class TestBugCheck(object):
         print("Master: ", multihost.master.hostname)
         print("REPLICA: ", multihost.replica.hostname)
         print("\nChecking IPA server package whether installed on REPLICA")
-        rpm_list = ['ipa-server']
-        check_rpm(multihost.replica, rpm_list)
+        cmd = ['dnf', '-y', 'module', 'install', 'idm:4']
+        multihost.replica.qerun(cmd, exp_returncode=0)
 
     def test_0001_bz1283890(self, multihost):
         """
