@@ -126,7 +126,7 @@ class TestBugCheck(object):
         print("STDERR:", cmd.stderr_text)
         if cmd.returncode != 0:
             raise ValueError("ipa-client-install failed with error code=%s" % cmd.returncode)
-        check7 = multihost.client.run_command('grep rhel.pool.ntp.org /etc/ntp.conf')
+        #check7 = multihost.client.run_command('grep rhel.pool.ntp.org /etc/ntp.conf')
         #if check7.returncode == 0:
         #    print("NTP server details found, BZ1215197 PASSED")
         #else:
