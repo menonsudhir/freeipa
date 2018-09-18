@@ -14,7 +14,6 @@ def setup_session(request, multihost):
     try:
         setup_master(multihost.master)
         print("Setup done")
-        multihost.master.yum_install(['pexpect'])
         multihost.master.kinit_as_admin()
         multihost.master.qerun('ipa group-add groupone --desc=groupone', exp_returncode=0)
 
