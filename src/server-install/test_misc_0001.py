@@ -42,7 +42,7 @@ class Testmaster1(object):
         else:
             print("\n IPA server package not found on MASTER, thus installing")
             install1 = multihost.master.run_command(
-                ['dnf', '-y', 'module', 'install', 'idm:4/dns'])
+                ['dnf', '-y', 'module', 'install', multihost.master.server_module])
             if install1.returncode == 0:
                 print("IPA server package installed.")
                 print("Setting up ipa-server on MASTER")

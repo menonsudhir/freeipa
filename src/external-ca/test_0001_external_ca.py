@@ -67,7 +67,7 @@ class TestExternalCA(object):
 
         print_time()
         print("Installing required packages")
-        cmd = ['dnf', '-y', 'module', 'install', 'idm:4/dns']
+        cmd = ['dnf', '-y', 'module', 'install', master.config.server_module]
         master.qerun(cmd, exp_returncode=0)
 
         print_time()

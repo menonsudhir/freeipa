@@ -20,7 +20,7 @@ class TestBugCheck(object):
         print("CLIENT: ", multihost.client.hostname)
         print("\nChecking IPA server whether installed on MASTER")
         check_rpm(multihost.master, ['ipa-server'])
-        cmd = ['dnf', '-y', 'module', 'install', 'idm:4']
+        cmd = ['dnf', '-y', 'module', 'install', multihost.client.config.client_module]
         multihost.client.qerun(cmd, exp_returncode=0)
 
     #def test_0001(self, multihost):

@@ -145,7 +145,7 @@ def setup_master(master, **kwargs):
     #master.yum_install(['ipa-server', 'ipa-server-dns',
     #                    'bind-dyndb-ldap', 'bind-pkcs11',
     #                    'bind-pkcs11-utils'])
-    cmd = ['dnf', '-y', 'module', 'install', 'idm:4/dns']
+    cmd = ['dnf', '-y', 'module', 'install', master.config.server_module]
     master.qerun(cmd, exp_returncode=0)
 
     print_time()
@@ -263,7 +263,7 @@ def setup_replica(replica, master, **kwargs):
     print("Installing required packages")
     #replica.yum_install(['ipa-server', 'ipa-server-dns', 'bind-dyndb-ldap',
     #                    'bind-pkcs11', 'bind-pkcs11-utils'])
-    cmd = ['dnf', '-y', 'module', 'install', 'idm:4/dns']
+    cmd = ['dnf', '-y', 'module', 'install', replica.config.server_module]
     replica.qerun(cmd, exp_returncode=0)
 
     domain_level = get_domain_level(master)
@@ -344,7 +344,7 @@ def setup_client(client, master, server=None, domain=None):
     print_time()
     print("Installing required packages on client [%s]" % client.hostname)
     #client.yum_install(['ipa-client', 'ipa-admintools'])
-    cmd = ['dnf', '-y', 'module', 'install', 'idm:4']
+    cmd = ['dnf', '-y', 'module', 'install', client.config.client_module]
     client.qerun(cmd, exp_returncode=0)
 
     print("Listing RPMS")
@@ -888,10 +888,9 @@ def setup_master_ca_less(master, admin_passwd, http_pin, dirsrv_pin, http_cert_f
 #    master.yum_install(['ipa-server', 'ipa-server-dns',
 #                       'bind-dyndb-ldap', 'bind-pkcs11',
 #                       'bind-pkcs11-utils'])
-    cmd = ['dnf', '-y', 'module', 'install', 'idm:4/dns']
+    cmd = ['dnf', '-y', 'module', 'install', master.config.server_module]
     master.qerun(cmd, exp_returncode=0)
     print(" Installing ipa-server ")
-
 
     cmdstr = "{} --http-cert-file {} " \
              "--dirsrv-cert-file {} --ip-address {} -r {} -p {} " \
@@ -921,7 +920,7 @@ def setup_replica_ca_less(replica, master, admin_passwd, http_pin,
     print("Installing required packages")
     #replica.yum_install(['ipa-server', 'ipa-server-dns', 'bind-dyndb-ldap',
     #                     'bind-pkcs11', 'bind-pkcs11-utils'])
-    cmd = ['dnf', '-y', 'module', 'install', 'idm:4/dns']
+    cmd = ['dnf', '-y', 'module', 'install', replica.config.server_module]
     replica.qerun(cmd, exp_returncode=0)
 
     domain_level = get_domain_level(master)
@@ -956,7 +955,7 @@ def setup_replica_ca_less(replica, master, admin_passwd, http_pin,
 #    replica.yum_install(['ipa-server', 'ipa-server-dns',
 #                       'bind-dyndb-ldap', 'bind-pkcs11',
 #                       'bind-pkcs11-utils'])
-    cmd = ['dnf', '-y', 'module', 'install', 'idm:4/dns']
+    cmd = ['dnf', '-y', 'module', 'install', replica.config.server_module]
     replica.qerun(cmd, exp_returncode=0)
     print(" Installing ipa-server ")
 
