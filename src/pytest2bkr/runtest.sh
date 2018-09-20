@@ -30,7 +30,7 @@
 . /usr/share/beakerlib/beakerlib.sh || exit 1
 . /etc/pytest_env.sh
 
-PACKAGES="selinux-policy firefox xorg-x11-server-Xvfb "
+PACKAGES="selinux-policy firefox xorg-x11-server-Xvfb python3-libs-devel openldap-devel"
 pytest_location=/root/ipa-pytests
 mh_cfg=$MH_CONF_FILE
 junit_xml=${PYCONF_DIR}/${TESTCASE}.xml
@@ -72,7 +72,7 @@ install_pytest() {
         rlLog "Install Pytest and dependencies"
         rlLog "Going to install : pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver"
         easy_install-3.6 pip
-        rlRun "pip3 install pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver PyYAML pexpect --index https://pypi.org/simple/"
+        rlRun "pip3 install pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver PyYAML pexpect python-ldap --index https://pypi.org/simple/"
         if [ $? -eq 0 ]; then
             if [ -d ${pytest_location} ]; then
                 pushd `pwd`
