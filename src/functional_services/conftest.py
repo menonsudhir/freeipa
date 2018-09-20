@@ -35,7 +35,8 @@ def setup_session(request, multihost):
         tp.setup()
     except Exception as errval:
         print(str(errval.args[0]))
-        pytest.skip("setup_session_skip")
+        pytest.exit(str(errval.args[0]))
+        #pytest.skip("setup_session_skip")
 
     def teardown_session():
         """ define fixture for session level teardown """
