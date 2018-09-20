@@ -78,10 +78,10 @@ class TestOTPfunction(object):
         ldapotp = str(multihost.master.config.admin_pw + lib.get_otp(multihost, otp)).strip('\n')
 
         search = ['ldapsearch', '-xLLL',
-                  '-D', 'uid='+multihost.testuser+',cn=users,cn=accounts,'+base_dn,
+                  '-D', 'uid=%s,cn=users,cn=accounts,%s' % (multihost.testuser, base_dn),
                   '-w', ldapotp,
                   '-h', multihost.master.hostname,
-                  '-b', 'cn=users,cn=accounts,'+base_dn,
+                  '-b', 'cn=users,cn=accounts,%s' % base_dn,
                   '-s', 'sub']
 
         cmd = multihost.master.run_command(search, raiseonerr=False)
@@ -148,11 +148,15 @@ class TestOTPfunction(object):
                                exp_returncode=0)
         multihost.master.kinit_as_admin()
         cmd = multihost.master.run_command(['kinit', '-T',
-                                            'KEYRING:persistent:0:0',
+                                            'KCM:0',
                                             multihost.testuser],
                                            stdin_text=multihost.password,
                                            raiseonerr=False)
         exp_output = 'kinit: Preauthentication failed'
+        print("STDOUT:")
+        print(cmd.stdout_text)
+        print("STDERR:")
+        print(cmd.stderr_text)
         if exp_output not in cmd.stderr_text:
             pytest.fail("Failed to verify")
         #   delete otp user

@@ -117,7 +117,7 @@ def user_login(multihost):
         ['kswitch', '-c', 'KEYRING:persistent:0:0'], exp_returncode=0)
     multihost.master.kinit_as_admin()
     expect_script = 'set timeout 15\n'
-    expect_script += 'spawn kinit -T KEYRING:persistent:0:0 %s\n' % multihost.testuser
+    expect_script += 'spawn kinit -T KCM:0 %s\n' % multihost.testuser
     expect_script += 'expect "Enter OTP Token Value:"\n'
     expect_script += 'send "%s\r"\n' % multihost.secret
     expect_script += 'expect EOF\n'
@@ -134,7 +134,7 @@ def user_failed_login(multihost):
         ['kswitch', '-c', 'KEYRING:persistent:0:0'], exp_returncode=0)
     multihost.master.kinit_as_admin()
     expect_script = 'set timeout 15\n'
-    expect_script += 'spawn kinit -T KEYRING:persistent:0:0 %s\n' % multihost.testuser
+    expect_script += 'spawn kinit -T KCM:0 %s\n' % multihost.testuser
     expect_script += 'expect "Enter OTP Token Value:"\n'
     expect_script += 'send "%s\r"\n' % multihost.secret
     expect_script += '%s\n' % multihost.expectederror

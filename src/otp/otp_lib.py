@@ -30,7 +30,7 @@ def otp_key_convert(key):
     """ convert base64 to base32 to oathtool can take it """
     decode = base64.b64decode(key)
     encode = base64.b32encode(decode)
-    return encode
+    return encode.decode('utf-8')
 
 
 def get_otp(multihost, otp_key):
@@ -55,7 +55,11 @@ def get_krb_cache(multihost, user, host=None):
         user, multihost.master.config.admin_pw)
     cmd = host.run_command([
         'klist'])
-    search = re.search('KEYRING.+(?!$)', cmd.stdout_text)
+    print("STDOUT: ")
+    print(cmd.stdout_text)
+    print("STDERR: ")
+    print(cmd.stderr_text)
+    search = re.search('KCM.+(?!$)', cmd.stdout_text)
     return str(search.group())
 
 
@@ -77,7 +81,7 @@ def add_token(multihost, owner):
 def prepare_radiusd(multihost, user):
     """ prepare radius server """
     check_rpm(multihost.client, ['freeradius', 'freeradius-ldap',
-                                 'freeradius-utils', 'wpa-supplicant'])
+                                 'freeradius-utils', 'wpa_supplicant'])
     multihost.master.transport.get_file(paths.RAD_USERS, RAD_USERS_LOCAL)
     new = ''
     with open(RAD_USERS_LOCAL, 'r') as fin:

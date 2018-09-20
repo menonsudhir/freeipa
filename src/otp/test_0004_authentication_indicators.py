@@ -285,18 +285,6 @@ class TestAuthIndent(object):
             'sss_cache', '-E'])
         multihost.master.run_command([
             'ipactl', 'restart'])
-        multihost.master.run_command([
-            'systemctl', 'stop', 'ntpd'])
-        multihost.master.run_command([
-            'ntpdate', 'clock.redhat.com'])
-        multihost.master.run_command([
-            'systemctl', 'start', 'ntpd'])
-        multihost.client.run_command([
-            'systemctl', 'stop', 'ntpd'])
-        multihost.client.run_command([
-            'ntpdate', 'clock.redhat.com'])
-        multihost.client.run_command([
-            'systemctl', 'start', 'ntpd'])
         time.sleep(13)
         multihost.client.kinit_as_user(
             TESTUSER, multihost.master.config.admin_pw)
