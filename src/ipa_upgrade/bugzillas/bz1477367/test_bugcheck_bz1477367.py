@@ -55,8 +55,18 @@ class TestBugzilla(object):
 
         print_time()
         print("Installing required packages")
-        cmd = ['dnf', '-y', 'module', 'install', 'idm:4']
-        master.qerun(cmd, exp_returncode=0)
+        osver = multihost.master.get_os_version()
+        print(osver)
+        if osver >= '80':
+            print("installing through dnf")
+            cmd = ['dnf', '-y', 'module', 'install', master.config.server_module]
+            master.qerun(cmd, exp_returncode=0)
+            print_time()
+        else:
+            print("installing through yum")
+            master.yum_install(['ipa-server', 'ipa-server-dns',
+                                'bind-dyndb-ldap', 'bind-pkcs11',
+                                'bind-pkcs11-utils'])
         print_time()
 
         setup_master(multihost.master)
@@ -127,7 +137,6 @@ class TestBugzilla(object):
                 add_repo(multihost.master, repo)
         else:
             pytest.xfail("Please specify correct upgrade path")
-
 
         cmd = upgrade(multihost.master)    # upgrade starts at this point
         print(cmd.stdout_text)
