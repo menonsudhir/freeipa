@@ -23,7 +23,7 @@ class TestMaster(object):
     def class_setup(self, multihost):
         """ Setup for class """
         print("\nClass Setup")
-        print"MASTER: ", multihost.master.hostname
+        print("MASTER: ", multihost.master.hostname)
         # Enabling Setsebool, this change is required or else
         # installation will fail. This is introduced from
         # RHEL Atomic host 7.5.0 onwards.
@@ -43,9 +43,9 @@ class TestMaster(object):
     def test_master_0002(self, multihost):
         """@TITLE: IDM-IPA-TC : ipa-server-docker : Check Atomic host and docker image details"""
         cmd = multihost.master.run_command(['atomic', 'host', 'status'])
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         cmd = multihost.master.run_command(['docker', 'inspect', 'rhel7/ipa-server'])
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
     def test_master_0003(self, multihost):
         """@TITLE: IDM-IPA-TC : ipa-server-docker : Check if correct version IPA master version is available with IPA image."""

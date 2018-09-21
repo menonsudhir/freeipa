@@ -24,7 +24,7 @@ class TestMaster(object):
     def class_setup(self, multihost):
         """ Setup for class """
         print("\nClass Setup")
-        print"MASTER: ", multihost.master.hostname
+        print("MASTER: ", multihost.master.hostname)
         # Enabling Setsebool, this change is required or else
         # installation will fail. This is introduced from
         # RHEL Atomic host 7.5.0 onwards.
@@ -75,7 +75,7 @@ class TestMaster(object):
         cmd = multihost.master.run_command(paths.DOCKER + ' exec -i ' + container +
                                            ' dig +short SRV _ldap._tcp.' + forwardzone,
                                            raiseonerr=False)
-        print cmd.stdout_text, cmd.stderr_text
+        print(cmd.stdout_text, cmd.stderr_text)
 
         if ad1.hostname in cmd.stdout_text:
             print("dns resolution passed for ad domain")
@@ -87,7 +87,7 @@ class TestMaster(object):
                                            ' dig +short SRV @' + ad1.ip +
                                            ' _ldap._tcp.' + domain,
                                            raiseonerr=False)
-        print cmd.stdout_text, cmd.stderr_text
+        print(cmd.stdout_text, cmd.stderr_text)
         if domain in cmd.stdout_text:
             print("dns resolution passed for ipa domain")
         else:
@@ -105,19 +105,19 @@ class TestMaster(object):
                                             '--two-way=True'],
                                            stdin_text=ad1.ssh_password,
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
         # Verify added Trust
         cmd = multihost.master.run_command([paths.DOCKER, 'exec', '-i',
                                             container,
                                             'ipa', 'trust-show', forwardzone],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if "Trust direction: Two-way trust" in cmd.stdout_text:
-            print "Two way trust establised successfully"
+            print("Two way trust establised successfully")
         else:
             pytest.xfail("Two way trust addition failed")
-        print "waiting for 60 seconds"
+        print("waiting for 60 seconds")
         time.sleep(60)
 
         # Verifying Basics work after trust-add
@@ -132,16 +132,16 @@ class TestMaster(object):
         master = multihost.master
         container = 'ipadocker'
 
-        print "waiting for 60 seconds"
+        print("waiting for 60 seconds")
         time.sleep(60)
         sssd_cache_reset_docker(multihost.master, container)
         time.sleep(60)
         cmd = multihost.master.run_command(paths.DOCKER + ' exec -i ' + container +
                                            ' id ' + aduser + '@' + forwardzone,
                                            raiseonerr=False)
-        print cmd.stdout_text, cmd.stderr_text
+        print(cmd.stdout_text, cmd.stderr_text)
         if cmd.returncode == 0:
-            print "AD user resolved on IPA"
+            print("AD user resolved on IPA")
         else:
             pytest.xfail("AD user not resolved on IPA ")
 
@@ -158,9 +158,9 @@ class TestMaster(object):
                                             container,
                                             'ipa', 'trust-del', forwardzone],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if "Deleted trust" in cmd.stdout_text:
-            print "Two way trust deleted successfully"
+            print("Two way trust deleted successfully")
         else:
             pytest.xfail("Two way trust deletion failed")
 

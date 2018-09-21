@@ -21,7 +21,7 @@ class TestMaster(object):
     def class_setup(self, multihost):
         """ Setup for class """
         print("\nClass Setup")
-        print"MASTER: ", multihost.master.hostname
+        print("MASTER: ", multihost.master.hostname)
         # Enabling Setsebool, this change is required or else
         # installation will fail. This is introduced from
         # RHEL Atomic host 7.5.0 onwards.
@@ -50,7 +50,7 @@ class TestMaster(object):
                                             '--type', 'symmetric',
                                             '--password', vaultpass],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         docker_service_restart(master, container)
         docker_service_status(master, container)
         docker_kinit_as_admin(master, container)
@@ -70,7 +70,7 @@ class TestMaster(object):
                                             '--data', datavalue,
                                             '--password', vaultpass],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
     def test_master_0003(self, multihost):
         """@TITLE: IDM-IPA-TC : ipa-server-docker : Check if Vault can be retrieved from IPA master using docker image"""
@@ -84,7 +84,7 @@ class TestMaster(object):
                                             'ipa', 'vault-retrieve', vaultname,
                                             '--password', vaultpass],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
     def test_master_0004(self, multihost):
         """@TITLE: IDM-IPA-TC : ipa-server-docker : Check if Vault can be deleted from IPA master using docker image"""
@@ -97,7 +97,7 @@ class TestMaster(object):
                                             container,
                                             'ipa', 'vault-del', vaultname],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
     def class_teardown(self, multihost):
         """ This is Teardown"""

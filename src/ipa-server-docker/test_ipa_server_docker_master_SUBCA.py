@@ -20,7 +20,7 @@ class TestMaster(object):
     def class_setup(self, multihost):
         """ Setup for class """
         print("\nClass Setup")
-        print"MASTER: ", multihost.master.hostname
+        print("MASTER: ", multihost.master.hostname)
         # Enabling Setsebool, this change is required or else
         # installation will fail. This is introduced from
         # RHEL Atomic host 7.5.0 onwards.
@@ -44,7 +44,7 @@ class TestMaster(object):
                                             container,
                                             'ipa', 'ca-find'],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
         # Add SUB-CA
         subject = 'CN=Smart Card CA, O=TESTRELM.TEST'
@@ -56,14 +56,14 @@ class TestMaster(object):
                                             '--subject', subject,
                                             '--desc', desc],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
 
         print('\nVerify subca on Master')
         cmd = multihost.master.run_command(['docker', 'exec', '-i',
                                             container,
                                             'ipa', 'ca-find', subcaname],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         if cmd.returncode == 0:
             print('SUB-CA setup correctly')
         docker_service_restart(master, container)
@@ -80,13 +80,13 @@ class TestMaster(object):
                                             container,
                                             'ipa', 'ca-del', subcaname],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         print('\nCheck subca on Master after delete')
         cmd = multihost.master.run_command(['docker', 'exec', '-i',
                                             container,
                                             'ipa', 'ca-find'],
                                            raiseonerr=False)
-        print cmd.stdout_text
+        print(cmd.stdout_text)
         docker_service_restart(master, container)
         docker_service_status(master, container)
         docker_kinit_as_admin(master, container)
