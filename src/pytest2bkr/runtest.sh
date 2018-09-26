@@ -30,7 +30,8 @@
 . /usr/share/beakerlib/beakerlib.sh || exit 1
 . /etc/pytest_env.sh
 
-PACKAGES="selinux-policy firefox xorg-x11-server-Xvfb python3-libs-devel openldap-devel"
+PACKAGES="selinux-policy firefox xorg-x11-server-Xvfb python3-ldap python3-pyyaml python3-pexpect"
+pytest=/root/.local/bin/pytest
 pytest_location=/root/ipa-pytests
 mh_cfg=$MH_CONF_FILE
 junit_xml=${PYCONF_DIR}/${TESTCASE}.xml
@@ -70,9 +71,7 @@ install_pytest() {
 
 
         rlLog "Install Pytest and dependencies"
-        rlLog "Going to install : pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver"
-        easy_install-3.6 pip
-        rlRun "pip3 install pytest==$pytest_ver pytest-multihost pyvirtualdisplay selenium==$selenium_ver PyYAML pexpect python-ldap --index https://pypi.org/simple/"
+        rlRun "easy_install-3  --user pytest pytest-multihost selenium==3.4.3 pyvirtualdisplay"
         if [ $? -eq 0 ]; then
             if [ -d ${pytest_location} ]; then
                 pushd `pwd`
@@ -101,7 +100,7 @@ run_test() {
     rlLog "running pytest"
     if [ -d ${pytest_location}/src/$TESTCASE -a -f $mh_cfg ];
     then
-        pytest -s -v --multihost-config=${mh_cfg} --junit-xml=${junit_xml} ${pytest_location}/src/${TESTCASE}
+        rlRun "$pytest -s -v --multihost-config=${mh_cfg} --junit-xml=${junit_xml} ${pytest_location}/src/${TESTCASE}"
         if [ $? -eq 0 ]; then
             rlPass "$TESTCASE Passed"
         else
@@ -121,7 +120,6 @@ rlJournalStart
                  run_test
                  rlRun "rhts-sync-set -s 'DONE' -m $CONTROLLER"
             else
-                install_pytest
                 rlLog "$(hostname) is not CONTROLLER, so skipping operations and waiting for CONTROLLER"
                 rlRun "rhts-sync-block -s 'DONE' $CONTROLLER"
             fi
