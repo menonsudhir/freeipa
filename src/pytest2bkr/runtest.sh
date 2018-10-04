@@ -32,6 +32,7 @@
 
 PACKAGES="selinux-policy firefox xorg-x11-server-Xvfb python3-ldap python3-pyyaml python3-pexpect"
 pytest=/root/.local/bin/pytest
+python=/usr/libexec/platform-python
 pytest_location=/root/ipa-pytests
 mh_cfg=$MH_CONF_FILE
 junit_xml=${PYCONF_DIR}/${TESTCASE}.xml
@@ -71,12 +72,12 @@ install_pytest() {
 
 
         rlLog "Install Pytest and dependencies"
-        rlRun "easy_install-3  --user pytest pytest-multihost selenium==3.4.3 pyvirtualdisplay"
+        rlRun "easy_install-3.6  --user pytest pytest-multihost selenium==3.4.3 pyvirtualdisplay"
         if [ $? -eq 0 ]; then
             if [ -d ${pytest_location} ]; then
                 pushd `pwd`
                 cd ${pytest_location}
-                python3.6 setup.py install
+                $python setup.py install
                 if [ $? -eq 0 ]; then
                     rlPass "Successfully install Pytest"
                 else
