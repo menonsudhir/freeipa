@@ -26,7 +26,8 @@ def setup_ldap_service(multihost):
 
 def _ldap_install_software(multihost):
     """ Install LDAP Software """
-    multihost.client.qerun(['yum', '-y', '--nogpgcheck', 'install', 'net-tools', '389-ds-base-legacy-tools'])
+    multihost.client.qerun(['dnf', '-y', 'module', 'enable', '389-ds'])
+    multihost.client.qerun(['dnf', '-y', 'install', 'net-tools', '389-ds-base-legacy-tools'])
 
 
 def _ldap_add_user(multihost):
