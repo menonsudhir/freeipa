@@ -33,7 +33,7 @@ class Testsubidview(object):
         setup_client(multihost.client, multihost.master)
 
         disable_dnssec(multihost.master)
-        check_rpm(multihost.master, ['ipa-server-trust-ad', 'expect'])
+        check_rpm(multihost.master, ['expect'])
         adtrust_install(multihost.master)
 
         ad1 = multihost.ads[0]

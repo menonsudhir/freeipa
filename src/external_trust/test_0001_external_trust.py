@@ -6,11 +6,11 @@ import pytest
 from ipa_pytests.shared.utils import (disable_dnssec, dnsforwardzone_add,
                                       add_dnsforwarder, sssd_cache_reset)
 from ipa_pytests.qe_install import adtrust_install
-from lib import (add_external_trust, ad_domain)
+from ipa_pytests.external_trust.lib import (add_external_trust, ad_domain)
 import time
 from ipa_pytests.shared.ssh_onclient import ssh_from_client
 from ipa_pytests.shared.trust_utils import (ipa_trust_show, ipa_trust_add)
-from  ipa_pytests.shared.user_utils import (id_user, getent)
+from ipa_pytests.shared.user_utils import (id_user, getent)
 from ipa_pytests.shared import paths
 
 USER1 = 'etuser1'
@@ -31,9 +31,9 @@ class TestExternalTrust(object):
 
     def class_setup(self, multihost):
         """ Setup for class """
-        print "\nClass Setup"
-        print "MASTER: ", multihost.master.hostname
-        print "CLIENT: ", multihost.client.hostname
+        print("\nClass Setup")
+        print("MASTER: {}".format(multihost.master.hostname))
+        print("CLIENT: {}".format(multihost.client.hostname))
         disable_dnssec(multihost.master)
 
         adtrust_install(multihost.master)
@@ -54,16 +54,16 @@ class TestExternalTrust(object):
         add_dnsforwarder(ad1, domain, multihost.master.ip)
 
         cmd = multihost.master.run_command(paths.DIG + ' +short SRV _ldap._tcp.' + forwardzone, raiseonerr=False)
-        print cmd.stdout_text, cmd.stderr_text
+        print("STDOUT : {} \n STDERR : {}".format(cmd.stdout_text, cmd.stderr_text))
         if ad1.hostname in cmd.stdout_text:
-            print "dns resolution passed for ad domain"
+            print("dns resolution passed for ad domain")
         else:
             pytest.fail("dns resolution failed for ad domain", pytrace=False)
         cmd = multihost.master.run_command(paths.DIG + ' +short SRV @' + ad1.ip + ' _ldap._tcp.' + domain,
                                            raiseonerr=False)
-        print cmd.stdout_text, cmd.stderr_text
+        print("STDOUT : {} \n STDERR : {}".format(cmd.stdout_text, cmd.stderr_text))
         if domain in cmd.stdout_text:
-            print "dns resolution passed for ipa domain"
+            print("dns resolution passed for ipa domain")
         else:
             pytest.xfail("dns resolution failed for ipa domain")
 
@@ -79,12 +79,11 @@ class TestExternalTrust(object):
         opt_list = ['--type=ad', '--external=False']
         passwd = ad1.ssh_password
         cmd = ipa_trust_add(multihost.master, forwardzone, ad1.ssh_username, opt_list, passwd)
-        print "ipa trust-add\n", cmd.stdout_text
+        print("ipa trust-add\n {}".format(cmd.stdout_text))
 
         # verifying trust add output
         if "Trust type: Active Directory domain" in cmd.stdout_text:
-            print "Expected Result:\n External trust " \
-                  "is not added as expected\n"
+            print("Expected Result:\n External trust is not added as expected\n")
         else:
             pytest.xfail("Test failed: external trust with false option ")
 
@@ -103,7 +102,7 @@ class TestExternalTrust(object):
 
         # cleaning sssd cache
         sssd_cache_reset(multihost.master)
-        print "waiting for 60 seconds"
+        print("waiting for 60 seconds")
         time.sleep(60)
 
         # verifying user
@@ -123,7 +122,7 @@ class TestExternalTrust(object):
 
         # cleaning sssd cache
         sssd_cache_reset(multihost.master)
-        print "waiting for 60 seconds"
+        print("waiting for 60 seconds")
         time.sleep(60)
 
         # getent group
@@ -141,7 +140,7 @@ class TestExternalTrust(object):
 
         # cleaning sssd cache
         sssd_cache_reset(multihost.master)
-        print "waiting for 60 seconds"
+        print("waiting for 60 seconds")
         time.sleep(60)
 
         # getent group
@@ -159,7 +158,7 @@ class TestExternalTrust(object):
 
         # cleaning sssd cache
         sssd_cache_reset(multihost.master)
-        print "waiting for 60 seconds"
+        print("waiting for 60 seconds")
         time.sleep(60)
 
         # getent group
@@ -177,7 +176,7 @@ class TestExternalTrust(object):
 
         # cleaning sssd cache
         sssd_cache_reset(multihost.master)
-        print "waiting for 60 seconds"
+        print("waiting for 60 seconds")
         time.sleep(60)
 
         # getent group
@@ -195,7 +194,7 @@ class TestExternalTrust(object):
 
         # cleaning sssd cache
         sssd_cache_reset(multihost.master)
-        print "waiting for 60 seconds"
+        print("waiting for 60 seconds")
         time.sleep(60)
 
         # getent group
@@ -213,7 +212,7 @@ class TestExternalTrust(object):
 
         # cleaning sssd cache
         sssd_cache_reset(multihost.master)
-        print "waiting for 60 seconds"
+        print("waiting for 60 seconds")
         time.sleep(60)
 
         # getent group
@@ -231,7 +230,7 @@ class TestExternalTrust(object):
 
         # cleaning sssd cache
         sssd_cache_reset(multihost.master)
-        print "waiting for 60 seconds"
+        print("waiting for 60 seconds")
         time.sleep(60)
 
         # getent group
@@ -249,14 +248,14 @@ class TestExternalTrust(object):
 
         # ipa trust-show
         cmd = ipa_trust_show(multihost.master, addomain)
-        print "ipa trust-show\n", cmd.stdout_text
+        print("ipa trust-show {}".format(cmd.stdout_text))
 
         multihost.expectresult = "Trust type: Non-transitive external" \
                                  " trust to a domain in another" \
                                  " Active Directory forest"
 
         if multihost.expectresult in cmd.stdout_text:
-            print "Trust show works as expected\n"
+            print("Trust show works as expected\n")
         else:
             pytest.fail("Trust show fails", pytrace=False)
 
@@ -273,7 +272,7 @@ class TestExternalTrust(object):
         # ipa trust-show
         opt_list = ['--all']
         cmd = ipa_trust_show(multihost.master, addomain, opt_list)
-        print "ipa trust-show --all\n", cmd.stdout_text
+        print("ipa trust-show --all\n {}".format(cmd.stdout_text))
 
         # verifying trust show output
         if all(x in cmd.stdout_text for x in ["SID blacklist incoming",
@@ -284,7 +283,7 @@ class TestExternalTrust(object):
                                               "ipanttrustpartner",
                                               "ipanttrustposixoffset",
                                               "objectclass"]):
-            print "Trust show with --all option works as expected\n"
+            print("Trust show with --all option works as expected\n")
         else:
             pytest.fail("Trust show --all fails", pytrace=False)
 
@@ -301,11 +300,11 @@ class TestExternalTrust(object):
         # ipa trust-show
         opt_list = ['--all', '--rights']
         cmd = ipa_trust_show(multihost.master, addomain, opt_list)
-        print "ipa trust-show --all --rights\n", cmd.stdout_text
+        print("ipa trust-show --all --rights\n {}".format(cmd.stdout_text))
 
         # verifying trust show output
         if "attributelevelrights" in cmd.stdout_text:
-            print "Trust show with --all --rights option works as expected\n"
+            print("Trust show with --all --rights option works as expected\n")
         else:
             pytest.fail("Trust show --all --rights fails", pytrace=False)
 
@@ -322,13 +321,12 @@ class TestExternalTrust(object):
         # ipa trust-show
         opt_list = ['--raw']
         cmd = ipa_trust_show(multihost.master, addomain, opt_list)
-        print "ipa trust-show --raw\n", cmd.stdout_text
+        print("ipa trust-show --raw\n {}".format(cmd.stdout_text))
 
         # verifying trust show output
         if all(x in cmd.stdout_text for x in ["ipanttrusteddomainsid",
                                               "ipantflatname", "cn"]):
-            print "Trust show with --raw option" \
-                  " works as expected\n"
+            print("Trust show with --raw option works as expected\n")
         else:
             pytest.fail("Trust show --raw fails", pytrace=False)
 
@@ -345,7 +343,7 @@ class TestExternalTrust(object):
         # ipa trust-show
         opt_list = ['--all', '--rights', '--raw']
         cmd = ipa_trust_show(multihost.master, addomain, opt_list)
-        print "ipa trust-show --all --rights --raw\n", cmd.stdout_text
+        print("ipa trust-show --all --rights --raw\n {}".format(cmd.stdout_text))
 
         # verifying trust show output
         if all(x in cmd.stdout_text for x in ["incoming",
@@ -359,8 +357,7 @@ class TestExternalTrust(object):
                                               "attributelevelrights",
                                               "cn",
                                               "ipantflatname"]):
-            print "Trust show with --all --rights --raw " \
-                  "option works as expected"
+            print("Trust show with --all --rights --raw option works as expected")
         else:
             pytest.fail(
                 "Trust show --all --rights --raw fails\n",
@@ -378,12 +375,11 @@ class TestExternalTrust(object):
         opt_list = ['--type=ad', '--two-way=true', '--external=true']
         passwd = ad1.ssh_password
         cmd = ipa_trust_add(multihost.master, forwardzone, ad1.ssh_username, opt_list, passwd)
-        print "ipa trust-add\n", cmd.stdout_text
+        print("ipa trust-add\n{}".format(cmd.stdout_text))
 
         if ("Trust type: Non-transitive external "
             "trust to a domain in another Active Directory forest" and "Trust direction: Two-way trust") in cmd.stdout_text:
-            print "Expected Result:\n Non transitive external" \
-                  " trust is established with --two-way=true option\n"
+            print("Expected Result:\n Non transitive external trust is established with --two-way=true option\n")
         else:
             pytest.xfail("External trust not established")
 
@@ -400,9 +396,9 @@ class TestExternalTrust(object):
         # Delete Trust
         cmd = multihost.master.run_command(['ipa', 'trust-del',
                                             addomain], raiseonerr=False)
-        print cmd.stdout_text
+        print("STDOUT : {}".format(cmd.stdout_text))
         if "Deleted trust" in cmd.stdout_text:
-            print "Trust deleted successfully\n"
+            print("Trust deleted successfully\n")
         else:
             pytest.xfail("External trust not deleted")
 
@@ -478,10 +474,10 @@ class TestExternalTrust(object):
         opt_list = ['--type=ad', '--external=test']
         passwd = ad1.ssh_password
         cmd = ipa_trust_add(multihost.master, forwardzone, ad1.ssh_username, opt_list, passwd, raiseonerr=False)
-        print "ipa trust-add\n", cmd.stderr_text
+        print("ipa trust-add\n {}".format(cmd.stderr_text))
 
         if expectoutput in cmd.stderr_text:
-            print "Failed as expected"
+            print("Failed as expected")
         else:
             pytest.xfail("External trust established with invalid input")
 

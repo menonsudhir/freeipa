@@ -58,6 +58,6 @@ def check_for_skew(master, addomain):
     # one minute then fail
     skew = sdate - cdate
     if skew > oneminute:
-        return false
+        return False
     else:
-        return true
+        return True

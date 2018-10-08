@@ -11,6 +11,7 @@ from ipa_pytests.shared.utils import (service_control,
                                       dnsforwardzone_add, add_dnsforwarder,
                                       disable_dnssec)
 from  ipa_pytests.shared.user_utils import (add_ipa_user)
+from ipa_pytests.shared.trust_utils import check_for_skew
 
 
 class TestWinSyncMigrate(object):
@@ -39,16 +40,8 @@ class TestWinSyncMigrate(object):
         print("*" * 80)
 
         # Checking for required RPMs installed on Master
-        packages = ["ipa-server-trust-ad", "samba-winbind", "adcli",
-                    "samba-client"]
-        for pkg in packages:
-            cmd = multihost.master.rpm_install_check(pkg)
-            if cmd != 0:
-                print("Installing package [%s]" % (pkg))
-                multihost.master.yum_install([pkg])
-            else:
-                print("Package [%s] is already "
-                      "installed" % (pkg))
+        cmd = 'dnf module install idm:DL1/adtrust'
+        multihost.master.qerun(cmd, exp_returncode=0)
 
         # Check time between two server
         synced = check_for_skew(master1, ad1)

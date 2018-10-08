@@ -28,10 +28,10 @@ def add_external_trust(multihost):
     opt_list = ['--type=ad', '--external=true']
     passwd = ad1.ssh_password
     cmd = ipa_trust_add(multihost.master, forwardzone, ad1.ssh_username, opt_list, passwd)
-    print "ipa trust-add\n", cmd.stdout_text
+    print("ipa trust-add \n: {}".format(cmd.stdout_text))
 
     if "Trust type: Non-transitive external trust to a " \
        "domain in another Active Directory forest" in cmd.stdout_text:
-        print "Expected Result:\n External trust added successfully\n"
+        print("Expected Result:\n External trust added successfully\n")
     else:
         pytest.xfail("External trust not added")
