@@ -8,7 +8,7 @@ from ipa_pytests.shared import paths
 from selenium import webdriver
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.utils import ipa_version_gte
-from ipa_pytests.qe_install import setup_master_ca_less, setup_replica_ca_less
+from ipa_pytests.qe_install import setup_master_ca_less, setup_replica_ca_less, set_etc_hosts
 from ipa_pytests.shared.user_utils import add_ipa_user, show_ipa_user
 from ipa_pytests.test_webui import ui_lib
 from ipa_pytests.shared.utils import run_pk12util
@@ -73,7 +73,6 @@ class Testmaster(object):
                                     server_cert_file, server_cert_file)
         print(cmd1.stdout_text)
         print(cmd1.stderr_text)
-
         replica_cert_file = '/root/replica.p12'
         certs.create_server_cert(server2_subject, 'replica', ca_nick)
         cmdstr2 = ['-o', replica_cert_file, '-n', 'replica', '-d',
@@ -87,8 +86,9 @@ class Testmaster(object):
                   "stored at [%s]" % replica_cert_file)
 
         cert_file = '/root/replica.p12'
-        prep_content = master.get_file_contents(replica_cert_file)
-        replica.put_file_contents(cert_file, prep_content)
+        set_etc_hosts(replica, dest_host=master)
+        master.run_command(['scp', '-o', 'StrictHostKeyChecking=no', cert_file,
+                            'root@{}:/root/'.format(replica.hostname)])
 
         # Install CA-less replica
         cmd2 = setup_replica_ca_less(replica, master, passwd, passwd, passwd,
@@ -113,6 +113,7 @@ class Testmaster(object):
         """
         user1 = 'testuser1'
         userpass = 'TestP@ss123'
+        multihost.master.run_command(['kdestroy', '-A'])
         tp = ui_lib.ui_driver(multihost.master)
         try:
             tp.setup()

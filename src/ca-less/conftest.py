@@ -18,7 +18,9 @@ def pytest_namespace():
 def setup_session(request, multihost):
 
     multihost.replica = multihost.replicas[0]
-
+    cmd = "dnf -y module install {}"
+    multihost.master.run_command(cmd.format(multihost.master.config.server_module))
+    multihost.replica.run_command(cmd.format(multihost.replica.config.server_module))
     def teardown_session():
         """ define fixture for session level teardown """
         pass
