@@ -83,7 +83,7 @@ class QeConfig(pytest_multihost.config.Config):
         self.untrusted_certs = kwargs.get('untrusted_certs', os.getenv('UNTRUSTED_CERTS', False))
         self.domain_level = kwargs.get('domain_level', os.getenv('DOMAIN_LEVEL', 1))
         self.server_module = kwargs.get('server_module', 'idm:DL1/dns')
-        self.client_module = kwargs.get('client_module', 'idm:client')
+        self.client_module = kwargs.get('client_module', 'idm:DL1/client')
 
     def get_domain_class(self):
         """
