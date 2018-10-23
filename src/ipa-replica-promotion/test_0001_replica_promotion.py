@@ -159,7 +159,7 @@ class TestIPAReplicaPromotion(object):
         if cmd.returncode == 0:
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
-            uninstall_server(multihost.replica)
+            uninstall_server(multihost.replica, force=True)
             server_del(multihost.master,
                        hostname=multihost.replica.hostname,
                        force=True)
