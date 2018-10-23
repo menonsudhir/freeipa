@@ -50,7 +50,7 @@ class TestIPAReplicaPromotion(object):
         if cmd.returncode == 0:
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
-            uninstall_server(multihost.replica)
+            uninstall_server(multihost.replica, force=True)
             server_del(multihost.master,
                        hostname=multihost.replica.hostname,
                        force=True)
@@ -110,7 +110,7 @@ class TestIPAReplicaPromotion(object):
         if cmd.returncode == 0:
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
-            uninstall_server(multihost.replica)
+            uninstall_server(multihost.replica, force=True)
             server_del(multihost.master,
                        hostname=multihost.replica.hostname,
                        force=True)
@@ -206,7 +206,7 @@ class TestIPAReplicaPromotion(object):
         if cmd.returncode == 0:
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
-            uninstall_server(multihost.replica)
+            uninstall_server(multihost.replica, force=True)
             server_del(multihost.master,
                        hostname=multihost.replica.hostname,
                        force=True)
@@ -238,7 +238,7 @@ class TestIPAReplicaPromotion(object):
         assert cmd.returncode == 0
         assert testuser in cmd.stdout_text
 
-        uninstall_server(multihost.replica)
+        uninstall_server(multihost.replica, force=True)
         server_del(multihost.master,
                        hostname=multihost.replica.hostname,
                        force=True)
@@ -258,7 +258,7 @@ class TestIPAReplicaPromotion(object):
         if cmd.returncode == 0:
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
-            uninstall_server(multihost.replica)
+            uninstall_server(multihost.replica, force=True)
             server_del(multihost.master,
                        hostname=multihost.replica.hostname,
                        force=True)
@@ -277,7 +277,7 @@ class TestIPAReplicaPromotion(object):
         testuser = "test_0007_testuser1"
         passwd = multihost.master.config.admin_pw
 
-        uninstall_server(multihost.replica)
+        uninstall_server(multihost.replica, force=True)
         add_ipa_user(multihost.master, testuser, passwd)
         cmd = multihost.replica.run_command(['kdestroy', '-A'],
                                             raiseonerr=False)
@@ -324,7 +324,7 @@ class TestIPAReplicaPromotion(object):
         if cmd.returncode == 0:
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
-            uninstall_server(multihost.replica)
+            uninstall_server(multihost.replica, force=True)
             server_del(multihost.master,
                        hostname=multihost.replica.hostname,
                        force=True)
@@ -343,7 +343,7 @@ class TestIPAReplicaPromotion(object):
         testuser = "test_0008_testuser1"
         passwd = multihost.master.config.admin_pw
 
-        uninstall_server(multihost.replica)
+        uninstall_server(multihost.replica, force=True)
         add_ipa_user(multihost.master, testuser, passwd)
 
         # Add host in host record
@@ -417,7 +417,7 @@ class TestIPAReplicaPromotion(object):
         if cmd.returncode == 0:
             # Try to uninstall if only we have successful replica install
             print("\nUninstalling IPA Replica server. Please wait ...")
-            uninstall_server(multihost.replica)
+            uninstall_server(multihost.replica, force=True)
             server_del(multihost.master,
                        hostname=multihost.replica.hostname,
                        force=True)
