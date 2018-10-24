@@ -36,7 +36,7 @@ python=/usr/libexec/platform-python
 pytest_location=/root/ipa-pytests
 mh_cfg=$MH_CONF_FILE
 junit_xml=${PYCONF_DIR}/${TESTCASE}.xml
-gecko_driver=https://github.com/mozilla/geckodriver/releases/download/v0.12.0/geckodriver-v0.12.0-linux64.tar.gz
+gecko_driver=https://github.com/mozilla/geckodriver/releases/download/v0.19.0/geckodriver-v0.19.0-linux64.tar.gz
 pytest_ver=3.4.2
 selenium_ver=3.4.3
 
@@ -55,7 +55,7 @@ install_pytest() {
 
         rlLog "Clone git repo ipa-pytests using $SRC_LOCATION"
         rlRun "wget $gecko_driver" 0
-        rlRun "tar xvzf geckodriver-v0.12.0-linux64.tar.gz" 0
+        rlRun "tar xvzf geckodriver-v0.19.0-linux64.tar.gz" 0
         rlRun "mv geckodriver /usr/bin/" 0
 
         if [ -z $BRANCH ]; then
