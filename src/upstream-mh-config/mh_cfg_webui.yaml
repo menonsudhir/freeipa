@@ -11,3 +11,4 @@ domains:
       - name: master.testrelm.test
         external_hostname: hostname1
         role: master
+        install_master: true
