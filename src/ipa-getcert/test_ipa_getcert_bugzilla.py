@@ -29,7 +29,7 @@ class Testmaster(object):
             if cmd.returncode != 0:
                 pytest.xfail("Openssl command failed to create CA.PEM file.")
             print("Editing CA.pem file")
-            cmd = multihost.master.run_command(['sed', '-i', '1,5d', file2],
+            cmd = multihost.master.run_command(['sed', '-i', '1,7d', file2],
                                      raiseonerr=False)
             print(cmd.stdout_text)
             cmd = multihost.master.run_command([paths.OPENSSL, 'asn1parse', '-in', file2,
