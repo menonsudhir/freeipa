@@ -51,8 +51,8 @@ class TestSudoRule(object):
         print("Added sudorule option !authenticate\n")
 
         # Setting sudorule order
-        print("Setting sudo order to 13")
-        sudorule_mod(multihost.master, sudo_rule, order=13)
+        print("Setting sudo order to 14")
+        sudorule_mod(multihost.master, sudo_rule, order=14)
 
         print("\nkinit as admin")
         multihost.master.kinit_as_admin()
