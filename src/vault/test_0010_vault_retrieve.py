@@ -4,10 +4,10 @@ Vault Retrieve tests
 
 # pylint: disable=too-many-public-methods,no-self-use,global-statement,too-many-statements
 
-from .lib import setup_test_prereqs, teardown_test_prereqs
-from . import data  # pylint: disable=relative-import
 import base64
-import pytest
+
+from . import data  # pylint: disable=relative-import
+from .lib import setup_test_prereqs, teardown_test_prereqs
 
 PRIV_VAULT_W_PASSWORD = []
 PRIV_VAULT_W_KEY = []
@@ -117,7 +117,7 @@ class TestVaultRetrieve(object):
         :Caseautomation: automated
 
         """
-        runcmd = ['ipa', 'vault-retrieve'] + PRIV_VAULT_W_PASSWORD + ['--password=' + data.PASSWORD]
+        runcmd = ['ipa', 'vault-retrieve'] + PRIV_VAULT_W_PASSWORD + ['--password=%s' % data.PASSWORD]
         multihost.master.qerun(runcmd, exp_output=data.SECRET_BLOB)
 
     def test_0006_successfully_retrieve_secret_from_vault_with_password_from_file(self, multihost):
@@ -132,7 +132,7 @@ class TestVaultRetrieve(object):
 
         """
         runcmd = ['ipa', 'vault-retrieve'] + PRIV_VAULT_W_PASSWORD + \
-                 ['--password-file=' + data.PASS_FILE]
+                 ['--password-file=%s' % data.PASS_FILE]
         multihost.master.qerun(runcmd, exp_output=data.SECRET_BLOB)
 
     def test_0007_successfully_retrieve_secret_from_vault_with_public_key(self, multihost):
@@ -147,8 +147,8 @@ class TestVaultRetrieve(object):
 
         """
         prvkey = multihost.master.transport.get_file_contents(data.PRVKEY_FILE)
-        prvkey_blob = base64.b64encode(prvkey)
-        runcmd = ['ipa', 'vault-retrieve'] + PRIV_VAULT_W_KEY + ['--private-key=%s' % prvkey_blob]
+        prvkey = base64.b64encode(prvkey)
+        runcmd = ['ipa', 'vault-retrieve', PRIV_VAULT_W_KEY[0], '--private-key=%s' % prvkey.decode("utf-8")]
         multihost.master.qerun(runcmd, exp_output=data.SECRET_BLOB)
 
     def test_0008_successfully_retrieve_secret_from_vault_with_public_key_from_file(self, multihost):
@@ -163,7 +163,7 @@ class TestVaultRetrieve(object):
 
         """
         runcmd = ['ipa', 'vault-retrieve'] + PRIV_VAULT_W_KEY + \
-                 ['--private-key-file=' + data.PRVKEY_FILE]
+                 ['--private-key-file=%s' % data.PRVKEY_FILE]
         multihost.master.qerun(runcmd, exp_output=data.SECRET_BLOB)
 
     def test_0009_fail_to_retrieve_secret_from_non_existent_vault_without_lock(self, multihost):
@@ -192,7 +192,7 @@ class TestVaultRetrieve(object):
 
         """
         runcmd = ['ipa', 'vault-retrieve', data.PREFIX + '_vault_user',
-                  '--service=' + data.SERVICE1]
+                  '--service=%s' % data.SERVICE1]
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0011_fail_to_retrieve_secret_from_shared_vault_without_lock_with_user_option(self, multihost):
@@ -207,7 +207,7 @@ class TestVaultRetrieve(object):
 
         """
         runcmd = ['ipa', 'vault-retrieve', data.PREFIX + '_vault_shared',
-                  '--user=' + data.USER1]
+                  '--user=%s' % data.USER1]
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0012_fail_to_retrieve_secret_from_service_vault_without_lock_with_shared_option(self, multihost):
@@ -250,7 +250,7 @@ class TestVaultRetrieve(object):
 
         """
         runcmd = ['ipa', 'vault-retrieve', data.PREFIX + '_vault_service',
-                  '--service=DNE' + '/' + multihost.master.hostname]
+                  '--service=DNE/%s' % multihost.master.hostname]
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output="vault not found")
 
     def test_0015_fail_to_retrieve_secret_from_vault_with_invalid_password(self, multihost):
@@ -279,7 +279,7 @@ class TestVaultRetrieve(object):
 
         """
         runcmd = ['ipa', 'vault-retrieve'] + PRIV_VAULT_W_PASSWORD + \
-                 ['--password-file=' + data.DNE_FILE]
+                 ['--password-file=%s' % data.DNE_FILE]
         multihost.master.qerun(runcmd, exp_returncode=1, exp_output="No such file or directory")
 
     def test_0017_fail_to_retrieve_secret_from_vault_with_invalid_public_key_value(self, multihost):
@@ -295,7 +295,7 @@ class TestVaultRetrieve(object):
         """
         new_prvkey = multihost.master.transport.get_file_contents(data.NEW_PRVKEY_FILE)
         new_prvkey_blob = base64.b64encode(new_prvkey)
-        runcmd = ['ipa', 'vault-retrieve'] + PRIV_VAULT_W_KEY + ['--private-key=%s' % new_prvkey_blob]
+        runcmd = ['ipa', 'vault-retrieve', PRIV_VAULT_W_KEY[0], '--private-key=%s' % new_prvkey_blob.decode("utf-8")]
         multihost.master.qerun(runcmd, exp_returncode=1, exp_output="Invalid credentials")
 
     def test_0018_fail_to_retrieve_secret_from_vault_with_non_existent_public_key_file(self, multihost):
@@ -310,7 +310,7 @@ class TestVaultRetrieve(object):
 
         """
         runcmd = ['ipa', 'vault-retrieve'] + PRIV_VAULT_W_KEY + \
-                 ['--private-key-file=' + data.DNE_FILE]
+                 ['--private-key-file=%s' % data.DNE_FILE]
         multihost.master.qerun(runcmd, exp_returncode=1, exp_output="No such file or directory")
 
     def test_0019_successfully_retrieve_vault_on_replica_without_kra(self, multihost):

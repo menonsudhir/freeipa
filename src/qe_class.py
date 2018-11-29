@@ -295,7 +295,7 @@ def test_count(request):
         pytest.count += 1
     except:
         pytest.count = 0
-    request.function.func_globals['TEST_COUNT'] = pytest.count
+    request.function.__globals__['TEST_COUNT'] = pytest.count
 
 
 @pytest.yield_fixture(scope="session", autouse=True)

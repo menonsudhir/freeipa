@@ -84,7 +84,7 @@ class TestVaultAdd(object):
         pubkey = multihost.master.transport.get_file_contents(data.PUBKEY_FILE)
         pubkey = base64.b64encode(pubkey)
         runcmd = ['ipa', 'vault-add', '--type=asymmetric',
-                  '--public-key=%s' % pubkey, vault_name]
+                  '--public-key=%s' % pubkey.decode('ascii'), vault_name]
         multihost.master.qerun(runcmd)
 
     def test_0005_successfully_add_asymmetric_private_vault_public_key_file(self, multihost):
@@ -166,7 +166,7 @@ class TestVaultAdd(object):
         pubkey = multihost.master.transport.get_file_contents(data.PUBKEY_FILE)
         pubkey = base64.b64encode(pubkey)
         runcmd = ['ipa', 'vault-add', '--user=%s' % data.USER1, '--type=asymmetric',
-                  '--public-key=%s' % pubkey, vault_name]
+                  '--public-key=%s' % pubkey.decode('ascii'), vault_name]
         multihost.master.qerun(runcmd)
 
     def test_0010_successfully_add_asymmetric_user_vault_public_key_file(self, multihost):
@@ -247,7 +247,7 @@ class TestVaultAdd(object):
         pubkey = multihost.master.transport.get_file_contents(data.PUBKEY_FILE)
         pubkey = base64.b64encode(pubkey)
         runcmd = ['ipa', 'vault-add', '--shared', '--type=asymmetric',
-                  '--public-key=%s' % pubkey, vault_name]
+                  '--public-key=%s' % pubkey.decode('ascii'), vault_name]
         multihost.master.qerun(runcmd)
 
     def test_0015_successfully_add_asymmetric_shared_vault_public_key_file(self, multihost):
@@ -329,7 +329,7 @@ class TestVaultAdd(object):
         pubkey = multihost.master.transport.get_file_contents(data.PUBKEY_FILE)
         pubkey = base64.b64encode(pubkey)
         runcmd = ['ipa', 'vault-add', '--service=%s' % data.SERVICE1, '--type=asymmetric',
-                  '--public-key=%s' % pubkey, vault_name]
+                  '--public-key=%s' % pubkey.decode('ascii'), vault_name]
         multihost.master.qerun(runcmd)
 
     def test_0020_successfully_add_asymmetric_service_vault_public_key_file(self, multihost):

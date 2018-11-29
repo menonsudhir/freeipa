@@ -107,6 +107,7 @@ class TestVaultModify(object):
                   '--out=' + out_file]
         multihost.master.qerun(runcmd)
         secret_retrieved = multihost.master.transport.get_file_contents(out_file)
+        secret_retrieved = secret_retrieved.decode('ascii')
         assert secret_retrieved == data.SECRET_VALUE
 
     def test_0003_successfully_change_vault_type_from_symmetric_to_asymmetric(self, multihost):
@@ -131,6 +132,7 @@ class TestVaultModify(object):
                   '--private-key-file=' + data.PRVKEY_FILE, '--out=' + out_file]
         multihost.master.qerun(runcmd)
         secret_retrieved = multihost.master.transport.get_file_contents(out_file)
+        secret_retrieved = secret_retrieved.decode('ascii')
         assert secret_retrieved == data.SECRET_VALUE
 
     def test_0004_successfully_change_vault_type_from_asymmetric_to_standard(self, multihost):
@@ -153,6 +155,7 @@ class TestVaultModify(object):
         runcmd = ['ipa', 'vault-retrieve', data.PREFIX + '_vault_priv_asym_to_std', '--out=' + out_file]
         multihost.master.qerun(runcmd)
         secret_retrieved = multihost.master.transport.get_file_contents(out_file)
+        secret_retrieved = secret_retrieved.decode('ascii')
         assert secret_retrieved == data.SECRET_VALUE
 
     def test_0005_successfully_change_vault_password_salt(self, multihost):
@@ -166,9 +169,9 @@ class TestVaultModify(object):
         :Caseautomation: automated
 
         """
-        newsalt = base64.b64encode('TeStNewSalT')
+        newsalt = base64.b64encode(b'TeStNewSalT')
         out_file = '/root/multihost_tests/asym_to_std_mod_test.' + str(pytest.count)
-        runcmd = ['ipa', 'vault-mod', data.PREFIX + '_vault_priv_symmetric', '--salt=' + newsalt,
+        runcmd = ['ipa', 'vault-mod', data.PREFIX + '_vault_priv_symmetric', '--salt=' + newsalt.decode('ascii'),
                   '--old-password=' + data.PASSWORD, '--new-password=' + data.PASSWORD]
         multihost.master.qerun(runcmd)
         runcmd = ['ipa', 'vault-archive', data.PREFIX + '_vault_priv_symmetric', '--password=' + data.PASSWORD,
@@ -178,6 +181,7 @@ class TestVaultModify(object):
                   '--out=' + out_file]
         multihost.master.qerun(runcmd)
         secret_retrieved = multihost.master.transport.get_file_contents(out_file)
+        secret_retrieved = secret_retrieved.decode('ascii')
         assert secret_retrieved == data.SECRET_VALUE
 
     def test_0006_successfully_change_asymmetric_keys_with_blobs(self, multihost):
@@ -199,14 +203,16 @@ class TestVaultModify(object):
         new_prvkey_blob = base64.b64encode(new_prvkey)
         out_file = '/root/multihost_tests/asym_key_change_mod_test.' + str(pytest.count)
         runcmd = ['ipa', 'vault-mod', data.PREFIX + '_vault_priv_asymmetric',
-                  '--private-key="%s"' % old_prvkey_blob, '--public-key="%s"' % new_pubkey_blob]
+                  '--private-key="%s"' % old_prvkey_blob.decode('ascii'),
+                  '--public-key="%s"' % new_pubkey_blob.decode('ascii')]
         multihost.master.qerun(runcmd)
         runcmd = ['ipa', 'vault-archive', data.PREFIX + '_vault_priv_asymmetric', '--in=' + data.SECRET_FILE]
         multihost.master.qerun(runcmd)
         runcmd = ['ipa', 'vault-retrieve', data.PREFIX + '_vault_priv_asymmetric',
-                  '--private-key="%s"' % new_prvkey_blob, '--out=' + out_file]
+                  '--private-key="%s"' % new_prvkey_blob.decode('ascii'), '--out=' + out_file]
         multihost.master.qerun(runcmd)
         secret_retrieved = multihost.master.transport.get_file_contents(out_file)
+        secret_retrieved = secret_retrieved.decode('ascii')
         assert secret_retrieved == data.SECRET_VALUE
 
     def test_0007_successfully_change_user_vault_description(self, multihost):
@@ -306,8 +312,8 @@ class TestVaultModify(object):
         :Caseautomation: automated
 
         """
-        newsalt = base64.b64encode('TeStNewSalT')
-        runcmd = ['ipa', 'vault-mod', 'dne_vault', '--salt=' + newsalt,
+        newsalt = base64.b64encode(b'TeStNewSalT')
+        runcmd = ['ipa', 'vault-mod', 'dne_vault', '--salt=' + newsalt.decode('ascii'),
                   '--old-password=' + data.PASSWORD, '--new-password=' + data.PASSWORD]
         multihost.master.qerun(runcmd, exp_returncode=2, exp_output='vault not found')
 
@@ -338,9 +344,9 @@ class TestVaultModify(object):
 
         """
         # This relies on salt test above
-        newsalt = base64.b64encode('TeStNewSalT')
+        newsalt = base64.b64encode(b'TeStNewSalT')
         runcmd = ['ipa', 'vault-mod', data.PREFIX + '_vault_priv_symmetric', '--type=symmetric',
-                  '--salt=' + newsalt, '--old-password=' + data.PASSWORD,
+                  '--salt=' + newsalt.decode('ascii'), '--old-password=' + data.PASSWORD,
                   '--new-password=' + data.PASSWORD]
         multihost.master.qerun(runcmd, exp_returncode=1,
                                exp_output='no modifications to be performed')
@@ -387,8 +393,8 @@ class TestVaultModify(object):
         :Caseautomation: automated
 
         """
-        newsalt = base64.b64encode('TeStNewSalT')
-        runcmd = ['ipa', 'vault-mod', data.PREFIX + '_vault_priv_symmetric', '--salt=' + newsalt[:-1],
+        newsalt = base64.b64encode(b'TeStNewSalT')
+        runcmd = ['ipa', 'vault-mod', data.PREFIX + '_vault_priv_symmetric', '--salt=' + newsalt[:-1].decode('ascii'),
                   '--old-password=' + data.PASSWORD, '--new-password=' + data.PASSWORD]
         multihost.master.qerun(runcmd, exp_returncode=1, exp_output='Base64 decoding failed')
 
@@ -404,7 +410,7 @@ class TestVaultModify(object):
 
         """
         valid_key = multihost.master.get_file_contents(data.PUBKEY_FILE)
-        invalid_key = base64.b64encode(valid_key)[:-1]
+        invalid_key = str.encode(valid_key[:-1])
         runcmd = ['ipa', 'vault-mod', data.PREFIX + '_vault_priv_asymmetric', '--public-key="%s"' % invalid_key,
                   '--private-key-file=' + data.NEW_PRVKEY_FILE]
         multihost.master.qerun(runcmd, exp_returncode=1, exp_output='Base64 decoding failed')
@@ -623,5 +629,5 @@ class TestVaultModify(object):
         old_prvkey = multihost.master.transport.get_file_contents(data.PRVKEY_FILE)
         old_prvkey_blob = base64.b64encode(old_prvkey)
         runcmd = ['ipa', 'vault-retrieve', data.PREFIX + '_vault_priv_asymmetric',
-                  '--private-key=' + old_prvkey_blob, '--out=' + out_file]
+                  '--private-key=' + old_prvkey_blob.decode('ascii'), '--out=' + out_file]
         multihost.master.qerun(runcmd, exp_returncode=1, exp_output="Invalid credentials")

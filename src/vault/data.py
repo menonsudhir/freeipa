@@ -19,7 +19,7 @@ SECRET_VALUE = ''
 SECRET_BLOB = ''
 SECRET_FILE = ''
 SECRET_OUT_FILE = ''
-INVALID_KEY = base64.b64encode("INIT")
+INVALID_KEY = base64.b64encode(b"INIT")
 DNE_FILE = ''
 LARGE_FILE = ''
 DNE_VAULT = []
@@ -66,7 +66,7 @@ def init(multihost, prefix):
     SECRET_BLOB = "U2VjcmV0MTIzCg=="
     SECRET_FILE = "/root/multihost_tests/vault_secret"
     SECRET_OUT_FILE = "/root/multihost_tests/vault_secret_out"
-    INVALID_KEY = base64.b64encode("INVALID")
+    INVALID_KEY = base64.b64encode(b"INVALID")
     DNE_FILE = "/root/multihost_tests/dne_file"
     LARGE_FILE = "/root/multihost_tests/large_file"
     DNE_VAULT = ['dne_vault']
