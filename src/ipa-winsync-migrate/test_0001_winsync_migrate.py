@@ -40,7 +40,7 @@ class TestWinSyncMigrate(object):
         print("*" * 80)
 
         # Checking for required RPMs installed on Master
-        cmd = 'dnf module install idm:DL1/adtrust'
+        cmd = 'dnf module install -y idm:DL1/adtrust'
         multihost.master.qerun(cmd, exp_returncode=0)
 
         # Check time between two server

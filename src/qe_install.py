@@ -440,7 +440,7 @@ def adtrust_install(host):
         print("STDOUT: %s" % cmd.stdout_text)
         print("STDERR: %s" % cmd.stderr_text)
         if 'package ipa-server-trust-ad is not installed' in cmd.stdout_text:
-            runcmd = 'dnf module install idm:DL1/adtrust'
+            runcmd = 'dnf module install -y idm:DL1/adtrust'
             cmd = host.run_command(runcmd, raiseonerr=False)
             print("Running command: %s" % runcmd)
             if cmd.returncode != 0:
