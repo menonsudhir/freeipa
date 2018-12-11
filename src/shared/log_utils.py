@@ -13,6 +13,8 @@ def backup_logs(host, logfiles):
     if host.transport.file_exists(targz):
         host.run_command([paths.GUNZIP, targz])
     for logfile in logfiles:
+        if not host.transport.file_exists(logfile):
+            continue
         stripped_name = re.sub('^/', '', logfile)
         host.run_command([paths.TAR, 'f', tarball, '--delete',
                           stripped_name], raiseonerr=False)
