@@ -1,3 +1,6 @@
+# pylint: disable=W0613
+# W0613 unused-argument
+
 """ Functional Services Conftest
 conftest to setup required fixtures needed by tests:
 - config for multihost plugin
@@ -29,16 +32,3 @@ def setup_session(request, multihost):
     # for single replica and client
     multihost.replica = multihost.replicas[0]
     multihost.client = multihost.clients[0]
-
-    tp = setup_lib.TestPrep(multihost)
-    try:
-        tp.setup()
-    except Exception as errval:
-        print(str(errval.args[0]))
-        pytest.exit(str(errval.args[0]))
-        #pytest.skip("setup_session_skip")
-
-    def teardown_session():
-        """ define fixture for session level teardown """
-        tp.teardown()
-    request.addfinalizer(teardown_session)

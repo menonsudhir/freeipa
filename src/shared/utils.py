@@ -8,16 +8,18 @@ Major shared support utility functions
 - run_pk12util - Helper function to run pk12util
 - create_noise_file - Helper function to create randomness in a file
 """
+from __future__ import print_function
 import time
 import re
-import pytest
 import os
 import tempfile
-from ipa_pytests.shared import paths
 import array
 import string
 import random
+import netaddr
 from distutils.version import LooseVersion
+from ipa_pytests.shared import paths
+import pytest
 
 
 def kinit_as_user(host, user, passwd):
@@ -218,6 +220,7 @@ def add_dnsforwarder(host, domain, ip):
     cmd = host.run_command('dnscmd /clearcache', raiseonerr=False)
     print("clear cache return code is: %s" % cmd.returncode)
     print(cmd.stdout_text, cmd.stderr_text)
+
 
 def ipa_config_mod(multihost, opts=None):
     """
@@ -456,6 +459,7 @@ def get_ipv6_ip(host):
     else:
         pytest.fail("ipv6 is not enabled on %s " % host.hostname)
 
+
 def get_base_dn(host):
     with open('/etc/openldap/ldap.conf','r') as f:
         for line in f:
@@ -527,3 +531,25 @@ def check_mod_ssl_migration(host):
     key_file = '/var/lib/ipa/private/httpd.key'
     if host.transport.file_exists(key_file):
         print("/var/lib/ipa/private/httpd.key file exists")
+
+
+def get_revnet_info(ip_addr):
+    """ support function to split an ip into network and host """
+    if '/' not in ip_addr:
+        if ':' in ip_addr:
+            netbits = '64'
+        else:
+            netbits = '24'
+        ip_addr = '{}/{}'.format(ip_addr, netbits)
+
+    net = netaddr.IPNetwork(ip_addr)
+    if net.version == 4:
+        iprange = 4 - net.prefixlen // 8
+    elif net.version == 6:
+        iprange = 32 - net.prefixlen // 4
+    else:
+        iprange = 1
+    items = net.ip.reverse_dns.split('.')
+    revip = u'.'.join(items[:int(iprange)])
+    revnet = u'.'.join(items[int(iprange):])
+    return revip, revnet
