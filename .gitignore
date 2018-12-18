@@ -1,0 +1,18 @@
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Distribution / packaging
+.metadata/
+build/
+.tox/
+dist/
+.pytest_cache/
+
+# IDE files
+.idea/
+
+# git files
+.gitkeep
+
