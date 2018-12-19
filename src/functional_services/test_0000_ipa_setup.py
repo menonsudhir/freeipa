@@ -1,5 +1,12 @@
 # pylint: disable=W0702
-""" Functional Services IPA Setup Tests
+"""
+:caselevel: Acceptance
+:casecomponent: ipa
+:caseautomation: Automated
+:caseimportance: Critical
+:testtype: Functional
+
+Functional Services IPA Setup Tests
 - This includes:
 - master setup with ipa-server-install
 - replica setup with ipa-replica-install
@@ -21,7 +28,7 @@ class TestIpaSetup(object):
         pass
 
     def test_setup_ipa_master(self, multihost):
-        """ Install IPA Master """
+        """ :title: IPA-TC: Functional Services: Install IPA Master """
         if multihost.client.transport.file_exists(self.fin):
             print('Found finish file...skipping setup_master')
             return
@@ -33,7 +40,7 @@ class TestIpaSetup(object):
             raise ValueError('Failed to setup IPA Master...exiting')
 
     def test_setup_ipa_replica(self, multihost):
-        """ Install IPA Replica """
+        """ :title: IPA-TC: Functional Services: Install IPA Replica """
         if multihost.client.transport.file_exists(self.fin):
             print('Found finish file...skipping setup_replica')
             return
@@ -45,7 +52,7 @@ class TestIpaSetup(object):
             raise ValueError('Failed to setup IPA Replica...exiting')
 
     def test_setup_ipa_client(self, multihost):
-        """ Install IPA Client """
+        """ :title: IPA-TC: Functional Services: Install IPA Client """
         if multihost.client.transport.file_exists(self.fin):
             print('Found finish file...skipping setup_client')
             return
