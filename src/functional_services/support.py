@@ -98,7 +98,9 @@ def check_revoked(host, cert_dir):
             print("There was an error.   Checking again to be sure")
             print("stdout: %s" % cmd.stdout_text)
             print("stderr: %s" % cmd.stderr_text)
+        time.sleep(2)
 
+    host.run_command(['journalctl', '-xel'])
     raise ValueError('Certificate not revoked or unable to check')
 
 
