@@ -30,7 +30,7 @@
 . /usr/share/beakerlib/beakerlib.sh || exit 1
 . /etc/pytest_env.sh
 
-PACKAGES="selinux-policy firefox xorg-x11-server-Xvfb python3-ldap python3-pyyaml python3-pexpect"
+PACKAGES="selinux-policy firefox xorg-x11-server-Xvfb python3-ldap python3-pyyaml python3-pexpect python3-netaddr"
 pytest=/root/.local/bin/pytest
 python=/usr/libexec/platform-python
 pytest_location=/root/ipa-pytests
