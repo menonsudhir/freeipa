@@ -276,17 +276,34 @@ def ipa_version_gte(master, version):
     return ret
 
 
-def sssd_cache_reset(host):
+def sssd_cache_reset(host, user=None, wait_sssd_operational=False):
     """
     Helper function to reset the sssd cache
     :param host: hostname
+    :param user: string
+    :param wait_sssd_operational: boolean
     :return:
     """
     service_control(host, 'sssd', 'stop')
     host.run_command('rm -rf /var/lib/sss/db/*', set_env=True)
     host.run_command('rm -rf /var/lib/sss/mc/*', set_env=True)
     service_control(host, 'sssd', 'start')
-
+    # temp fix for bz1659498
+    if user is None:
+        user = 'admin@{}'.format(host.domain.name)
+    deadline = time.time() + 600
+    # max waiting limit is 10 minutes
+    if wait_sssd_operational:
+        while True:
+            cmd = host.run_command(['id', user], raiseonerr=False)
+            if cmd.returncode == 0:
+                print(cmd.stdout_text)
+                return True
+            else:
+                time.sleep(10)
+                if time.time() > deadline:  # timeout exceeded
+                    print("Timeout exceeded waiting time 10-min")
+                    return True
 
 def start_firewalld(host):
     """

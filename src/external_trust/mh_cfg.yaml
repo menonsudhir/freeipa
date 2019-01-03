@@ -6,21 +6,21 @@ dirman_id: '"cn=Directory Manager"'
 dirman_pw: Secret123
 dns_forwarder: 10.11.5.19
 domains:
-  - name: testrelm.test
+  - name: testrelmext.test
     type: ipa
     hosts:
-      - name: master.testrelm.test
+      - name: master.testrelmext.test
         external_hostname: hostname1
         role: master
-      - name: client.testrelm.test
+      - name: client.testrelmext.test
         external_hostname: hostname2
         role: client
-  - name: ipaad2016.test
+  - name: ipaad2016ci.test
     type: ad
     hosts:
-      - name: idm-qe-ipa-ci1.ipaad2016.test
-        external_hostname: idm-qe-ipa-ci1.ipaad2016.test
-        ip: 10.8.63.38
+      - name: ipaad2016.ipaad2016ci.test
+        external_hostname: ipaad2016.ipaad2016ci.test
+        ip: 10.8.253.86
         role: ad
         username: 'Administrator'
         password: 'Secret123'

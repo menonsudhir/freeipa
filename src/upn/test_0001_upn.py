@@ -3,7 +3,6 @@ This covers the test cases for upn feature
 """
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.qe_class import qe_use_class_setup
-from ipa_pytests.shared.utils import (service_control)
 from ipa_pytests.shared.utils import (disable_dnssec, dnsforwardzone_add,
                                       add_dnsforwarder, sssd_cache_reset)
 from ipa_pytests.qe_install import adtrust_install
@@ -36,9 +35,10 @@ class TestUPN(object):
         multihost.master.put_file_contents(etchosts, etchostscfg)
 
         dnsforwardzone_add(multihost.master, forwardzone, ad1.ip)
+        time.sleep(60)
 
         add_dnsforwarder(ad1, domain, multihost.master.ip)
-
+        time.sleep(60)
         cmd = multihost.master.run_command('dig +short SRV _ldap._tcp.' +
                                            forwardzone,
                                            raiseonerr=False)
@@ -62,8 +62,6 @@ class TestUPN(object):
         """
         ad1 = multihost.ads[0]
         forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
-        domain = multihost.master.domain.name
-        realm = multihost.master.domain.realm
 
         multihost.master.kinit_as_admin()
         cmd = multihost.master.run_command(['ipa', 'trust-add', forwardzone,
@@ -101,9 +99,6 @@ class TestUPN(object):
         """
         ad1 = multihost.ads[0]
         forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
-        domain = multihost.master.domain.name
-        realm = multihost.master.domain.realm
-
         multihost.master.kinit_as_admin()
         cmd = multihost.master.run_command(['ipa', 'trust-add', forwardzone,
                                             '--admin', ad1.ssh_username,
@@ -228,12 +223,8 @@ class TestUPN(object):
         else:
             pytest.xfail("UPN suffix is not seen as expected")
         # Restart sssd
-        time.sleep(60)
-        service_control(multihost.master, 'sssd', 'stop')
-        multihost.master.run_command(['rm', '-rf', '/var/lib/sss/{db,mc}/*'], 
-                                     raiseonerr=False)
-        service_control(multihost.master, 'sssd', 'start')
-        time.sleep(60)
+        # temp fix for bz1659498
+        sssd_cache_reset(multihost.master, wait_sssd_operational=True, user=upn_full)
         # Check getent passwd command output
         cmd = multihost.master.run_command(['getent', 'passwd', upn_full],
                                            raiseonerr=False)

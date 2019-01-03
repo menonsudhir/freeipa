@@ -52,6 +52,7 @@ class TestExternalTrust(object):
         dnsforwardzone_add(multihost.master, forwardzone, ad1.ip)
 
         add_dnsforwarder(ad1, domain, multihost.master.ip)
+        time.sleep(60)
 
         cmd = multihost.master.run_command(paths.DIG + ' +short SRV _ldap._tcp.' + forwardzone, raiseonerr=False)
         print("STDOUT : {} \n STDERR : {}".format(cmd.stdout_text, cmd.stderr_text))
@@ -101,10 +102,12 @@ class TestExternalTrust(object):
         #id_user(multihost.master, USER1 + '@' + addomain)
 
         # cleaning sssd cache
-        sssd_cache_reset(multihost.master)
-        print("waiting for 60 seconds")
-        time.sleep(60)
-
+        #sssd_cache_reset(multihost.master)
+        #print("waiting for 60 seconds")
+        #time.sleep(60)
+        # temp fix for bz1659498
+        aduser = '{}@{}'.format(USER1, addomain)
+        sssd_cache_reset(multihost.master, wait_sssd_operational=True, user=aduser)
         # verifying user
         id_user(multihost.master, USER1 + '@' + addomain)
         # getent passwd
@@ -121,9 +124,12 @@ class TestExternalTrust(object):
         add_external_trust(multihost)
 
         # cleaning sssd cache
-        sssd_cache_reset(multihost.master)
-        print("waiting for 60 seconds")
-        time.sleep(60)
+        #sssd_cache_reset(multihost.master)
+        #print("waiting for 60 seconds")
+        #time.sleep(60)
+        # temp fix for bz1659498
+        aduser = '{}@{}'.format(GROUP1, addomain)
+        sssd_cache_reset(multihost.master, wait_sssd_operational=True, user=aduser)
 
         # getent group
         getent(multihost.master, 'group', GROUP1 + '@' + addomain, exp_output=GROUP1)
@@ -139,9 +145,12 @@ class TestExternalTrust(object):
         add_external_trust(multihost)
 
         # cleaning sssd cache
-        sssd_cache_reset(multihost.master)
-        print("waiting for 60 seconds")
-        time.sleep(60)
+        #sssd_cache_reset(multihost.master)
+        #print("waiting for 60 seconds")
+        #time.sleep(60)
+        # temp fix for bz1659498
+        aduser = '{}@{}'.format(GROUP2, addomain)
+        sssd_cache_reset(multihost.master, wait_sssd_operational=True, user=aduser)
 
         # getent group
         getent(multihost.master, 'group', GROUP2 + '@' + addomain, exp_output=USER2)
@@ -211,9 +220,12 @@ class TestExternalTrust(object):
         add_external_trust(multihost)
 
         # cleaning sssd cache
-        sssd_cache_reset(multihost.master)
-        print("waiting for 60 seconds")
-        time.sleep(60)
+        #sssd_cache_reset(multihost.master)
+        #print("waiting for 60 seconds")
+        #time.sleep(60)
+        # temp fix for bz1659498
+        aduser = '{}@{}'.format(GROUP6, addomain)
+        sssd_cache_reset(multihost.master, wait_sssd_operational=True, user=aduser)
 
         # getent group
         getent(multihost.master, 'group', GROUP6 + '@' + addomain, exp_output=GROUP6)
@@ -407,26 +419,12 @@ class TestExternalTrust(object):
         @Title: IDM-IPA-TC: External Trust with Active Directory domain:
         Check external trust is added with trust secret option.
         """
-        ad1 = multihost.ads[0]
-        forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
+        addomain = ad_domain(multihost)
         multihost.secret = "Passwd123"
         multihost.master.kinit_as_admin()
-        expect_script = 'set timeout 15\n'
-        expect_script += 'spawn ipa trust-add ' + \
-                         forwardzone + ' --admin ' + \
-                         ad1.ssh_username + \
-                         ' --type=ad' \
-                         ' --external=True' \
-                         ' --trust-secret\n'
-        expect_script += 'expect "Active Directory' \
-                         ' domain administrator\'s password:"\n'
-        expect_script += 'send "%s\r"\n' % ad1.ssh_password
-        expect_script += 'expect "Shared secret for the trust:"\n'
-        expect_script += 'send "%s\r"\n' % multihost.secret
-        expect_script += 'expect "Trust status: Waiting' \
-                         ' for confirmation by remote side"\n'
-        expect_script += 'expect EOF\n'
-        output = multihost.master.expect(expect_script)
+        cmd = ['ipa', 'trust-add', addomain, '--type=ad', '--external=True', '--trust-secret']
+        cmd = multihost.master.run_command(cmd, stdin_text=multihost.secret)
+        assert "Trust status: Waiting for confirmation by remote side" in cmd.stdout_text
 
     def test_0018_verifying_ssh_from_client(self, multihost):
         """
