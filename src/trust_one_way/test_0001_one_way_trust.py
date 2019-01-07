@@ -33,9 +33,11 @@ class TestOneWay(object):
         multihost.master.put_file_contents(etchosts, etchostscfg)
 
         dnsforwardzone_add(multihost.master, forwardzone, ad1.ip)
+        time.sleep(60)
 
-        #add_dnsforwarder(ad1, domain, multihost.master.ip)
-        add_dnsforwarder(ad1, domain, multihost.master.external_ip)
+        add_dnsforwarder(ad1, domain, multihost.master.ip)
+        #add_dnsforwarder(ad1, domain, multihost.master.external_ip)
+        time.sleep(60)
 
         cmd = multihost.master.run_command('dig +short SRV _ldap._tcp.' +
                                            forwardzone, raiseonerr=False)
@@ -206,7 +208,7 @@ class TestOneWay(object):
         cmd = multihost.master.run_command(['klist'], raiseonerr=False)
         print(cmd.stdout_text)
         print(cmd.stderr_text)
-        exp_output = "krbtgt/" + forwardzone.upper() + '@' + realm
+        exp_output = "krbtgt/" + forwardzone.upper() + '@' + forwardzone.upper()
         if exp_output in cmd.stdout_text:
             print("krb tkt for IPA user granted from AD domain")
         else:

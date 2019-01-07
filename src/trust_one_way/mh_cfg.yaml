@@ -1,23 +1,23 @@
 ssh_key_filename: ~/.ssh/id_rsa
+ssh_password: Secret123
 admin_id: admin
 admin_pw: Secret123
 dirman_id: '"cn=Directory Manager"'
 dirman_pw: Secret123
 dns_forwarder: 10.11.5.19
 domains:
-  - name: testrelm.test
+  - name: testrelm1way.test
     type: ipa
     hosts:
-      - name: master.testrelm.test
+      - name: master.testrelm1way.test
         external_hostname: hostname1
-        external_ip: 1.2.3.4
         role: master
-  - name: ipaad2016.test
+  - name: ipaad2016ci.test
     type: ad
     hosts:
-      - name: idm-qe-ipa-ci1.ipaad2016.test
-        external_hostname: idm-qe-ipa-ci1.ipaad2016.test
-        ip: 10.8.63.38
+      - name: ipaad2016.ipaad2016ci.test
+        external_hostname: ipaad2016.ipaad2016ci.test
+        ip: 10.8.253.86
         role: ad
         username: 'Administrator'
         password: 'Secret123'
