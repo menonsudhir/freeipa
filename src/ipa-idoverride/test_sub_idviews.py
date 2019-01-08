@@ -45,10 +45,10 @@ class Testsubidview(object):
         etchostscfg += '\n' + ad1.ip + ' ' + ad1.hostname + '\n'
         multihost.master.put_file_contents(etchosts, etchostscfg)
         dnsforwardzone_add(multihost.master, forwardzone, ad1.ip)
-        time.sleep(20)
+        time.sleep(60)
 
         add_dnsforwarder(ad1, domain, multihost.master.ip)
-        time.sleep(20)
+        time.sleep(60)
 
         cmd = multihost.master.run_command('dig +short SRV _ldap._tcp.' +
                                            forwardzone, raiseonerr=False)
@@ -91,12 +91,13 @@ class Testsubidview(object):
             print(output.stderr_text)
         else:
             print(output.stdout_text)
+        self.temp_workaround(multihost)
 
     def test_useradd_subdomain(self, multihost):
         multihost.master.kinit_as_admin()
         check_rpm(multihost.master, ['adcli'])
         cmd = multihost.ads[0].run_command(['kinit',
-                                            multihost.master.config.ad_user + '@' + multihost.master.config.ad_sub_domain],
+                                            multihost.master.config.ad_user + '@' + multihost.master.config.ad_sub_domain.upper()],
                                            stdin_text=multihost.master.config.ad_pwd,
                                            raiseonerr=False)
         print(cmd.stdout_text)
@@ -112,8 +113,10 @@ class Testsubidview(object):
 
     def test_0002_sub_useradd(self, multihost):
         """Adding user to specific view"""
-        sssd_cache_reset(multihost.master)
-        time.sleep(20)
+        # temporary workaround for BZ #1659498
+        self.temp_workaround(multihost)
+        #sssd_cache_reset(multihost.master)
+        #time.sleep(20)
         cmd = idview_add(multihost.master, viewname='view')
         multihost.master.qerun(['ipa', 'idoverrideuser-add', 'view',
                                 'idviewuser1@' + multihost.master.config.ad_sub_domain],
@@ -495,7 +498,7 @@ class Testsubidview(object):
         multihost.master.kinit_as_admin()
         check_rpm(multihost.master, ['adcli'])
         cmd = multihost.ads[0].run_command(['kinit',
-                                            multihost.master.config.ad_user + '@' + multihost.master.config.ad_sub_domain],
+                                            multihost.master.config.ad_user + '@' + multihost.master.config.ad_sub_domain.upper()],
                                            stdin_text=multihost.master.config.ad_pwd,
                                            raiseonerr=False)
         print(cmd.stdout_text)
@@ -508,6 +511,27 @@ class Testsubidview(object):
                                                     'idviewuser%s' % str(i), '-x'],
                                                    stdin_text=multihost.master.config.ad_pwd,
                                                    raiseonerr=False)
+
+    def temp_workaround(self, multihost):
+        """ This is temporary workaround for BZ #1659498"""
+        multihost.master.qerun(['ipa', 'trust-fetch-domains',
+                                multihost.master.config.ad_top_domain],
+                               exp_returncode=1)
+        sssd_cache_reset(multihost.master)
+        time.sleep(180)
+
+        cmd = multihost.master.run_command(['id',
+                                            multihost.master.config.ad_user + '@' + multihost.master.config.ad_top_domain],
+                                           raiseonerr=False)
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
+
+        cmd = multihost.master.run_command(['id',
+                                            multihost.master.config.ad_user + '@' + multihost.master.config.ad_sub_domain],
+                                           raiseonerr=False)
+        print(cmd.stdout_text)
+        print(cmd.stderr_text)
+
     def class_teardown(self, multihost):
         cmd = multihost.master.qerun('ipa trust-del ' + multihost.master.config.ad_top_domain)
         uninstall_client(multihost.client)
