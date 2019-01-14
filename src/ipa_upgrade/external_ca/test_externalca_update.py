@@ -217,9 +217,9 @@ class TestExternalCA(object):
 
         # get current ipa version
         # upgrade_from = os.getenv('UPGRADE_FROM', multihost.master.config.upgrade_from)
+        upgrade_from = os.getenv('UPGRADE_FROM', multihost.master.config.upgrade_from)
+        upgrade_to = os.getenv('UPGRADE_TO', multihost.master.config.upgrade_to)
 
-        # Hard coded path is used for upgrade
-        upgrade_to = '7.6.a'
         # print("Upgrading from : %s" % upgrade_from)
         print("Upgrading to : %s" % upgrade_to)
 
@@ -227,12 +227,12 @@ class TestExternalCA(object):
         # upgrade_to is version which can be used to set repo as per appropriate version for upgrading the packages
         # for this refer ipa_upgrade/constants.py
 
-        # if is_allowed_to_update(upgrade_to, upgrade_from):
-        for repo in repo_urls[upgrade_to]:
-            print("Upgrading using repo : %s" % repo)
-            add_repo(multihost.master, repo)
-        # else:
-        #    pytest.xfail("Please specify correct upgrade path")
+        if is_allowed_to_update(upgrade_to, upgrade_from):
+            for repo in repo_urls[upgrade_to]:
+                print("Upgrading using repo : %s" % repo)
+                cmdupdate = add_repo(multihost.master, repo)
+        else:
+            pytest.xfail("Please specify correct upgrade path")
 
         cmd = upgrade(multihost.master)  # upgrade starts at this point
         if cmd.returncode == 0:
