@@ -45,6 +45,7 @@ def _install_master(host, domain, forwarder, password):
         host,
         'ipa-server-install'
         ' --setup-dns'
+        ' --setup-kra'
         ' --forwarder {forwarder}'
         ' --domain {domain[name]}'
         ' --realm TESTRELM.TEST'
