@@ -61,7 +61,7 @@ def _install_master(host, domain, forwarder, password):
         )
     )
     _call_ssh(host, 'cp /etc/ipa/default.conf ~/.ipa/default.conf')
-
+    _call_ssh(host, 'cp /etc/ipa/ca.crt ~/.ipa/ca.crt')
 
 with open((sys.argv[1:])[0]) as stream:
     try:
