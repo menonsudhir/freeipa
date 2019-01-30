@@ -1,4 +1,5 @@
 """ Functional Services Support Functions """
+from __future__ import print_function
 import re
 import time
 import ldap
@@ -83,16 +84,24 @@ def ldap_simple_bind_check_py(uri, username, password):
 
 def check_revoked(host, cert_dir):
     """ support function to check if certificate is revoked """
-    max_checks = 5
-    if host.transport.file_exists('/usr/lib64/nss/unsupported-tools/ocspclnt'):
-        ocspcmd = '/usr/lib64/nss/unsupported-tools/ocspclnt'
-    else:
-        ocspcmd = '/usr/lib/nss/unsupported-tools/ocspclnt'
+    max_checks = 10
+    tmpcert = '{}/check_revoked.crt'.format(cert_dir)
+    ca_url = 'http://ipa-ca.{}/ca/ocsp'.format(host.domain.name)
+    opensslcmd = ['openssl', 'ocsp', '-issuer', '/etc/ipa/ca.crt',
+                  '-cert', tmpcert, '-text', '-url', ca_url]
 
+    # create the temp certfile from nssdb to use with openssl cmd
+    cmd = host.run_command(['certutil', '-d', cert_dir, '-L', '-n',
+                            host.hostname, '-a'])
+    host.put_file_contents(tmpcert, cmd.stdout_text)
+
+    # run openssl ocsp check till you find or max_checks
     for _ in range(max_checks):
-        cmd = host.run_command([ocspcmd, '-S', host.hostname, '-d', cert_dir])
-        if 'Certificate has been revoked' in cmd.stdout_text:
+        cmd = host.run_command(opensslcmd)
+        if 'Cert Status: revoked' in cmd.stdout_text:
             print("stdout: %s" % cmd.stdout_text)
+            if host.transport.file_exists(tmpcert):
+                host.run_command(['rm', '-f', tmpcert])
             return
         else:
             print("There was an error.   Checking again to be sure")
