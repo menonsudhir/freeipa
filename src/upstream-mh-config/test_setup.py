@@ -30,8 +30,8 @@ def _create_ui_test_conf(host, domain, admin, password):
         ('type', 'local'),
         ('browser', 'firefox'),
         ('save_screenshots', True),
-        ('screenshot_dir', '~/screenshots/'),
-        ('geckodriver_log_path', '~/geckodriver.log'),
+        ('screenshot_dir', '/root/screenshots/'),
+        ('geckodriver_log_path', '/root/geckodriver.log'),
     ]
 
     conf_text = '\n'.join('%s: %s' % opt for opt in conf)
