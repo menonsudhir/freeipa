@@ -91,9 +91,12 @@ class Testsubidview(object):
             print(output.stderr_text)
         else:
             print(output.stdout_text)
+        # temporary workaround for BZ #1659498
         self.temp_workaround(multihost)
 
     def test_useradd_subdomain(self, multihost):
+        # temporary workaround for BZ #1659498
+        self.temp_workaround(multihost)
         multihost.master.kinit_as_admin()
         check_rpm(multihost.master, ['adcli'])
         cmd = multihost.ads[0].run_command(['kinit',
@@ -103,11 +106,11 @@ class Testsubidview(object):
         print(cmd.stdout_text)
         print(cmd.stderr_text)
         print(cmd.returncode)
-        if cmd.returncode == 1:
+        if cmd.returncode == 0:
             for i in range(30):
                 cmd = multihost.master.run_command(['adcli', 'create-user',
                                                     '--domain=' + multihost.master.config.ad_sub_domain,
-                                                   'idviewuser%s' % str(i), '-x'],
+                                                   'idviewuser%s' % str(i)],
                                                    stdin_text=multihost.master.config.ad_pwd,
                                                    raiseonerr=False)
 
@@ -504,11 +507,11 @@ class Testsubidview(object):
         print(cmd.stdout_text)
         print(cmd.stderr_text)
         print(cmd.returncode)
-        if cmd.returncode == 1:
+        if cmd.returncode == 0:
             for i in range(30):
                 cmd = multihost.master.run_command(['adcli', 'delete-user',
                                                     '--domain=' + multihost.master.config.ad_sub_domain,
-                                                    'idviewuser%s' % str(i), '-x'],
+                                                    'idviewuser%s' % str(i)],
                                                    stdin_text=multihost.master.config.ad_pwd,
                                                    raiseonerr=False)
 
