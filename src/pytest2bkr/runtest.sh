@@ -72,7 +72,7 @@ install_pytest() {
 
 
         rlLog "Install Pytest and dependencies"
-        rlRun "easy_install-3.6  --user pytest pytest-multihost selenium==3.4.3 pyvirtualdisplay"
+        rlRun "easy_install-3.6  --user pytest==4.0.2 pytest-multihost selenium==3.4.3 pyvirtualdisplay"
         if [ $? -eq 0 ]; then
             if [ -d ${pytest_location} ]; then
                 pushd `pwd`
