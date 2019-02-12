@@ -41,7 +41,12 @@ def set_hostname(host):
                           '/etc/hostname',
                           '/etc/hostname.qebackup'])
         host.put_file_contents('/etc/hostname', host.hostname)
-        host.run_command(['hostnamectl'])
+        cmd = host.run_command('hostname')
+        print(cmd.stdout_text)
+        if '{}'.format(host.domain.name) not in cmd.stdout_text:
+            host.run_command(['hostnamectl', 'set-hostname', host.hostname])
+        else:
+            host.run_command(['hostnamectl'])
     else:
         host.run_command(['cp', '-af', '/etc/sysconfig/network',
                           '/etc/sysconfig/network.qebackup'])
