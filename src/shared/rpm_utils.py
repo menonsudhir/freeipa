@@ -80,3 +80,20 @@ def get_rpm_version(host, rpm_list):
     else:
         return ''
 
+
+def dnf_module_install(host, module):
+    """
+    Helper function to install dnf modules.  With module stream
+    switching restricted in RHEL8, you now have to reset a module
+    before enabling/installing it.
+
+    :param host: multihost host object--master, replica, client
+    :param module: dnf module string--idm:DL1/dns, idm:DL1/adtrust
+    :return:
+    """
+    cmd = ['dnf', '-y', 'module', 'reset', module.split(':')[0]]
+    host.qerun(cmd, exp_returncode=0)
+    cmd = ['dnf', '-y', 'module', 'enable', module.split('/')[0]]
+    host.qerun(cmd, exp_returncode=0)
+    cmd = ['dnf', '-y', 'module', 'install', module]
+    host.qerun(cmd, exp_returncode=0)
