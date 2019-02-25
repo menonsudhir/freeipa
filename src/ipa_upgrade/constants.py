@@ -19,6 +19,7 @@ repo_urls = {
     "7.5.b": ["http://download.eng.pnq.redhat.com/rel-eng/repos/rhel-7.5-z-candidate/x86_64/"],           # 7.5z repo
     "7.5.c": ["http://download-node-02.eng.bos.redhat.com/rel-eng/updates/RHEL-7.5/RHEL-7.5-Update-3.0/compose/Server/x86_64/"],
     "7.6.a": ["http://download-node-02.eng.bos.redhat.com/rel-eng/repos/rhel-7.6-candidate/x86_64/"],
-    "7.6.b": ["http://download-node-02.eng.bos.redhat.com/rel-eng/updates/RHEL-7.6/RHEL-7.6-Update-1.10/compose/Server/x86_64/os/"],
+    #"7.6.b": ["http://download-node-02.eng.bos.redhat.com/rel-eng/updates/RHEL-7.6/RHEL-7.6-Update-1.10/compose/Server/x86_64/os/"],
+    "7.6.b": ["http://download.eng.bos.redhat.com/rhel-7/rel-eng/updates/RHEL-7/RHEL-7.6-updates-20190122.0/compose/Server/x86_64/os/"],
     "7.6.c": ["http://download-node-02.eng.bos.redhat.com/rel-eng/repos/rhel-7.6-z-candidate/x86_64/"]
 }
