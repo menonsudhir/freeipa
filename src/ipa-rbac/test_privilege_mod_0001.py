@@ -32,6 +32,13 @@ class TestPrivilegeModPositive(object):
         privilege_mod(multihost.master, self.privilege_name,
                       [attr])
 
+    # Marking this as xfail because of bug in 389-ds-base:
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1678517
+    #
+    # When this is fixed, will need to complete this ticket:
+    # https://projects.engineering.redhat.com/browse/FREEIPA-2557
+    #
+    @pytest.mark.xfail(reason='BZ#1678517 FREEIPA-2557')
     def test_0002_rename_privilege(self, multihost):
         """
         IDM-IPA-TC : rbac : Test to rename privilege
@@ -41,6 +48,13 @@ class TestPrivilegeModPositive(object):
         privilege_mod(multihost.master, self.privilege_name,
                       [attr + "=" + new_privilege_name])
 
+    # Marking this as xfail because of bug in 389-ds-base:
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1678517
+    #
+    # When this is fixed, will need to complete this ticket:
+    # https://projects.engineering.redhat.com/browse/FREEIPA-2557
+    #
+    @pytest.mark.xfail(reason='BZ#1678517 FREEIPA-2557')
     def test_0003_use_addattr(self, multihost):
         """
         IDM-IPA-TC : rbac : Test to mod privilege to use addattr
@@ -54,6 +68,13 @@ class TestPrivilegeModPositive(object):
                       [attr1 + "=" + add_owner1,
                        attr2 + "=" + add_owner2])
 
+    # Marking this as xfail because of bug in 389-ds-base:
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1678517
+    #
+    # When this is fixed, will need to complete this ticket:
+    # https://projects.engineering.redhat.com/browse/FREEIPA-2557
+    #
+    @pytest.mark.xfail(reason='BZ#1678517 FREEIPA-2557')
     def test_0004_delattr(self, multihost):
         """
         IDM-IPA-TC : rbac : Test to mod privilege to delattr
@@ -64,6 +85,13 @@ class TestPrivilegeModPositive(object):
         privilege_mod(multihost.master, privilege_name,
                       [attr])
 
+    # Marking this as xfail because of bug in 389-ds-base:
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1678517
+    #
+    # When this is fixed, will need to complete this ticket:
+    # https://projects.engineering.redhat.com/browse/FREEIPA-2557
+    #
+    @pytest.mark.xfail(reason='BZ#1678517 FREEIPA-2557')
     def test_0005_blank_desc(self, multihost):
         """
         IDM-IPA-TC : rbac : Test to mod privilege to use blank desc
@@ -82,6 +110,13 @@ class TestPrivilegeModPositive(object):
         if "Description" in check5.stdout_text:
             pytest.fail("Blank decription should equal removal of description")
 
+    # Marking this as xfail because of bug in 389-ds-base:
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1678517
+    #
+    # When this is fixed, will need to complete this ticket:
+    # https://projects.engineering.redhat.com/browse/FREEIPA-2557
+    #
+    @pytest.mark.xfail(reason='BZ#1678517 FREEIPA-2557')
     def test_cleanup(self, multihost):
         """
         Cleanup changes made

@@ -100,6 +100,13 @@ class TestFunctional2(object):
         else:
             pytest.fail(check2_1a.stderr_text)
 
+    # Marking this as xfail because of bug in 389-ds-base:
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1678517
+    #
+    # When this is fixed, will need to complete this ticket:
+    # https://projects.engineering.redhat.com/browse/FREEIPA-2557
+    #
+    @pytest.mark.xfail(reason='BZ#1678517 FREEIPA-2557')
     def test_0002(self, multihost):
         """IDM-IPA-TC : rbac : Add a member to the group by modifying permission of the user"""
         multihost.master.kinit_as_admin()
@@ -117,6 +124,13 @@ class TestFunctional2(object):
         else:
             print("new member added successfully to the group")
 
+    # Marking this as xfail because of bug in 389-ds-base:
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1678517
+    #
+    # When this is fixed, will need to complete this ticket:
+    # https://projects.engineering.redhat.com/browse/FREEIPA-2557
+    #
+    @pytest.mark.xfail(reason='BZ#1678517 FREEIPA-2557')
     def test_cleanup(self, multihost):
         """
         Clean up all the test privileges, permissions and roles added

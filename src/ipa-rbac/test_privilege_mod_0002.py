@@ -23,6 +23,13 @@ class TestPrivilegeModNegative(object):
         print("\nClass Setup")
         print("MASTER: ", multihost.master.hostname)
 
+    # Marking this as xfail because of bug in 389-ds-base:
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1678517
+    #
+    # When this is fixed, will need to complete this ticket:
+    # https://projects.engineering.redhat.com/browse/FREEIPA-2557
+    #
+    @pytest.mark.xfail(reason='BZ#1678517 FREEIPA-2557')
     def test_0001_multiple_addattr(self, multihost):
         """
         IDM-IPA-TC : rbac : Test to mod privilege to addattr multiple attr when only one one value is allowed
@@ -36,6 +43,13 @@ class TestPrivilegeModNegative(object):
         if expmsg not in check1.stderr_text:
             pytest.fail("Addition extra description attr should have failed")
 
+    # Marking this as xfail because of bug in 389-ds-base:
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1678517
+    #
+    # When this is fixed, will need to complete this ticket:
+    # https://projects.engineering.redhat.com/browse/FREEIPA-2557
+    #
+    @pytest.mark.xfail(reason='BZ#1678517 FREEIPA-2557')
     def test_0002_addattr_invalid_syn(self, multihost):
         """
         IDM-IPA-TC : rbac : Test to mod privilege to addattr with invalid syntax
@@ -62,6 +76,13 @@ class TestPrivilegeModNegative(object):
             print(check4.stderr_text)
             pytest.fail("Modification of the privilege should have failed")
 
+    # Marking this as xfail because of bug in 389-ds-base:
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1678517
+    #
+    # When this is fixed, will need to complete this ticket:
+    # https://projects.engineering.redhat.com/browse/FREEIPA-2557
+    #
+    @pytest.mark.xfail(reason='BZ#1678517 FREEIPA-2557')
     def test_0005_same_rename(self, multihost):
         """
         IDM-IPA-TC : rbac : Test to mod privilege to rename to same name
