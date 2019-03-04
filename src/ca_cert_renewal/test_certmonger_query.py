@@ -22,7 +22,6 @@ class TestUserA(object):
 
     def test_list_certs_0001(self, multihost):
         """ list IPA certs """
-        # It fails for bz-1512952
         script1 = "/usr/local/lib/python%s/site-packages/ipa_pytests/scripts/qe_ipa_getcerts.py" % sys.version[:3]
         script = "/root/qe_ipa_getcerts.py"
         f = open(script1).read()
@@ -43,7 +42,14 @@ class TestUserA(object):
                 qe_certs.set_certs(ast.literal_eval(cmd.stdout_text))
                 resubmit = qe_certs.get_resubmit_status()
                 if resubmit != 0:
-                    pytest.fail("Failed : bz-1512952 Found..!!")
+                    # when date goes past 2038, cert renewal fails due to timestamp overflow
+                    # known issues: https://bugzilla.redhat.com/show_bug.cgi?id=1660877
+                    #               https://pagure.io/freeipa/issue/7827
+
+                    if current > 2145916800:
+                        pytest.xfail("Known issue bz-1660877")
+                    else:
+                        pytest.fail("Failed: Seems like bz-1660877 fixed or some other issue occured!!")
                 next_soonest = qe_certs.get_soonest_expiration()
                 if next_soonest > soonest:
                     break
