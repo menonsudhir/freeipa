@@ -1,0 +1,11 @@
+ci_meta:
+ Tier: 1
+ resource_count: 1
+ tags: [ tier-1, pytest ]
+test_meta:
+ test_dependencies: [ pki-core, sssd, certmonger, nspr, nss ]
+ test_name: ca_cert_renewal-pytest
+ test_cfg: ipa-pytests/src/ca_cert_renewal/mh_cfg.yaml
+ test_location: ipa-pytests/src/ca_cert_renewal
+ test_harness: pytest
+ test_owner: myusuf
