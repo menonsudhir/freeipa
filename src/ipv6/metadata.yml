@@ -1,0 +1,4 @@
+---
+ci_meta:
+  resource_count: 3
+  os_network: provider_net_cci_1
