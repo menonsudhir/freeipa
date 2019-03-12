@@ -203,10 +203,10 @@ def add_dnsforwarder(host, domain, ip):
     """Add DNS forwarder on AD machine for IPA domain"""
 
     cmd = host.run_command('dnscmd /ZoneInfo ' + domain, raiseonerr=False)
-    print("Add dns forwarder return code is: %s" % cmd.returncode)
+    print("ZoneInfo return code is: %s" % cmd.returncode)
     print(cmd.stdout_text, cmd.stderr_text)
-    if cmd.returncode == 1:
-        #cmd = host.run_command(['dnscmd', '/ZoneDelete', domain, '/DsDel', '/f'],
+    if 'DNS_ERROR_ZONE_DOES_NOT_EXIST' not in (
+            cmd.stdout_text + cmd.stderr_text):
         cmd = host.run_command(['dnscmd', '/ZoneDelete', domain, '/f'],
                                raiseonerr=False)
         print("zone delete return code is: %s" % cmd.returncode)

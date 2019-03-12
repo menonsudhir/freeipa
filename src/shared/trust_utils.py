@@ -2,6 +2,7 @@
 Helper functions required for trust
 '''
 
+import subprocess
 import pytest
 import time
 from datetime import datetime, timedelta
@@ -23,7 +24,8 @@ def ipa_trust_show(host, domain, options_list=None, raiseonerr=True):
     return op
 
 
-def ipa_trust_add(host, addomain, login, options_list=None, stdin_text=None, raiseonerr=True):
+def ipa_trust_add(host, addomain, login, options_list=None, stdin_text=None,
+                  raiseonerr=True, retry_on_failure=False):
     """
     Helper function to trust add
     :param host: string
@@ -36,8 +38,18 @@ def ipa_trust_add(host, addomain, login, options_list=None, stdin_text=None, rai
     cmd_list = [paths.IPA, 'trust-add', addomain, '--admin', login]
     if options_list:
         cmd_list.extend(options_list)
-    op = host.run_command(cmd_list, stdin_text=stdin_text, raiseonerr=raiseonerr)
-    return op
+    start = time.time()
+    deadline = start + 600
+    while True:
+        try:
+            op = host.run_command(cmd_list, stdin_text=stdin_text, raiseonerr=raiseonerr)
+        except subprocess.CalledProcessError:
+            if retry_on_failure and time.time() < deadline:
+                print('ipa trust-add failed, retrying')
+                time.sleep(10)
+                continue
+            raise
+        return op
 
 def check_for_skew(master, addomain):
     """

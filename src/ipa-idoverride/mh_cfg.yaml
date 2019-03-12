@@ -4,6 +4,13 @@ admin_pw: Secret123
 dirman_id: '"cn=Directory Manager"'
 dirman_pw: Secret123
 dns_forwarder: 10.11.5.19
+ad_top_domain: ipaad2k16cin.test
+ad_ip: 10.0.144.176
+ad_hostname: ipaad2k16ci.ipaad2k16cin.test
+ad_sub_ip: 10.0.144.244
+ad_sub_domain: ipasubad2k16cin.ipaad2k16cin.test
+
+
 domains:
   - name: testrelmido.test
     type: ipa
@@ -11,16 +18,13 @@ domains:
       - name: master.testrelmido.test
         external_hostname: hostname1
         role: master
-      - name: client.testrelmido.test
-        external_hostname: hostname2
-        role: client
-  - name: ipaad2016ci.test
+  - name: ipaad2k16cin.test
     type: ad
     hosts:
-      - name: ipaad2016.ipaad2016ci.test
-        external_hostname: ipaad2016.ipaad2016ci.test
+      - name: ipaad2k16ci.ipaad2k16cin.test
+        external_hostname: ipaad2k16ci.ipaad2k16cin.test
         role: ad
-        ip: 10.8.253.86
+        ip: 10.0.144.176
         username: 'Administrator'
         password: 'Secret123'
         host_type: 'windows'
