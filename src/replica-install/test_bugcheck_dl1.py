@@ -79,6 +79,28 @@ class TestBugCheck(object):
                                 exp_returncode=0,
                                 exp_output=master_op.stdout_text)
 
+    def test_0004_bz_1658294(self, multihost):
+        """
+        IDM-IPA-TC : Replica-Install : validate IPA replica install parameter : --setup-adtrust
+        """
+        # If ipa-server-trust-ad is not installed on replica
+        # then installtion should fail with option --setup-adtrust
+        uninstall_server(multihost.replica)
+        server_del(multihost.master, hostname=multihost.replica.hostname,
+                   force=True)
+        cmd = multihost.replica.run_command(['rpm', '-q', 'ipa-server-trust-ad'], raiseonerr=False)
+        if 'package ipa-server-trust-ad is not installed' in cmd.stdout_text:
+            runcmd = ['ipa-replica-install', '-P', multihost.master.config.admin_id,
+                      '-w', multihost.master.config.dirman_pw, '--server',
+                      multihost.master.hostname, '--domain', multihost.master.domain.name,
+                      '--setup-adtrust', '-U']
+
+            cmd = multihost.replica.run_command(runcmd, raiseonerr=False)
+            print(cmd.stdout_text)
+            assert cmd.returncode != 0
+            err_msg = "Please install the 'samba' packages and start the installation again"
+            assert err_msg in cmd.stdout_text
+
     def class_teardown(self, multihost):
         """ Full suite teardown """
         uninstall_server(multihost.replica)
