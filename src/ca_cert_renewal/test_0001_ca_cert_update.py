@@ -7,10 +7,11 @@ from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.qe_certutils import certutil
 from ipa_pytests.shared.openssl_utils import openssl_util
 import ipa_pytests.shared.paths as paths
-from ipa_pytests.qe_install import setup_master
+from ipa_pytests.qe_install import setup_master, uninstall_server
 from ipa_pytests.shared.ipa_cert_utils import ipa_ca_cert_update
 from ipa_pytests.shared.rpm_utils import get_rpm_version
 from ipa_pytests.shared.utils import ipa_version_gte
+from ipa_pytests.ca_cert_renewal.lib_ca_renewal import renew_certs
 
 
 class TestCaCertRenewal(object):
@@ -27,9 +28,11 @@ class TestCaCertRenewal(object):
     def test_0001_self_signed_to_external_ca(self, multihost):
         """
 
-        :Title: IDM-IPA-TC: Convert Self-signed CA to External CA signed server
+        :Title: IDM-IPA-TC: Convert Self-signed CA to External CA signed
+                            server
 
-        :Description: Check installation of IPA Master from self-signed to external CA signed server
+        :Description: Check installation of IPA Master from self-signed to
+                      external CA signed server
 
         :Setup:
 
@@ -39,7 +42,8 @@ class TestCaCertRenewal(object):
             1. Install IPA Master which will install self-signed CA
             2. Check if IPA Master is installed successfully
             3. Check if ipactl works with various operations
-            4. Use ipa-cacert-update with --external-ca and sign given CSR with External CA
+            4. Use ipa-cacert-update with --external-ca and sign given CSR
+               with External CA
             5. Renew CA certificate using ipa-certupdate
             6. Again convert external CA to self-signed CA
 
@@ -49,7 +53,8 @@ class TestCaCertRenewal(object):
             3. Successful ipactl operations
             4. Successful ipa-cacert-update command
             5. Conversion using ipa-cacert-update should be successful
-            6. Conversion using ipa-cacert-update should be successful from external CA to self signed
+            6. Conversion using ipa-cacert-update should be successful from
+               external CA to self signed
 
         :Automation: Yes
 
@@ -75,13 +80,16 @@ class TestCaCertRenewal(object):
         print("\nCreating self-signed CA certificate")
 
         if ipa_version_gte(multihost.master, '4.5.0'):
-            certs.selfsign_cert(ca_subject, ca_nick, options=['-m', '1', '--extSKID'])
+            certs.selfsign_cert(ca_subject, ca_nick,
+                                options=['-m', '1', '--extSKID'])
         else:
-            certs.selfsign_cert(ca_subject, ca_nick, options=['-m', '1'])
+            certs.selfsign_cert(ca_subject, ca_nick,
+                                options=['-m', '1'])
 
         # Create
         master.kinit_as_admin()
-        cmd = master.run_command([paths.IPACACERTMANAGE, 'renew', '--external-ca'], raiseonerr=False)
+        cmd = master.run_command([paths.IPACACERTMANAGE, 'renew',
+                                  '--external-ca'], raiseonerr=False)
         assert cmd.returncode == 0
 
         # Sign Certificate using external CA
@@ -99,10 +107,13 @@ class TestCaCertRenewal(object):
         ipa_version = get_rpm_version(multihost.master, rpm)
         print(ipa_version)
         if ipa_version_gte(multihost.master, '4.5.0'):
-            print("Ipa version is %s" % ipa_version, "using extSKID option installing Ipa server ")
-            certs.sign_csr(cert_der_file, out_der_file, ca_nick, options=['--extSKID'])
+            print("Ipa version is %s" % ipa_version,
+                  "using extSKID option installing Ipa server ")
+            certs.sign_csr(cert_der_file, out_der_file, ca_nick,
+                           options=['--extSKID'])
         else:
-            print("Ipa version is %s" % ipa_version, "without extSKID option installing Ipa server ")
+            print("Ipa version is %s" % ipa_version,
+                  "without extSKID option installing Ipa server ")
             certs.sign_csr(cert_der_file, out_der_file, ca_nick)
 
         # Generate PEM file
@@ -120,9 +131,10 @@ class TestCaCertRenewal(object):
         master.put_file_contents(chain_cert_file,
                                  pem_file_content + ca_cert_file_content)
 
-        #bz-1506526 automation
+        # bz-1506526 automation
         ca_csr_out_file = '/tmp/ca_csr.out'
-        cmd = ['req', '-in', install_cert_file, '-noout', '-text', '-out', ca_csr_out_file]
+        cmd = ['req', '-in', install_cert_file, '-noout',
+               '-text', '-out', ca_csr_out_file]
         openssl_util(master, cmd)
         ca_csr_out = master.get_file_contents(ca_csr_out_file)
         cmd = ['openssl', 'x509', '-in', out_pem_file, '-noout', '-text']
@@ -133,7 +145,9 @@ class TestCaCertRenewal(object):
         print("Running : %s" % " ".join(cmd))
         cmd2 = master.run_command(cmd, raiseonerr=False)
 
-        if 'CA:TRUE' in ca_csr_out and 'CA:TRUE' in cmd1.stdout_text and 'CA:TRUE' in cmd2.stdout_text:
+        if ('CA:TRUE' in ca_csr_out and
+                'CA:TRUE' in cmd1.stdout_text and
+                'CA:TRUE' in cmd2.stdout_text):
             print("Success : bz-1506526 verified")
         else:
             pytest.xfail("Failed : bz-1506526 found..!!")
@@ -142,7 +156,8 @@ class TestCaCertRenewal(object):
         master.kinit_as_admin()
         certs.list_certs(db_dir='/etc/pki/pki-tomcat/alias')
 
-        cmd = [paths.IPACACERTMANAGE, 'renew', '--external-cert-file=%s' % chain_cert_file]
+        cmd = [paths.IPACACERTMANAGE, 'renew',
+               '--external-cert-file=%s' % chain_cert_file]
         print("Running : {0}".format(" ".join(cmd)))
         cmd = master.run_command(cmd, raiseonerr=False)
         if cmd.returncode != 0:
@@ -168,6 +183,13 @@ class TestCaCertRenewal(object):
 
         certs.list_certs(db_dir='/etc/pki/pki-tomcat/alias')
 
+    def test_renew_ca_certs(self, multihost):
+        """ Test to renew CA cert """
+        renew_certs(multihost.master)
+
+        # uninstall server
+        uninstall_server(multihost.master)
+
     def class_teardown(self, multihost):
         """ Teardown for class """
-        print("Class teardown for CA Cert Renewal")
+        pass
