@@ -16,3 +16,5 @@ dist/
 # git files
 .gitkeep
 
+# Emacs
+*~

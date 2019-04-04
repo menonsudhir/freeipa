@@ -1,0 +1,38 @@
+domains:
+  - name: testrelm.test
+    type: ipa
+    hosts:
+      - name: master.testrelm.test
+        external_hostname: hostname1
+        role: 'master'
+        os: rhel-8.0
+phases:
+  - name: init
+    steps:
+      - playbook: init/build.yaml
+        type: controller
+        resource_count: 1
+        extra_vars: {resource_count: 1, os_network: provider_net_cci_5}
+  - name: provision
+    steps:
+      - playbook: provision/linchpin-up.yaml
+        type: controller
+  - name: prep
+    steps:
+      - playbook: prep/redhat-base.yaml
+        type: sut
+      - playbook: prep/install-ipa-packages.yaml
+        type: sut
+      - playbook: prep/firewall.yaml
+        type: sut
+      - playbook: prep/ipa-network.yaml
+        type: sut
+  - name: test
+    steps:
+      - pytests: ipa_pytests/ipa_host
+        git: /home/jenkins/ipa-pytests
+
+  - name: teardown
+    steps:
+      - playbook: teardown/linchpin-destroy.yaml
+        type: controller
