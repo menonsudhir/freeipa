@@ -5,7 +5,7 @@ domains:
       - name: master.testrelm.test
         external_hostname: hostname1
         role: master
-	os: rhel-8.0
+        os: rhel-8.0
       - name: replica.testrelm.test
         external_hostname: hostname2
         role: replica
