@@ -102,9 +102,13 @@ def ssh_test(multihost, user, passwd=None):
             'ssh', user + '@' + multihost.master.hostname, 'hostname'
             ])
     else:
-        multihost.client.run_command([
-            'ssh', user + '@' + multihost.master.hostname, 'hostname'
-            ], stdin_text=passwd)
+        list_cache = multihost.client.run_command(['klist'])
+        print(list_cache.stdout_text)
+        cmd = multihost.client.run_command([
+            'ssh', '-vvv', user + '@' + multihost.master.hostname, 'hostname'
+        ], stdin_text=passwd, raiseonerr=False)
+        assert "Authentication succeeded (gssapi-with-mic)" in cmd.stderr_text
+        assert "authmethod_is_enabled gssapi-with-mic" in cmd.stderr_text
 
 
 def ssh_neg_test(multihost, user):

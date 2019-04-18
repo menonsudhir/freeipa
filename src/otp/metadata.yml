@@ -1,0 +1,13 @@
+ci_meta:
+ Tier: 1
+ resource_count: 2
+ tags: [ tier-1, pytest ]
+test_meta:
+ test_dependencies: [ pki-core, sssd, certmonger, nspr, nss ]
+ test_name: otp-pytest
+ test_cfg: ipa-pytests/src/otp/mh_cfg.yaml
+ test_location: ipa-pytests/src/otp
+ test_harness: pytest
+ test_owner: amore
+
+

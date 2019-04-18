@@ -27,7 +27,7 @@ def setup_session(request, multihost):
         multihost.client = multihost.clients[0]
         setup_master(multihost.master)
         setup_client(multihost.client, multihost.master)
-        #multihost.master.yum_install(['expect'])
+        multihost.master.yum_install(['expect'])
 
     except Exception as errval:
         print("Error in setup_session %s" % (str(errval.args[0])))

@@ -6,7 +6,7 @@ from ipa_pytests.otp.lib import (add_user, add_radiusproxy,
                                  verify_user_login, delete_radiusproxy,
                                  user_failed_login, print_output)
 from ipa_pytests.shared.user_utils import del_ipa_user
-import os
+from ipa_pytests.shared.utils import service_control
 import pexpect
 
 
@@ -33,7 +33,7 @@ class TestRadiusfunction(object):
         IDM-IPA-TC: OTP: User login with a radius authentication
         """
         multihost.radiusproxy = "radiusproxy01"
-        multihost.testuser = 'radiususer'
+        multihost.testuser = 'radiususer01'
 
         # add otp user
         add_user(multihost)
@@ -142,7 +142,7 @@ class TestRadiusfunction(object):
         IDM-IPA-TC: OTP: Delete radiusproxy as user
         """
         multihost.radiusproxy = "radiusproxy04"
-        multihost.testuser = 'radiususer'
+        multihost.testuser = 'radiususer04'
 
         # add otp user
         add_user(multihost)
@@ -157,7 +157,7 @@ class TestRadiusfunction(object):
         add_info(multihost)
 
         # Start radius server
-        os.system("radiusd -s&")
+        service_control(multihost.master,'radiusd', 'start')
 #        multihost.master.qerun(['radiusd', '-s'])
 
         # Log-in as user with manually enabled FAST
@@ -363,7 +363,7 @@ class TestRadiusfunction(object):
         IDM-IPA-TC: OTP: Modify- Show radius proxy as user
         """
         multihost.radiusproxy = "radiusproxy014"
-        multihost.testuser = 'radiususer'
+        multihost.testuser = 'radiususer014'
 
         # add otp user
         add_user(multihost)
@@ -408,7 +408,7 @@ class TestRadiusfunction(object):
         IDM-IPA-TC: OTP: Modify- Find radius proxy as user
         """
         multihost.radiusproxy = "radiusproxy015"
-        multihost.testuser = 'radiususer'
+        multihost.testuser = 'radiususer015'
 
         # add otp user
         add_user(multihost)
@@ -446,4 +446,5 @@ class TestRadiusfunction(object):
 
     def class_teardown(self, multihost):
         """ Teardown for class """
-        os.system('mv -f /etc/raddb/users_automation_bkp /etc/raddb/users')
+        cmd = 'mv -f /etc/raddb/users_automation_bkp /etc/raddb/users'
+        multihost.master.qerun(cmd)

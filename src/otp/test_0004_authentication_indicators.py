@@ -211,7 +211,7 @@ class TestAuthIndent(object):
         multihost.client.run_command([
             'kinit', '-T', krb_cache, RADUSER
             ], stdin_text=password)
-        lib.ssh_test(multihost, RADUSER)
+        lib.ssh_test(multihost, RADUSER, passwd=password)
 
     def test009(self, multihost):
         """
@@ -290,7 +290,7 @@ class TestAuthIndent(object):
             TESTUSER, multihost.master.config.admin_pw)
         multihost.client.run_command(['klist'])
         time.sleep(5)
-        lib.ssh_test(multihost, TESTUSER)
+        lib.ssh_test(multihost, TESTUSER, passwd=multihost.master.config.admin_pw)
         krb_cache = lib.get_krb_cache(multihost, INFOUSER, multihost.client)
         password = multihost.master.config.admin_pw + lib.get_otp(
             multihost, OTP2)
@@ -301,7 +301,7 @@ class TestAuthIndent(object):
         print(cmd.stdout_text)
         print(cmd.stderr_text)
         time.sleep(5)
-        lib.ssh_test(multihost, TESTUSER)
+        lib.ssh_test(multihost, TESTUSER, passwd=password)
 
     def test014(self, multihost):
         """
@@ -326,7 +326,7 @@ class TestAuthIndent(object):
             'kinit', '-T', krb_cache, TESTUSER
             ], stdin_text=password)
         time.sleep(10)
-        lib.ssh_test(multihost, TESTUSER)
+        lib.ssh_test(multihost, TESTUSER, passwd=password)
 
     def test015(self, multihost):
         """

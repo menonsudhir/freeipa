@@ -478,10 +478,11 @@ def get_ipv6_ip(host):
 
 
 def get_base_dn(host):
-    with open('/etc/openldap/ldap.conf','r') as f:
-        for line in f:
-            if 'BASE dc=' in line:
-               return (line.split(" ")[1]).strip('\n')
+
+    ldap_conf = host.get_file_contents(paths.LDAPCONF)
+    for line in ldap_conf.split('\n'):
+        if 'BASE dc=' in line:
+            return (line.split(" ")[1]).strip('\n')
 
 
 def sssd_cache_reset_docker(host, container):

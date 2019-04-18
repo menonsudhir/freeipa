@@ -3,6 +3,7 @@ Helper functions required for test_kdcproxy
 '''
 
 from ipa_pytests.shared.user_utils import add_ipa_user
+from ipa_pytests.shared import paths
 import pexpect
 
 
@@ -55,8 +56,9 @@ def add_info(multihost):
     """
     Adding user information in /etc/raddb/users
     """
-    with open('/etc/raddb/users', 'a') as f:
-        f.write(multihost.testuser + ' Cleartext-Password := "Secret123"\n')
+    contents = '%s  Cleartext-Password := "Secret123"\n' % multihost.testuser
+    if multihost.master.transport.file_exists(paths.RAD_USERS):
+        multihost.master.put_file_contents(paths.RAD_USERS, contents)
 
 
 def add_otptoken(multihost):
