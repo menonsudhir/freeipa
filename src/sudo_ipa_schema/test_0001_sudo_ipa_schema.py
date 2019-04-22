@@ -1,7 +1,7 @@
 import pytest
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.user_utils import add_ipa_user, del_ipa_user
-from ipa_pytests.shared.utils import (service_control)
+from ipa_pytests.shared.utils import (service_control, sssd_cache_reset)
 from .lib import (group_add_member, group_del, add_sudo_command, del_sudo_command, client_sudo_user_allowed,
                   client_sudo_group_allowed, sudorule_add_permissive_options, sudorule_add_defaults,
                   sudorule_del, sudorule_add_attr, sudorule_del_attr)
@@ -139,8 +139,13 @@ class TestSudo(object):
         client_sudo_user_allowed(multihost, tusr1, tusr2, tcmd1)
         sudorule_del_attr(multihost, 'host', tsudorule, '--hosts', multihost.client.hostname)
         sudorule_add_attr(multihost, 'host', tsudorule, '--hosts', tdumhost)
-        client_sudo_user_allowed(multihost, tusr1, tusr2, tcmd1, exp_returncode=1, exp_output='not allowed to run sudo')
+        cmd = ['ipa', 'sudorule-disable', 'defaults']
+        multihost.master.qerun(cmd)
+        sssd_cache_reset(multihost.client)
+        client_sudo_user_allowed(multihost, tusr1, tusr2, tcmd1, exp_returncode=1, exp_output='no tty present')
         sudorule_del_attr(multihost, 'host', tsudorule, '--hosts', tdumhost)
+        cmd = ['ipa', 'sudorule-enable', 'defaults']
+        multihost.master.qerun(cmd)
         sudorule_del(multihost, tsudorule)
 
     def test_0006_sudo_ipa_schema_check_sudo_command_attribute_support(self, multihost):
@@ -148,7 +153,7 @@ class TestSudo(object):
         IDM-IPA-TC: Sudo IPA Schema: Check sudo command attribute support
         """
         sudorule_add_permissive_options(multihost, tsudorule, cmd_arg="")
-        client_sudo_user_allowed(multihost, tusr1, tusr2, tcmd1, exp_returncode=1, exp_output='not allowed to execute')
+        client_sudo_user_allowed(multihost, tusr1, tusr2, tcmd1, exp_returncode=1, exp_output='not allowed to run')
         cmd = ['ipa', 'sudorule-mod', tsudorule, '--cmd=all']
         multihost.master.qerun(cmd)
         client_sudo_user_allowed(multihost, tusr1, tusr2, tcmd1)
