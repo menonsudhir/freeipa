@@ -1,0 +1,48 @@
+ssh_key_filename: ~/.ssh/id_rsa
+admin_id: admin
+admin_pw: Secret123
+dirman_id: '"cn=Directory Manager"'
+dirman_pw: Secret123
+dns_forwarder: 10.11.5.19
+domains:
+  - name: testrelm.test
+    type: IPA
+    hosts:
+      - name: runner.testrelm.test
+        group: runner
+        role: test
+        os: rhel-8.0
+      - name: master.testrelm.test
+        external_hostname: hostname1
+        group: ipaserver
+        role: master
+        os: rhel-8.0
+        install_master: true
+phases:
+  - name: init
+    steps:
+      - playbook: init/build.yaml
+        type: controller
+        extra_vars: {resource_count: 1, os_network: provider_net_cci_5}
+  - name: provision
+    steps:
+      - playbook: provision/ipa-linchpin-up.yaml
+        type: controller
+  - name: prep
+    steps:
+      - playbook: prep/prepare.yaml
+        type: sut
+      - playbook: prep/ipa-network.yaml
+        type: sut
+      - playbook: prep/prepare-pytest.yaml
+        type: sut
+      - playbook: prep/prepare-upstream.yaml
+        type: sut
+  - name: test
+    steps:
+      - playbook: test/test-upstream.yaml
+        type: runner
+  - name: teardown
+    steps:
+      - playbook: teardown/linchpin-destroy.yaml
+        type: controller

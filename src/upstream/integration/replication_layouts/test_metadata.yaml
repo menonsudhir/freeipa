@@ -1,0 +1,76 @@
+ssh_key_filename: ~/.ssh/id_rsa
+admin_id: admin
+admin_pw: Secret123
+dirman_id: '"cn=Directory Manager"'
+dirman_pw: Secret123
+dns_forwarder: 10.11.5.19
+domains:
+  - name: testrelm.test
+    type: IPA
+    hosts:
+      - name: runner.testrelm.test
+        group: runner
+        role: test
+        os: rhel-8.0
+      - {external_hostname: hostname1, name: master.testrelm.test, group: ipaserver, role:master}
+      - {external_hostname: hostname1, name: replica1.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica2.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica3.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica4.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica5.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica6.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica7.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica8.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica9.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica10.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica11.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica12.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica13.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica14.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica15.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica16.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica17.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica18.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica19.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica20.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica21.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica22.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica23.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica24.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica25.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica26.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica27.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica28.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica29.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica30.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica31.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica32.testrelm.test, group: ipaserver, role:replica}
+      - {external_hostname: hostname1, name: replica33.testrelm.test, group: ipaserver, role:replica}
+phases:
+  - name: init
+    steps:
+      - playbook: init/build.yaml
+        type: controller
+        extra_vars: {resource_count: 34, os_network: provider_net_cci_5}
+  - name: provision
+    steps:
+      - playbook: provision/ipa-linchpin-up.yaml
+        type: controller
+  - name: prep
+    steps:
+      - playbook: prep/prepare.yaml
+        type: sut
+      - playbook: prep/ipa-network.yaml
+        type: sut
+      - playbook: prep/prepare-pytest.yaml
+        type: sut
+      - playbook: prep/prepare-upstream.yaml
+        type: sut
+  - name: test
+    steps:
+      - playbook: test/test-upstream.yaml
+        type: runner
+  - name: teardown
+    steps:
+      - playbook: teardown/linchpin-destroy.yaml
+        type: controller

@@ -10,7 +10,10 @@ import subprocess
 
 def _call_ssh(host, cmd):
     subprocess.check_call(
-        ["ssh", "-o StrictHostKeyChecking=no", "root@" + host['ip'], cmd]
+        ["ssh",
+         "-o StrictHostKeyChecking=no",
+         "-i", "build/config/id_rsa",
+         "root@" + host['ip'], cmd]
     )
 
 
