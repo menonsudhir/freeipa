@@ -33,6 +33,8 @@ phases:
         type: sut
       - playbook: prep/ipa-network-hosts.yaml
         type: sut
+      - playbook: prep/install-ipa-packages.yaml
+        type: sut
       - playbook: prep/prepare-pytest.yaml
         type: sut
       - playbook: prep/prepare-upstream.yaml
