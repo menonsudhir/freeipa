@@ -30,7 +30,7 @@ phases:
         type: controller
   - name: prep
     steps:
-      - playbook: prep/prepare.yaml
+      - playbook: prep/redhat-base.yaml
         type: sut
       - playbook: prep/ipa-network-hosts.yaml
         type: sut
