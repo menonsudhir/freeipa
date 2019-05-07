@@ -10,12 +10,12 @@ domains:
         external_hostname: hostname2
         role: client
         os: rhel-8.0
-  - name: ipaad2016ci.test
+  - name: ipaad2k16cin.test
     type: ad
     hosts:
-      - name: ipaad2016.ipaad2016ci.test
-        external_hostname: ipaad2016.ipaad2016ci.test
-        ip: 10.8.253.86
+      - name: ipaad2k16ci.ipaad2k16cin.test
+        external_hostname: ipaad2k16ci.ipaad2k16cin.test
+        ip: 10.0.144.176
         role: ad
         username: 'Administrator'
         password: 'Secret123'
