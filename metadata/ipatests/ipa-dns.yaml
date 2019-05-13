@@ -5,12 +5,12 @@ domains:
       - name: master.testrealm.test
         role: master
         group: ipaserver
-        os: rhel-8.0
+        os: rhel-8.1
         restraint_id: 1
       - name: replica.testrealm.test
         role: replica
         group: ipaserver
-        os: rhel-8.0
+        os: rhel-8.1
         restraint_id: 2
 phases:
   - name: init

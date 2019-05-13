@@ -5,15 +5,15 @@ domains:
       - name: master.testrealm.test
         external_hostname: hostname1
         role: master
-        os: rhel-8.0
+        os: rhel-8.1
       - name: replica.testrealm.test
         external_hostname: hostname2
         role: replica
-        os: rhel-8.0
+        os: rhel-8.1
       - name: client.testrealm.test
         external_hostname: hostname3
         role: client
-        os: rhel-8.0
+        os: rhel-8.1
 phases:
   - name: init
     steps:

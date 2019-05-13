@@ -6,7 +6,7 @@ domains:
         external_hostname: hostname1
         role: master
         group: ipaserver
-        os: rhel-8.0
+        os: rhel-8.1
   - name: ipaad2016ci.test
     type: ad
     hosts:

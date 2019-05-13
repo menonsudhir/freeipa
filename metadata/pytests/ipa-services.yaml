@@ -6,12 +6,12 @@ domains:
         external_hostname: hostname1
         role: master
         group: ipaserver
-        os: rhel-8.0
+        os: rhel-8.1
       - name: client.testrealm.test
         external_hostname: hostname2
         role: client
         group: ipaclient
-        os: rhel-8.0
+        os: rhel-8.1
 phases:
   - name: init
     steps:

@@ -5,7 +5,7 @@ domains:
       - name: master.testrealm.test
         role: master
         group: ipaserver
-        os: rhel-8.0
+        os: rhel-8.1
 phases:
   - name: init
     steps:
