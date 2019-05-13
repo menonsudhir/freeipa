@@ -1,0 +1,54 @@
+domains:
+  - name: testrealmupn.test
+    type: ipa
+    hosts:
+      - name: master.testrealmupn.test
+        external_hostname: hostname1
+        role: master
+        os: rhel-8.0
+  - name: ipaad2k16cin.test
+    type: ad
+    hosts:
+      - name: ipaad2k16ci.ipaad2k16cin.test
+        external_hostname: ipaad2k16ci.ipaad2k16cin.test
+        ip: 10.0.144.176
+        role: ad
+        username: 'Administrator'
+        password: 'Secret123'
+        host_type: 'windows'
+phases:
+  - name: init
+    steps:
+      - playbook: init/pytests.yaml
+        type: controller
+      - playbook: init/testrunner-dir.yaml
+        type: controller
+  - name: provision
+    steps:
+      - playbook: provision/linchpin-up.yaml
+        type: controller
+      - playbook: provision/wait.yaml
+        type: sut
+  - name: prep
+    steps:
+      - playbook: prep/redhat-base.yaml
+        type: sut
+      - playbook: prep/repos.yaml
+        type: sut
+      - playbook: prep/install-ipa-packages.yaml
+        type: sut
+      - playbook: prep/prepare-pytest.yaml
+        type: sut
+      - playbook: prep/firewall.yaml
+        type: sut
+      - playbook: prep/ipa-network.yaml
+        type: sut
+  - name: test
+    steps:
+      - pytests: src/upn
+        git: ipa-pytests
+
+  - name: teardown
+    steps:
+      - playbook: teardown/linchpin-destroy.yaml
+        type: controller
