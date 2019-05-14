@@ -13,6 +13,8 @@ domains:
       - name: ipaad2k16ci.ipaad2k16cin.test
         external_hostname: ipaad2k16ci.ipaad2k16cin.test
         role: ad
+        group: ad
+        os: win2012
         ip: 10.0.144.176
         username: 'Administrator'
         password: 'Secret123'
