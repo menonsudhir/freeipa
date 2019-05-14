@@ -163,13 +163,13 @@ node {
             },
             "bash::trust-functional-ssh": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-trust-functional/ipa-trust-func-ssh.yaml',
+                    metadata: 'metadata/ipatests/ipa-trust-func-ssh.yaml',
                     test: 'ipa-trust-functional-ssh'
                 ]).exec('upshift-slave')
             },
             "bash::trust-functional-user": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-trust-functional/ipa-trust-func-user.yaml',
+                    metadata: 'metadata/ipatests/ipa-trust-func-user.yaml',
                     test: 'ipa-trust-functional-user'
                 ]).exec('upshift-slave')
             }
