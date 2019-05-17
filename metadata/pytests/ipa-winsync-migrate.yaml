@@ -47,7 +47,7 @@ phases:
   - name: test
     steps:
       - pytests: src/ipa-winsync-migrate
-        git: ipa-pytests
+        git: ../ipa-pytests
 
   - name: teardown
     steps:

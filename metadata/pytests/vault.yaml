@@ -43,7 +43,7 @@ phases:
   - name: test
     steps:
       - pytests: src/vault
-        git: ipa-pytests
+        git: ../ipa-pytests
 
   - name: teardown
     steps:

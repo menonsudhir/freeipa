@@ -36,7 +36,7 @@ phases:
   - name: test
     steps:
       - restraint: beaker/ipa-server/acceptance/ipa-trust-functional/restraint-ssh.xml
-        git: ipa-tests
+        git: ../ipa-tests
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml

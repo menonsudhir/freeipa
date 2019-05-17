@@ -37,7 +37,7 @@ phases:
   - name: test
     steps:
       - pytests: src/ipa-nis-manage
-        git: ipa-pytests
+        git: ../ipa-pytests
 
   - name: teardown
     steps:

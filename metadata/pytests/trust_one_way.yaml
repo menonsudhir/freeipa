@@ -47,7 +47,7 @@ phases:
   - name: test
     steps:
       - pytests: src/trust_one_way
-        git: ipa-pytests
+        git: ../ipa-pytests
 
   - name: teardown
     steps:

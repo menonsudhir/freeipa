@@ -49,7 +49,7 @@ phases:
   - name: test
     steps:
       - pytests: src/ipa-idoverride
-        git: ipa-pytests
+        git: ../ipa-pytests
 
   - name: teardown
     steps:

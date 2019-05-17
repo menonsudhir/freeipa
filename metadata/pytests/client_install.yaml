@@ -40,7 +40,7 @@ phases:
   - name: test
     steps:
       - pytests: src/client_install
-        git: ipa-pytests
+        git: ../ipa-pytests
 
   - name: teardown
     steps:

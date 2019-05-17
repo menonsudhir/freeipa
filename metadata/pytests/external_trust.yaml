@@ -52,7 +52,7 @@ phases:
   - name: test
     steps:
       - pytests: src/external_trust
-        git: ipa-pytests
+        git: ../ipa-pytests
 
   - name: teardown
     steps:
