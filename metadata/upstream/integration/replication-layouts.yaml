@@ -1,0 +1,81 @@
+ssh_key_filename: ~/.ssh/id_rsa
+admin_id: admin
+admin_pw: Secret123
+dirman_id: '"cn=Directory Manager"'
+dirman_pw: Secret123
+dns_forwarder: 10.11.5.19
+domains:
+  - name: testrelm.test
+    type: IPA
+    hosts:
+      - name: runner.testrelm.test
+        group: runner
+        role: test
+        os: rhel-8.1
+      - {name: master.testrelm.test, group: ipaserver, role:master}
+      - {name: replica1.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica2.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica3.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica4.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica5.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica6.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica7.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica8.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica9.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica10.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica11.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica12.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica13.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica14.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica15.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica16.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica17.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica18.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica19.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica20.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica21.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica22.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica23.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica24.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica25.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica26.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica27.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica28.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica29.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica30.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica31.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica32.testrelm.test, group: ipaserver, role:replica}
+      - {name: replica33.testrelm.test, group: ipaserver, role:replica}
+phases:
+  - name: init
+    steps:
+      - playbook: init/pytests.yaml
+        type: controller
+      - playbook: init/testrunner-dir.yaml
+        type: controller
+  - name: provision
+    steps:
+      - playbook: provision/linchpin-up.yaml
+        type: controller
+  - name: prep
+    steps:
+      - playbook: prep/redhat-base.yaml
+        type: sut
+      - playbook: prep/ipa-network-hosts.yaml
+        type: sut
+      - playbook: prep/install-ipa-packages.yaml
+        type: sut
+      - playbook: prep/prepare-pytest.yaml
+        type: sut
+      - playbook: prep/prepare-upstream.yaml
+        type: sut
+  - name: test
+    steps:
+      - playbook: test/test-upstream.yaml
+        type: sut
+        extra_vars:
+          test_suite: test_integration/test_replication_//.yaml/layouts.py
+  - name: teardown
+    steps:
+      - playbook: teardown/linchpin-destroy.yaml
+        type: controller
