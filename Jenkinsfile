@@ -20,8 +20,8 @@ properties([
     ])
 ])
 
-env.IDMPIPELINE_GITREPO = 'https://gitlab.cee.redhat.com/ftrivino/ipa-pytests.git'
-env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/ftrivino/idm-ci.git'
+env.IDMPIPELINE_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests.git'
+env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.git'
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
 
