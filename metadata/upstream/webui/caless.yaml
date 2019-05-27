@@ -27,8 +27,6 @@ phases:
     steps:
       - playbook: provision/linchpin-up.yaml
         type: controller
-      - playbook: provision/wait.yaml
-        type: sut
   - name: prep
     steps:
       - playbook: prep/redhat-base.yaml
@@ -41,16 +39,19 @@ phases:
         type: sut
       - playbook: prep/prepare-upstream.yaml
         type: sut
-      - playbook: prep/ipa-server-install.yaml
+      - playbook: prep/ipa-server-install-caless.yaml
         type: sut
       - playbook: prep/prepare-webui.yaml
         type: sut
+        extra_vars:
+          caless: true
   - name: test
     steps:
       - playbook: test/test-webui.yaml
         type: sut
         extra_vars:
-          test_suite: test_webui/test_range.py
+          test_suite: test_webui/
+          keywords: ca_less
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml

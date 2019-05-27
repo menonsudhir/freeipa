@@ -41,6 +41,8 @@ phases:
         type: sut
       - playbook: prep/prepare-upstream.yaml
         type: sut
+      - playbook: prep/ipa-server-install.yaml
+        type: sut
       - playbook: prep/prepare-webui.yaml
         type: sut
   - name: test
@@ -49,6 +51,7 @@ phases:
         type: sut
         extra_vars:
           test_suite: test_webui/test_service.py
+          keywords: not ca_less
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml

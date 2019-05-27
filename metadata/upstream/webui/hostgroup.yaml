@@ -39,8 +39,7 @@ phases:
         type: sut
       - playbook: prep/prepare-pytest.yaml
         type: sut
-      - playbook: prep/prepare-upstream.yaml
-        type: sut
+
       - playbook: prep/prepare-webui.yaml
         type: sut
   - name: test
