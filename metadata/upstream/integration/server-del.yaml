@@ -56,7 +56,7 @@ phases:
       - playbook: test/test-upstream.yaml
         type: sut
         extra_vars:
-          test_suite: test_integration/test_server_//.yaml/del.py
+          test_suite: test_integration/test_server_del.py
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml

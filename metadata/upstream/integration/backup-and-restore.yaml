@@ -52,7 +52,7 @@ phases:
       - playbook: test/test-upstream.yaml
         type: sut
         extra_vars:
-          test_suite: test_integration/test_backup_//.yaml/and_//.yaml/restore.py
+          test_suite: test_integration/test_backup_and_restore.py
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml

@@ -52,7 +52,7 @@ phases:
       - playbook: test/test-upstream.yaml
         type: sut
         extra_vars:
-          test_suite: test_integration/test_forced_//.yaml/client_//.yaml/reenrollment.py
+          test_suite: test_integration/test_forced_client_reenrollment.py
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml
