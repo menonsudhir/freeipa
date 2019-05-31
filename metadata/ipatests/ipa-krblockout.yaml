@@ -32,6 +32,8 @@ phases:
     steps:
       - restraint: beaker/ipa-server/acceptance/ipa-client-cert/restraint.xml
         git: ../ipa-tests
+      - playbook: test/restraint-results.yaml
+        type: controller
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml
