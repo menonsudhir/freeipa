@@ -31,6 +31,8 @@ phases:
     steps:
       - playbook: provision/linchpin-up.yaml
         type: controller
+      - playbook: provision/wait.yaml
+        type: sut
   - name: prep
     steps:
       - playbook: prep/redhat-base.yaml
