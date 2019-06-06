@@ -41,22 +41,10 @@ node {
                     test: 'ipa-functional-services',
                 ]).exec('ipa-slave')
             },
-            "pytest::idoverride": {
-                new TeRun([
-                    metadata: 'metadata/pytests/ipa-idoverride.yaml',
-                    test: 'ipa-idoverride',
-                ]).exec('ipa-slave')
-            },
             "pytest::subca": {
                 new TeRun([
                     metadata: 'metadata/pytests/subca.yaml',
                     test: 'ipa-subca',
-                ]).exec('ipa-slave')
-            },
-            "pytest::rbac": {
-                new TeRun([
-                    metadata: 'metadata/pytests/ipa-rbac.yaml',
-                    test: 'ipa-rbac',
                 ]).exec('ipa-slave')
             },
             "pytest::external-ca": {
