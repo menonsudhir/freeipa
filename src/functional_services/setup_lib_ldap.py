@@ -85,14 +85,11 @@ def _ldap_set_sasl(multihost):
 
 def _ldap_set_cfg_krb_keytab(multihost):
     """ Configure ldap to point to keytab """
-    cfgget = '/etc/sysconfig/dirsrv'
-    cfgput = '/etc/sysconfig/dirsrv'
-    ldapcfg = multihost.client.get_file_contents(cfgget)
-    if multihost.client.transport.file_exists('/usr/lib/systemd/system/dirsrv@.service'):
-        ldapcfg = ldapcfg + '\nKRB5_KTNAME=/etc/dirsrv/ldap_service.keytab\n'
-    else:
-        ldapcfg = ldapcfg + '\nKRB5_KTNAME=/etc/dirsrv/ldap_service.keytab ; export KRB5_KTNAME\n'
-    multihost.client.put_file_contents(cfgput, ldapcfg)
+    cfg = '/etc/sysconfig/dirsrv-instance1'
+    ldapcfg = multihost.client.get_file_contents(cfg)
+    ldapcfg = ldapcfg + '\nKRB5_KTNAME=/etc/dirsrv/ldap_service.keytab\n'
+    multihost.client.put_file_contents(cfg, ldapcfg)
+    multihost.client.qerun(['systemctl', 'daemon-reload'])
     service_control(multihost.client, 'dirsrv@instance1', 'restart')
     wait_for_ldap(multihost.client, '3389')
     time.sleep(30)

@@ -338,7 +338,7 @@ def setup_replica(replica, master, **kwargs):
                          "error code=%s" % cmd.returncode)
 
 
-def setup_client(client, master, server=None, domain=None):
+def setup_client(client, master, server=None, domain=None, module_stream=None):
     """
     This is the default testing setup for an IPA Client.
     This setup routine will install an IPA client using autodiscovery.
@@ -347,8 +347,10 @@ def setup_client(client, master, server=None, domain=None):
     print_time()
     print("Installing required packages on client [%s]" % client.hostname)
     #client.yum_install(['ipa-client', 'ipa-admintools'])
-    dnf_module_install(client, client.config.server_module)
-
+    if module_stream == 'client':
+        dnf_module_install(client, client.config.client_stream)
+    else:
+        dnf_module_install(client, client.config.client_module)
     print("Listing RPMS")
     list_rpms(client)
     print("Disabling Firewall")

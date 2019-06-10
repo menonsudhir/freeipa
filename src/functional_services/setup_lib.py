@@ -25,7 +25,7 @@ def ipa_replica(multihost):
 
 def ipa_client(multihost):
     """ Install IPA Client """
-    setup_client(multihost.client, multihost.master)
+    setup_client(multihost.client, multihost.master, module_stream='client')
     set_resolv_conf_add_server(multihost.client, multihost.replica.ip)
     revip, revnet = get_revnet_info(multihost.client.ip)
     run = ['dig', '+short', '-x', multihost.client.ip]
