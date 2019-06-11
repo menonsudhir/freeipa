@@ -327,9 +327,9 @@ class TestFunctionalDNS(object):
         """
         multihost.master.kinit_as_admin()
         del_ipa_user(multihost.master, self.login4)
-        multihost.master.run_command([IPA,
-                                      'dnszone-del',
-                                      'one.testrelm.test',
-                                      'two.testrelm.test'])
+        multihost.master.qerun(
+            [IPA, 'dnszone-del', 'one.' + multihost.master.domain.name])
+        multihost.master.qerun(
+            [IPA, 'dnszone-del', 'two.' + multihost.master.domain.name])
         role_del(multihost.master, self.dns_role)
         privilege_del(multihost.master, self.dns_priv)
