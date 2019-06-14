@@ -76,13 +76,6 @@ node {
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
-            "pytest::ca_cert_renewal": {
-                new TeRun([
-                    metadata: 'metadata/pytests/ca_cert_renewal.yaml',
-                    test: 'ca_cert_renewal',
-                    message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
-            },
             "pytest::otp": {
                 new TeRun([
                     metadata: 'metadata/pytests/otp.yaml',
@@ -171,13 +164,6 @@ node {
                 new TeRun([
                     metadata: 'metadata/ipatests/adduser.yaml',
                     test: 'ipa-user-cli-adduser',
-                    message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
-            },
-            "bash::client-cert": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-client-cert.yaml',
-                    test: 'ipa-client-cert',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
