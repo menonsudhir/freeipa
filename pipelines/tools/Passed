@@ -1,0 +1,88 @@
+@Library('idm-ci')
+import idmci.*
+
+env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/ftrivino/idm-ci.git'
+env.IDMCI_BRANCH = 'passed'
+env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
+env.ANSIBLE_GATHER_TIMEOUT = '60'
+
+
+properties([
+    parameters([
+    string(name: 'CI_MESSAGE', defaultValue: '', description: 'CI_MESSAGE'),
+    string(name: 'MESSAGE_HEADERS', defaultValue: '', description: 'MESSAGE_HEADERS')
+    ]),
+    pipelineTriggers([
+    [
+        $class: 'CIBuildTrigger',
+        noSquash: false,
+        providerData: [
+        $class: 'ActiveMQSubscriberProviderData',
+        checks: [
+            [
+            expectedValue: 'tier0',
+            field: 'type'
+            ],
+            [
+            expectedValue: 'idm',
+            field: 'artifact.name'
+            ],
+            [
+            expectedValue: 'passed',
+            field: 'status'
+            ]
+        ],
+        name: 'Red Hat UMB',
+        overrides: [
+            topic: 'Consumer.rh-jenkins-ci-plugin.e1a8f4a3-3a25-4919-b2b9-080614de8fb6.VirtualTopic.eng.ci.redhat-module.test.complete'
+        ],
+        selector: '',
+        timeout: null
+        ]
+    ]
+    ])
+])
+
+node {
+     sh "touch /tmp/tier1_status"
+     sh "rm -fr idm-ci"
+     sh 'git clone -b passed https://gitlab.cee.redhat.com/ftrivino/idm-ci.git'
+     echo 'Generating json message to be placed on UMB'
+     sh "ansible-playbook -vvvv --connection=local -i localhost, idm-ci/playbooks/gating/gen_tier1_message.yaml"
+     env.tier1json = readJSON file:'/tmp/tier1-results-umb.json'
+     echo "${env.tier1json}"
+     sh "cat /tmp/tier1-results-umb.json"
+     echo "Placing the result on UMB"
+     retry(3) {
+       try {
+           // 1 minute should be more than enough time to send the topic msg
+           timeout(1) {
+             try {
+               // Send message and return SendResult
+               def msgContent = "${env.tier1json}"
+               println msgContent
+               sendResult = sendCIMessage \
+                       messageContent: msgContent, \
+                       messageProperties: '', \
+                       messageType: 'Custom', \
+                       overrides: [topic: 'VirtualTopic.eng.ci.redhat-module.test.complete'], \
+                       providerName: 'Red Hat UMB', \
+                       failOnError: true
+               return sendResult
+               // echo sent message id and content
+               echo sendResult.getMessageId()
+               echo sendResult.getMessageContent()
+             } catch(e) {
+                 throw e
+             }
+           }
+       } catch(e) {
+           echo "FAIL: Could not send message to msg to UMB"
+           echo e.getMessage()
+           sleep 30
+           error e.getMessage()
+       }
+     }
+
+
+}
