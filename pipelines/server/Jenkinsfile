@@ -111,13 +111,6 @@ node {
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
-            "bash::dns": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-dns.yaml',
-                    test: 'ipa-dns',
-                    message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
-            },
             "bash::sudo": {
                 new TeRun([
                     metadata: 'metadata/ipatests/ipa-sudo.yaml',
@@ -136,13 +129,6 @@ node {
                 new TeRun([
                     metadata: 'metadata/ipatests/ipa-cert.yaml',
                     test: 'ipa-cert',
-                    message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
-            },
-            "bash::getcert": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-getcert.yaml',
-                    test: 'ipa-getcert',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
