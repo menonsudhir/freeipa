@@ -153,17 +153,10 @@ node {
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
-            "bash::trust-functional-ssh": {
+            "pytest::func-svcs": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-trust-func-ssh.yaml',
-                    test: 'ipa-trust-functional-ssh',
-                    message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
-            },
-            "bash::trust-functional-user": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-trust-func-user.yaml',
-                    test: 'ipa-trust-functional-user',
+                    metadata: 'metadata/pytests/functional_services.yaml',
+                    test: 'ipa-functional-services',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             }
