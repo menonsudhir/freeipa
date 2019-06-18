@@ -1,0 +1,16 @@
+image: docker-registry.upshift.redhat.com/idm/idm-test-slave:gitlab-0.1
+  
+.mr_template: &mr_definition
+  tags:
+  - shared
+  only:
+  - merge_requests
+
+before_script:
+- git clone https://gitlab.cee.redhat.com/identity-management/idm-ci.git
+
+ipa-mr-pipeline:
+  <<: *mr_definition
+  script:
+  - bash idm-ci/scripts/mr_workflow.sh
+
