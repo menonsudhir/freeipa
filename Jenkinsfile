@@ -1,32 +1,11 @@
 @Library('idm-ci')
 import idmci.*
 
-properties([
-    gitLabConnection('idm-jenkins'),
-    pipelineTriggers([
-        gitlab(
-            triggerOnPush: true,
-            triggerOnMergeRequest: true, triggerOpenMergeRequestOnPush: "never",
-            triggerOnNoteRequest: true,
-            noteRegex: "Jenkins please retry a build",
-            skipWorkInProgressMergeRequest: true,
-            ciSkip: true,
-            setBuildDescription: true,
-            addNoteOnMergeRequest: true,
-            addCiMessage: true,
-            addVoteOnMergeRequest: true,
-            acceptMergeRequestOnSuccess: false,
-            branchFilterType: 'All')
-    ])
-])
-
-env.IDMPIPELINE_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests.git'
 env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.git'
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
 
 node {
-    gitlabBuilds(builds: ['tier-1']) {
         stage("tier-1") {
           parallel(
             "pytest::ipa-hosts": {
@@ -163,5 +142,4 @@ node {
             }
             )
         }
-    }
 }
