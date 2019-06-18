@@ -11,35 +11,6 @@ properties([
     parameters([
     string(name: 'CI_MESSAGE', defaultValue: '', description: 'CI_MESSAGE'),
     string(name: 'MESSAGE_HEADERS', defaultValue: '', description: 'MESSAGE_HEADERS')
-    ]),
-    pipelineTriggers([
-    [
-        $class: 'CIBuildTrigger',
-        noSquash: false,
-        providerData: [
-        $class: 'ActiveMQSubscriberProviderData',
-        checks: [
-            [
-            expectedValue: 'tier0',
-            field: 'type'
-            ],
-            [
-            expectedValue: 'idm',
-            field: 'artifact.name'
-            ],
-            [
-            expectedValue: 'passed',
-            field: 'status'
-            ]
-        ],
-        name: 'Red Hat UMB',
-        overrides: [
-            topic: 'Consumer.rh-jenkins-ci-plugin.e1a8f4a3-3a25-4919-b2b9-080614de8fb6.VirtualTopic.eng.ci.redhat-module.test.complete'
-        ],
-        selector: '',
-        timeout: null
-        ]
-    ]
     ])
 ])
 
