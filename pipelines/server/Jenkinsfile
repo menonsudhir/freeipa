@@ -27,6 +27,9 @@ properties([
             expectedValue: 'idm',
             field: 'artifact.name'
             ],
+            expectedValue: 'DL1',
+            field: 'artifact.stream'
+            ],
             [
             expectedValue: 'passed',
             field: 'status'
