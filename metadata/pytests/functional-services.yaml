@@ -1,16 +1,23 @@
 domains:
   - name: testrealm.test
-    type: IPA
+    type: ipa
     hosts:
       - name: master.testrealm.test
         role: master
         group: ipaserver
         os: rhel-8.1
-        restraint_id: 1
+      - name: replica.testrealm.test
+        role: replica
+        group: ipaserver
+        os: rhel-8.1
+      - name: client.testrealm.test
+        role: client
+        group: ipaclient
+        os: rhel-8.1
 phases:
   - name: init
     steps:
-      - playbook: init/ipatests.yaml
+      - playbook: init/pytests.yaml
         type: controller
       - playbook: init/testrunner-dir.yaml
         type: controller
@@ -26,15 +33,17 @@ phases:
         type: sut
       - playbook: prep/repos.yaml
         type: sut
-      - playbook: prep/restraint.yaml
+      - playbook: prep/prepare-pytest.yaml
+        type: sut
+      - playbook: prep/firewall.yaml
+        type: sut
+      - playbook: prep/ipa-network.yaml
         type: sut
   - name: test
     steps:
-      - restraint: beaker/ipa-server/acceptance/ipa-krbtpolicy/restraint.xml
-        git: ../ipa-tests
-        stop-on-error: 'False'
-      - playbook: test/restraint-results.yaml
-        type: controller
+      - pytests: src/functional_services
+        git: ../ipa-pytests
+
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml

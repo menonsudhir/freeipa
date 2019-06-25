@@ -1,19 +1,16 @@
 domains:
   - name: testrealm.test
-    type: ipa
+    type: IPA
     hosts:
       - name: master.testrealm.test
-        external_hostname: hostname1
         role: master
+        group: ipaserver
         os: rhel-8.1
-      - name: client.testrealm.test
-        external_hostname: hostname2
-        role: client
-        os: rhel-8.1
+        restraint_id: 1
 phases:
   - name: init
     steps:
-      - playbook: init/pytests.yaml
+      - playbook: init/ipatests.yaml
         type: controller
       - playbook: init/testrunner-dir.yaml
         type: controller
@@ -29,19 +26,15 @@ phases:
         type: sut
       - playbook: prep/repos.yaml
         type: sut
-      - playbook: prep/install-ipa-packages.yaml
-        type: sut
-      - playbook: prep/prepare-pytest.yaml
-        type: sut
-      - playbook: prep/firewall.yaml
-        type: sut
-      - playbook: prep/ipa-network.yaml
+      - playbook: prep/restraint.yaml
         type: sut
   - name: test
     steps:
-      - pytests: src/client_install
-        git: ../ipa-pytests
-
+      - restraint: beaker/ipa-server/acceptance/ipa-trust-cli/restraint.xml
+        git: ../ipa-tests
+        stop-on-error: 'False'
+      - playbook: test/restraint-results.yaml
+        type: controller
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml

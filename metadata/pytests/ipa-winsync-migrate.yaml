@@ -3,7 +3,6 @@ domains:
     type: ipa
     hosts:
       - name: master.testrealm.test
-        external_hostname: hostname1
         role: master
         group: ipaserver
         os: rhel-8.1
@@ -14,6 +13,8 @@ domains:
         external_hostname: idm-qe-ipa-win3.ipaad2012r2.test
         ip: 10.8.63.43
         role: ad
+        group: ad
+        os: win-2012
         username: 'Administrator'
         password: 'Secret123'
         host_type: 'windows'

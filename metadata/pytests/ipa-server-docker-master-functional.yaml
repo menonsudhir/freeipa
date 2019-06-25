@@ -5,15 +5,12 @@ domains:
       - name: master.testrealm.test
         role: master
         group: ipaserver
-        os: rhel-7.5-atomic # replace with e.g. rhel-7.6 for non-atomic
+        os: rhel-7.6-atomic # replace with e.g. rhel-7.6 for non-atomic
 phases:
   - name: init
     steps:
       - playbook: init/pytests.yaml
         type: controller
-        extra_vars:
-          repo: https://gitlab.cee.redhat.com/pvoborni/ipa-pytests.git
-          version: rename
       - playbook: init/testrunner-dir.yaml
         type: controller
   - name: provision
@@ -36,8 +33,8 @@ phases:
     steps:
       # Run only subset of test. Removing the /test_ipa... part will run all
       # docker tests there
-      - pytests: src/ipa_server_docker/test_ipa_server_docker_master_Functional.py
-        git: ../ipa-pytests
+      - pytests: test_ipa_server_docker_master_Functional.py
+        git: ../ipa-pytests/src/ipa-server-docker
 
   - name: teardown
     steps:

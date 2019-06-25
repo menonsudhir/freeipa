@@ -30,8 +30,9 @@ phases:
         type: sut
   - name: test
     steps:
-      - restraint: beaker/ipa-server/acceptance/ipa-client-cert/restraint.xml
+      - restraint: beaker/ipa-server/acceptance/ipa-default/restraint.xml
         git: ../ipa-tests
+        stop-on-error: 'False'
       - playbook: test/restraint-results.yaml
         type: controller
   - name: teardown

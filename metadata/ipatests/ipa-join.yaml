@@ -7,6 +7,16 @@ domains:
         group: ipaserver
         os: rhel-8.1
         restraint_id: 1
+      - name: replica.testrealm.test
+        role: replica
+        group: ipaserver
+        os: rhel-8.1
+        restraint_id: 2
+      - name: client.testrealm.test
+        role: client
+        group: ipaclient
+        os: rhel-8.1
+        restraint_id: 3
 phases:
   - name: init
     steps:
@@ -30,7 +40,7 @@ phases:
         type: sut
   - name: test
     steps:
-      - restraint: beaker/ipa-server/acceptance/ipa-krbtpolicy/restraint.xml
+      - restraint: beaker/ipa-server/acceptance/ipa-join/restraint.xml
         git: ../ipa-tests
         stop-on-error: 'False'
       - playbook: test/restraint-results.yaml

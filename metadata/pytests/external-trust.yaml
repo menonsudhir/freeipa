@@ -1,15 +1,27 @@
 domains:
-  - name: testrealm.test
+  - name: testrealmext.test
     type: ipa
     hosts:
-      - name: master.testrealm.test
+      - name: master.testrealmext.test
         role: master
         group: ipaserver
         os: rhel-8.1
-      - name: replica.testrealm.test
-        role: replica
-        group: ipaserver
+      - name: client.testrealmext.test
+        role: client
+        group: ipaclient
         os: rhel-8.1
+  - name: ipaad2k16cin.test
+    type: ad
+    hosts:
+      - name: ipaad2k16ci.ipaad2k16cin.test
+        external_hostname: ipaad2k16ci.ipaad2k16cin.test
+        ip: 10.0.144.176
+        role: ad
+        group: ad
+        os: win-2016
+        username: 'Administrator'
+        password: 'Secret123'
+        host_type: 'windows'
 phases:
   - name: init
     steps:
@@ -39,7 +51,7 @@ phases:
         type: sut
   - name: test
     steps:
-      - pytests: src/vault
+      - pytests: src/external_trust
         git: ../ipa-pytests
 
   - name: teardown

@@ -42,6 +42,7 @@ phases:
     steps:
       - restraint: beaker/ipa-server/acceptance/ipa-hbac-func/restraint.xml
         git: ../ipa-tests
+        stop-on-error: 'False'
       - playbook: test/restraint-results.yaml
         type: controller
   - name: teardown

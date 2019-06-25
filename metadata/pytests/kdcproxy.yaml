@@ -3,16 +3,16 @@ domains:
     type: ipa
     hosts:
       - name: master.testrealm.test
-        external_hostname: hostname1
         role: master
+        group: ipaserver
         os: rhel-8.1
       - name: replica.testrealm.test
-        external_hostname: hostname2
         role: replica
+        group: ipaserver
         os: rhel-8.1
       - name: client.testrealm.test
-        external_hostname: hostname3
         role: client
+        group: ipaclient
         os: rhel-8.1
 phases:
   - name: init
@@ -36,8 +36,6 @@ phases:
       - playbook: prep/install-ipa-packages.yaml
         type: sut
       - playbook: prep/prepare-pytest.yaml
-        type: sut
-      - playbook: prep/firewall.yaml
         type: sut
       - playbook: prep/ipa-network.yaml
         type: sut

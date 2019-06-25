@@ -3,7 +3,6 @@ domains:
     type: ipa
     hosts:
       - name: master.testrealmido.test
-        external_hostname: hostname1
         role: master
         group: ipaserver
         os: rhel-8.1
@@ -14,7 +13,7 @@ domains:
         external_hostname: ipaad2k16ci.ipaad2k16cin.test
         role: ad
         group: ad
-        os: win2012
+        os: win-2016
         ip: 10.0.144.176
         username: 'Administrator'
         password: 'Secret123'

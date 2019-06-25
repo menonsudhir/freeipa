@@ -3,7 +3,6 @@ domains:
     type: ipa
     hosts:
       - name: master.testrealm.test
-        external_hostname: hostname1
         role: 'master'
         group: ipaserver
         os: rhel-8.1

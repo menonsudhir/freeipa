@@ -37,6 +37,7 @@ phases:
     steps:
       - restraint: beaker/ipa-server/acceptance/ipa-trust-functional/restraint-user.xml
         git: ../ipa-tests
+        stop-on-error: 'False'
       - playbook: test/restraint-results.yaml
         type: controller
   - name: teardown

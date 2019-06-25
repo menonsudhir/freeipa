@@ -32,8 +32,10 @@ phases:
     steps:
       - restraint: beaker/ipa-server/acceptance/ipa-user-cli/adduser/restraint.xml
         git: ../ipa-tests
+        stop-on-error: 'False'
       - playbook: test/restraint-results.yaml
         type: controller
+
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml
