@@ -16,6 +16,13 @@ domains:
         group: ipaserver
         role: master
         os: rhel-8.1
+  - name: win.test
+    type: ad
+    hosts:
+      - name: ad.win.test
+        role: ad
+        group: ad
+        os: win-2016
 phases:
   - name: init
     steps:
@@ -23,15 +30,18 @@ phases:
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
+      - playbook: provision/win-config.yaml
       - playbook: provision/wait.yaml
   - name: prep
     steps:
       - playbook: prep/redhat-base.yaml
       - playbook: prep/repos.yaml
-      - playbook: prep/ipa-network-hosts.yaml
       - playbook: prep/install-ipa-packages.yaml
       - playbook: prep/prepare-upstream.yaml
       - playbook: prep/ipa-server-install.yaml
+      - playbook: prep/win-domain-setup.yaml
+      - playbook: prep/ipa-adtrust-install.yaml
+      - playbook: prep/ipa-network-hosts.yaml
       - playbook: prep/prepare-webui.yaml
   - name: test
     steps:
