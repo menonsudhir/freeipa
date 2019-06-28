@@ -8,16 +8,40 @@ env.ANSIBLE_GATHER_TIMEOUT = '60'
 node {
         stage("tier-1") {
           parallel(
-            "pytest::ipa-hosts": {
-                new TeRun([
-                    metadata: 'metadata/pytests/ipa-host.yaml',
-                    test: 'pytests-ipa-host'
-                ]).exec('ipa-slave')
-            },
             "pytest::func-svcs": {
                 new TeRun([
                     metadata: 'metadata/pytests/functional_services.yaml',
                     test: 'ipa-functional-services',
+                ]).exec('ipa-slave')
+            },
+            "pytest::replica-promotion": {
+                new TeRun([
+                    metadata: 'metadata/pytests/ipa-replica-promotion.yaml',
+                    test: 'ipa-replica-promotion',
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-hbac-func": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-hbac-func.yaml',
+                    test: 'ipa-hbac-func'
+                ]).exec('ipa-slave')
+            },
+            "upstream::advise": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/advise.yaml',
+                    test: 'upstream-advise'
+                ]).exec('ipa-slave')
+            },
+            "bash::getcert": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-getcert.yaml',
+                    test: 'ipa-getcert'
+                ]).exec('ipa-slave')
+            },
+            "pytest::ipa-hosts": {
+                new TeRun([
+                    metadata: 'metadata/pytests/ipa-host.yaml',
+                    test: 'pytests-ipa-host'
                 ]).exec('ipa-slave')
             },
             "pytest::subca": {
@@ -32,34 +56,10 @@ node {
                     test: 'ipa-external-ca',
                 ]).exec('ipa-slave')
             },
-            "pytest::ca_cert_renewal": {
-                new TeRun([
-                    metadata: 'metadata/pytests/ca_cert_renewal.yaml',
-                    test: 'ca_cert_renewal',
-                ]).exec('ipa-slave')
-            },
             "pytest::otp": {
                 new TeRun([
                     metadata: 'metadata/pytests/otp.yaml',
                     test: 'otp',
-                ]).exec('ipa-slave')
-            },
-            "pytest::vault": {
-                new TeRun([
-                    metadata: 'metadata/pytests/vault.yaml',
-                    test: 'vault',
-                ]).exec('ipa-slave')
-            },
-            "pytest::replica-install": {
-                new TeRun([
-                    metadata: 'metadata/pytests/replica-install.yaml',
-                    test: 'ipa-replica-install',
-                ]).exec('ipa-slave')
-            },
-            "pytest::replica-promotion": {
-                new TeRun([
-                    metadata: 'metadata/pytests/ipa-replica-promotion.yaml',
-                    test: 'ipa-replica-promotion',
                 ]).exec('ipa-slave')
             },
             "bash::krbtpolicy": {
@@ -92,18 +92,6 @@ node {
                     test: 'ipa-cert'
                 ]).exec('ipa-slave')
             },
-            "bash::getcert": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-getcert.yaml',
-                    test: 'ipa-getcert'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-hbac-func": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-hbac-func.yaml',
-                    test: 'ipa-hbac-func'
-                ]).exec('ipa-slave')
-            },
             "bash::ssh-functional": {
                 new TeRun([
                     metadata: 'metadata/ipatests/ipa-ssh-functional.yaml',
@@ -114,12 +102,6 @@ node {
                 new TeRun([
                     metadata: 'metadata/ipatests/adduser.yaml',
                     test: 'ipa-user-cli-adduser'
-                ]).exec('ipa-slave')
-            },
-            "bash::client-cert": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-client-cert.yaml',
-                    test: 'ipa-client-cert'
                 ]).exec('ipa-slave')
             },
             "bash::user-cli-moduser": {
@@ -138,6 +120,36 @@ node {
                 new TeRun([
                     metadata: 'metadata/ipatests/ipa-trust-func-user.yaml',
                     test: 'ipa-trust-functional-user'
+                ]).exec('ipa-slave')
+            },
+            "upstream::caless-TestServerInstall": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/caless-TestServerInstall.yaml',
+                    test: 'upstream-caless-TestServerInstall'
+                ]).exec('ipa-slave')
+            },
+            "upstream::caless-TestReplicaInstall": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/caless-TestReplicaInstall.yaml',
+                    test: 'upstream-caless-TestReplicaInstall'
+                ]).exec('ipa-slave')
+            },
+            "upstream::commands": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/commands.yaml',
+                    test: 'upstream-commands'
+                ]).exec('ipa-slave')
+            },
+            "upstream::nfs": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/nfs.yaml',
+                    test: 'upstream-nfs'
+                ]).exec('ipa-slave')
+            },
+            "upstream::authselect": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/authselect.yaml',
+                    test: 'upstream-authselect'
                 ]).exec('ipa-slave')
             }
             )

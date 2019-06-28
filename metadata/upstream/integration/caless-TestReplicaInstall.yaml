@@ -1,0 +1,61 @@
+ssh_key_filename: ~/.ssh/id_rsa
+admin_id: admin
+admin_pw: Secret123
+dirman_id: '"cn=Directory Manager"'
+dirman_pw: Secret123
+dns_forwarder: 10.11.5.19
+domains:
+  - name: testrelm.test
+    type: IPA
+    hosts:
+      - name: runner.testrelm.test
+        group: runner
+        role: test
+        os: rhel-8.1
+      - name: master.testrelm.test
+        group: ipaserver
+        role: master
+        os: rhel-8.1
+      - name: replica.testrelm.test
+        group: ipaserver
+        role: replica
+        os: rhel-8.1
+      - name: client.testrelm.test
+        group: ipaclient
+        role: client
+        os: rhel-8.1
+phases:
+  - name: init
+    steps:
+      - playbook: init/pytests.yaml
+        type: controller
+      - playbook: init/testrunner-dir.yaml
+        type: controller
+  - name: provision
+    steps:
+      - playbook: provision/linchpin-up.yaml
+        type: controller
+      - playbook: provision/wait.yaml
+        type: sut
+  - name: prep
+    steps:
+      - playbook: prep/redhat-base.yaml
+        type: sut
+      - playbook: prep/ipa-network-hosts.yaml
+        type: sut
+      - playbook: prep/install-ipa-packages.yaml
+        type: sut
+      - playbook: prep/prepare-pytest.yaml
+        type: sut
+      - playbook: prep/prepare-upstream.yaml
+        type: sut
+  - name: test
+    steps:
+      - playbook: test/test-upstream.yaml
+        type: sut
+        extra_vars:
+          test_suite: test_integration/test_caless.py::TestReplicaInstall
+  - name: teardown
+    steps:
+      - playbook: teardown/linchpin-destroy.yaml
+        type: controller
