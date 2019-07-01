@@ -9,58 +9,190 @@ env.ANSIBLE_GATHER_TIMEOUT = '60'
 node {
         stage("tier-1") {
           parallel(
-            "pytest::ipa-host": {
+            "bash::ipa-automember": {
                 new TeRun([
-                    metadata: 'metadata/pytests/ipa-host.yaml',
-                    test: 'ipa-host'
+                    metadata: 'metadata/ipatests/ipa-automember.yaml',
+                    test: 'ipa-automember'
                 ]).exec('ipa-slave')
             },
-            "pytest::functional-services": {
+            "bash::ipa-automount": {
                 new TeRun([
-                    metadata: 'metadata/pytests/functional-services.yaml',
-                    test: 'functional-services',
+                    metadata: 'metadata/ipatests/ipa-automount.yaml',
+                    test: 'ipa-automount'
                 ]).exec('ipa-slave')
             },
-            "pytest::subca": {
+            "bash::ipa-config": {
                 new TeRun([
-                    metadata: 'metadata/pytests/subca.yaml',
-                    test: 'subca',
+                    metadata: 'metadata/ipatests/ipa-config.yaml',
+                    test: 'ipa-config'
                 ]).exec('ipa-slave')
             },
-            "pytest::external-ca": {
+            "bash::cert": {
                 new TeRun([
-                    metadata: 'metadata/pytests/external-ca.yaml',
-                    test: 'external-ca',
+                    metadata: 'metadata/ipatests/ipa-cert.yaml',
+                    test: 'ipa-cert'
                 ]).exec('ipa-slave')
             },
-            "pytest::ca-cert-renewal": {
+            "bash::ipa-ctl": {
                 new TeRun([
-                    metadata: 'metadata/pytests/ca-cert-renewal.yaml',
-                    test: 'ca-cert-renewal',
+                    metadata: 'metadata/ipatests/ipa-ctl.yaml',
+                    test: 'ipa-ctl'
                 ]).exec('ipa-slave')
             },
-            "pytest::otp": {
+            "bash::ipa-default": {
                 new TeRun([
-                    metadata: 'metadata/pytests/otp.yaml',
-                    test: 'otp',
+                    metadata: 'metadata/ipatests/ipa-default.yaml',
+                    test: 'ipa-default'
                 ]).exec('ipa-slave')
             },
-            "pytest::vault": {
+            "bash::ipa-delegation-cli": {
                 new TeRun([
-                    metadata: 'metadata/pytests/vault.yaml',
-                    test: 'vault',
+                    metadata: 'metadata/ipatests/ipa-delegation-cli.yaml',
+                    test: 'ipa-delegation-cli'
                 ]).exec('ipa-slave')
             },
-            "pytest::replica-install": {
+            "bash::dns": {
                 new TeRun([
-                    metadata: 'metadata/pytests/replica-install.yaml',
-                    test: 'replica-install',
+                    metadata: 'metadata/ipatests/ipa-dns.yaml',
+                    test: 'ipa-dns'
                 ]).exec('ipa-slave')
             },
-            "pytest::ipa-replica-promotion": {
+            "bash::getcert": {
                 new TeRun([
-                    metadata: 'metadata/pytests/ipa-replica-promotion.yaml',
-                    test: 'ipa-replica-promotion',
+                    metadata: 'metadata/ipatests/ipa-getcert.yaml',
+                    test: 'ipa-getcert'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-get-rm-keytab": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-get-rm-keytab.yaml',
+                    test: 'ipa-get-rm-keytab'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-group-cli": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-group-cli.yaml',
+                    test: 'ipa-group-cli'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-hbac-cli": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-hbac-cli.yaml',
+                    test: 'ipa-hbac-cli'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-hbac-func": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-hbac-func.yaml',
+                    test: 'ipa-hbac-func'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-hbacsvc-cli": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-hbacsvc-cli.yaml',
+                    test: 'ipa-hbacsvc-cli'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-host-cli": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-host-cli.yaml',
+                    test: 'ipa-host-cli'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-hostgroup-cli": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-hostgroup-cli.yaml',
+                    test: 'ipa-hostgroup-cli'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-i18n": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-i18n.yaml',
+                    test: 'ipa-i18n'
+                ]).exec('ipa-slave')
+            },
+            "bash::krbtpolicy": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-krbtpolicy.yaml',
+                    test: 'ipa-krbtpolicy'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-migration": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-migration.yaml',
+                    test: 'ipa-migration'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-netgroup-cli": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-netgroup-cli.yaml',
+                    test: 'ipa-netgroup-cli'
+                ]).exec('ipa-slave')
+            },
+            "bash::password": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-password.yaml',
+                    test: 'ipa-password'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-selfservice": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-selfservice.yaml',
+                    test: 'ipa-selfservice'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-selinuxusermap-cli": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-selinuxusermap-cli.yaml',
+                    test: 'ipa-selinuxusermap-cli'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-services": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-services.yaml',
+                    test: 'ipa-services'
+                ]).exec('ipa-slave')
+            },
+            "bash::ssh-functional": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-ssh-functional.yaml',
+                    test: 'ipa-ssh-functional'
+                ]).exec('ipa-slave')
+            },
+            "bash::sudo": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-sudo.yaml',
+                    test: 'ipa-sudo'
+                ]).exec('ipa-slave')
+            },
+            "bash::trust-functional-ssh": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-trust-func-ssh.yaml',
+                    test: 'ipa-trust-functional-ssh'
+                ]).exec('ipa-slave')
+            },
+            "bash::trust-functional-user": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-trust-func-user.yaml',
+                    test: 'ipa-trust-functional-user'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-upgrade": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-upgrade.yaml',
+                    test: 'ipa-upgrade'
+                ]).exec('ipa-slave')
+            },
+            "bash::user-cli-adduser": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/adduser.yaml',
+                    test: 'ipa-user-cli-adduser'
+                ]).exec('ipa-slave')
+            },
+            "bash::user-cli-moduser": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/moduser.yaml',
+                    test: 'ipa-user-cli-moduser'
                 ]).exec('ipa-slave')
             },
             "pytest::client-install": {
@@ -73,6 +205,18 @@ node {
                 new TeRun([
                     metadata: 'metadata/pytests/dns-services.yaml',
                     test: 'dns-services',
+                ]).exec('ipa-slave')
+            },
+            "pytest::external-ca": {
+                new TeRun([
+                    metadata: 'metadata/pytests/external-ca.yaml',
+                    test: 'ipa-external-ca',
+                ]).exec('ipa-slave')
+            },
+            "pytest::func-svcs": {
+                new TeRun([
+                    metadata: 'metadata/pytests/functional_services.yaml',
+                    test: 'ipa-functional-services',
                 ]).exec('ipa-slave')
             },
             "pytest::ipa-advise": {
@@ -105,205 +249,72 @@ node {
                     test: 'ipa-hbac',
                 ]).exec('ipa-slave')
             },
+            "pytest::ipa-hosts": {
+                new TeRun([
+                    metadata: 'metadata/pytests/ipa-host.yaml',
+                    test: 'pytests-ipa-host'
+                ]).exec('ipa-slave')
+            },
             "pytest::ipa-rbac": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-rbac.yaml',
                     test: 'ipa-rbac',
                 ]).exec('ipa-slave')
             },
-            "bash::ipa-automember": {
+            "pytest::replica-promotion": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-automember.yaml',
-                    test: 'ipa-automember'
+                    metadata: 'metadata/pytests/ipa-replica-promotion.yaml',
+                    test: 'ipa-replica-promotion',
                 ]).exec('ipa-slave')
             },
-            "bash::ipa-automount": {
+            "pytest::otp": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-automount.yaml',
-                    test: 'ipa-automount'
+                    metadata: 'metadata/pytests/otp.yaml',
+                    test: 'otp',
                 ]).exec('ipa-slave')
             },
-            "bash::ipa-config": {
+            "pytest::subca": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-config.yaml',
-                    test: 'ipa-config'
+                    metadata: 'metadata/pytests/subca.yaml',
+                    test: 'ipa-subca',
                 ]).exec('ipa-slave')
             },
-            "bash::ipa-ctl": {
+            "upstream::advise": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-ctl.yaml',
-                    test: 'ipa-ctl'
+                    metadata: 'metadata/upstream/integration/advise.yaml',
+                    test: 'upstream-advise'
                 ]).exec('ipa-slave')
             },
-            "bash::ipa-default": {
+            "upstream::authselect": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-default.yaml',
-                    test: 'ipa-default'
+                    metadata: 'metadata/upstream/integration/authselect.yaml',
+                    test: 'upstream-authselect'
                 ]).exec('ipa-slave')
             },
-            "bash::ipa-delegation-cli": {
+            "upstream::caless-TestServerInstall": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-delegation-cli.yaml',
-                    test: 'ipa-delegation-cli'
+                    metadata: 'metadata/upstream/integration/caless-TestServerInstall.yaml',
+                    test: 'upstream-caless-TestServerInstall'
                 ]).exec('ipa-slave')
             },
-            "bash::ipa-get-rm-keytab": {
+            "upstream::caless-TestReplicaInstall": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-get-rm-keytab.yaml',
-                    test: 'ipa-get-rm-keytab'
+                    metadata: 'metadata/upstream/integration/caless-TestReplicaInstall.yaml',
+                    test: 'upstream-caless-TestReplicaInstall'
                 ]).exec('ipa-slave')
             },
-            "bash::ipa-group": {
+             "upstream::commands": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-group-cli.yaml',
-                    test: 'ipa-group-cli'
+                    metadata: 'metadata/upstream/integration/commands.yaml',
+                    test: 'upstream-commands'
                 ]).exec('ipa-slave')
             },
-            "bash::ipa-hbac-cli": {
+            "upstream::nfs": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-hbac-cli.yaml',
-                    test: 'ipa-hbac-cli'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-hbacsvc-cli": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-hbacsvc-cli.yaml',
-                    test: 'ipa-hbacsvc-cli'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-host-cli": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-host-cli.yaml',
-                    test: 'ipa-host-cli'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-hostgroup-cli": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-hostgroup-cli.yaml',
-                    test: 'ipa-hostgroup-cli'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-i18n": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-i18n.yaml',
-                    test: 'ipa-i18n'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-migration": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-migration.yaml',
-                    test: 'ipa-migration'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-netgroup-cli": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-netgroup-cli.yaml',
-                    test: 'ipa-netgroup-cli'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-password": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-password.yaml',
-                    test: 'ipa-password'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-selfservice": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-selfservice.yaml',
-                    test: 'ipa-selfservice'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-selinuxusermap-cli": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-selinuxusermap-cli.yaml',
-                    test: 'ipa-selinuxusermap-cli'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-services": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-services.yaml',
-                    test: 'ipa-services'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-upgrade": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-upgrade.yaml',
-                    test: 'ipa-upgrade'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-krbtpolicy": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-krbtpolicy.yaml',
-                    test: 'ipa-krbtpolicy'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-dns": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-dns.yaml',
-                    test: 'ipa-dns'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-sudo": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-sudo.yaml',
-                    test: 'ipa-sudo'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-cert": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-cert.yaml',
-                    test: 'ipa-cert'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-getcert": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-getcert.yaml',
-                    test: 'ipa-getcert'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-hbac-func": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-hbac-func.yaml',
-                    test: 'ipa-hbac-func'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-ssh-functional": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-ssh-functional.yaml',
-                    test: 'ipa-ssh-functional'
-                ]).exec('ipa-slave')
-            },
-            "bash::user-cli-adduser": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/adduser.yaml',
-                    test: 'adduser'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-client-cert": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-client-cert.yaml',
-                    test: 'ipa-client-cert'
-                ]).exec('ipa-slave')
-            },
-            "bash::user-cli-moduser": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/moduser.yaml',
-                    test: 'moduser'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-trust-func-ssh": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-trust-func-ssh.yaml',
-                    test: 'ipa-trust-func-ssh'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-trust-func-user": {
-                new TeRun([
-                    metadata: 'metadata/ipatests/ipa-trust-func-user.yaml',
-                    test: 'ipa-trust-func-user'
+                    metadata: 'metadata/upstream/integration/nfs.yaml',
+                    test: 'upstream-nfs'
                 ]).exec('ipa-slave')
             }
             )
         }
 }
-
