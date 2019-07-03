@@ -20,7 +20,7 @@ properties([
         $class: 'ActiveMQSubscriberProviderData',
         checks: [
             [
-            expectedValue: 'tier0',
+            expectedValue: 'installability',
             field: 'type'
             ],
             [
