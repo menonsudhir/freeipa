@@ -42,6 +42,7 @@ properties([
         ],
         selector: '',
         timeout: null
+        ]
     ]
     ])
 ])
