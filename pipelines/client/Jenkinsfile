@@ -54,7 +54,7 @@ node {
           parallel(
           "pytest::functional-services": {
                 new TeRun([
-                    metadata: 'metadata/pytests/functional_services.yaml',
+                    metadata: 'metadata/pytests/functional-services.yaml',
                     test: 'pytests-functional-services',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')

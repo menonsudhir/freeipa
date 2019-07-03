@@ -159,7 +159,7 @@ node {
             },
             "pytest::func-svcs": {
                 new TeRun([
-                    metadata: 'metadata/pytests/functional_services.yaml',
+                    metadata: 'metadata/pytests/functional-services.yaml',
                     test: 'ipa-functional-services',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
