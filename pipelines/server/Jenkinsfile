@@ -41,7 +41,6 @@ properties([
         ],
         selector: '',
         timeout: null
-        ]
     ]
     ])
 ])
