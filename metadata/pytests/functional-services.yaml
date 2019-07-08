@@ -17,7 +17,7 @@ domains:
 phases:
   - name: init
     steps:
-      - playbook: init/pytests.yaml
+      - playbook: init/ipa-pytests.yaml
         type: controller
       - playbook: init/testrunner-dir.yaml
         type: controller
@@ -34,6 +34,8 @@ phases:
       - playbook: prep/repos.yaml
         type: sut
       - playbook: prep/prepare-pytest.yaml
+        type: sut
+      - playbook: prep/func-svcs-copy-config.yaml
         type: sut
       - playbook: prep/firewall.yaml
         type: sut

@@ -9,7 +9,7 @@ domains:
 phases:
   - name: init
     steps:
-      - playbook: init/pytests.yaml
+      - playbook: init/ipa-pytests.yaml
         type: controller
       - playbook: init/testrunner-dir.yaml
         type: controller
