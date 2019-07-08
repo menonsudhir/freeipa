@@ -37,6 +37,8 @@ phases:
         type: sut
       - playbook: prep/prepare-pytest.yaml
         type: sut
+      - playbook: prep/firewall.yaml
+        type: sut
       - playbook: prep/ipa-network.yaml
         type: sut
   - name: test
