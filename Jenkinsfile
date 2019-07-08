@@ -151,6 +151,12 @@ node {
                     metadata: 'metadata/upstream/integration/authselect.yaml',
                     test: 'upstream-authselect'
                 ]).exec('ipa-slave')
+            },
+            "upstream::crlgen-manage": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/crlgen-manage.yaml',
+                    test: 'upstream-crlgen-manage'
+                ]).exec('ipa-slave')
             }
             )
         }
