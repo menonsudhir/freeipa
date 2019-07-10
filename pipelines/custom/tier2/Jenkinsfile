@@ -5,6 +5,8 @@ env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.gi
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
 
+def IPATESTS_METADATA_PATH = 'https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/master'
+
 node {
         stage("tier-2") {
           parallel(
@@ -100,109 +102,109 @@ node {
             },
             "bash::ds-migration": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ds-migration.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ds-migration.yaml",
                     test: 'ds-migration'
                 ]).exec('ipa-slave')
             },
             "bash::ds-migration-func": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ds-migration-func.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ds-migration-func.yaml",
                     test: 'ds-migration-func'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-client-cert": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-client-cert.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-client-cert.yaml",
                     test: 'ipa-client-cert'
                 ]).exec('ipa-slave')
             },
             "bash::install-client-cli": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/install-client-cli.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/install-client-cli.yaml",
                     test: 'install-client-cli'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-adtrust": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-adtrust.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-adtrust.yaml",
                     test: 'ipa-adtrust'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-client-automount": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-client-automount.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-client-automount.yaml",
                     test: 'ipa-client-automount'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-idrange-cli": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-idrange-cli.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-idrange-cli.yaml",
                     test: 'ipa-idrange-cli'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-join": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-join.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-join.yaml",
                     test: 'ipa-join'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-krblockout": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-krblockout.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-krblockout.yaml",
                     test: 'ipa-krblockout'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-nis-integration": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-nis-integration.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-nis-integration.yaml",
                     test: 'ipa-nis-integration'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-realmdomains-cli": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-realmdomains-cli.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-realmdomains-cli.yaml",
                     test: 'ipa-realmdomains-cli'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-selinux-usermap-func": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-selinux-usermap-func.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-selinux-usermap-func.yaml",
                     test: 'ipa-selinux-usermap-func'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-trust-cli": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-trust-cli.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-cli.yaml",
                     test: 'ipa-trust-cli'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-trust-func-hbac": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-trust-func-hbac.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-hbac.yaml",
                     test: 'ipa-trust-func-hbac'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-trust-func-httpkrb": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-trust-func-httpkrb.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-httpkrb.yaml",
                     test: 'ipa-trust-func-httpkrb'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-trust-func-selinux-usermap": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-trust-func-selinux-usermap.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-selinux-usermap.yaml",
                     test: 'ipa-trust-func-selinux-usermap'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-trust-func-automount": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-trust-func-automount.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-automount.yaml",
                     test: 'ipa-trust-func-automount'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-trust-func-sudo": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-trust-func-sudo.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-sudo.yaml",
                     test: 'ipa-trust-func-sudo'
                 ]).exec('ipa-slave')
             }

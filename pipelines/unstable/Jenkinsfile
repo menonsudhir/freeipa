@@ -5,6 +5,8 @@ env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.gi
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
 
+def IPATESTS_METADATA_PATH = 'https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/master'
+
 node {
         stage("UNSTABLE") {
           parallel(
@@ -130,25 +132,25 @@ node {
             },
             "p2bash::krblockout": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-krblockout.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-krblockout.yaml",
                     test: 'ipa-krblockout',
                 ]).exec('ipa-slave')
             },
             "p2bash::client-cert": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-client-cert.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-client-cert.yaml",
                     test: 'ipa-client-cert',
                 ]).exec('ipa-slave')
             },
             "p2bash::idoverride": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-idoverride.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-idoverride.yaml",
                     test: 'ipa-idoverride',
                 ]).exec('ipa-slave')
             },
             "p2bash::client-automount": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-client-automount.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-client-automount.yaml",
                     test: 'ipa-client-automount',
                 ]).exec('ipa-slave')
             },

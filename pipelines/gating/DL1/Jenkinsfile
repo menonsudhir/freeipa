@@ -16,6 +16,8 @@ env.CI_IRC = '#ipa'
 env.CI_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ARTIFACT_NAMESPACE = 'idm-ci.redhat-module'
 
+def IPATESTS_METADATA_PATH = 'https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/master'
+
 properties([
     parameters([    
     string(name: 'CI_MESSAGE', defaultValue: '', description: 'CI_MESSAGE'),
@@ -117,56 +119,56 @@ node {
             },
             "bash::krbtpolicy": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-krbtpolicy.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-krbtpolicy.yaml",
                     test: 'ipa-krbtpolicy',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
             "bash::sudo": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-sudo.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-sudo.yaml",
                     test: 'ipa-sudo',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
             "bash::password": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-password.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-password.yaml",
                     test: 'ipa-password',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
             "bash::cert": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-cert.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-cert.yaml",
                     test: 'ipa-cert',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
             "bash::ipa-hbac-func": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-hbac-func.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-hbac-func.yaml",
                     test: 'ipa-hbac-func',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
             "bash::ssh-functional": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/ipa-ssh-functional.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-ssh-functional.yaml",
                     test: 'ipa-ssh-functional',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
             "bash::user-cli-adduser": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/adduser.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-user-cli-adduser.yaml",
                     test: 'ipa-user-cli-adduser',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
             "bash::user-cli-moduser": {
                 new TeRun([
-                    metadata: 'metadata/ipatests/moduser.yaml',
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-user-cli-moduser.yaml",
                     test: 'ipa-user-cli-moduser',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
