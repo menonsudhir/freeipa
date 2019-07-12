@@ -18,76 +18,58 @@ class TestBugCheck(object):
         """ Setup for class """
         print("\nClass Setup")
         print("MASTER: ", multihost.master.hostname)
-        print("\nChecking IPA server package whether installed on MASTER")
-        output = multihost.master.run_command(['rpm', '-q', 'ipa-server'],
-                                              set_env=False,
-                                              raiseonerr=False)
-        if output.returncode != 0:
-            print("IPA server package not found on MASTER, thus installing")
-            multihost.master.run_command(['yum',
-                                          '-y',
-                                          'install',
-                                          'ipa-server*'],
-                                         set_env=False,
-                                         raiseonerr=False)
-        else:
-            print("\n IPA server package found on MASTER, running tests")
 
     def test_0001_ipaverify_1207539(self, multihost):
         '''IDM-IPA-TC: dns-services: Adding TLS server certificate or public key
         with the domain name for TLSA certificate association.'''
-        multihost.master.kinit_as_admin()
+        master = multihost.master
+        master.kinit_as_admin()
         tlsa = "0 0 1 d2abde240d7cd3ee6b4b28c54df034b97983" \
                "a1d16e8a410e4561cb106618e971"
-        multihost.master.run_command('ipa dnsrecord-add testrelm.test test1 '
-                                     '--tlsa-rec=\"' + tlsa + '\"',
-                                     set_env=False, raiseonerr=False)
-        check1 = multihost.master.run_command(['ipa',
-                                               'dnsrecord-show',
-                                               'testrelm.test',
-                                               'test1'],
-                                              set_env=False,
-                                              raiseonerr=False)
+
+        multihost.master.run_command('ipa dnsrecord-add {0} test1 --tlsa-rec="{1}"'
+                                     .format(master.domain.name, tlsa))
+        rec_show = 'ipa dnsrecord-show {} test1'.format(master.domain.name)
+        check1 = master.run_command(rec_show)
         if check1.returncode == 0:
             print("DNS record found, thus continuing")
         else:
             pytest.xfail("DNS record not found, Bug 1207539 FAILED")
         out = "D2ABDE240D7CD3EE6B4B28C54DF034B97983A" \
               "1D16E8A410E4561CB10 6618E971"
-        multihost.master.qerun(['dig', 'test1.testrelm.test', 'TLSA'],
-                               exp_returncode=0,
-                               exp_output=out)
+        dig_cmd = 'dig test1.{0} TLSA'.format(master.domain.name)
+        multihost.master.qerun(dig_cmd, exp_returncode=0, exp_output=out)
 
     def test_0002_ipaverify_1211608_and_1207541(self, multihost):
         '''IDM-IPA-TC: dns-services: Verification for bugzilla 1211608 and 1207541'''
-        multihost.master.kinit_as_admin()
-        cmdstr = 'ipa dnszone-mod testrelm.test ' \
-                 '--update-policy \"grant * wildcard *;\"'
-        multihost.master.run_command(cmdstr)
-        command1 = "ipa dnszone-show testrelm.test --all"
-        command2 = "| grep wildcard"
-        check3 = multihost.master.run_command(command1 + command2,
-                                              raiseonerr=False)
+        master = multihost.master
+        master.kinit_as_admin()
+
+        policy = "--update-policy='grant * wildcard *;'"
+        cmdstr = 'ipa dnszone-mod {0} {1}' .format(master.domain.name, policy)
+        master.run_command(cmdstr)
+        command1 = "ipa dnszone-show {} --all".format(master.domain.name)
+        check3 = master.run_command(command1)
+        assert "wildcard" in check3.stdout_text
+
         if check3.returncode == 0:
             print("DNSZone wildcard details found, continuing tests.")
         else:
             pytest.xfail("DNSZone not found, BZ1211608 and BZ1207541 failed")
         print("Adding a non-standard record")
-        filedata = 'update add test4.testrelm.test 10 ' \
-                   'IN TYPE65280 \# 4 0A000001\nsend\nquit'
-        multihost.master.put_file_contents("/tmp/test4.txt", filedata)
-        check4 = multihost.master.run_command('nsupdate -g /tmp/test4.txt')
+        filedata = "update add test4.{} 10 IN TYPE65280 \# 4 0A000001 \nsend\nquit"\
+            .format(master.domain.name)
+        master.put_file_contents("/tmp/test4.txt", filedata)
+        check4 = master.run_command('nsupdate -g /tmp/test4.txt')
+
         if check4.returncode == 0:
             print("Nsupdate command successful, continuing tests.")
         else:
             pytest.xfail("Nsupdate not successful, bugzillas failed")
-        command3 = "ipa dnsrecord-show testrelm.test test4 --all"
-        command4 = "| grep unknown"
-        check5 = multihost.master.run_command(command3 + command4)
-        if check5.returncode == 0:
-            print("DNSrecord details found, BZ1211608 and BZ1207541 PASSED")
-        else:
-            print("DNSrecord not found, BZ1211608 and BZ1207541 FAILED")
+        command3 = "ipa dnsrecord-show {} test4 --all".format(master.domain.name)
+        check5 = master.run_command(command3)
+        # check for verification of BZ1211608 and BZ1207541
+        assert "unknown" in check5.stdout_text
 
     def test_0003_bz1139776(self, multihost):
         """
@@ -126,43 +108,51 @@ class TestBugCheck(object):
 
     def test_0004_bz1184065(self, multihost):
         """
-        IDM-IPA-TC: dns-services: Verification of bz1184065 - PTR record synchronization for A/AAAA record tuple can fail mysteriously
+        IDM-IPA-TC: dns-services: Verification of bz1184065 - PTR record
+        synchronization for A/AAAA record tuple can fail mysteriously
         """
+        master = multihost.master
         uninstall_server(multihost.master)
         setup_master(multihost.master, setup_reverse=False)
-        multihost.master.kinit_as_admin()
+        master.kinit_as_admin()
         dnszone_add = ['ipa', 'dnszone-add']
-        name_server = '--name-server=' + multihost.master.hostname + '.'
+        name_server = '--name-server=' + master.hostname + '.'
         zone_name = 'newzone'
         zone_name_dot = zone_name + '.'
         ns_add = dnszone_add + [name_server, zone_name]
-        multihost.master.run_command(ns_add)
+        master.run_command(ns_add)
         print("New zone added successfully")
 
-        multihost.master.kinit_as_admin()
+        master.kinit_as_admin()
         # arecord add
-        multihost.master.run_command(['ipa', 'dnsrecord-add', zone_name, 'arecord', '--a-rec=1.2.3.4'])
+        master.run_command(['ipa', 'dnsrecord-add', zone_name,
+                            'arecord', '--a-rec=1.2.3.4'])
         # aaaa record add
-        multihost.master.run_command(['ipa', 'dnsrecord-add',
-                                     zone_name, 'aaaa', "--aaaa-rec=fec0:0:a10:6000:10:16ff:fe98:193"])
+        master.run_command(['ipa', 'dnsrecord-add',
+                            zone_name, 'aaaa',
+                            "--aaaa-rec=fec0:0:a10:6000:10:16ff:fe98:193"])
         # dynamic_update enable
-        multihost.master.run_command(['ipa', 'dnszone-mod', zone_name_dot, '--dynamic-update=TRUE'])
+        master.run_command(['ipa', 'dnszone-mod', zone_name_dot,
+                            '--dynamic-update=TRUE'])
         # update_policy
-        multihost.master.run_command('ipa dnszone-mod ' + zone_name_dot + ' --update-policy="grant * wildcard *;"')
+
+        policy = "--update-policy='grant * wildcard *;'"
+        cmdstr = 'ipa dnszone-mod {0} {1}' .format(zone_name_dot, policy)
+        master.run_command(cmdstr)
         # enable sync_ptr
-        multihost.master.run_command(['ipa', 'dnszone-mod', zone_name_dot, '--allow-sync-ptr=TRUE'])
+        master.run_command(['ipa', 'dnszone-mod', zone_name_dot, '--allow-sync-ptr=TRUE'])
         # activate keytab
-        multihost.master.run_command(['kinit', '-k', '-t', '/etc/krb5.keytab', 'host/' + multihost.master.hostname])
+        master.run_command(['kinit', '-k', '-t', '/etc/krb5.keytab', 'host/' + master.hostname])
         print("Adding aaaa records to " + zone_name)
         filedata = "update add newzone 666 IN AAAA ::2\nupdate add newzone 666 IN AAAA ::23\n" \
                    "update add newzone 666 IN AAAA ::43\nsend\nquit"
-        multihost.master.put_file_contents("/tmp/test_0004_bz1184065.txt", filedata)
+        master.put_file_contents("/tmp/test_0004_bz1184065.txt", filedata)
         # perform nsupdate
-        multihost.master.run_command('nsupdate -g /tmp/test_0004_bz1184065.txt')
-        multihost.master.kinit_as_admin()
-        multihost.master.qerun(['ipa', 'dnsrecord-find', zone_name],
-                               exp_returncode=0,
-                               exp_output=r'(.*)AAAA record: ::2, ::23, ::43(.*)')
+        master.run_command('nsupdate -g /tmp/test_0004_bz1184065.txt')
+        master.kinit_as_admin()
+        master.qerun(['ipa', 'dnsrecord-find', zone_name],
+                     exp_returncode=0,
+                     exp_output=r'(.*)AAAA record: ::2, ::23, ::43(.*)')
 
     def class_teardown(self, multihost):
         """ Full suite teardown """
