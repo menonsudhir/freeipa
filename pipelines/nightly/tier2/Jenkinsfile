@@ -1,10 +1,11 @@
 @Library('idm-ci')
 import idmci.*
 
-env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/xdong/idm-ci.git'
-env.IDMCI_BRANCH = 'snapshot'
+env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.git'
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
+env.NIGHTLY = 'true'
+
 node {
         stage("tier-2") {
           parallel(
