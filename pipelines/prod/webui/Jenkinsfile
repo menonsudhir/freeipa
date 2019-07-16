@@ -1,0 +1,181 @@
+@Library('idm-ci')
+import idmci.*
+
+env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.git'
+env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
+env.ANSIBLE_GATHER_TIMEOUT = '60'
+
+node {
+        stage("WebUI") {
+          parallel(
+            "webui::automember": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/automember.yaml',
+                    test: 'upstream-automember'
+                ]).exec('ipa-slave')
+            },
+            "webui::automount": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/automount.yaml',
+                    test: 'upstream-automount'
+                ]).exec('ipa-slave')
+            },
+            "webui::caless": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/caless.yaml',
+                    test: 'upstream-caless'
+                ]).exec('ipa-slave')
+            },
+            "webui::cert": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/cert.yaml',
+                    test: 'upstream-cert'
+                ]).exec('ipa-slave')
+            },
+            "webui::config": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/config.yaml',
+                    test: 'upstream-config'
+                ]).exec('ipa-slave')
+            },
+            "webui::delegation": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/delegation.yaml',
+                    test: 'upstream-delegation'
+                ]).exec('ipa-slave')
+            },
+            "webui::dns": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/dns.yaml',
+                    test: 'upstream-dns'
+                ]).exec('ipa-slave')
+            },
+            "webui::group": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/group.yaml',
+                    test: 'upstream-group'
+                ]).exec('ipa-slave')
+            },
+            "webui::hbac": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/hbac.yaml',
+                    test: 'upstream-hbac'
+                ]).exec('ipa-slave')
+            },
+            "webui::hostgroup": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/hostgroup.yaml',
+                    test: 'upstream-hostgroup'
+                ]).exec('ipa-slave')
+            },
+            "webui::host": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/host.yaml',
+                    test: 'upstream-host'
+                ]).exec('ipa-slave')
+            },
+            "webui::idviews": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/idviews.yaml',
+                    test: 'upstream-idviews'
+                ]).exec('ipa-slave')
+            },
+            "webui::krbtpolicy": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/krbtpolicy.yaml',
+                    test: 'upstream-krbtpolicy'
+                ]).exec('ipa-slave')
+            },
+            "webui::loginscreen": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/loginscreen.yaml',
+                    test: 'upstream-loginscreen'
+                ]).exec('ipa-slave')
+            },
+            "webui::misc_cases": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/misc_cases.yaml',
+                    test: 'upstream-misc_cases'
+                ]).exec('ipa-slave')
+            },
+            "webui::navigation": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/navigation.yaml',
+                    test: 'upstream-navigation'
+                ]).exec('ipa-slave')
+            },
+            "webui::netgroup": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/netgroup.yaml',
+                    test: 'upstream-netgroup'
+                ]).exec('ipa-slave')
+            },
+            "webui::pwpolicy": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/pwpolicy.yaml',
+                    test: 'upstream-pwpolicy'
+                ]).exec('ipa-slave')
+            },
+            "webui::range": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/range.yaml',
+                    test: 'upstream-range'
+                ]).exec('ipa-slave')
+            },
+            "webui::rbac": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/rbac.yaml',
+                    test: 'upstream-rbac'
+                ]).exec('ipa-slave')
+            },
+            "webui::realmdomains": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/realmdomains.yaml',
+                    test: 'upstream-realmdomains'
+                ]).exec('ipa-slave')
+            },
+            "webui::selfservice": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/selfservice.yaml',
+                    test: 'upstream-selfservice'
+                ]).exec('ipa-slave')
+            },
+            "webui::selinuxusermap": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/selinuxusermap.yaml',
+                    test: 'upstream-selinuxusermap'
+                ]).exec('ipa-slave')
+            },
+            "webui::service": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/service.yaml',
+                    test: 'upstream-service'
+                ]).exec('ipa-slave')
+            },
+            "webui::sudo": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/sudo.yaml',
+                    test: 'upstream-sudo'
+                ]).exec('ipa-slave')
+            },
+            "webui::translation": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/translation.yaml',
+                    test: 'upstream-translation'
+                ]).exec('ipa-slave')
+            },
+            "webui::user": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/user.yaml',
+                    test: 'upstream-user'
+                ]).exec('ipa-slave')
+            },
+            "webui::vault": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/vault.yaml',
+                    test: 'upstream-vault'
+                ]).exec('ipa-slave')
+            }
+            )
+        }
+}
