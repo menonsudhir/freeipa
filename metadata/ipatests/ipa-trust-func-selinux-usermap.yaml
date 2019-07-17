@@ -1,18 +1,18 @@
 domains:
-  - name: testrealm.test
+  - name: smap2k16.test
     type: IPA
     hosts:
-      - name: master.testrealm.test
+      - name: master.smap2k16.test
         role: master
         group: ipaserver
         os: rhel-8.1
         restraint_id: 1
-      - name: replica.testrealm.test
-        role: replica
-        group: ipaserver
+      - name: client1.smap2k16.test
+        role: client
+        group: ipaclient
         os: rhel-8.1
         restraint_id: 2
-      - name: client.testrealm.test
+      - name: client2.smap2k16.test
         role: client
         group: ipaclient
         os: rhel-8.1
@@ -40,7 +40,7 @@ phases:
         type: sut
   - name: test
     steps:
-      - restraint: beaker/ipa-server/acceptance/ipa-client-cert/restraint.xml
+      - restraint: beaker/ipa-server/acceptance/ipa-trust-functional/restraint-selinux-usermap.xml
         git: ../ipa-tests
         stop-on-error: 'False'
       - playbook: test/restraint-results.yaml
