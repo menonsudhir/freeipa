@@ -1,0 +1,191 @@
+@Library('idm-ci')
+import idmci.*
+
+env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.git'
+env.IDMCI_BRANCH = 'production'
+env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
+env.ANSIBLE_GATHER_TIMEOUT = '60'
+env.VERSION = 'RHEL8.1'
+env.TYPE = 'tier1'
+
+// Gating env vars
+env.CI_NAME = 'IdM IPA CI'
+env.CI_TEAM = 'IdM Eagle Team'
+env.CI_DOCS = 'https://gitlab.cee.redhat.com/identity-management/idm-ci/blob/master/doc/user-doc.md'
+env.CI_IRC = '#ipa'
+env.CI_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
+env.ARTIFACT_NAMESPACE = 'idm-ci.redhat-module'
+
+properties([
+    parameters([    
+    string(name: 'CI_MESSAGE', defaultValue: '', description: 'CI_MESSAGE'),
+    string(name: 'MESSAGE_HEADERS', defaultValue: '', description: 'MESSAGE_HEADERS'),
+    booleanParam(name: 'SKIP_UMB_MSG', defaultValue: true, description: 'True will cause no UMB messages.'),
+    booleanParam(name: 'NOTIFY_PACKAGER', defaultValue: false, description: 'Notify packager about this jenkins build.'),
+    booleanParam(name: 'DEBUG', defaultValue: false, description: 'Will printout debug information.'),
+    ]),
+    pipelineTriggers([
+    [
+        $class: 'CIBuildTrigger',
+        noSquash: false,
+        providerData: [
+        $class: 'ActiveMQSubscriberProviderData',
+        checks: [
+            [
+            expectedValue: 'tier0',
+            field: 'type'
+            ],
+            [
+            expectedValue: 'idm',
+            field: 'artifact.name'
+            ],
+            [
+            expectedValue: 'DL1',
+            field: 'artifact.stream'
+            ],
+            [
+            expectedValue: 'passed',
+            field: 'status'
+            ]
+        ],
+        name: 'Red Hat UMB',
+        overrides: [
+            topic: 'Consumer.rh-jenkins-ci-plugin.e1a8f4a3-3a25-4919-b2b9-080614de8fb6.VirtualTopic.eng.ci.redhat-module.test.complete'
+        ],
+        selector: '',
+        timeout: null
+        ]
+    ]
+    ])
+])
+
+node {
+  def g = new idmci.gating.gating()
+  // We init an in-progress message to be published as soon as this pipeline is triggered
+  g.sendMessage('running')
+  try {
+        stage("tier-1") {
+          parallel(
+            "pytest::ipa-hosts": {
+                new TeRun([
+                    metadata: 'metadata/pytests/ipa-host.yaml',
+                    test: 'pytests-ipa-host',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "pytest::subca": {
+                new TeRun([
+                    metadata: 'metadata/pytests/subca.yaml',
+                    test: 'ipa-subca',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "pytest::external-ca": {
+                new TeRun([
+                    metadata: 'metadata/pytests/external-ca.yaml',
+                    test: 'ipa-external-ca',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "pytest::otp": {
+                new TeRun([
+                    metadata: 'metadata/pytests/otp.yaml',
+                    test: 'otp',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "pytest::vault": {
+                new TeRun([
+                    metadata: 'metadata/pytests/vault.yaml',
+                    test: 'vault',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "pytest::replica-install": {
+                new TeRun([
+                    metadata: 'metadata/pytests/replica-install.yaml',
+                    test: 'ipa-replica-install',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "pytest::replica-promotion": {
+                new TeRun([
+                    metadata: 'metadata/pytests/ipa-replica-promotion.yaml',
+                    test: 'ipa-replica-promotion',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "bash::krbtpolicy": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-krbtpolicy.yaml',
+                    test: 'ipa-krbtpolicy',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "bash::sudo": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-sudo.yaml',
+                    test: 'ipa-sudo',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "bash::password": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-password.yaml',
+                    test: 'ipa-password',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "bash::cert": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-cert.yaml',
+                    test: 'ipa-cert',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-hbac-func": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-hbac-func.yaml',
+                    test: 'ipa-hbac-func',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "bash::ssh-functional": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/ipa-ssh-functional.yaml',
+                    test: 'ipa-ssh-functional',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "bash::user-cli-adduser": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/adduser.yaml',
+                    test: 'ipa-user-cli-adduser',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "bash::user-cli-moduser": {
+                new TeRun([
+                    metadata: 'metadata/ipatests/moduser.yaml',
+                    test: 'ipa-user-cli-moduser',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            },
+            "pytest::func-svcs": {
+                new TeRun([
+                    metadata: 'metadata/pytests/functional-services.yaml',
+                    test: 'ipa-functional-services',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+            }
+            )
+        }
+   } catch (e) {
+     throw e
+     // We send failing message here
+     g.sendMessage('error')
+   } finally {
+     // We send a passing message here
+     g.sendMessage('complete')
+  }
+}
