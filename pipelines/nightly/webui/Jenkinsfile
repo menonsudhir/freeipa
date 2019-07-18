@@ -6,6 +6,10 @@ env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
 env.NIGHTLY = 'true'
 
+// syntax: cron(<minute> <hour> <day of month> <month> <day of week>) timezone: UTC
+// details of jenkins cron sytax: https://jenkins.io/doc/book/pipeline/syntax/#cron-syntax
+properties([pipelineTriggers([cron('0 23 * * 2,5')])])
+
 node {
         stage("WebUI") {
           parallel(
