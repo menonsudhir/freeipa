@@ -35,6 +35,8 @@ phases:
     steps:
       - playbook: prep/redhat-base.yaml
         type: sut
+      - playbook: prep/repos.yaml  
+        type: sut
       - playbook: prep/ipa-network-hosts.yaml
         type: sut
       - playbook: prep/install-ipa-packages.yaml
