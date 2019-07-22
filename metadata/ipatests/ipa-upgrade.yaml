@@ -1,18 +1,18 @@
 domains:
-  - name: testrealm.test
+  - name: upgrade.test
     type: IPA
     hosts:
-      - name: master.testrealm.test
+      - name: master.upgrade.test
         role: master
         group: ipaserver
         os: rhel-8.0
         restraint_id: 1
-      - name: replica.testrealm.test
+      - name: replica.upgrade.test
         role: replica
         group: ipaserver
         os: rhel-8.0
         restraint_id: 2
-      - name: client.testrealm.test
+      - name: client.upgrade.test
         role: client
         group: ipaclient
         os: rhel-8.0
