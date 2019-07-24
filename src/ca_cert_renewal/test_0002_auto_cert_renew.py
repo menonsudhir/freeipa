@@ -26,11 +26,20 @@ class TestAutoRenewCert(object):
         # install master
         setup_master(multihost.master)
 
-        # perform renewal
-        renew_certs(multihost.master)
+        try:
+            # perform renewal
+            renewcert_data = renew_certs(multihost.master)
 
-        # cleanup
-        uninstall_server(multihost.master)
+            # renewcert_data[0] = resubmit, renewcert_data[1] = current date
+            # will need to remove if-else block when bz-1660877 get fix
+            if renewcert_data[0] != 0 and renewcert_data[1] > 2145916800:
+                pytest.xfail("Known issue bz-1660877")
+            else:
+                pytest.fail("Failed: Seems like bz-1660877 fixed or some other issue occured!!")
+
+        finally:
+            # cleanup
+            uninstall_server(multihost.master)
 
     def class_teardown(self, multihost):
         """ Teardown for class """

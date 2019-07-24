@@ -34,14 +34,7 @@ def renew_certs(host):
             qe_certs.set_certs(ast.literal_eval(cmd.stdout_text))
             resubmit = qe_certs.get_resubmit_status()
             if resubmit != 0:
-                # when date goes past 2038, cert renewal fails due to timestamp overflow
-                # known issues: https://bugzilla.redhat.com/show_bug.cgi?id=1660877
-                #               https://pagure.io/freeipa/issue/7827
-
-                if current > 2145916800:
-                    pytest.xfail("Known issue bz-1660877")
-                else:
-                    pytest.fail("Failed: Seems like bz-1660877 fixed or some other issue occured!!")
+                return(resubmit, current)
             next_soonest = qe_certs.get_soonest_expiration()
             if next_soonest > soonest:
                 break

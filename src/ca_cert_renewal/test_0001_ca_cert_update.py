@@ -185,11 +185,21 @@ class TestCaCertRenewal(object):
 
     def test_renew_ca_certs(self, multihost):
         """ Test to renew CA cert """
-        renew_certs(multihost.master)
+        try:
+            renewcert_data = renew_certs(multihost.master)
 
-        # uninstall server
-        uninstall_server(multihost.master)
+            # renewcert_data[0] = resubmit, renewcert_data[1] = current date
+            # will need to remove this if-else block when bz-1512952 get fixed
+            if renewcert_data[0] != 0:
+                pytest.xfail("Known issue bz-1512952")
+            else:
+                pytest.fail("Failed: Seems like an issue, please debug!!")
+
+        finally:
+            # uninstall server
+            uninstall_server(multihost.master)
 
     def class_teardown(self, multihost):
         """ Teardown for class """
         pass
+
