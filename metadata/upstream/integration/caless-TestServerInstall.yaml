@@ -16,14 +16,6 @@ domains:
         group: ipaserver
         role: master
         os: rhel-8.1
-      - name: replica.testrelm.test
-        group: ipaserver
-        role: replica
-        os: rhel-8.1
-      - name: client.testrelm.test
-        group: ipaclient
-        role: client
-        os: rhel-8.1
 phases:
   - name: init
     steps:
@@ -39,13 +31,15 @@ phases:
     steps:
       - playbook: prep/redhat-base.yaml
         type: sut
-      - playbook: prep/repos.yaml  
+      - playbook: prep/repos.yaml
         type: sut
       - playbook: prep/ipa-network-hosts.yaml
         type: sut
       - playbook: prep/install-ipa-packages.yaml
         type: sut
       - playbook: prep/prepare-upstream.yaml
+        type: sut
+      - playbook: prep/firewall.yaml
         type: sut
   - name: test
     steps:
