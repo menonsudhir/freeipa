@@ -2,7 +2,7 @@ import pytest
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.user_utils import add_ipa_user, del_ipa_user
 from ipa_pytests.shared.utils import (service_control, sssd_cache_reset)
-from .lib import (group_add_member, group_del, add_sudo_command, del_sudo_command, client_sudo_user_allowed,
+from lib import (group_add_member, group_del, add_sudo_command, del_sudo_command, client_sudo_user_allowed,
                   client_sudo_group_allowed, sudorule_add_permissive_options, sudorule_add_defaults,
                   sudorule_del, sudorule_add_attr, sudorule_del_attr)
 
