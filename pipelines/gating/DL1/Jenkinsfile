@@ -20,7 +20,7 @@ properties([
     parameters([    
     string(name: 'CI_MESSAGE', defaultValue: '', description: 'CI_MESSAGE'),
     string(name: 'MESSAGE_HEADERS', defaultValue: '', description: 'MESSAGE_HEADERS'),
-    booleanParam(name: 'SKIP_UMB_MSG', defaultValue: true, description: 'True will cause no UMB messages.'),
+    booleanParam(name: 'SKIP_UMB_MSG', defaultValue: false, description: 'True will cause no UMB messages.'),
     booleanParam(name: 'NOTIFY_PACKAGER', defaultValue: false, description: 'Notify packager about this jenkins build.'),
     booleanParam(name: 'DEBUG', defaultValue: false, description: 'Will printout debug information.'),
     ]),
