@@ -62,9 +62,7 @@ properties([
 node {
   def g = new idmci.gating.gating()
   // We init an in-progress message to be published as soon as this pipeline is triggered
-  // NB!! The plugin we are using msg-rh-jenkins-ci-plugin is not authorized to write to: topic://running
-  // so we are unable to publish in-progress messages
-  // g.sendMessage('running')
+  g.sendMessage('running')
   try {
         stage("tier-1") {
           parallel(
