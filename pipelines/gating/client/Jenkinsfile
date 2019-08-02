@@ -78,7 +78,9 @@ node {
    } catch (e) {
      throw e
      // We send failing message here
-     g.sendMessage('error')
+     //	NB!!! This is temporarily disabled as these messages are not working well
+     // they are interpreted as passing case.
+     //g.sendMessage('error')
    } finally {
      // We send a passing message here
      g.sendMessage('complete')
