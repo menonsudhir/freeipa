@@ -11,6 +11,7 @@ domains:
     hosts:
       - name: ipaad2k16ci.ipaad2k16cin.test
         external_hostname: ipaad2k16ci.ipaad2k16cin.test
+        static: 'True'
         role: ad
         group: ad
         os: win-2016

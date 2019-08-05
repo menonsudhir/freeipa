@@ -11,6 +11,7 @@ domains:
     hosts:
       - name: idm-qe-ipa-win3.ipaad2012r2.test
         external_hostname: idm-qe-ipa-win3.ipaad2012r2.test
+        static: 'True'
         ip: 10.8.63.43
         role: ad
         group: ad

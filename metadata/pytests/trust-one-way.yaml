@@ -11,6 +11,7 @@ domains:
     hosts:
       - name: ipaad2016.ipaad2016ci.test
         external_hostname: ipaad2016.ipaad2016ci.test
+        static: 'True'
         ip: 10.8.253.86
         role: ad
         group: ad
