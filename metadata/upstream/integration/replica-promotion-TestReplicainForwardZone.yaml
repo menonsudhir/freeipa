@@ -16,9 +16,9 @@ domains:
         group: ipaserver
         role: master
         os: rhel-8.1
-      - name: client.testrelm.test
-        group: ipaclient
-        role: client
+      - name: replica.testrelm.test
+        group: ipaserver
+        role: replica
         os: rhel-8.1
 phases:
   - name: init
@@ -50,7 +50,7 @@ phases:
       - playbook: test/test-upstream.yaml
         type: sut
         extra_vars:
-          test_suite: test_integration/test_authselect.py
+          test_suite: test_integration/test_replica_promotion.py::TestReplicaInForwardZone
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml

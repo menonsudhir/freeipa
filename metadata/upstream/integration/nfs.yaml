@@ -16,15 +16,15 @@ domains:
         group: ipaserver
         role: master
         os: rhel-8.1
-      - name: replica1.testrelm.test
-        group: ipaserver
-        role: replica
+      - name: client1.testrelm.test
+        group: ipaclient
+        role: client
         os: rhel-8.1
-      - name: replica2.testrelm.test
-        group: ipaserver
-        role: replica
+      - name: client2.testrelm.test
+        group: ipaclient
+        role: client
         os: rhel-8.1
-      - name: client.testrelm.test
+      - name: client3.testrelm.test
         group: ipaclient
         role: client
         os: rhel-8.1

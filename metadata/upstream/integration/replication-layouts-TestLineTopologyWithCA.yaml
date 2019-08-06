@@ -58,7 +58,7 @@ phases:
       - playbook: test/test-upstream.yaml
         type: sut
         extra_vars:
-          test_suite: test_integration/test_topology.py
+          test_suite: test_integration/test_replication_layouts.py::TestCompleteTopologyWithCA
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml

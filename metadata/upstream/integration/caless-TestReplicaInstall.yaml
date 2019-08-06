@@ -20,10 +20,6 @@ domains:
         group: ipaserver
         role: replica
         os: rhel-8.1
-      - name: client.testrelm.test
-        group: ipaclient
-        role: client
-        os: rhel-8.1
 phases:
   - name: init
     steps:
