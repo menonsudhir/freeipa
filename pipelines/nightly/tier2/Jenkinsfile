@@ -212,6 +212,378 @@ node {
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-sudo.yaml",
                     test: 'ipa-trust-func-sudo'
                 ]).exec('ipa-slave')
+            },
+            "upstream::automember": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/automember.yaml',
+                    test: 'upstream-automember'
+                ]).exec('ipa-slave')
+            },
+            "upstream::backup-and-restore-TestBackupAndRestore": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupAndRestore.yaml',
+                    test: 'upstream-backup-and-restore-TestBackupAndRestore'
+                ]).exec('ipa-slave')
+            },
+            "upstream::backup-and-restore-TestBackupAndRestoreDMPassword": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupAndRestoreDMPassword.yaml',
+                    test: 'upstream-backup-and-restore-TestBackupAndRestoreDMPassword'
+                ]).exec('ipa-slave')
+            },
+            "upstream::backup-and-restore-TestBackupAndRestoreWithDNS": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupAndRestoreWithDNS.yaml',
+                    test: 'upstream-backup-and-restore-TestBackupAndRestoreWithDNS'
+                ]).exec('ipa-slave')
+            },
+            "upstream::backup-and-restore-TestBackupAndRestoreWithDNSSEC": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupAndRestoreWithDNSSEC.yaml',
+                    test: 'upstream-backup-and-restore-TestBackupAndRestoreWithDNSSEC'
+                ]).exec('ipa-slave')
+            },
+            "upstream::backup-and-restore-TestBackupAndRestoreWithKRA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupAndRestoreWithKRA.yaml',
+                    test: 'upstream-backup-and-restore-TestBackupAndRestoreWithKRA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::backup-and-restore-TestBackupAndRestoreWithReplica": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupAndRestoreWithReplica.yaml',
+                    test: 'upstream-backup-and-restore-TestBackupAndRestoreWithReplica'
+                ]).exec('ipa-slave')
+            },
+            "upstream::backup-and-restore-TestBackupReinstallRestoreWithDNS": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupReinstallRestoreWithDNS.yaml',
+                    test: 'upstream-backup-and-restore-TestBackupReinstallRestoreWithDNS'
+                ]).exec('ipa-slave')
+            },
+            "upstream::backup-and-restore-TestBackupReinstallRestoreWithDNSSEC": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupReinstallRestoreWithDNSSEC.yaml',
+                    test: 'upstream-backup-and-restore-TestBackupReinstallRestoreWithDNSSEC'
+                ]).exec('ipa-slave')
+            },
+            "upstream::backup-and-restore-TestBackupReinstallRestoreWithKRA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupReinstallRestoreWithKRA.yaml',
+                    test: 'upstream-backup-and-restore-TestBackupReinstallRestoreWithKRA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::backup-and-restore-TestReplicainstallAfterRestore": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/backup-and-restore-TestReplicainstallAfterRestore.yaml',
+                    test: 'upstream-backup-and-restore-TestReplicainstallAfterRestore'
+                ]).exec('ipa-slave')
+            },
+            "upstream::backup-and-restore-TestUserRootFilesownershipPermiss": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/backup-and-restore-TestUserRootFilesownershipPermiss.yaml',
+                    test: 'upstream-backup-and-restore-TestUserRootFilesownershipPermiss'
+                ]).exec('ipa-slave')
+            },
+            "upstream::caless-TestCertinstall": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/caless-TestCertinstall.yaml',
+                    test: 'upstream-caless-TestCertinstall'
+                ]).exec('ipa-slave')
+            },
+            "upstream::caless-TestClientinstall": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/caless-TestClientinstall.yaml',
+                    test: 'upstream-caless-TestClientinstall'
+                ]).exec('ipa-slave')
+            },
+            "upstream::caless-TestIPACommands": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/caless-TestIPACommands.yaml',
+                    test: 'upstream-caless-TestIPACommands'
+                ]).exec('ipa-slave')
+            },
+            "upstream::caless-TestPKINIT": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/caless-TestPKINIT.yaml',
+                    test: 'upstream-caless-TestPKINIT'
+                ]).exec('ipa-slave')
+            },
+            "upstream::caless-TestReplicaCALessToCAFull": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/caless-TestReplicaCALessToCAFull.yaml',
+                    test: 'upstream-caless-TestReplicaCALessToCAFull'
+                ]).exec('ipa-slave')
+            },
+            "upstream::caless-TestServerCALessToExternalCA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/caless-TestServerCALessToExternalCA.yaml',
+                    test: 'upstream-caless-TestServerCALessToExternalCA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::caless-TestServerReplicaCALessToCAFull": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/caless-TestServerReplicaCALessToCAFull.yaml',
+                    test: 'upstream-caless-TestServerReplicaCALessToCAFull'
+                ]).exec('ipa-slave')
+            },
+            "upstream::crlgen-manage": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/crlgen-manage.yaml',
+                    test: 'upstream-crlgen-manage'
+                ]).exec('ipa-slave')
+            },
+            "upstream::customized-ds-config-install": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/customized-ds-config-install.yaml',
+                    test: 'upstream-customized-ds-config-install'
+                ]).exec('ipa-slave')
+            },
+            "upstream::dns-locations": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/dns-locations.yaml',
+                    test: 'upstream-dns-locations'
+                ]).exec('ipa-slave')
+            },
+            "upstream::external-ca-TestExternalCA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/external-ca-TestExternalCA.yaml',
+                    test: 'upstream-external-ca-TestExternalCA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::external-ca-TestSelfExternalSelf": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/external-ca-TestSelfExternalSelf.yaml',
+                    test: 'upstream-external-ca-TestSelfExternalSelf'
+                ]).exec('ipa-slave')
+            },
+            "upstream::external-ca-TestExternalCAinvalidCert": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/external-ca-TestExternalCAinvalidCert.yaml',
+                    test: 'upstream-external-ca-TestExternalCAinvalidCert'
+                ]).exec('ipa-slave')
+            },
+            "upstream::external-ca-TestExternalCAdirsrvStop": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/external-ca-TestExternalCAdirsrvStop.yaml',
+                    test: 'upstream-external-ca-TestExternalCAdirsrvStop'
+                ]).exec('ipa-slave')
+            },
+            "upstream::external-ca-TestMultipleExternalCA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/external-ca-TestMultipleExternalCA.yaml',
+                    test: 'upstream-external-ca-TestMultipleExternalCA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::forced-client-reenrollment": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/forced-client-reenrollment.yaml',
+                    test: 'upstream-forced-client-reenrollment'
+                ]).exec('ipa-slave')
+            },
+            "upstream::http-kdc-proxy": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/http-kdc-proxy.yaml',
+                    test: 'upstream-http-kdc-proxy'
+                ]).exec('ipa-slave')
+            },
+            "upstream::idviews": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/idviews.yaml',
+                    test: 'upstream-idviews'
+                ]).exec('ipa-slave')
+            },
+            "upstream::kerberos-flags": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/kerberos-flags.yaml',
+                    test: 'upstream-kerberos-flags'
+                ]).exec('ipa-slave')
+            },
+            "upstream::legacy-clients": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/legacy-clients.yaml',
+                    test: 'upstream-legacy-clients'
+                ]).exec('ipa-slave')
+            },
+            "upstream::netgroup": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/netgroup.yaml',
+                    test: 'upstream-netgroup'
+                ]).exec('ipa-slave')
+            },
+            "upstream::pkinit-manage": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/pkinit-manage.yaml',
+                    test: 'upstream-pkinit-manage'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replica-promotion-TestHiddenReplicaPromotion": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replica-promotion-TestHiddenReplicaPromotion.yaml',
+                    test: 'upstream-replica-promotion-TestHiddenReplicaPromotion'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replica-promotion-TestProhibitReplicaUninstallation": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replica-promotion-TestProhibitReplicaUninstallation.yaml',
+                    test: 'upstream-replica-promotion-TestProhibitReplicaUninstallation'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replica-promotion-TestRenewalMaster": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replica-promotion-TestRenewalMaster.yaml',
+                    test: 'upstream-replica-promotion-TestRenewalMaster'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replica-promotion-TestReplicainForwardZone": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replica-promotion-TestReplicainForwardZone.yaml',
+                    test: 'upstream-replica-promotion-TestReplicainForwardZone'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replica-promotion-TestReplicainstallCustodia": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replica-promotion-TestReplicainstallCustodia.yaml',
+                    test: 'upstream-replica-promotion-TestReplicainstallCustodia'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replica-promotion-TestReplicainstallWithExistingEntry": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replica-promotion-TestReplicainstallWithExistingEntry.yaml',
+                    test: 'upstream-replica-promotion-TestReplicainstallWithExistingEntry'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replica-promotion-TestReplicaPromotionLevel1": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replica-promotion-TestReplicaPromotionLevel1.yaml',
+                    test: 'upstream-replica-promotion-TestReplicaPromotionLevel1'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replica-promotion-TestSubCAkeyReplication": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replica-promotion-TestSubCAkeyReplication.yaml',
+                    test: 'upstream-replica-promotion-TestSubCAkeyReplication'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replica-promotion-TestUnprivilegedUserPermissions": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replica-promotion-TestUnprivilegedUserPermissions.yaml',
+                    test: 'upstream-replica-promotion-TestUnprivilegedUserPermissions'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replica-promotion-TestWrongClientDomain": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replica-promotion-TestWrongClientDomain.yaml',
+                    test: 'upstream-replica-promotion-TestWrongClientDomain'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replication-layouts-TestStarTopologyWithoutCA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replication-layouts-TestStarTopologyWithoutCA.yaml',
+                    test: 'upstream-replication-layouts-TestStarTopologyWithoutCA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replication-layouts-TestCompleteTopologyWithCA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replication-layouts-TestCompleteTopologyWithCA.yaml',
+                    test: 'upstream-replication-layouts-TestCompleteTopologyWithCA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replication-layouts-TestCompleteTopologyWithCAKRA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replication-layouts-TestCompleteTopologyWithCAKRA.yaml',
+                    test: 'upstream-replication-layouts-TestCompleteTopologyWithCAKRA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replication-layouts-TestCompleteTopologyWithoutCA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replication-layouts-TestCompleteTopologyWithoutCA.yaml',
+                    test: 'upstream-replication-layouts-TestCompleteTopologyWithoutCA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replication-layouts-TestLineTopologyWithCA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replication-layouts-TestLineTopologyWithCA.yaml',
+                    test: 'upstream-replication-layouts-TestLineTopologyWithCA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replication-layouts-TestLineTopologyWithCAKRA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replication-layouts-TestLineTopologyWithCAKRA.yaml',
+                    test: 'upstream-replication-layouts-TestLineTopologyWithCAKRA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replication-layouts-TestLineTopologyWithoutCA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replication-layouts-TestLineTopologyWithoutCA.yaml',
+                    test: 'upstream-replication-layouts-TestLineTopologyWithoutCA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replication-layouts-TestStarTopologyWithCA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replication-layouts-TestStarTopologyWithCA.yaml',
+                    test: 'upstream-replication-layouts-TestStarTopologyWithCA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::replication-layouts-TestStarTopologyWithCAKRA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replication-layouts-TestStarTopologyWithCAKRA.yaml',
+                    test: 'upstream-replication-layouts-TestStarTopologyWithCAKRA'
+                ]).exec('ipa-slave')
+            },
+            "upstream::server-del": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/server-del.yaml',
+                    test: 'upstream-server-del'
+                ]).exec('ipa-slave')
+            },
+            "upstream::service-permissions": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/service-permissions.yaml',
+                    test: 'upstream-service-permissions'
+                ]).exec('ipa-slave')
+            },
+            "upstream::sudo": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/sudo.yaml',
+                    test: 'upstream-sudo'
+                ]).exec('ipa-slave')
+            },
+            "upstream::topology-TestCASpecificRUVs": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/topology-TestCASpecificRUVs.yaml',
+                    test: 'upstream-topology-TestCASpecificRUVs'
+                ]).exec('ipa-slave')
+            },
+            "upstream::topology-TestTopologyOptions": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/topology-TestTopologyOptions.yaml',
+                    test: 'upstream-topology-TestTopologyOptions'
+                ]).exec('ipa-slave')
+            },
+            "upstream::trust": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/trust.yaml',
+                    test: 'upstream-trust'
+                ]).exec('ipa-slave')
+            },
+            "upstream::user-permissions": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/user-permissions.yaml',
+                    test: 'upstream-user-permissions'
+                ]).exec('ipa-slave')
+            },
+            "upstream::vault": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/vault.yaml',
+                    test: 'upstream-vault'
+                ]).exec('ipa-slave')
+            },
+            "upstream::winsyncmigrate": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/winsyncmigrate.yaml',
+                    test: 'upstream-winsyncmigrate'
+                ]).exec('ipa-slave')
             }
             )
         }
