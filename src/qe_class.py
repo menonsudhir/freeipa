@@ -217,6 +217,8 @@ class QeHost(pytest_multihost.host.Host):
 
         print("QERUN COMMAND SUCCEEDED!")
 
+        return cmd
+
     def yum_install(self, packages):
         """
         yum_install :: <packages>
