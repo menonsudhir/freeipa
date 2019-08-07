@@ -6,13 +6,13 @@ domains:
         role: master
         group: ipaserver
         os: rhel-8.1
-  - name: ipaad2016ci.test
+  - name: ipaad2k16cin.test
     type: ad
     hosts:
-      - name: ipaad2016.ipaad2016ci.test
-        external_hostname: ipaad2016.ipaad2016ci.test
+      - name: ipaad2k16ci.ipaad2k16cin.test
+        external_hostname: ipaad2k16ci.ipaad2k16cin.test
         static: 'True'
-        ip: 10.8.253.86
+        ip: 10.0.144.176
         role: ad
         group: ad
         os: win-2016
