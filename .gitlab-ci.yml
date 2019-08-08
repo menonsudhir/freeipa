@@ -1,7 +1,7 @@
 image:
   name: docker-registry.upshift.redhat.com/idm/idm-test-slave:latest
   entrypoint: [""]
-  
+
 .mr_template: &mr_definition
   tags:
   - shared
@@ -11,7 +11,7 @@ image:
     untracked: true
     when: always
     expire_in: 1 week
-    
+
 before_script:
 - git clone https://gitlab.cee.redhat.com/identity-management/idm-ci.git
 
