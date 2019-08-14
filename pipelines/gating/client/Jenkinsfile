@@ -7,6 +7,7 @@ env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
 env.VERSION = 'RHEL8.1'
 env.TYPE = 'client-stream.tier1'
+env.NIGHTLY = 'true'
 
 // Gating env vars
 env.CI_NAME = 'IdM IPA CI'
