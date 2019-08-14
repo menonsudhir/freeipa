@@ -146,13 +146,13 @@ node {
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
-            "bash::ipa-hbac-func": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-hbac-func.yaml",
-                    test: 'ipa-hbac-func',
-                    message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
-            },
+//            "bash::ipa-hbac-func": {
+//                new TeRun([
+//                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-hbac-func.yaml",
+//                    test: 'ipa-hbac-func',
+//                    message: "${params.CI_MESSAGE}"
+//                ]).exec('ipa-slave')
+//            },
             "bash::ssh-functional": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-ssh-functional.yaml",
@@ -173,14 +173,14 @@ node {
                     test: 'ipa-user-cli-moduser',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
-            },
-            "pytest::func-svcs": {
-                new TeRun([
-                    metadata: 'metadata/pytests/functional-services.yaml',
-                    test: 'ipa-functional-services',
-                    message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
             }
+//            "pytest::func-svcs": {
+//                new TeRun([
+//                    metadata: 'metadata/pytests/functional-services.yaml',
+//                    test: 'ipa-functional-services',
+//                    message: "${params.CI_MESSAGE}"
+//                ]).exec('ipa-slave')
+//            }
             )
         }
    } catch (e) {
