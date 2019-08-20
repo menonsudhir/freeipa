@@ -191,9 +191,11 @@ class QeHost(pytest_multihost.host.Host):
             su_command = 'su - %s -c "%s"' % (user, command)
 
         if user is None:
-            cmd = self.run_command(command, stdin_text, raiseonerr=False)
+            cmd = self.run_command(
+                command, stdin_text=stdin_text, raiseonerr=False)
         else:
-            cmd = self.run_command(su_command, stdin_text, raiseonerr=False)
+            cmd = self.run_command(
+                su_command, stdin_text=stdin_text, raiseonerr=False)
 
         all_output = cmd.stdout_text + cmd.stderr_text
         print("QERUN ALL OUTPUT:")
@@ -203,7 +205,7 @@ class QeHost(pytest_multihost.host.Host):
             msg = "\n> returncode mismatch."
             msg += "\n> GOT: {}".format(cmd.returncode)
             msg += "\n> EXPECTED: {}".format(exp_returncode)
-            pytest.fail(msg, pytrace=False)
+            pytest.fail(msg)
 
         if exp_output is None:
             print("Not checking expected output")
@@ -211,7 +213,7 @@ class QeHost(pytest_multihost.host.Host):
             msg = "\n> expected output not found."
             msg += "\n> GOT: {}".format(all_output.rstrip('\n'))
             msg += "\n> EXPECTED: {}".format(exp_output)
-            pytest.fail(msg, pytrace=False)
+            pytest.fail(msg)
         else:
             print("GOT: %s" % exp_output)
 
