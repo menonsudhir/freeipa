@@ -10,25 +10,18 @@ phases:
   - name: init
     steps:
       - playbook: init/ipa-pytests.yaml
-        type: controller
       - playbook: init/testrunner-dir.yaml
-        type: controller
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
-        type: controller
       - playbook: provision/wait.yaml
-        type: sut
   - name: prep
     steps:
       # For Atomic host
       - playbook: prep/root-ssh.yaml
-        type: sut
       # Uncommenting the below will enable this test to run on non-atomic RHEL 7
       # - playbook: prep/redhat-base.yaml
-      #   type: sut
       # - playbook: prep/install-docker.yaml
-      #   type: sut
   - name: test
     steps:
       # Run only subset of test. Removing the /test_ipa... part will run all
@@ -39,4 +32,3 @@ phases:
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml
-        type: controller

@@ -20,37 +20,26 @@ phases:
   - name: init
     steps:
       - playbook: init/testrunner-dir.yaml
-        type: controller
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
-        type: controller
   - name: prep
     steps:
       - playbook: prep/redhat-base.yaml
-        type: sut
       - playbook: prep/repos.yaml
-        type: sut
       - playbook: prep/ipa-network-hosts.yaml
-        type: sut
       - playbook: prep/install-ipa-packages.yaml
-        type: sut
       - playbook: prep/prepare-upstream.yaml
-        type: sut
       - playbook: prep/ipa-server-install-caless.yaml
-        type: sut
       - playbook: prep/prepare-webui.yaml
-        type: sut
         extra_vars:
           caless: true
   - name: test
     steps:
       - playbook: test/test-webui.yaml
-        type: sut
         extra_vars:
           test_suite: test_webui/
           keywords: ca_less
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml
-        type: controller

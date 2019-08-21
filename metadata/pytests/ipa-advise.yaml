@@ -10,29 +10,19 @@ phases:
   - name: init
     steps:
       - playbook: init/ipa-pytests.yaml
-        type: controller
       - playbook: init/testrunner-dir.yaml
-        type: controller
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
-        type: controller
       - playbook: provision/wait.yaml
-        type: sut
   - name: prep
     steps:
       - playbook: prep/redhat-base.yaml
-        type: sut
       - playbook: prep/repos.yaml
-        type: sut
       - playbook: prep/install-ipa-packages.yaml
-        type: sut
       - playbook: prep/prepare-pytest.yaml
-        type: sut
       - playbook: prep/firewall.yaml
-        type: sut
       - playbook: prep/ipa-network.yaml
-        type: sut
   - name: test
     steps:
       - pytests: src/ipa-advise
@@ -40,4 +30,3 @@ phases:
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml
-        type: controller

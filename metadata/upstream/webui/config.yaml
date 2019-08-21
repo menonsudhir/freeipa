@@ -20,36 +20,24 @@ phases:
   - name: init
     steps:
       - playbook: init/testrunner-dir.yaml
-        type: controller
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
-        type: controller
       - playbook: provision/wait.yaml
-        type: sut
   - name: prep
     steps:
       - playbook: prep/redhat-base.yaml
-        type: sut
       - playbook: prep/repos.yaml
-        type: sut
       - playbook: prep/ipa-network-hosts.yaml
-        type: sut
       - playbook: prep/install-ipa-packages.yaml
-        type: sut
       - playbook: prep/prepare-upstream.yaml
-        type: sut
       - playbook: prep/ipa-server-install.yaml
-        type: sut
       - playbook: prep/prepare-webui.yaml
-        type: sut
   - name: test
     steps:
       - playbook: test/test-webui.yaml
-        type: sut
         extra_vars:
           test_suite: test_webui/test_config.py
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml
-        type: controller

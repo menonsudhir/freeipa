@@ -24,34 +24,23 @@ phases:
   - name: init
     steps:
       - playbook: init/testrunner-dir.yaml
-        type: controller
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
-        type: controller
       - playbook: provision/wait.yaml
-        type: sut
   - name: prep
     steps:
       - playbook: prep/redhat-base.yaml
-        type: sut
       - playbook: prep/repos.yaml
-        type: sut
       - playbook: prep/ipa-network-hosts.yaml
-        type: sut
       - playbook: prep/install-ipa-packages.yaml
-        type: sut
       - playbook: prep/prepare-upstream.yaml
-        type: sut
       - playbook: prep/firewall.yaml
-        type: sut
   - name: test
     steps:
       - playbook: test/test-upstream.yaml
-        type: sut
         extra_vars:
           test_suite: test_integration/test_caless.py::TestReplicaCALessToCAFull
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml
-        type: controller

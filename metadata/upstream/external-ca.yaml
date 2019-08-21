@@ -18,31 +18,22 @@ phases:
   - name: init
     steps:
       - playbook: init/upstream-tests.yaml
-        type: controller
         extra_vars:
           repo: https://github.com/freeipa/freeipa.git
           version: ipa-4-6
         extra_args:
       - playbook: init/testrunner-dir.yaml
-        type: controller
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
-        type: controller
       - playbook: provision/wait.yaml
-        type: sut
   - name: prep
     steps:
       - playbook: prep/redhat-base.yaml
-        type: sut
       - playbook: prep/repos.yaml  
-        type: sut
       - playbook: prep/install-ipa-packages.yaml
-        type: sut
       - playbook: prep/firewall.yaml
-        type: sut
       - playbook: prep/ipa-network.yaml
-        type: sut
   - name: test
     steps:
       - pytests: ipatests/test_integration/test_external_ca.py::TestExternalCA::test_external_ca
@@ -51,4 +42,3 @@ phases:
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml
-        type: controller
