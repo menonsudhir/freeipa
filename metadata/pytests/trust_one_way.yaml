@@ -32,6 +32,7 @@ phases:
     steps:
       - playbook: prep/redhat-base.yaml
       - playbook: prep/repos.yaml
+      - playbook: prep/create-task-repo.yaml
       - playbook: prep/install-ipa-packages.yaml
       - playbook: prep/prepare-pytest.yaml
       - playbook: prep/firewall.yaml
