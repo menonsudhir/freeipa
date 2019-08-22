@@ -319,6 +319,12 @@ node {
                     metadata: 'metadata/upstream/integration/nfs.yaml',
                     test: 'upstream-nfs'
                 ]).exec('ipa-slave')
+            },
+            "upstream::pki-config-override": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/pki-config-override.yaml',
+                    test: 'upstream-pki-config-override'
+                ]).exec('ipa-slave')
             }
             )
         }
