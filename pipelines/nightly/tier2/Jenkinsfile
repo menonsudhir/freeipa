@@ -375,6 +375,12 @@ node {
                     test: 'upstream-external-ca-TestMultipleExternalCA'
                 ]).exec('ipa-slave')
             },
+            "upstream::external-ca-TestExternalCAProfileScenarios": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/external-ca-TestExternalCAProfileScenarios.yaml',
+                    test: 'upstream-external-ca-TestExternalCAProfileScenarios'
+                ]).exec('ipa-slave')
+            },
             "upstream::forced-client-reenrollment": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/forced-client-reenrollment.yaml',
