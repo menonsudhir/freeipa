@@ -71,69 +71,6 @@ def add_data_before_backup(multihost):
     print("Success: user added on master and replica found on clients")
 
 
-def ipa_gpg_encryption(host):
-    """method for gpg ecryption"""
-    keygen = '/root/keygen'
-    keygen1 = '/root/keygen1'
-    keygen_content = """%echo Generating a standard key\n
-                      Key-Type: RSA\n
-                      Key-Length: 2048\n
-                      Name-Real: IPA Backup root\n
-                      Name-Comment: IPA Backup root\n
-                      Name-Email: root@example.com\n
-                      Expire-Date: 0\n
-                      %pubring /root/backup.pub\n
-                      %secring /root/backup.sec\n
-                      %commit\n
-                      %echo done"""
-
-    keygen1_content = """%echo Generating a standard key\n
-                        Key-Type: RSA\n
-                        Key-Length: 1048\n
-                        Name-Real: IPA Backup test\n
-                        Name-Comment: IPA Backup test\n
-                        Name-Email: test@example.com\n
-                        Expire-Date: 0\n
-                        %pubring /root/another_backup.pub\n
-                        %secring /root/another_backup.sec\n
-                        %commit\n
-                        %echo done"""
-
-    host.put_file_contents(keygen, keygen_content)
-    host.put_file_contents(keygen1, keygen1_content)
-    print("Generating gpg keys")
-    cmd_arg = [paths.GPG, "--batch", "--gen-key", keygen]
-    print("Running : " + str(cmd_arg))
-    cmd = host.run_command(cmd_arg)
-    assert cmd.returncode == 0
-    print(cmd.stdout_text)
-    print("Success : gpg key generated : %s"%keygen)
-
-    print("Exporting valid gpg key")
-    cmd_arg = [paths.GPG, "--no-default-keyring", "--secret-keyring",
-               "/root/backup.sec", "--keyring", "/root/backup.pub",
-               "--list-secret-keys"]
-    print("Running : " + str(cmd_arg))
-    cmd = host.run_command(cmd_arg)
-    assert cmd.returncode == 0
-    print(cmd.stdout_text)
-    print("Success : gpg key exported")
-
-    return ["/root/backup"]
-
-
-def backup_without_gpg_encryption(host):
-    """backup scenario for backup with invalid gpg-keyring"""
-    tmp = '/tmp/temp.out'
-    print("backup without providing gpg-keyring")
-    cmd_arg = [paths.IPABACKUP, "--gpg", "--gpg-keyring=", ">", tmp, "2>&1"]
-    print("Running : " + str(cmd_arg))
-    cmd = host.run_command(cmd_arg, raiseonerr=False)
-    assert cmd.returncode != 0
-    print(cmd.stderr_text)
-    print("Success : Backup failed with invalid gpg-keyring.!")
-
-
 def backup_with_data_logs(host):
     cmd_arg = [paths.IPABACKUP, "--data", "--logs"]
     print("Running : " + str(cmd_arg))
@@ -158,12 +95,10 @@ def backup(host, **kwargs):
     """Run backup on host, return the path to the backup directory"""
     args = [paths.IPABACKUP]
 
-    gpg = kwargs.get('gpg', False)
     logs = kwargs.get('logs', False)
     data = kwargs.get('data', False)
     online = kwargs.get('online', False)
     custom_log = kwargs.get('custom_log', False)
-    gpg_keyrings = None
 
     if logs:
         print("IPA backup with logs")
@@ -175,15 +110,6 @@ def backup(host, **kwargs):
 
         print("IPA data backup")
         args.append('--data')
-
-    if gpg:
-        args.append('--gpg')
-        # scenario: Backup with invalid gpg-keyring
-        backup_without_gpg_encryption(host)
-
-        print("IPA backup with gpg-keyring")
-        gpg_keyrings = ipa_gpg_encryption(host)
-        args.append('--gpg-keyring=%s'%gpg_keyrings[0])
 
     if online:
         print("IPA backup online")
@@ -208,13 +134,10 @@ def backup(host, **kwargs):
         file_contents = host.transport.get_file_contents(custom_log)
     else:
         file_contents = host.transport.get_file_contents(paths.IPABACKUPLOG)
-    path = str(regex.search(file_contents).groups()[0])
+    path = regex.search(file_contents.decode("utf-8")).groups()[0]
 
     if path:
-        if gpg_keyrings:
-            return [path, gpg_keyrings]
-        else:
-            return path
+        return path
     else:
         raise AssertionError('Backup directory not found in %s'%(paths.IPABACKUPLOG))
 
@@ -225,15 +148,9 @@ def data_check_after_backup(host, backup_path, **kwargs):
     path1 = os.path.join(backup_path, "header")
     path1 = host.transport.file_exists(path1)
 
-    gpg = kwargs.get('gpg', False)
     data = kwargs.get('data', False)
     logs = kwargs.get('logs', False)
     custom_log = kwargs.get('custom_log', False)
-
-    if gpg:
-        path2 = os.path.join(backup_path, "ipa-full.tar.gpg")
-        path2 = host.transport.file_exists(path2)
-        assert path1 and path2
 
     if data:
         path2 = os.path.join(backup_path, "ipa-data.tar")
@@ -296,7 +213,7 @@ def disable_replication_uninstall_master(multihost):
     arg = ['ldapmodify',
            '-h', multihost.master.hostname,
            '-p', '389', '-D',
-           str(multihost.master.config.dirman_id),
+           multihost.master.config.dirman_id,
            '-w', multihost.master.config.dirman_pw,
            '-f', ldif_file]
     print("running:%s"%str(arg))
@@ -306,7 +223,7 @@ def disable_replication_uninstall_master(multihost):
 
     # uninstall master
     print("Uninstalling IPA server: %s"%multihost.master.hostname)
-    uninstall_server(multihost.master)
+    uninstall_server(multihost.master, force=True)
     args = "lsof -i tcp:8443 | awk 'NR!=1 {print $2}' | xargs kill"
     print("Running : %s"%args)
     multihost.master.run_command(args, raiseonerr=False)
@@ -345,7 +262,7 @@ def backup_when_ipa_service_down(host):
 
     regex = re.compile('\n.*Backed\sup\sto\s(.*)\n')
     file_contents = host.transport.get_file_contents(paths.IPABACKUPLOG)
-    path = str(regex.search(file_contents).groups()[0])
+    path = regex.search(file_contents.decode("utf-8")).groups()[0]
 
     if path:
         return path
@@ -354,7 +271,7 @@ def backup_when_ipa_service_down(host):
 
 def clear_data(host):
     """method for user clean up"""
-    for user in testuser1, testuser2:
+    for user in (testuser1, testuser2, testuser3, testuser4):
         del_ipa_user(host, user)
 
     # clear logs
@@ -363,38 +280,6 @@ def clear_data(host):
         print("Running : %s"%str(args))
         host.run_command(args)
 
-
-def selinux_boolean(host, off):
-    if off:
-        print("Turning off the httpd_can_network_connect selinux boolean")
-        cmd_arg = [paths.SETSEBOOL, "httpd_can_network_connect", "0"]
-        print("Running : " + str(cmd_arg))
-        cmd = host.run_command(cmd_arg)
-        assert cmd.returncode == 0
-        print("Success : boolean httpd_can_network_connect turned off")
-        print("Turning off the httpd_manage_ipa selinux boolean")
-        cmd_arg = [paths.SETSEBOOL, "httpd_manage_ipa", "0"]
-        print("Running : " + str(cmd_arg))
-        cmd = host.run_command(cmd_arg)
-        assert cmd.returncode == 0
-        print(cmd.stdout_text)
-        print("Success : boolean httpd_manage_ipa turned off")
-
-    else:
-        cmd_arg = paths.GETSEBOOL + (" httpd_can_network_connect|"
-                        "grep 'httpd_can_network_connect --> on'")
-        print("Checking status of selinux boolean httpd_can_network_connect")
-        print("Running : " + str(cmd_arg))
-        cmd = host.run_command(cmd_arg)
-        assert cmd.returncode == 0
-        print(cmd.stdout_text)
-        print("Success : boolean httpd_can_network_connect tunred ON after restore")
-
-        print("Checking status of selinux boolean httpd_manage_ipa")
-        cmd_arg = paths.GETSEBOOL + (" httpd_manage_ipa|"
-                                   "grep 'httpd_manage_ipa --> on'")
-        print("Running : " + str(cmd_arg))
-        cmd = host.run_command(cmd_arg)
-        assert cmd.returncode == 0
-        print(cmd.stdout_text)
-        print("Success : boolean httpd_manage_ipa tunred ON after restore")
+    # clear previous backups
+    args = ['rm', '-rf', '/var/lib/ipa/backup/*']
+    host.run_command(args)

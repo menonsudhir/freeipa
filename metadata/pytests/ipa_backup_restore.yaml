@@ -1,0 +1,50 @@
+domains:
+  - name: testrealm.test
+    type: ipa
+    hosts:
+      - name: master.testrealm.test
+        role: master
+        group: ipaserver
+        os: rhel-8.1
+      - name: replica1.testrealm.test
+        role: replica
+        group: ipaserver
+        os: rhel-8.1
+      - name: replica2.testrealm.test
+        role: replica
+        group: ipaserver
+        os: rhel-8.1
+      - name: client1.testrealm.test
+        role: client
+        group: ipaclient
+        os: rhel-8.1
+      - name: client2.testrealm.test
+        role: client
+        group: ipaclient
+        os: rhel-8.1
+phases:
+  - name: init
+    steps:
+      - playbook: init/ipa-pytests.yaml
+      - playbook: init/testrunner-dir.yaml
+  - name: provision
+    steps:
+      - playbook: provision/linchpin-up.yaml
+      - playbook: provision/wait.yaml
+  - name: prep
+    steps:
+      - playbook: prep/redhat-base.yaml
+      - playbook: prep/repos.yaml
+      - playbook: prep/create-task-repo.yaml
+      - playbook: prep/install-ipa-packages.yaml
+      - playbook: prep/prepare-pytest.yaml
+      - playbook: prep/firewall.yaml
+      - playbook: prep/ipa-network.yaml
+  - name: test
+    steps:
+      - pytests: src/ipa_backup_restore
+        git: ../ipa-pytests
+
+  - name: teardown
+    steps:
+      - playbook: teardown/linchpin-destroy.yaml

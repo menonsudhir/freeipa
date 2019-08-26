@@ -20,19 +20,6 @@ testuser4 = "testuser4"
 sixtyseconds = 60
 
 
-def resotre_invalid_keyring(host, backup_path):
-    tmp = '/tmp/tmp.ipa_restore_encrypted_full.out'
-    dirman_password = host.config.dirman_pw
-    cmd_arg = [paths.IPARESTORE, backup_path,
-               "--gpg-keyring=/root/backup1", ">", tmp, " 2>&1"]
-    print("Restoring full backup with invalid key")
-    cmd = host.run_command(cmd_arg,
-            stdin_text=dirman_password + '\nyes', raiseonerr=False)
-    assert cmd.returncode != 0
-    print(cmd.stderr_text)
-    print("Success : IPA restore failed with invalid gpg-keyring")
-
-
 def restore_without_data_option(host, backup_path):
     dirman_password = host.config.dirman_pw
     print("Restoring data from data backup without --data option")
@@ -51,19 +38,11 @@ def ipa_restore(host, backup_path, **kwargs):
     dirman_password = host.config.dirman_pw
     cmd_arg = [paths.IPARESTORE, backup_path]
 
-    gpg_keyring = kwargs.get('gpg_keyring', None)
     online = kwargs.get('--online', False)
     data = kwargs.get('--data', False)
     instance = kwargs.get('--instance', False)
     backend_root = kwargs.get('backend_root', False)
     backend_ca = kwargs.get('backend_ca', False)
-
-    if gpg_keyring:
-        # scenario: restore with invalid gpg-keyring
-        resotre_invalid_keyring(host, backup_path)
-
-        cmd_arg.append('--gpg-keyring=%s'%gpg_keyring)
-        print("Restoring full backup with gpg-keyring")
 
     if online:
         print("ipa restore online")

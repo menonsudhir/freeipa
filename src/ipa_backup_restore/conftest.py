@@ -42,7 +42,7 @@ def setup_session(request, multihost):
 
         setup_client(multihost.client1, multihost.master,
                      domain)
-    except StandardError as errval:
+    except Exception as errval:
         print("Error in setup_session %s" % (str(errval.args[0])))
         pytest.skip("setup_session_skip")
 

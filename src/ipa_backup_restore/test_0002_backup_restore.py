@@ -179,55 +179,6 @@ class TestIPABackupRestoreDataBackendInstance(object):
         backup_lib.clear_data(multihost.master)
 
 
-class TestIPABackupRestoreSELinuxBooleans(object):
-    """ Test Class """
-
-    def class_setup(self, multihost):
-        """ Setup for class """
-        print("\nUsing following hosts for IPA Backup Restore testcases")
-        print("*" * 80)
-        print("MASTER: %s" % multihost.master.hostname)
-        for replica in multihost.replicas:
-            print("REPLICA: %s" % replica.hostname)
-
-        for client in multihost.clients:
-            print("CLIENT: %s" % client.hostname)
-
-        print("*" * 80)
-        print("*" * 80)
-
-
-    def test_0013_backup_restore_SELinux_Booleans(self, multihost):
-        """
-        :Title: IDM-IPA-TC: Backup-Restore : IPA Data backup restore SELinux Booleans
-
-        :Requirement: IDM-IPA-REQ :
-
-        :Automation: Yes
-
-        :casecomponent: ipa
-        """
-        # backup
-        backup_path = backup_lib.backup(multihost.master, logs=True)
-        backup_lib.disable_replication_uninstall_master(multihost)
-
-        # turn SELinux Boolean off
-        backup_lib.selinux_boolean(multihost.master, off=True)
-
-        # restore with multiple backend
-        restore_lib.ipa_restore(multihost.master, backup_path)
-        restore_lib.ipa_log_check_after_restore_and_reinit(multihost)
-
-        # check SELinux Boolean is on
-        backup_lib.selinux_boolean(multihost.master, off=False)
-
-
-    def class_teardown(self, multihost):
-        """ Teardown for class """
-        print("Cleanup")
-        backup_lib.clear_data(multihost.master)
-
-
 class TestIPABackupRestoreFull(object):
     """ Test Class """
 
@@ -298,72 +249,6 @@ class TestIPABackupRestoreFull(object):
 
         # data check after restore
         restore_lib.ipa_data_check_after_restore(multihost)
-
-
-    def class_teardown(self, multihost):
-        """ Teardown for class """
-        print("Cleanup")
-        backup_lib.clear_data(multihost.master)
-
-class TestIPABackupRestoreSecondReplica(object):
-    """ Test Class """
-
-    def class_setup(self, multihost):
-        """ Setup for class """
-        print("\nUsing following hosts for IPA Backup Restore testcases")
-        print("*" * 80)
-        print("MASTER: %s" % multihost.master.hostname)
-        for replica in multihost.replicas:
-            print("REPLICA: %s" % replica.hostname)
-
-        for client in multihost.clients:
-            print("CLIENT: %s" % client.hostname)
-
-        print("*" * 80)
-
-
-    def test_0016_backup_restore_second_replica(self, multihost):
-        """
-        :Title: IDM-IPA-TC : Backup-Restore : Second replica install after backup restore
-
-        :Requirement: IDM-IPA-REQ :
-
-        :Automation: Yes
-
-        :casecomponent: ipa
-        """
-        # add data before backup
-        backup_lib.add_data_before_backup(multihost)
-
-        # Full backup with logs
-        print("Executing backup")
-        backup_path = backup_lib.backup(multihost.master, logs=True)
-        backup_lib.data_check_after_backup(multihost.master,
-                                           backup_path,
-                                           logs=True)
-        backup_lib.data_deletion_after_backup(multihost)
-        backup_lib.disable_replication_uninstall_master(multihost)
-
-        # Restore scenario
-        print("Executing restore")
-        restore_lib.ipa_restore(multihost.master, backup_path)
-        restore_lib.ipa_log_check_after_restore_and_reinit(multihost)
-
-        # data check after restore
-        restore_lib.ipa_data_check_after_restore(multihost)
-
-        # setup secons replica and client
-        set_etc_hosts(multihost.replica2, multihost.master)
-        set_etc_hosts(multihost.master, multihost.replica2)
-        setup_replica(multihost.replica2, multihost.master,
-                      setup_dns=True,
-                      setup_ca=True,
-                      setup_reverse=False,
-                      skip_concheck=True)
-        domain = multihost.master.domain.name
-
-        setup_client(multihost.client2, multihost.master,
-                     domain)
 
 
     def class_teardown(self, multihost):
