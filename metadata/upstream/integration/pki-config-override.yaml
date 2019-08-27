@@ -11,11 +11,11 @@ domains:
       - name: runner.testrelm.test
         group: runner
         role: test
-        os: rhel-8.1-nightly
+        os: rhel-8.1
       - name: master.testrelm.test
         group: ipaserver
         role: master
-        os: rhel-8.1-nightly
+        os: rhel-8.1
 phases:
   - name: init
     steps:
