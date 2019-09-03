@@ -2,6 +2,7 @@
 import idmci.*
 
 env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.git'
+env.IDMCI_BRANCH = 'production'
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
 env.NIGHTLY = 'true'
