@@ -21,7 +21,7 @@ domains:
     hosts:
       - name: ad.win.test
         role: ad
-        group: ad
+        group: ad_root
         os: win-2016
 phases:
   - name: init
