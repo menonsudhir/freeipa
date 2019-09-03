@@ -21,9 +21,9 @@ properties([
     parameters([
     string(name: 'CI_MESSAGE', defaultValue: '', description: 'CI_MESSAGE'),
     string(name: 'MESSAGE_HEADERS', defaultValue: '', description: 'MESSAGE_HEADERS'),
-    booleanParam(name: 'SKIP_UMB_MSG', defaultValue: true, description: 'True will cause no UMB messages.'),
+    booleanParam(name: 'SKIP_UMB_MSG', defaultValue: false, description: 'True will cause no UMB messages.'),
     booleanParam(name: 'NOTIFY_PACKAGER', defaultValue: false, description: 'Notify packager about this jenkins build.'),
-    booleanParam(name: 'DEBUG', defaultValue: false, description: 'Will printout debug information.'),
+    booleanParam(name: 'DEBUG', defaultValue: true, description: 'Will printout debug information.'),
     ]),
     pipelineTriggers([
     [
@@ -33,25 +33,21 @@ properties([
         $class: 'ActiveMQSubscriberProviderData',
         checks: [
             [
-            expectedValue: 'installability',
-            field: 'type'
+            expectedValue: '^done$',
+            field: 'state_name'
             ],
             [
             expectedValue: 'idm',
-            field: 'artifact.name'
+            field: 'name'
             ],
             [
             expectedValue: 'client',
-            field: 'artifact.stream'
+            field: 'stream'
             ],
-            [
-            expectedValue: 'passed',
-            field: 'status'
-            ]
         ],
         name: 'Red Hat UMB',
         overrides: [
-            topic: 'Consumer.rh-jenkins-ci-plugin.65ef218a-b2e3-4999-ba81-ade6448bcdca.VirtualTopic.eng.ci.redhat-module.test.complete'
+            topic: 'Consumer.rh-jenkins-ci-plugin.65ef218a-b2e3-4999-ba81-ade6448bcdca.VirtualTopic.eng.mbs.module.state.change'
         ],
         selector: '',
         timeout: null
