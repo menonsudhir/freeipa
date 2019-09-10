@@ -13,7 +13,7 @@ image:
     expire_in: 1 week
 
 before_script:
-- git clone https://gitlab.cee.redhat.com/identity-management/idm-ci.git
+- git clone -b production --depth=1 https://gitlab.cee.redhat.com/identity-management/idm-ci.git
 
 ipa-mr-pipeline:
   <<: *mr_definition
