@@ -89,7 +89,7 @@ node {
             },
             "pytest::trust-one-way": {
                 new TeRun([
-                    metadata: 'metadata/pytests/trust_one_way.yaml',
+                    metadata: 'metadata/pytests/trust-one-way.yaml',
                     test: 'trust-one-way'
                 ]).exec('ipa-slave')
             },
