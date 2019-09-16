@@ -36,7 +36,7 @@ phases:
     steps:
       - playbook: test/test-upstream.yaml
         extra_vars:
-          test_suite: test_integration/test_external_ca.py::TestExternalCAinvalidCert
+          test_suite: test_integration/test_external_ca.py::TestExternalCAInvalidCert
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml
