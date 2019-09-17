@@ -12,7 +12,7 @@ def ad_domain(multihost):
     AD Domain
     """
     ad1 = multihost.ads[0]
-    addomain = '.'.join(ad1.external_hostname.split(".")[1:])
+    addomain = '.'.join(ad1.hostname.split(".")[1:])
 
     return addomain
 
@@ -22,7 +22,7 @@ def add_external_trust(multihost):
     Add external trust
     """
     ad1 = multihost.ads[0]
-    forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
+    forwardzone = '.'.join(ad1.hostname.split(".")[1:])
 
     # trust-add
     opt_list = ['--type=ad', '--external=true']

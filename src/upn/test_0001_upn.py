@@ -26,7 +26,7 @@ class TestUPN(object):
         adtrust_install(multihost.master)
 
         ad1 = multihost.ads[0]
-        forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
+        forwardzone = '.'.join(ad1.hostname.split(".")[1:])
         domain = multihost.master.domain.name
 
         etchosts = '/etc/hosts'
@@ -61,7 +61,7 @@ class TestUPN(object):
         @Title: IDM-IPA-TC: UPN : Check if UPN suffixes are displayed in ipa trust show with one way trust
         """
         ad1 = multihost.ads[0]
-        forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
+        forwardzone = '.'.join(ad1.hostname.split(".")[1:])
 
         multihost.master.kinit_as_admin()
         cmd = multihost.master.run_command(['ipa', 'trust-add', forwardzone,
@@ -98,7 +98,7 @@ class TestUPN(object):
         @Title: IDM-IPA-TC: UPN : Check if UPN suffixes are displayed in ipa trust show with two way trust
         """
         ad1 = multihost.ads[0]
-        forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
+        forwardzone = '.'.join(ad1.hostname.split(".")[1:])
         multihost.master.kinit_as_admin()
         cmd = multihost.master.run_command(['ipa', 'trust-add', forwardzone,
                                             '--admin', ad1.ssh_username,
@@ -135,7 +135,7 @@ class TestUPN(object):
         @Title: IDM-IPA-TC: UPN : Check if UPN suffixes are displayed in ipa trust show with external trust
         """
         ad1 = multihost.ads[0]
-        forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
+        forwardzone = '.'.join(ad1.hostname.split(".")[1:])
         domain = multihost.master.domain.name
         realm = multihost.master.domain.realm
 
@@ -175,7 +175,7 @@ class TestUPN(object):
         @Title: IDM-IPA-TC: UPN : Check if UPN works with getent passwd id and kinit command output
         """
         ad1 = multihost.ads[0]
-        forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
+        forwardzone = '.'.join(ad1.hostname.split(".")[1:])
         domain = multihost.master.domain.name
         realm = multihost.master.domain.realm
 

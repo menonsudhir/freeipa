@@ -13,7 +13,7 @@ def ssh_from_client(multihost):
     ssh to user from client environment
     """
     ad1 = multihost.ads[0]
-    addomain = '.'.join(ad1.external_hostname.split(".")[1:])
+    addomain = '.'.join(ad1.hostname.split(".")[1:])
     aduser = '{}@{}'.format(multihost.aduser, addomain)
 
     # cleaning sssd cache
@@ -26,7 +26,7 @@ def ssh_from_client(multihost):
 
     expect_script = 'set timeout 15\n'
     expect_script = 'spawn ssh -l ' + multihost.aduser + '@' + \
-                    addomain + ' ' + multihost.master.hostname + '\n'
+                    addomain + ' ' + multihost.master.ip + '\n'
     expect_script += 'expect "Password:"\n'
     expect_script += 'send "' + multihost.password + '\r"\n'
     expect_script += 'expect "$"\n'

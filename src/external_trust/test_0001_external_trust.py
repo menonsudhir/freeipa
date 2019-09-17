@@ -39,7 +39,7 @@ class TestExternalTrust(object):
         adtrust_install(multihost.master)
 
         ad1 = multihost.ads[0]
-        forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
+        forwardzone = '.'.join(ad1.hostname.split(".")[1:])
         domain = multihost.master.domain.name
 
         etchosts = paths.ETCHOSTS
@@ -74,7 +74,7 @@ class TestExternalTrust(object):
          Check external trust with false option
         """
         ad1 = multihost.ads[0]
-        forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
+        forwardzone = '.'.join(ad1.hostname.split(".")[1:])
 
         # trust-add
         opt_list = ['--type=ad', '--external=False']
@@ -381,7 +381,7 @@ class TestExternalTrust(object):
         Check two way transitive trust works
         """
         ad1 = multihost.ads[0]
-        forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
+        forwardzone = '.'.join(ad1.hostname.split(".")[1:])
 
         # trust-add
         opt_list = ['--type=ad', '--two-way=true', '--external=true']
@@ -465,7 +465,7 @@ class TestExternalTrust(object):
         external trust add fails when incorrect value is specified
         """
         ad1 = multihost.ads[0]
-        forwardzone = '.'.join(ad1.external_hostname.split(".")[1:])
+        forwardzone = '.'.join(ad1.hostname.split(".")[1:])
         expectoutput = "ipa: ERROR: invalid 'external': must be True or False"
 
         # trust-add
