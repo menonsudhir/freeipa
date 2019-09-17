@@ -6,6 +6,11 @@ env.IDMCI_BRANCH = 'production'
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
 
+properties([
+    [$class: 'CachetJobProperty', requiredResources: true, resources: ['openstack.psi.redhat.com', 'paas.psi.redhat.com']],
+])
+
+
 node {
         stage("WebUI") {
           parallel(

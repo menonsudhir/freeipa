@@ -18,6 +18,7 @@ env.CI_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ARTIFACT_NAMESPACE = 'idm-ci.redhat-module'
 
 properties([
+    [$class: 'CachetJobProperty', requiredResources: true, resources: ['openstack.psi.redhat.com', 'paas.psi.redhat.com']],
     parameters([
     string(name: 'CI_MESSAGE', defaultValue: '', description: 'CI_MESSAGE'),
     string(name: 'MESSAGE_HEADERS', defaultValue: '', description: 'MESSAGE_HEADERS'),
