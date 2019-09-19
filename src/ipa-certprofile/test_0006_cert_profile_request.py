@@ -2,6 +2,7 @@
 Certprofile Request testsuite
 """
 import re
+import time
 import pytest
 from datetime import datetime
 from lib import certprofile_run, create_cert_cfg, caacl_run
@@ -384,6 +385,8 @@ class TestCertProfileRequest(object):
         :Caseautomation: automated
 
         """
+        iterations = 0
+        maxiter = 30
         # Kinit as admin
         multihost.master.kinit_as_admin()
         # Create a sample configuration
@@ -412,13 +415,21 @@ class TestCertProfileRequest(object):
                 'exp_code': '0',
                 'op': 'import'}
         certprofile_run(data)
+        exp_str = 'cn=%s,ou=certificateProfiles,ou=ca,o=ipaca' % cname
         search = ['ldapsearch', '-xLLL',
                   '-D', 'cn=Directory Manager',
                   '-w', 'Secret123',
-                  '-h', multihost.master.hostname,
-                  '-b', 'ou=certificateProfiles,ou=ca,o=ipaca']
-        cmd = multihost.replica1.run_command(search, raiseonerr=True)
-        if cmd.returncode != 0:
+                  '-h', multihost.replica1.hostname,
+                  '-b', exp_str,
+                  '-s', 'base', '1.1']
+        while iterations < maxiter:
+            iterations += 1
+            output = multihost.replica1.run_command(search)
+            if output.returncode == 0:
+                assert exp_str in output.stdout_text
+                break
+            time.sleep(2)
+        else:
             pytest.fail("Fail to verify")
         data['op'] = 'del'
         certprofile_run(data)
@@ -435,6 +446,8 @@ class TestCertProfileRequest(object):
         :Caseautomation: automated
 
         """
+        iterations = 0
+        maxiter = 30
         # Kinit as admin
         multihost.master.kinit_as_admin()
         # Create a sample configuration
@@ -466,13 +479,21 @@ class TestCertProfileRequest(object):
         search = ['ldapsearch', '-xLLL',
                   '-D', 'cn=Directory Manager',
                   '-w', 'Secret123',
-                  '-h', multihost.master.hostname,
-                  '-b', '"ou=certificateProfiles,ou=ca,o=ipaca"']
-        multihost.replica1.qerun(search, exp_returncode=32)
-
+                  '-h', multihost.replica1.hostname,
+                  '-b', 'cn=%s,ou=certificateProfiles,ou=ca,o=ipaca' % cname,
+                  '-s', 'base', '1.1']
         data['host'] = multihost.master
         data['op'] = 'del'
         certprofile_run(data)
+        while iterations < maxiter:
+            iterations += 1
+            try:
+                multihost.replica1.qerun(search, exp_returncode=32, exp_output='No such object')
+                break
+            except:
+                time.sleep(2)
+        else:
+            pytest.fail("Fail to verify")
 
     def test_0027_positive_cert_request_krb5principal_name(self, multihost):
         """
