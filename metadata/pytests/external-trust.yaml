@@ -5,11 +5,11 @@ domains:
       - name: master.testrealmext.test
         role: master
         group: ipaserver
-        os: rhel-8.1
+        os: rhel-8.2
       - name: client.testrealmext.test
         role: client
         group: ipaclient
-        os: rhel-8.1
+        os: rhel-8.2
   - name: ipaad2k16cin.test
     type: ad
     hosts:
@@ -27,6 +27,9 @@ phases:
   - name: init
     steps:
       - playbook: init/ipa-pytests.yaml
+        extra_vars:
+          repo: https://gitlab.cee.redhat.com/identity-management/ipa-pytests.git
+          version: RHEL8.2
       - playbook: init/testrunner-dir.yaml
   - name: provision
     steps:

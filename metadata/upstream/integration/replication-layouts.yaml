@@ -11,7 +11,7 @@ domains:
       - name: runner.testrelm.test
         group: runner
         role: test
-        os: rhel-8.1
+        os: rhel-8.2
       - {name: master.testrelm.test, group: ipaserver, role:master}
       - {name: replica1.testrelm.test, group: ipaserver, role:replica}
       - {name: replica2.testrelm.test, group: ipaserver, role:replica}
