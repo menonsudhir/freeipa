@@ -33,4 +33,5 @@ phases:
 
   - name: teardown
     steps:
+      - playbook: teardown/fetch-logs.yaml
       - playbook: teardown/linchpin-destroy.yaml
