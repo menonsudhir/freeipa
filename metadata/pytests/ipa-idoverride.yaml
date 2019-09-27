@@ -6,18 +6,22 @@ domains:
         role: master
         group: ipaserver
         os: rhel-8.2
-  - name: ipaad2k16cin.test
+  - name: win2016.test
     type: ad
     hosts:
-      - name: ipaad2k16ci.ipaad2k16cin.test
-        external_hostname: ipaad2k16ci.ipaad2k16cin.test
-        static: 'True'
+      - name: ad1.win2016.test
         role: ad
-        group: ad
+        group: ad_root
         os: win-2016
-        ip: 10.0.144.176
-        username: 'Administrator'
-        password: 'Secret123'
+        host_type: 'windows'
+  - name: sub1.win2016.test
+    type: ad
+    parent: win2016.test
+    hosts:
+      - name: ad2.sub1.win2016.test
+        role: ad
+        group: ad_subdomain
+        os: win-2016
         host_type: 'windows'
 phases:
   - name: init
@@ -30,6 +34,7 @@ phases:
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
+      - playbook: provision/win-config.yaml
       - playbook: provision/wait.yaml
   - name: prep
     steps:
@@ -40,6 +45,7 @@ phases:
       - playbook: prep/prepare-pytest.yaml
       - playbook: prep/firewall.yaml
       - playbook: prep/ipa-network.yaml
+      - playbook: prep/win-domain-setup.yaml
   - name: test
     steps:
       - pytests: src/ipa-idoverride

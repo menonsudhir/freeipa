@@ -10,18 +10,14 @@ domains:
         role: client
         group: ipaclient
         os: rhel-8.2
-  - name: ipaad2k16cin.test
+  - name: win2016.test
     type: ad
     hosts:
-      - name: ipaad2k16ci.ipaad2k16cin.test
-        external_hostname: ipaad2k16ci.ipaad2k16cin.test
-        static: 'True'
-        ip: 10.0.144.176
+      - name: ad1.win2016.test
+        external_hostname: ad1.win2016.test
         role: ad
-        group: ad
+        group: ad_root
         os: win-2016
-        username: 'Administrator'
-        password: 'Secret123'
         host_type: 'windows'
 phases:
   - name: init
@@ -34,6 +30,7 @@ phases:
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
+      - playbook: provision/win-config.yaml
       - playbook: provision/wait.yaml
   - name: prep
     steps:
@@ -44,6 +41,39 @@ phases:
       - playbook: prep/prepare-pytest.yaml
       - playbook: prep/firewall.yaml
       - playbook: prep/ipa-network.yaml
+      - playbook: prep/win-domain-setup.yaml
+      - playbook: prep/win-user-add.yaml
+        extra_vars:
+          users:
+            - name: etuser1
+              password: Secret123
+            - name: etuser2
+              password: Secret123
+      - playbook: prep/win-group-add.yaml
+        extra_vars:
+          ad_groups:
+            - name: etgdgrp
+              category: distribution
+              scope: global
+            - name: etgsgrp
+              category: security
+              scope: global
+            - name: etgsgrp2
+              members: ['etuser2']
+              category: security
+              scope: global
+            - name: etldgrp
+              category: distribution
+              scope: domainlocal
+            - name: etlsgrp
+              category: security
+              scope: domainlocal
+            - name: etudgrp
+              category: distribution
+              scope: universal
+            - name: etusgrp
+              category: security
+              scope: universal
   - name: test
     steps:
       - pytests: src/external_trust

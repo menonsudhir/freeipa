@@ -6,19 +6,25 @@ domains:
         role: master
         group: ipaserver
         os: rhel-8.2
-  - name: ipaad2k16cin.test
+  - name: win2016.test
     type: ad
     hosts:
-      - name: ipaad2k16ci.ipaad2k16cin.test
-        external_hostname: ipaad2k16ci.ipaad2k16cin.test
-        static: 'True'
-        ip: 10.0.144.176
+      - name: ad1.win2016.test
         role: ad
-        group: ad
+        group: ad_root
         os: win-2016
-        username: 'Administrator'
-        password: 'Secret123'
-        host_type: 'windows'
+        netbios: WIN2016
+        domain_level: top
+  - name: sub1.win2016.test
+    type: ad
+    parent: win2016.test
+    hosts:
+      - name: ad2.sub1.win2016.test
+        role: ad
+        group: ad_subdomain
+        os: win-2016
+        netbios: SUB1
+        domain_level: sub1
 phases:
   - name: init
     steps:
@@ -30,6 +36,7 @@ phases:
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
+      - playbook: provision/win-config.yaml
       - playbook: provision/wait.yaml
   - name: prep
     steps:
@@ -40,6 +47,19 @@ phases:
       - playbook: prep/prepare-pytest.yaml
       - playbook: prep/firewall.yaml
       - playbook: prep/ipa-network.yaml
+      - playbook: prep/win-domain-setup.yaml
+      - playbook: prep/win-user-add.yaml
+        extra_vars:
+          users:
+            - name: aduser1
+              password: Secret123
+          target_host: ad1.win2016.test
+      - playbook: prep/win-user-add.yaml
+        extra_vars:
+          users:
+            - name: aduser1
+              password: Secret123
+          target_host: ad2.sub1.win2016.test
   - name: test
     steps:
       - pytests: src/trust_one_way
