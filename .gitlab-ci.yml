@@ -12,11 +12,21 @@ image:
     when: always
     expire_in: 1 week
 
+.mr_backport_template: &mr_backport_definition
+  tags:
+  - shared
+  only:
+  - /^RHEL*/
+
 before_script:
 - git clone -b production --depth=1 https://gitlab.cee.redhat.com/identity-management/idm-ci.git
+
+backport-mr:
+  <<: *mr_backport_definition
+  script:
+  - python3 idm-ci/scripts/backport_mr.py
 
 ipa-mr-pipeline:
   <<: *mr_definition
   script:
   - bash idm-ci/scripts/mr_workflow.sh
-
