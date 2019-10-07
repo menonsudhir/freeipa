@@ -30,7 +30,8 @@ phases:
       - playbook: prep/repos.yaml
       - playbook: prep/ipa-network-hosts.yaml
       - playbook: prep/install-ipa-packages.yaml
-
+      - playbook: prep/prepare-upstream.yaml
+      - playbook: prep/ipa-server-install.yaml
       - playbook: prep/prepare-webui.yaml
   - name: test
     steps:
