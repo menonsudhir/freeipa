@@ -16,6 +16,29 @@ domains:
         group: ipaserver
         role: master
         os: rhel-8.2
+  - name: ad.test
+    type: AD
+    hosts:
+      - name: root-dc.ad.test
+        role: ad
+        group: ad_root
+        os: win-2016
+  - name: child.ad.test
+    type: AD_SUBDOMAIN
+    parent: ad.test
+    hosts:
+      - name: child-dc.child.ad.test
+        role: ad_subdomain
+        group: ad_subdomain
+        os: win-2016
+  - name: adtree.test
+    type: AD_TREEDOMAIN
+    parent: ad.test
+    hosts:
+      - name: tree-dc.adtree.test
+        role: ad_treedomain
+        group: ad_treedomain
+        os: win-2016
 phases:
   - name: init
     steps:
@@ -23,6 +46,7 @@ phases:
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
+      - playbook: provision/win-config.yaml
       - playbook: provision/wait.yaml
   - name: prep
     steps:
@@ -32,6 +56,61 @@ phases:
       - playbook: prep/install-ipa-packages.yaml
       - playbook: prep/prepare-upstream.yaml
       - playbook: prep/firewall.yaml
+      - command: yum install -y samba-client
+        host: master.testrelm.test
+      - playbook: prep/win-domain-setup.yaml
+        extra_vars:
+          upn_suffixes:
+            - UPNsuffix.com
+      - playbook: prep/win-user-add.yaml
+        extra_vars:
+          target_host: root-dc.ad.test
+          users:
+            # A test user with posix attributes defined
+            - name: testuser
+              password: Secret123
+              attributes:
+                uidNumber: 10042
+                gidNumber: 10047
+                loginShell: /bin/sh
+                homeDirectory: /home/testuser
+                gecos: Test User
+            # A test user without posix attributes defined
+            - name: nonposixuser
+              password: Secret123
+            # A user with UPN suffix
+            - name: upnuser
+              password: Secret123456
+              upn: upnuser@UPNsuffix.com
+              attributes:
+                uidNumber: 10048
+                gidNumber: 10047
+                loginShell: /bin/sh
+                gecos: UPN User
+      - playbook: prep/win-user-add.yaml
+        extra_vars:
+          target_host: child-dc.child.ad.test
+          users:
+            # A test user with posix attributes defined
+            - name: subdomaintestuser
+              password: Secret123
+              attributes:
+                uidNumber: 10142
+                gidNumber: 10147
+                loginShell: /bin/sh
+                gecos: Subdomaintest User
+      - playbook: prep/win-user-add.yaml
+        extra_vars:
+          target_host: tree-dc.adtree.test
+          users:
+            # A test user with posix attributes defined
+            - name: treetestuser
+              password: Secret123456
+              attributes:
+                uidNumber: 10242
+                gidNumber: 10247
+                loginShell: /bin/sh
+                gecos: TreeTest User
   - name: test
     steps:
       - playbook: test/test-upstream.yaml
