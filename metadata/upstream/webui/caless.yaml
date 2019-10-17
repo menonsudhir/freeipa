@@ -23,6 +23,7 @@ phases:
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
+      - playbook: provision/wait.yaml
   - name: prep
     steps:
       - playbook: prep/redhat-base.yaml
