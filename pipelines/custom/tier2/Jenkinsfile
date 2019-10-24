@@ -167,10 +167,10 @@ node {
                     test: 'ipa-realmdomains-cli'
                 ]).exec('ipa-slave')
             },
-            "bash::ipa-selinux-usermap-func": {
+            "bash::ipa-selinuxusermap-func": {
                 new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-selinux-usermap-func.yaml",
-                    test: 'ipa-selinux-usermap-func'
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-selinuxusermap-func.yaml",
+                    test: 'ipa-selinuxusermap-func'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-trust-cli": {
