@@ -11,11 +11,11 @@ domains:
       - name: runner.testrelm.test
         group: runner
         role: test
-        os: rhel-8.2
+        os: rhel-8.1
       - name: master.testrelm.test
         group: ipaserver
         role: master
-        os: rhel-8.2
+        os: rhel-8.1
   - name: ad.test
     type: AD
     hosts:
@@ -23,6 +23,7 @@ domains:
         role: ad
         group: ad_root
         os: win-2016
+
 phases:
   - name: init
     steps:
@@ -41,7 +42,6 @@ phases:
       - playbook: prep/prepare-upstream.yaml
       - playbook: prep/firewall.yaml
       - playbook: prep/win-domain-setup.yaml
-      - playbook: prep/win-certificate-authority.yaml
       - playbook: prep/win-user-add.yaml
         extra_vars:
             users:
@@ -51,7 +51,7 @@ phases:
     steps:
       - playbook: test/test-upstream.yaml
         extra_vars:
-          test_suite: test_integration/test_winsyncmigrate.py
+          test_suite: test_integration/test_sssd.py
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml

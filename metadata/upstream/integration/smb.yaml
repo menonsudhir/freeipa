@@ -11,11 +11,19 @@ domains:
       - name: runner.testrelm.test
         group: runner
         role: test
-        os: rhel-8.2
+        os: rhel-8.1
       - name: master.testrelm.test
         group: ipaserver
         role: master
-        os: rhel-8.2
+        os: rhel-8.1
+      - name: client1.testrelm.test
+        group: ipaclient
+        role: client
+        os: rhel-8.1
+      - name: client2.testrelm.test
+        group: ipaclient
+        role: client
+        os: rhel-8.1
   - name: ad.test
     type: AD
     hosts:
@@ -23,6 +31,7 @@ domains:
         role: ad
         group: ad_root
         os: win-2016
+
 phases:
   - name: init
     steps:
@@ -40,8 +49,11 @@ phases:
       - playbook: prep/install-ipa-packages.yaml
       - playbook: prep/prepare-upstream.yaml
       - playbook: prep/firewall.yaml
+      - command: yum install -y ipa-client-samba || yum install -y freeipa-client-samba
+        host: client1.testrelm.test
+      - command: yum install -y cifs-utils samba-client
+        host: client2.testrelm.test
       - playbook: prep/win-domain-setup.yaml
-      - playbook: prep/win-certificate-authority.yaml
       - playbook: prep/win-user-add.yaml
         extra_vars:
             users:
@@ -51,7 +63,7 @@ phases:
     steps:
       - playbook: test/test-upstream.yaml
         extra_vars:
-          test_suite: test_integration/test_winsyncmigrate.py
+          test_suite: test_integration/test_smb.py
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml

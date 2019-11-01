@@ -20,6 +20,14 @@ domains:
         group: ipaclient
         role: client
         os: rhel-8.2
+  - name: ad.test
+    type: AD
+    hosts:
+      - name: root-dc.ad.test
+        role: ad
+        group: ad_root
+        os: win-2016
+
 phases:
   - name: init
     steps:
@@ -27,6 +35,7 @@ phases:
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
+      - playbook: provision/win-config.yaml
       - playbook: provision/wait.yaml
   - name: prep
     steps:
@@ -36,11 +45,17 @@ phases:
       - playbook: prep/install-ipa-packages.yaml
       - playbook: prep/prepare-upstream.yaml
       - playbook: prep/firewall.yaml
+      - playbook: prep/win-domain-setup.yaml
+      - playbook: prep/win-user-add.yaml
+        extra_vars:
+          users:
+            - name: testuser
+              password: Secret123
   - name: test
     steps:
       - playbook: test/test-upstream.yaml
         extra_vars:
-          test_suite: test_integration/test_idviews.py::TestIDViews
+          test_suite: test_integration/test_idviews.py::TestIDViews test_integration/test_idviews.py::TestRulesWithServicePrincipals
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml
