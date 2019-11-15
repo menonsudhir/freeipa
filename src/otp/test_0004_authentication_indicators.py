@@ -85,7 +85,7 @@ class TestAuthIndent(object):
         service_mod(
             multihost.master,
             SERVICENAME,
-            {'auth-ind': ['otp', 'radius', 'password']})
+            {'auth-ind': ['otp', 'radius', 'hardened']})
 
     def test003(self, multihost):
         """
@@ -253,8 +253,9 @@ class TestAuthIndent(object):
         cmd = host_mod(
             multihost.master,
             NEW_HOST,
-            {'auth-ind': '""'})
-        assert not any(x in cmd.stdout_text for x in ("otp", "radius"))
+            {'auth-ind': '""'}, raiseonerr=False)
+        error_text = "ipa: ERROR: invalid 'auth_ind': must be one of 'radius', 'otp', 'pkinit', 'hardened'"
+        assert error_text in cmd.stderr_text
 
     def test013(self, multihost):
         """
@@ -333,7 +334,10 @@ class TestAuthIndent(object):
         @Title: IDM-IPA-TC: Authentication Indicators: Add authentication indicator with special characters
         @casecomponent: ipa
         """
-        service_mod(multihost.master, SERVICENAME, {'auth-ind': '%@!#'})
+        cmd = service_mod(multihost.master, SERVICENAME,
+                          {'auth-ind': '%@!#'}, raiseonerr=False)
+        error_text = "ipa: ERROR: invalid 'auth_ind': must be one of 'radius', 'otp', 'pkinit', 'hardened'"
+        assert error_text in cmd.stderr_text
 
     def test016(self, multihost):
         """
