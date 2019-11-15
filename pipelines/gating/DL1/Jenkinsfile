@@ -32,6 +32,7 @@ properties([
 
 node {
   def g = new idmci.gating.gating()
+  def failed = false
   // We init an in-progress message to be published as soon as this pipeline is triggered
   g.sendMessage('running')
   try {
@@ -152,14 +153,13 @@ node {
             )
         }
    } catch (e) {
-     throw e
-     // We send failing message here
-     // NB!!! This is temporarily disabled as these messages are not working well
-     // they are interpreted as passing case.
-     //g.sendMessage('error')
+       failed = true
    } finally {
-     // We send a passing message here
-     g.sendMessage('complete')
-  }
+       if (failed) {
+         g.sendMessage('error')
+         sh script: "exit 1", label: "Pipeline run failed"
+       } else {
+       g.sendMessage('complete')
+      }
+   }
 }
-
