@@ -94,27 +94,27 @@ node {
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
-            "bash::sudo": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-sudo.yaml",
-                    test: 'ipa-sudo',
-                    message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
-            },
-            "bash::password": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-password.yaml",
-                    test: 'ipa-password',
-                    message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
-            },
-            "bash::cert": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-cert.yaml",
-                    test: 'ipa-cert',
-                    message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
-            },
+//            "bash::sudo": {
+//                new TeRun([
+//                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-sudo.yaml",
+//                    test: 'ipa-sudo',
+//                    message: "${params.CI_MESSAGE}"
+//                ]).exec('ipa-slave')
+//            },
+//            "bash::password": {
+//                new TeRun([
+//                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-password.yaml",
+//                    test: 'ipa-password',
+//                    message: "${params.CI_MESSAGE}"
+//                ]).exec('ipa-slave')
+//            },
+//            "bash::cert": {
+//                new TeRun([
+//                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-cert.yaml",
+//                    test: 'ipa-cert',
+//                    message: "${params.CI_MESSAGE}"
+//                ]).exec('ipa-slave')
+//            },
 //            "bash::ipa-hbac-func": {
 //                new TeRun([
 //                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-hbac-func.yaml",
