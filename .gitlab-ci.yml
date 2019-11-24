@@ -20,7 +20,7 @@ image:
 
 before_script:
 - git clone -b production --depth=1 https://gitlab.cee.redhat.com/identity-management/idm-ci.git
-- pip3 install $CI_PROJECT_PATH/idm-ci || true
+- pip3 install ./idm-ci
 
 backport-mr:
   <<: *mr_backport_definition
