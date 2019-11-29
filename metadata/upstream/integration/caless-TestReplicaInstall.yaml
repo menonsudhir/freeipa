@@ -23,7 +23,6 @@ domains:
 phases:
   - name: init
     steps:
-      - playbook: init/ipa-pytests.yaml
       - playbook: init/testrunner-dir.yaml
   - name: provision
     steps:
@@ -35,7 +34,6 @@ phases:
       - playbook: prep/repos.yaml
       - playbook: prep/ipa-network-hosts.yaml
       - playbook: prep/install-ipa-packages.yaml
-      - playbook: prep/prepare-pytest.yaml
       - playbook: prep/prepare-upstream.yaml
       - playbook: prep/firewall.yaml
   - name: test
@@ -46,3 +44,4 @@ phases:
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml
+
