@@ -1,0 +1,705 @@
+
+
+upstream-advise:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/advise.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/advise.yaml
+
+upstream-authselect:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/authselect.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/authselect.yaml
+
+upstream-caless-TestServerInstall:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/caless-TestServerInstall.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/caless-TestServerInstall.yaml
+
+upstream-caless-TestReplicaInstall:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/caless-TestReplicaInstall.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/caless-TestReplicaInstall.yaml
+
+upstream-commands:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/commands.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/commands.yaml
+
+upstream-nfs:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/nfs.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/nfs.yaml
+
+upstream-pki_config_override:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/pki_config_override.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/pki_config_override.yaml
+
+upstream-automember:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/automember.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/automember.yaml
+
+upstream-backup_and_restore-TestBackupAndRestore:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/backup_and_restore-TestBackupAndRestore.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/backup_and_restore-TestBackupAndRestore.yaml
+
+upstream-backup_and_restore-TestBackupAndRestoreDMPassword:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreDMPassword.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreDMPassword.yaml
+
+upstream-backup_and_restore-TestBackupAndRestoreWithDNS:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNS.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNS.yaml
+
+upstream-backup_and_restore-TestBackupAndRestoreWithDNSSEC:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNSSEC.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNSSEC.yaml
+
+upstream-backup_and_restore-TestBackupAndRestoreWithKRA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithKRA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithKRA.yaml
+
+upstream-backup_and_restore-TestBackupAndRestoreWithReplica:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithReplica.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithReplica.yaml
+
+upstream-backup_and_restore-TestBackupReinstallRestoreWithDNS:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNS.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNS.yaml
+
+upstream-backup_and_restore-TestBackupReinstallRestoreWithDNSSEC:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNSSEC.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNSSEC.yaml
+
+upstream-backup_and_restore-TestBackupReinstallRestoreWithKRA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithKRA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithKRA.yaml
+
+upstream-backup_and_restore-TestReplicainstallAfterRestore:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/backup_and_restore-TestReplicainstallAfterRestore.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/backup_and_restore-TestReplicainstallAfterRestore.yaml
+
+upstream-backup_and_restore-TestUserRootFilesownershipPermiss:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/backup_and_restore-TestUserRootFilesownershipPermiss.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/backup_and_restore-TestUserRootFilesownershipPermiss.yaml
+
+upstream-caless-TestCertinstall:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/caless-TestCertinstall.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/caless-TestCertinstall.yaml
+
+upstream-caless-TestClientinstall:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/caless-TestClientinstall.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/caless-TestClientinstall.yaml
+
+upstream-caless-TestIPACommands:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/caless-TestIPACommands.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/caless-TestIPACommands.yaml
+
+upstream-caless-TestPKINIT:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/caless-TestPKINIT.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/caless-TestPKINIT.yaml
+
+upstream-caless-TestReplicaCALessToCAFull:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/caless-TestReplicaCALessToCAFull.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/caless-TestReplicaCALessToCAFull.yaml
+
+upstream-caless-TestServerCALessToExternalCA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/caless-TestServerCALessToExternalCA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/caless-TestServerCALessToExternalCA.yaml
+
+upstream-caless-TestServerReplicaCALessToCAFull:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/caless-TestServerReplicaCALessToCAFull.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/caless-TestServerReplicaCALessToCAFull.yaml
+
+upstream-crlgen_manage:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/crlgen_manage.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/crlgen_manage.yaml
+
+upstream-customized_ds_config_install:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/customized_ds_config_install.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/customized_ds_config_install.yaml
+
+upstream-dns_locations:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/dns_locations.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/dns_locations.yaml
+
+upstream-external_ca-TestExternalCA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/external_ca-TestExternalCA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/external_ca-TestExternalCA.yaml
+
+upstream-external_ca-TestSelfExternalSelf:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/external_ca-TestSelfExternalSelf.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/external_ca-TestSelfExternalSelf.yaml
+
+upstream-external_ca-TestExternalCAinvalidCert:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/external_ca-TestExternalCAinvalidCert.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/external_ca-TestExternalCAinvalidCert.yaml
+
+upstream-external_ca-TestExternalCAdirsrvStop:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/external_ca-TestExternalCAdirsrvStop.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/external_ca-TestExternalCAdirsrvStop.yaml
+
+upstream-external_ca-TestMultipleExternalCA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/external_ca-TestMultipleExternalCA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/external_ca-TestMultipleExternalCA.yaml
+
+upstream-external_ca-TestExternalCAProfileScenarios:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/external_ca-TestExternalCAProfileScenarios.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/external_ca-TestExternalCAProfileScenarios.yaml
+
+upstream-forced_client_reenrollment:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/forced_client_reenrollment.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/forced_client_reenrollment.yaml
+
+upstream-http_kdc_proxy:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/http_kdc_proxy.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/http_kdc_proxy.yaml
+
+upstream-idviews:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/idviews.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/idviews.yaml
+
+upstream-kerberos_flags:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/kerberos_flags.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/kerberos_flags.yaml
+
+upstream-legacy_clients:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/legacy_clients.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/legacy_clients.yaml
+
+upstream-netgroup:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/netgroup.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/netgroup.yaml
+
+upstream-pkinit_manage:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/pkinit_manage.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/pkinit_manage.yaml
+
+upstream-replica_promotion-TestHiddenReplicaPromotion:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replica_promotion-TestHiddenReplicaPromotion.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replica_promotion-TestHiddenReplicaPromotion.yaml
+
+upstream-replica_promotion-TestProhibitReplicaUninstallation:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replica_promotion-TestProhibitReplicaUninstallation.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replica_promotion-TestProhibitReplicaUninstallation.yaml
+
+upstream-replica_promotion-TestRenewalMaster:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replica_promotion-TestRenewalMaster.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replica_promotion-TestRenewalMaster.yaml
+
+upstream-replica_promotion-TestReplicainForwardZone:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replica_promotion-TestReplicainForwardZone.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replica_promotion-TestReplicainForwardZone.yaml
+
+upstream-replica_promotion-TestReplicainstallCustodia:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replica_promotion-TestReplicainstallCustodia.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replica_promotion-TestReplicainstallCustodia.yaml
+
+upstream-replica_promotion-TestReplicainstallWithExistingEntry:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replica_promotion-TestReplicainstallWithExistingEntry.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replica_promotion-TestReplicainstallWithExistingEntry.yaml
+
+upstream-replica_promotion-TestReplicaPromotionLevel1:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replica_promotion-TestReplicaPromotionLevel1.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replica_promotion-TestReplicaPromotionLevel1.yaml
+
+upstream-replica_promotion-TestSubCAkeyReplication:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replica_promotion-TestSubCAkeyReplication.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replica_promotion-TestSubCAkeyReplication.yaml
+
+upstream-replica_promotion-TestUnprivilegedUserPermissions:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replica_promotion-TestUnprivilegedUserPermissions.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replica_promotion-TestUnprivilegedUserPermissions.yaml
+
+upstream-replica_promotion-TestWrongClientDomain:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replica_promotion-TestWrongClientDomain.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replica_promotion-TestWrongClientDomain.yaml
+
+upstream-replication_layouts-TestStarTopologyWithoutCA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replication_layouts-TestStarTopologyWithoutCA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replication_layouts-TestStarTopologyWithoutCA.yaml
+
+upstream-replication_layouts-TestCompleteTopologyWithCA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCA.yaml
+
+upstream-replication_layouts-TestCompleteTopologyWithCAKRA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCAKRA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCAKRA.yaml
+
+upstream-replication_layouts-TestCompleteTopologyWithoutCA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithoutCA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithoutCA.yaml
+
+upstream-replication_layouts-TestLineTopologyWithCA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replication_layouts-TestLineTopologyWithCA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replication_layouts-TestLineTopologyWithCA.yaml
+
+upstream-replication_layouts-TestLineTopologyWithCAKRA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replication_layouts-TestLineTopologyWithCAKRA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replication_layouts-TestLineTopologyWithCAKRA.yaml
+
+upstream-replication_layouts-TestLineTopologyWithoutCA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replication_layouts-TestLineTopologyWithoutCA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replication_layouts-TestLineTopologyWithoutCA.yaml
+
+upstream-replication_layouts-TestStarTopologyWithCA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replication_layouts-TestStarTopologyWithCA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replication_layouts-TestStarTopologyWithCA.yaml
+
+upstream-replication_layouts-TestStarTopologyWithCAKRA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/replication_layouts-TestStarTopologyWithCAKRA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/replication_layouts-TestStarTopologyWithCAKRA.yaml
+
+upstream-server_del:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/server_del.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/server_del.yaml
+
+upstream-service_permissions:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/service_permissions.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/service_permissions.yaml
+
+upstream-sudo:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/sudo.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/sudo.yaml
+
+upstream-topologies:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/topologies.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/topologies.yaml
+
+upstream-topology-TestCASpecificRUVs:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/topology-TestCASpecificRUVs.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/topology-TestCASpecificRUVs.yaml
+
+upstream-topology-TestTopologyOptions:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/topology-TestTopologyOptions.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/topology-TestTopologyOptions.yaml
+
+upstream-trust:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/trust.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/trust.yaml
+
+upstream-user_permissions:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/user_permissions.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/user_permissions.yaml
+
+upstream-vault:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/vault.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/vault.yaml
+
+upstream-winsyncmigrate:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/winsyncmigrate.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/winsyncmigrate.yaml
+
+upstream-dnssec:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/dnssec.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/dnssec.yaml
+
+upstream-installation-TestinstallMaster:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallMaster.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallMaster.yaml
+
+upstream-installation-TestinstallMasterDNS:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallMasterDNS.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallMasterDNS.yaml
+
+upstream-installation-TestinstallMasterKRA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallMasterKRA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallMasterKRA.yaml
+
+upstream-installation-TestinstallMasterReservediPasForwarder:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallMasterReservediPasForwarder.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallMasterReservediPasForwarder.yaml
+
+upstream-installation-TestinstallWithCA1:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA1.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallWithCA1.yaml
+
+upstream-installation-TestinstallWithCA2:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA2.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallWithCA2.yaml
+
+upstream-installation-TestinstallWithCA_DNS1:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_DNS1.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallWithCA_DNS1.yaml
+
+upstream-installation-TestinstallWithCA_DNS2:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_DNS2.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallWithCA_DNS2.yaml
+
+upstream-installation-TestinstallWithCA_DNS3:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_DNS3.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallWithCA_DNS3.yaml
+
+upstream-installation-TestinstallWithCA_DNS4:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_DNS4.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallWithCA_DNS4.yaml
+
+upstream-installation-TestinstallWithCA_KRA1:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_KRA1.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallWithCA_KRA1.yaml
+
+upstream-installation-TestinstallWithCA_KRA2:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_KRA2.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallWithCA_KRA2.yaml
+
+upstream-installation-TestinstallWithCA_KRA_DNS1:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_KRA_DNS1.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallWithCA_KRA_DNS1.yaml
+
+upstream-installation-TestinstallWithCA_KRA_DNS2:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_KRA_DNS2.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestinstallWithCA_KRA_DNS2.yaml
+
+upstream-installation-TestInstallReplicaAgainstSpecificServer:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallReplicaAgainstSpecificServer.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/installation-TestInstallReplicaAgainstSpecificServer.yaml
+
+upstream-uninstallation:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/uninstallation.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/uninstallation.yaml

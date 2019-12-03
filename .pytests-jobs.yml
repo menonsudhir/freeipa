@@ -1,0 +1,316 @@
+
+
+ipa-pytests-client_install:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/client_install.yaml
+  only:
+    changes:
+    - metadata/pytests/client_install.yaml
+    - src/client_install/*
+
+ipa-pytests-dns_services:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/dns_services.yaml
+  only:
+    changes:
+    - metadata/pytests/dns_services.yaml
+    - src/dns_services/*
+
+ipa-pytests-external-ca:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/external-ca.yaml
+  only:
+    changes:
+    - metadata/pytests/external-ca.yaml
+    - src/external-ca/*
+
+ipa-pytests-functional_services:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/functional_services.yaml
+  only:
+    changes:
+    - metadata/pytests/functional_services.yaml
+    - src/functional_services/*
+
+ipa-pytests-ipa-advise:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa-advise.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa-advise.yaml
+    - src/ipa-advise/*
+
+ipa-pytests-ipa-cert:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa-cert.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa-cert.yaml
+    - src/ipa-cert/*
+
+ipa-pytests-ipa-certprofile:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa-certprofile.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa-certprofile.yaml
+    - src/ipa-certprofile/*
+
+ipa-pytests-ipa-getcert:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa-getcert.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa-getcert.yaml
+    - src/ipa-getcert/*
+
+ipa-pytests-ipa-hbac:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa-hbac.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa-hbac.yaml
+    - src/ipa-hbac/*
+
+ipa-pytests-ipa-host:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa-host.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa-host.yaml
+    - src/ipa-host/*
+
+ipa-pytests-ipa-rbac:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa-rbac.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa-rbac.yaml
+    - src/ipa-rbac/*
+
+ipa-pytests-ipa-replica-promotion:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa-replica-promotion.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa-replica-promotion.yaml
+    - src/ipa-replica-promotion/*
+
+ipa-pytests-otp:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/otp.yaml
+  only:
+    changes:
+    - metadata/pytests/otp.yaml
+    - src/otp/*
+
+ipa-pytests-subca:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/subca.yaml
+  only:
+    changes:
+    - metadata/pytests/subca.yaml
+    - src/subca/*
+
+ipa-pytests-external_trust:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/external_trust.yaml
+  only:
+    changes:
+    - metadata/pytests/external_trust.yaml
+    - src/external_trust/*
+
+ipa-pytests-ipa_backup_restore:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa_backup_restore.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa_backup_restore.yaml
+    - src/ipa_backup_restore/*
+
+ipa-pytests-ipa-idoverride:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa-idoverride.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa-idoverride.yaml
+    - src/ipa-idoverride/*
+
+ipa-pytests-ipa-nis-manage:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa-nis-manage.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa-nis-manage.yaml
+    - src/ipa-nis-manage/*
+
+ipa-pytests-ipa-services:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa-services.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa-services.yaml
+    - src/ipa-services/*
+
+ipa-pytests-ipa-sudo:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa-sudo.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa-sudo.yaml
+    - src/ipa-sudo/*
+
+ipa-pytests-ipa_upgrade-external-ca:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa_upgrade-external-ca.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa_upgrade-external-ca.yaml
+    - src/ipa_upgrade-external-ca/*
+
+ipa-pytests-ipa_upgrade-ca-cert-renewal:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa_upgrade-ca-cert-renewal.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa_upgrade-ca-cert-renewal.yaml
+    - src/ipa_upgrade-ca-cert-renewal/*
+
+ipa-pytests-ipa_upgrade-ca-less:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa_upgrade-ca-less.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa_upgrade-ca-less.yaml
+    - src/ipa_upgrade-ca-less/*
+
+ipa-pytests-ipa-user:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa-user.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa-user.yaml
+    - src/ipa-user/*
+
+ipa-pytests-kdcproxy:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/kdcproxy.yaml
+  only:
+    changes:
+    - metadata/pytests/kdcproxy.yaml
+    - src/kdcproxy/*
+
+ipa-pytests-replica-install:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/replica-install.yaml
+  only:
+    changes:
+    - metadata/pytests/replica-install.yaml
+    - src/replica-install/*
+
+ipa-pytests-server-role:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/server-role.yaml
+  only:
+    changes:
+    - metadata/pytests/server-role.yaml
+    - src/server-role/*
+
+ipa-pytests-sudo-ipa-schema:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/sudo-ipa-schema.yaml
+  only:
+    changes:
+    - metadata/pytests/sudo-ipa-schema.yaml
+    - src/sudo-ipa-schema/*
+
+ipa-pytests-trust_one_way:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/trust_one_way.yaml
+  only:
+    changes:
+    - metadata/pytests/trust_one_way.yaml
+    - src/trust_one_way/*
+
+ipa-pytests-upn:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/upn.yaml
+  only:
+    changes:
+    - metadata/pytests/upn.yaml
+    - src/upn/*
+
+ipa-pytests-vault:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/vault.yaml
+  only:
+    changes:
+    - metadata/pytests/vault.yaml
+    - src/vault/*
+
+ipa-pytests-ca_cert_renewal:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ca_cert_renewal.yaml
+  only:
+    changes:
+    - metadata/pytests/ca_cert_renewal.yaml
+    - src/ca_cert_renewal/*
+
+ipa-pytests-ipv6:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipv6.yaml
+  only:
+    changes:
+    - metadata/pytests/ipv6.yaml
+    - src/ipv6/*
+
+ipa-pytests-performance-tests:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/performance-tests.yaml
+  only:
+    changes:
+    - metadata/pytests/performance-tests.yaml
+    - src/performance-tests/*
+
+ipa-pytests-server-install:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/server-install.yaml
+  only:
+    changes:
+    - metadata/pytests/server-install.yaml
+    - src/server-install/*
