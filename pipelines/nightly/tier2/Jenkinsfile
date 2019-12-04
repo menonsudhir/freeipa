@@ -16,10 +16,10 @@ properties([pipelineTriggers([cron('30 20 * * 2,5')])])
 node {
         stage("tier-2") {
           parallel(
-            "pytest::external-trust": {
+            "pytest::external_trust": {
                 new TeRun([
-                    metadata: 'metadata/pytests/external-trust.yaml',
-                    test: 'external-trust'
+                    metadata: 'metadata/pytests/external_trust.yaml',
+                    test: 'external_trust'
                 ]).exec('ipa-slave')
             },
             "pytest::ipa-backup-restore": {
@@ -88,10 +88,10 @@ node {
                     test: 'sudo-ipa-schema'
                 ]).exec('ipa-slave')
             },
-            "pytest::trust-one-way": {
+            "pytest::trust_one_way": {
                 new TeRun([
-                    metadata: 'metadata/pytests/trust-one-way.yaml',
-                    test: 'trust-one-way'
+                    metadata: 'metadata/pytests/trust_one_way.yaml',
+                    test: 'trust_one_way'
                 ]).exec('ipa-slave')
             },
             "pytest::upn": {
@@ -220,70 +220,70 @@ node {
                     test: 'upstream-automember'
                 ]).exec('ipa-slave')
             },
-            "upstream::backup-and-restore-TestBackupAndRestore": {
+            "upstream::backup_and_restore-TestBackupAndRestore": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupAndRestore.yaml',
-                    test: 'upstream-backup-and-restore-TestBackupAndRestore'
+                    metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestore.yaml',
+                    test: 'upstream-backup_and_restore-TestBackupAndRestore'
                 ]).exec('ipa-slave')
             },
-            "upstream::backup-and-restore-TestBackupAndRestoreDMPassword": {
+            "upstream::backup_and_restore-TestBackupAndRestoreDMPassword": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupAndRestoreDMPassword.yaml',
-                    test: 'upstream-backup-and-restore-TestBackupAndRestoreDMPassword'
+                    metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreDMPassword.yaml',
+                    test: 'upstream-backup_and_restore-TestBackupAndRestoreDMPassword'
                 ]).exec('ipa-slave')
             },
-            "upstream::backup-and-restore-TestBackupAndRestoreWithDNS": {
+            "upstream::backup_and_restore-TestBackupAndRestoreWithDNS": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupAndRestoreWithDNS.yaml',
-                    test: 'upstream-backup-and-restore-TestBackupAndRestoreWithDNS'
+                    metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNS.yaml',
+                    test: 'upstream-backup_and_restore-TestBackupAndRestoreWithDNS'
                 ]).exec('ipa-slave')
             },
-            "upstream::backup-and-restore-TestBackupAndRestoreWithDNSSEC": {
+            "upstream::backup_and_restore-TestBackupAndRestoreWithDNSSEC": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupAndRestoreWithDNSSEC.yaml',
-                    test: 'upstream-backup-and-restore-TestBackupAndRestoreWithDNSSEC'
+                    metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNSSEC.yaml',
+                    test: 'upstream-backup_and_restore-TestBackupAndRestoreWithDNSSEC'
                 ]).exec('ipa-slave')
             },
-            "upstream::backup-and-restore-TestBackupAndRestoreWithKRA": {
+            "upstream::backup_and_restore-TestBackupAndRestoreWithKRA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupAndRestoreWithKRA.yaml',
-                    test: 'upstream-backup-and-restore-TestBackupAndRestoreWithKRA'
+                    metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithKRA.yaml',
+                    test: 'upstream-backup_and_restore-TestBackupAndRestoreWithKRA'
                 ]).exec('ipa-slave')
             },
-            "upstream::backup-and-restore-TestBackupAndRestoreWithReplica": {
+            "upstream::backup_and_restore-TestBackupAndRestoreWithReplica": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupAndRestoreWithReplica.yaml',
-                    test: 'upstream-backup-and-restore-TestBackupAndRestoreWithReplica'
+                    metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithReplica.yaml',
+                    test: 'upstream-backup_and_restore-TestBackupAndRestoreWithReplica'
                 ]).exec('ipa-slave')
             },
-            "upstream::backup-and-restore-TestBackupReinstallRestoreWithDNS": {
+            "upstream::backup_and_restore-TestBackupReinstallRestoreWithDNS": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupReinstallRestoreWithDNS.yaml',
-                    test: 'upstream-backup-and-restore-TestBackupReinstallRestoreWithDNS'
+                    metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNS.yaml',
+                    test: 'upstream-backup_and_restore-TestBackupReinstallRestoreWithDNS'
                 ]).exec('ipa-slave')
             },
-            "upstream::backup-and-restore-TestBackupReinstallRestoreWithDNSSEC": {
+            "upstream::backup_and_restore-TestBackupReinstallRestoreWithDNSSEC": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupReinstallRestoreWithDNSSEC.yaml',
-                    test: 'upstream-backup-and-restore-TestBackupReinstallRestoreWithDNSSEC'
+                    metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNSSEC.yaml',
+                    test: 'upstream-backup_and_restore-TestBackupReinstallRestoreWithDNSSEC'
                 ]).exec('ipa-slave')
             },
-            "upstream::backup-and-restore-TestBackupReinstallRestoreWithKRA": {
+            "upstream::backup_and_restore-TestBackupReinstallRestoreWithKRA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/backup-and-restore-TestBackupReinstallRestoreWithKRA.yaml',
-                    test: 'upstream-backup-and-restore-TestBackupReinstallRestoreWithKRA'
+                    metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithKRA.yaml',
+                    test: 'upstream-backup_and_restore-TestBackupReinstallRestoreWithKRA'
                 ]).exec('ipa-slave')
             },
-            "upstream::backup-and-restore-TestReplicainstallAfterRestore": {
+            "upstream::backup_and_restore-TestReplicainstallAfterRestore": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/backup-and-restore-TestReplicainstallAfterRestore.yaml',
-                    test: 'upstream-backup-and-restore-TestReplicainstallAfterRestore'
+                    metadata: 'metadata/upstream/integration/backup_and_restore-TestReplicainstallAfterRestore.yaml',
+                    test: 'upstream-backup_and_restore-TestReplicainstallAfterRestore'
                 ]).exec('ipa-slave')
             },
-            "upstream::backup-and-restore-TestUserRootFilesownershipPermiss": {
+            "upstream::backup_and_restore-TestUserRootFilesownershipPermiss": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/backup-and-restore-TestUserRootFilesownershipPermiss.yaml',
-                    test: 'upstream-backup-and-restore-TestUserRootFilesownershipPermiss'
+                    metadata: 'metadata/upstream/integration/backup_and_restore-TestUserRootFilesownershipPermiss.yaml',
+                    test: 'upstream-backup_and_restore-TestUserRootFilesownershipPermiss'
                 ]).exec('ipa-slave')
             },
             "upstream::caless-TestCertinstall": {

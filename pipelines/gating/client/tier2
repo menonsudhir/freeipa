@@ -35,10 +35,10 @@ node {
   try {
         stage("tier-2") {
           parallel(
-          "pytest::functional-services": {
+          "pytest::functional_services": {
                 new TeRun([
-                    metadata: 'metadata/pytests/functional-services.yaml',
-                    test: 'pytests-functional-services',
+                    metadata: 'metadata/pytests/functional_services.yaml',
+                    test: 'pytests-functional_services',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             }

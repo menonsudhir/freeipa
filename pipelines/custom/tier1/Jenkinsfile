@@ -197,16 +197,16 @@ node {
                     test: 'ipa-user-cli-moduser'
                 ]).exec('ipa-slave')
             },
-            "pytest::client-install": {
+            "pytest::client_install": {
                 new TeRun([
-                    metadata: 'metadata/pytests/client-install.yaml',
-                    test: 'client-install',
+                    metadata: 'metadata/pytests/client_install.yaml',
+                    test: 'client_install',
                 ]).exec('ipa-slave')
             },
-            "pytest::dns-services": {
+            "pytest::dns_services": {
                 new TeRun([
-                    metadata: 'metadata/pytests/dns-services.yaml',
-                    test: 'dns-services',
+                    metadata: 'metadata/pytests/dns_services.yaml',
+                    test: 'dns_services',
                 ]).exec('ipa-slave')
             },
             "pytest::external-ca": {
@@ -217,8 +217,8 @@ node {
             },
             "pytest::func-svcs": {
                 new TeRun([
-                    metadata: 'metadata/pytests/functional-services.yaml',
-                    test: 'ipa-functional-services',
+                    metadata: 'metadata/pytests/functional_services.yaml',
+                    test: 'ipa-functional_services',
                 ]).exec('ipa-slave')
             },
             "pytest::ipa-advise": {
