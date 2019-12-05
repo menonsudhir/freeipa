@@ -47,6 +47,8 @@ phases:
             users:
             - name: testuser
               password: Secret123
+              first_name: Test
+              last_name: User
   - name: test
     steps:
       - playbook: test/test-upstream.yaml
