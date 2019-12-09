@@ -3,6 +3,7 @@ user tests scenarios
 """
 
 import pytest
+import textwrap
 from ipa_pytests.qe_class import multihost
 from ipa_pytests.shared.user_utils import add_ipa_user, del_ipa_user, find_ipa_user
 from ipa_pytests.shared.utils import ldapmodify_cmd
@@ -110,6 +111,70 @@ class Testipauserfind(object):
         ldif_file = '/tmp/bz1250110-del.ldif'
         multihost.master.put_file_contents(ldif_file, ldif)
         ldapmodify_cmd(multihost.master, uri, ldapadmin, adminpass, ldif_file)
+
+    def test_0005_cve_bz_1726223(self, multihost):
+        """
+        This covers automation of CVE BZ 1726223
+
+        This adds a reproducer script to add a user using console and checks that
+        it password of user added not exposed in httpd logs
+        """
+
+        s = '''\
+            from ipalib import errors
+            import sys
+
+            batch_args = list()
+
+            def add_batch_operation(command, *args, **kw):
+                global batch_args
+                batch_args.append({
+                    "method": command,
+                    "params": [args, kw],
+                })
+
+            def flush_batch_operation():
+                global batch_args
+                if not batch_args:
+                    return None
+
+                kw = {}
+
+                try:
+                    return api.Command['batch'](*batch_args, **kw)
+                except errors.CCacheError as e:
+                    print(e)
+                    sys.exit(1)
+
+            params = ['newbie1']
+            kw = {
+                'givenname': 'first',
+                'sn': 'last',
+                'userpassword': 'SomePass4word!',
+            }
+
+            add_batch_operation('user_add', *params, **kw)
+
+            result = flush_batch_operation()
+            print(result)
+            '''
+
+        text = textwrap.dedent(s)
+
+        console_file = '/tmp/batch.console'
+        multihost.master.put_file_contents(console_file, text)
+        multihost.master.kinit_as_admin()
+        runcmd = ['ipa', 'console', console_file]
+        multihost.master.qerun(runcmd)
+        runcmd = ['tail', '-3', '/var/log/httpd/error_log']
+        cmd = multihost.master.qerun(runcmd)
+
+        assert 'userpassword=\'********\'' in cmd.stdout_text
+        assert not 'userpassword=\'SomePass4word\'' in cmd.stdout_text
+
+        #cleanup
+        runcmd = ['rm', '-rf', console_file]
+        multihost.master.qerun(runcmd)
 
     def class_teardown(self, multihost):
         """ Class Teardown """
