@@ -94,6 +94,12 @@ node {
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
+            "upstream::krbtpolicy": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/krbtpolicy.yaml',
+                    test: 'upstream-krbtpolicy'
+                ]).exec('ipa-slave')
+            },
 //            "bash::sudo": {
 //                new TeRun([
 //                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-sudo.yaml",

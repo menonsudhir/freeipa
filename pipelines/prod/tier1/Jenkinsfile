@@ -315,6 +315,12 @@ node {
                     test: 'upstream-commands'
                 ]).exec('ipa-slave')
             },
+            "upstream::krbtpolicy": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/krbtpolicy.yaml',
+                    test: 'upstream-krbtpolicy'
+                ]).exec('ipa-slave')
+            },
             "upstream::nfs": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/nfs.yaml',
