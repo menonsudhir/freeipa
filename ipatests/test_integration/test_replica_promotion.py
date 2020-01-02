@@ -674,8 +674,9 @@ class TestSubCAkeyReplication(IntegrationTest):
 
         ssl_cmd = ['openssl', 'x509', '-text', '-in', TEST_CRT_FILE]
         ssl = replica.run_command(ssl_cmd)
+        print (self.SUBCA)
         assert 'Issuer: CN = {}'.format(self.SUBCA) in ssl.stdout_text
-
+        
 
 class TestReplicaInstallCustodia(IntegrationTest):
     """
