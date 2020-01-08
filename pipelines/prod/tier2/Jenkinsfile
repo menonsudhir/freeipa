@@ -51,12 +51,6 @@ node {
                     test: 'ipa-sudo'
                 ]).exec('ipa-slave')
             },
-            "pytest::ipa-upgrade": {
-                new TeRun([
-                    metadata: 'metadata/pytests/ipa-upgrade.yaml',
-                    test: 'ipa-upgrade'
-                ]).exec('ipa-slave')
-            },
             "pytest::ipa-user": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-user.yaml',
@@ -211,6 +205,36 @@ node {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-sudo.yaml",
                     test: 'ipa-trust-func-sudo'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-upgrade_normal": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-upgrade_normal.yaml",
+                    test: 'ipa-upgrade_normal'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-upgrade_bztests": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-upgrade_bztests.yaml",
+                    test: 'ipa-upgrade_bztests'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-upgrade_parallel": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-upgrade_parallel.yaml",
+                    test: 'ipa-upgrade_parallel'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-upgrade_reverse": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-upgrade_reverse.yaml",
+                    test: 'ipa-upgrade_reverse'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-upgrade_dirsrvoff": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-upgrade_dirsrvoff.yaml",
+                    test: 'ipa-upgrade_dirsrvoff'
                 ]).exec('ipa-slave')
             },
             "upstream::automember": {
