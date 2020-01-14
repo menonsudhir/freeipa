@@ -8,6 +8,8 @@ from lib import certprofile_run, create_cert_cfg, caacl_run
 from ipa_pytests.shared.user_utils import add_ipa_user
 from ipa_pytests.qe_class import qe_use_class_setup
 
+NSSDB = '/etc/ipa/nssdb/'
+
 
 class TestCertProfileImport(object):
     """ Test Class """
@@ -117,8 +119,8 @@ class TestCertProfileImport(object):
         profile_desc = '%s_desc' % profile_name
         profile_file = '{}{}.xml'.format(multihost.tempdir, profile_name)
         multihost.master.kinit_as_admin()
-        multihost.master.qerun(['pki', 'cert-request-profile-show',
-                                profile_name, '--output', profile_file])
+        multihost.master.qerun(['pki', '-d', NSSDB,
+                                'cert-request-profile-show', profile_name, '--output', profile_file])
         data = {'host': multihost.master,
                 'store': 'True',
                 'testprofile_1': '',
@@ -163,7 +165,7 @@ class TestCertProfileImport(object):
                 'desc': cname + '_cert',
                 'file': newopfile,
                 'exp_code': '1',
-                'exp_output': 'data did not contain classId attribute.',
+                'exp_output': 'Unable to create profile: Missing class ID',
                 'op': 'import'}
         certprofile_run(data)
 
