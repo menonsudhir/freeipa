@@ -322,70 +322,70 @@ node {
                     test: 'upstream-caless-TestServerReplicaCALessToCAFull'
                 ]).exec('ipa-slave')
             },
-            "upstream::crlgen-manage": {
+            "upstream::crlgen_manage": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/crlgen-manage.yaml',
-                    test: 'upstream-crlgen-manage'
+                    metadata: 'metadata/upstream/integration/crlgen_manage.yaml',
+                    test: 'upstream-crlgen_manage'
                 ]).exec('ipa-slave')
             },
-            "upstream::customized-ds-config-install": {
+            "upstream::customized_ds_config_install": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/customized-ds-config-install.yaml',
-                    test: 'upstream-customized-ds-config-install'
+                    metadata: 'metadata/upstream/integration/customized_ds_config_install.yaml',
+                    test: 'upstream-customized_ds_config_install'
                 ]).exec('ipa-slave')
             },
-            "upstream::dns-locations": {
+            "upstream::dns_locations": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/dns-locations.yaml',
-                    test: 'upstream-dns-locations'
+                    metadata: 'metadata/upstream/integration/dns_locations.yaml',
+                    test: 'upstream-dns_locations'
                 ]).exec('ipa-slave')
             },
-            "upstream::external-ca-TestExternalCA": {
+            "upstream::external_ca-TestExternalCA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/external-ca-TestExternalCA.yaml',
-                    test: 'upstream-external-ca-TestExternalCA'
+                    metadata: 'metadata/upstream/integration/external_ca-TestExternalCA.yaml',
+                    test: 'upstream-external_ca-TestExternalCA'
                 ]).exec('ipa-slave')
             },
-            "upstream::external-ca-TestSelfExternalSelf": {
+            "upstream::external_ca-TestSelfExternalSelf": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/external-ca-TestSelfExternalSelf.yaml',
-                    test: 'upstream-external-ca-TestSelfExternalSelf'
+                    metadata: 'metadata/upstream/integration/external_ca-TestSelfExternalSelf.yaml',
+                    test: 'upstream-external_ca-TestSelfExternalSelf'
                 ]).exec('ipa-slave')
             },
-            "upstream::external-ca-TestExternalCAinvalidCert": {
+            "upstream::external_ca-TestExternalCAinvalidCert": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/external-ca-TestExternalCAinvalidCert.yaml',
-                    test: 'upstream-external-ca-TestExternalCAinvalidCert'
+                    metadata: 'metadata/upstream/integration/external_ca-TestExternalCAinvalidCert.yaml',
+                    test: 'upstream-external_ca-TestExternalCAinvalidCert'
                 ]).exec('ipa-slave')
             },
-            "upstream::external-ca-TestExternalCAdirsrvStop": {
+            "upstream::external_ca-TestExternalCAdirsrvStop": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/external-ca-TestExternalCAdirsrvStop.yaml',
-                    test: 'upstream-external-ca-TestExternalCAdirsrvStop'
+                    metadata: 'metadata/upstream/integration/external_ca-TestExternalCAdirsrvStop.yaml',
+                    test: 'upstream-external_ca-TestExternalCAdirsrvStop'
                 ]).exec('ipa-slave')
             },
-            "upstream::external-ca-TestMultipleExternalCA": {
+            "upstream::external_ca-TestMultipleExternalCA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/external-ca-TestMultipleExternalCA.yaml',
-                    test: 'upstream-external-ca-TestMultipleExternalCA'
+                    metadata: 'metadata/upstream/integration/external_ca-TestMultipleExternalCA.yaml',
+                    test: 'upstream-external_ca-TestMultipleExternalCA'
                 ]).exec('ipa-slave')
             },
-            "upstream::external-ca-TestExternalCAProfileScenarios": {
+            "upstream::external_ca-TestExternalCAProfileScenarios": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/external-ca-TestExternalCAProfileScenarios.yaml',
-                    test: 'upstream-external-ca-TestExternalCAProfileScenarios'
+                    metadata: 'metadata/upstream/integration/external_ca-TestExternalCAProfileScenarios.yaml',
+                    test: 'upstream-external_ca-TestExternalCAProfileScenarios'
                 ]).exec('ipa-slave')
             },
-            "upstream::forced-client-reenrollment": {
+            "upstream::forced_client_reenrollment": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/forced-client-reenrollment.yaml',
-                    test: 'upstream-forced-client-reenrollment'
+                    metadata: 'metadata/upstream/integration/forced_client_reenrollment.yaml',
+                    test: 'upstream-forced_client_reenrollment'
                 ]).exec('ipa-slave')
             },
-            "upstream::http-kdc-proxy": {
+            "upstream::http_kdc_proxy": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/http-kdc-proxy.yaml',
-                    test: 'upstream-http-kdc-proxy'
+                    metadata: 'metadata/upstream/integration/http_kdc_proxy.yaml',
+                    test: 'upstream-http_kdc_proxy'
                 ]).exec('ipa-slave')
             },
             "upstream::idviews": {
@@ -394,16 +394,16 @@ node {
                     test: 'upstream-idviews'
                 ]).exec('ipa-slave')
             },
-            "upstream::kerberos-flags": {
+            "upstream::kerberos_flags": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/kerberos-flags.yaml',
-                    test: 'upstream-kerberos-flags'
+                    metadata: 'metadata/upstream/integration/kerberos_flags.yaml',
+                    test: 'upstream-kerberos_flags'
                 ]).exec('ipa-slave')
             },
-            "upstream::legacy-clients": {
+            "upstream::legacy_clients": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/legacy-clients.yaml',
-                    test: 'upstream-legacy-clients'
+                    metadata: 'metadata/upstream/integration/legacy_clients.yaml',
+                    test: 'upstream-legacy_clients'
                 ]).exec('ipa-slave')
             },
             "upstream::netgroup": {
@@ -412,136 +412,136 @@ node {
                     test: 'upstream-netgroup'
                 ]).exec('ipa-slave')
             },
-            "upstream::pkinit-manage": {
+            "upstream::pkinit_manage": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/pkinit-manage.yaml',
-                    test: 'upstream-pkinit-manage'
+                    metadata: 'metadata/upstream/integration/pkinit_manage.yaml',
+                    test: 'upstream-pkinit_manage'
                 ]).exec('ipa-slave')
             },
-            "upstream::replica-promotion-TestHiddenReplicaPromotion": {
+            "upstream::replica_promotion-TestHiddenReplicaPromotion": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replica-promotion-TestHiddenReplicaPromotion.yaml',
-                    test: 'upstream-replica-promotion-TestHiddenReplicaPromotion'
+                    metadata: 'metadata/upstream/integration/replica_promotion-TestHiddenReplicaPromotion.yaml',
+                    test: 'upstream-replica_promotion-TestHiddenReplicaPromotion'
                 ]).exec('ipa-slave')
             },
-            "upstream::replica-promotion-TestProhibitReplicaUninstallation": {
+            "upstream::replica_promotion-TestProhibitReplicaUninstallation": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replica-promotion-TestProhibitReplicaUninstallation.yaml',
-                    test: 'upstream-replica-promotion-TestProhibitReplicaUninstallation'
+                    metadata: 'metadata/upstream/integration/replica_promotion-TestProhibitReplicaUninstallation.yaml',
+                    test: 'upstream-replica_promotion-TestProhibitReplicaUninstallation'
                 ]).exec('ipa-slave')
             },
-            "upstream::replica-promotion-TestRenewalMaster": {
+            "upstream::replica_promotion-TestRenewalMaster": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replica-promotion-TestRenewalMaster.yaml',
-                    test: 'upstream-replica-promotion-TestRenewalMaster'
+                    metadata: 'metadata/upstream/integration/replica_promotion-TestRenewalMaster.yaml',
+                    test: 'upstream-replica_promotion-TestRenewalMaster'
                 ]).exec('ipa-slave')
             },
-            "upstream::replica-promotion-TestReplicainForwardZone": {
+            "upstream::replica_promotion-TestReplicainForwardZone": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replica-promotion-TestReplicainForwardZone.yaml',
-                    test: 'upstream-replica-promotion-TestReplicainForwardZone'
+                    metadata: 'metadata/upstream/integration/replica_promotion-TestReplicainForwardZone.yaml',
+                    test: 'upstream-replica_promotion-TestReplicainForwardZone'
                 ]).exec('ipa-slave')
             },
-            "upstream::replica-promotion-TestReplicainstallCustodia": {
+            "upstream::replica_promotion-TestReplicainstallCustodia": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replica-promotion-TestReplicainstallCustodia.yaml',
-                    test: 'upstream-replica-promotion-TestReplicainstallCustodia'
+                    metadata: 'metadata/upstream/integration/replica_promotion-TestReplicainstallCustodia.yaml',
+                    test: 'upstream-replica_promotion-TestReplicainstallCustodia'
                 ]).exec('ipa-slave')
             },
-            "upstream::replica-promotion-TestReplicainstallWithExistingEntry": {
+            "upstream::replica_promotion-TestReplicainstallWithExistingEntry": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replica-promotion-TestReplicainstallWithExistingEntry.yaml',
-                    test: 'upstream-replica-promotion-TestReplicainstallWithExistingEntry'
+                    metadata: 'metadata/upstream/integration/replica_promotion-TestReplicainstallWithExistingEntry.yaml',
+                    test: 'upstream-replica_promotion-TestReplicainstallWithExistingEntry'
                 ]).exec('ipa-slave')
             },
-            "upstream::replica-promotion-TestReplicaPromotionLevel1": {
+            "upstream::replica_promotion-TestReplicaPromotionLevel1": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replica-promotion-TestReplicaPromotionLevel1.yaml',
-                    test: 'upstream-replica-promotion-TestReplicaPromotionLevel1'
+                    metadata: 'metadata/upstream/integration/replica_promotion-TestReplicaPromotionLevel1.yaml',
+                    test: 'upstream-replica_promotion-TestReplicaPromotionLevel1'
                 ]).exec('ipa-slave')
             },
-            "upstream::replica-promotion-TestSubCAkeyReplication": {
+            "upstream::replica_promotion-TestSubCAkeyReplication": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replica-promotion-TestSubCAkeyReplication.yaml',
-                    test: 'upstream-replica-promotion-TestSubCAkeyReplication'
+                    metadata: 'metadata/upstream/integration/replica_promotion-TestSubCAkeyReplication.yaml',
+                    test: 'upstream-replica_promotion-TestSubCAkeyReplication'
                 ]).exec('ipa-slave')
             },
-            "upstream::replica-promotion-TestUnprivilegedUserPermissions": {
+            "upstream::replica_promotion-TestUnprivilegedUserPermissions": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replica-promotion-TestUnprivilegedUserPermissions.yaml',
-                    test: 'upstream-replica-promotion-TestUnprivilegedUserPermissions'
+                    metadata: 'metadata/upstream/integration/replica_promotion-TestUnprivilegedUserPermissions.yaml',
+                    test: 'upstream-replica_promotion-TestUnprivilegedUserPermissions'
                 ]).exec('ipa-slave')
             },
-            "upstream::replica-promotion-TestWrongClientDomain": {
+            "upstream::replica_promotion-TestWrongClientDomain": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replica-promotion-TestWrongClientDomain.yaml',
-                    test: 'upstream-replica-promotion-TestWrongClientDomain'
+                    metadata: 'metadata/upstream/integration/replica_promotion-TestWrongClientDomain.yaml',
+                    test: 'upstream-replica_promotion-TestWrongClientDomain'
                 ]).exec('ipa-slave')
             },
-            "upstream::replication-layouts-TestStarTopologyWithoutCA": {
+            "upstream::replication_layouts-TestStarTopologyWithoutCA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replication-layouts-TestStarTopologyWithoutCA.yaml',
-                    test: 'upstream-replication-layouts-TestStarTopologyWithoutCA'
+                    metadata: 'metadata/upstream/integration/replication_layouts-TestStarTopologyWithoutCA.yaml',
+                    test: 'upstream-replication_layouts-TestStarTopologyWithoutCA'
                 ]).exec('ipa-slave')
             },
-            "upstream::replication-layouts-TestCompleteTopologyWithCA": {
+            "upstream::replication_layouts-TestCompleteTopologyWithCA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replication-layouts-TestCompleteTopologyWithCA.yaml',
-                    test: 'upstream-replication-layouts-TestCompleteTopologyWithCA'
+                    metadata: 'metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCA.yaml',
+                    test: 'upstream-replication_layouts-TestCompleteTopologyWithCA'
                 ]).exec('ipa-slave')
             },
-            "upstream::replication-layouts-TestCompleteTopologyWithCAKRA": {
+            "upstream::replication_layouts-TestCompleteTopologyWithCAKRA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replication-layouts-TestCompleteTopologyWithCAKRA.yaml',
-                    test: 'upstream-replication-layouts-TestCompleteTopologyWithCAKRA'
+                    metadata: 'metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCAKRA.yaml',
+                    test: 'upstream-replication_layouts-TestCompleteTopologyWithCAKRA'
                 ]).exec('ipa-slave')
             },
-            "upstream::replication-layouts-TestCompleteTopologyWithoutCA": {
+            "upstream::replication_layouts-TestCompleteTopologyWithoutCA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replication-layouts-TestCompleteTopologyWithoutCA.yaml',
-                    test: 'upstream-replication-layouts-TestCompleteTopologyWithoutCA'
+                    metadata: 'metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithoutCA.yaml',
+                    test: 'upstream-replication_layouts-TestCompleteTopologyWithoutCA'
                 ]).exec('ipa-slave')
             },
-            "upstream::replication-layouts-TestLineTopologyWithCA": {
+            "upstream::replication_layouts-TestLineTopologyWithCA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replication-layouts-TestLineTopologyWithCA.yaml',
-                    test: 'upstream-replication-layouts-TestLineTopologyWithCA'
+                    metadata: 'metadata/upstream/integration/replication_layouts-TestLineTopologyWithCA.yaml',
+                    test: 'upstream-replication_layouts-TestLineTopologyWithCA'
                 ]).exec('ipa-slave')
             },
-            "upstream::replication-layouts-TestLineTopologyWithCAKRA": {
+            "upstream::replication_layouts-TestLineTopologyWithCAKRA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replication-layouts-TestLineTopologyWithCAKRA.yaml',
-                    test: 'upstream-replication-layouts-TestLineTopologyWithCAKRA'
+                    metadata: 'metadata/upstream/integration/replication_layouts-TestLineTopologyWithCAKRA.yaml',
+                    test: 'upstream-replication_layouts-TestLineTopologyWithCAKRA'
                 ]).exec('ipa-slave')
             },
-            "upstream::replication-layouts-TestLineTopologyWithoutCA": {
+            "upstream::replication_layouts-TestLineTopologyWithoutCA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replication-layouts-TestLineTopologyWithoutCA.yaml',
-                    test: 'upstream-replication-layouts-TestLineTopologyWithoutCA'
+                    metadata: 'metadata/upstream/integration/replication_layouts-TestLineTopologyWithoutCA.yaml',
+                    test: 'upstream-replication_layouts-TestLineTopologyWithoutCA'
                 ]).exec('ipa-slave')
             },
-            "upstream::replication-layouts-TestStarTopologyWithCA": {
+            "upstream::replication_layouts-TestStarTopologyWithCA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replication-layouts-TestStarTopologyWithCA.yaml',
-                    test: 'upstream-replication-layouts-TestStarTopologyWithCA'
+                    metadata: 'metadata/upstream/integration/replication_layouts-TestStarTopologyWithCA.yaml',
+                    test: 'upstream-replication_layouts-TestStarTopologyWithCA'
                 ]).exec('ipa-slave')
             },
-            "upstream::replication-layouts-TestStarTopologyWithCAKRA": {
+            "upstream::replication_layouts-TestStarTopologyWithCAKRA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replication-layouts-TestStarTopologyWithCAKRA.yaml',
-                    test: 'upstream-replication-layouts-TestStarTopologyWithCAKRA'
+                    metadata: 'metadata/upstream/integration/replication_layouts-TestStarTopologyWithCAKRA.yaml',
+                    test: 'upstream-replication_layouts-TestStarTopologyWithCAKRA'
                 ]).exec('ipa-slave')
             },
-            "upstream::server-del": {
+            "upstream::server_del": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/server-del.yaml',
-                    test: 'upstream-server-del'
+                    metadata: 'metadata/upstream/integration/server_del.yaml',
+                    test: 'upstream-server_del'
                 ]).exec('ipa-slave')
             },
-            "upstream::service-permissions": {
+            "upstream::service_permissions": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/service-permissions.yaml',
-                    test: 'upstream-service-permissions'
+                    metadata: 'metadata/upstream/integration/service_permissions.yaml',
+                    test: 'upstream-service_permissions'
                 ]).exec('ipa-slave')
             },
             "upstream::sudo": {
@@ -568,10 +568,10 @@ node {
                     test: 'upstream-trust'
                 ]).exec('ipa-slave')
             },
-            "upstream::user-permissions": {
+            "upstream::user_permissions": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/user-permissions.yaml',
-                    test: 'upstream-user-permissions'
+                    metadata: 'metadata/upstream/integration/user_permissions.yaml',
+                    test: 'upstream-user_permissions'
                 ]).exec('ipa-slave')
             },
             "upstream::vault": {
