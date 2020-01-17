@@ -40,6 +40,7 @@ node {
                 new TeRun([
                     metadata: 'metadata/pytests/functional_services.yaml',
                     test: 'pytests-functional_services',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             }

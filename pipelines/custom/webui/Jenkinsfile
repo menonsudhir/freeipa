@@ -12,169 +12,197 @@ node {
             "webui::automember": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/automember.yaml',
-                    test: 'upstream-automember'
+                    test: 'upstream-automember',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::automount": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/automount.yaml',
-                    test: 'upstream-automount'
+                    test: 'upstream-automount',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::caless": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/caless.yaml',
-                    test: 'upstream-caless'
+                    test: 'upstream-caless',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::cert": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/cert.yaml',
-                    test: 'upstream-cert'
+                    test: 'upstream-cert',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::config": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/config.yaml',
-                    test: 'upstream-config'
+                    test: 'upstream-config',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::delegation": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/delegation.yaml',
-                    test: 'upstream-delegation'
+                    test: 'upstream-delegation',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::dns": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/dns.yaml',
-                    test: 'upstream-dns'
+                    test: 'upstream-dns',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::group": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/group.yaml',
-                    test: 'upstream-group'
+                    test: 'upstream-group',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::hbac": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/hbac.yaml',
-                    test: 'upstream-hbac'
+                    test: 'upstream-hbac',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::hostgroup": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/hostgroup.yaml',
-                    test: 'upstream-hostgroup'
+                    test: 'upstream-hostgroup',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::host": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/host.yaml',
-                    test: 'upstream-host'
+                    test: 'upstream-host',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::idviews": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/idviews.yaml',
-                    test: 'upstream-idviews'
+                    test: 'upstream-idviews',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::krbtpolicy": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/krbtpolicy.yaml',
-                    test: 'upstream-krbtpolicy'
+                    test: 'upstream-krbtpolicy',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::loginscreen": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/loginscreen.yaml',
-                    test: 'upstream-loginscreen'
+                    test: 'upstream-loginscreen',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::misc_cases": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/misc_cases.yaml',
-                    test: 'upstream-misc_cases'
+                    test: 'upstream-misc_cases',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::navigation": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/navigation.yaml',
-                    test: 'upstream-navigation'
+                    test: 'upstream-navigation',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::netgroup": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/netgroup.yaml',
-                    test: 'upstream-netgroup'
+                    test: 'upstream-netgroup',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::pwpolicy": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/pwpolicy.yaml',
-                    test: 'upstream-pwpolicy'
+                    test: 'upstream-pwpolicy',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::range": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/range.yaml',
-                    test: 'upstream-range'
+                    test: 'upstream-range',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::rbac": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/rbac.yaml',
-                    test: 'upstream-rbac'
+                    test: 'upstream-rbac',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::realmdomains": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/realmdomains.yaml',
-                    test: 'upstream-realmdomains'
+                    test: 'upstream-realmdomains',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::selfservice": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/selfservice.yaml',
-                    test: 'upstream-selfservice'
+                    test: 'upstream-selfservice',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::selinuxusermap": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/selinuxusermap.yaml',
-                    test: 'upstream-selinuxusermap'
+                    test: 'upstream-selinuxusermap',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::service": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/service.yaml',
-                    test: 'upstream-service'
+                    test: 'upstream-service',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::sudo": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/sudo.yaml',
-                    test: 'upstream-sudo'
+                    test: 'upstream-sudo',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::translation": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/translation.yaml',
-                    test: 'upstream-translation'
+                    test: 'upstream-translation',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::user": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/user.yaml',
-                    test: 'upstream-user'
+                    test: 'upstream-user',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "webui::vault": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/vault.yaml',
-                    test: 'upstream-vault'
+                    test: 'upstream-vault',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             }
             )

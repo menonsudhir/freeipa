@@ -19,571 +19,666 @@ node {
             "pytest::external_trust": {
                 new TeRun([
                     metadata: 'metadata/pytests/external_trust.yaml',
-                    test: 'external_trust'
+                    test: 'external_trust',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "pytest::ipa-backup-restore": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-backup-restore.yaml',
-                    test: 'ipa-backup-restore'
+                    test: 'ipa-backup-restore',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "pytest::ipa-idoverride": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-idoverride.yaml',
-                    test: 'ipa-idoverride'
+                    test: 'ipa-idoverride',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "pytest::ipa-nis-manage": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-nis-manage.yaml',
-                    test: 'ipa-nis-manage'
+                    test: 'ipa-nis-manage',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "pytest::ipa-services": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-services.yaml',
-                    test: 'ipa-services'
+                    test: 'ipa-services',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "pytest::ipa-sudo": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-sudo.yaml',
-                    test: 'ipa-sudo'
+                    test: 'ipa-sudo',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "pytest::ipa-user": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-user.yaml',
-                    test: 'ipa-user'
+                    test: 'ipa-user',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "pytest::kdcproxy": {
                 new TeRun([
                     metadata: 'metadata/pytests/kdcproxy.yaml',
-                    test: 'kdcproxy'
+                    test: 'kdcproxy',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "pytest::replica-install": {
                 new TeRun([
                     metadata: 'metadata/pytests/replica-install.yaml',
-                    test: 'replica-install'
+                    test: 'replica-install',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "pytest::server-role": {
                 new TeRun([
                     metadata: 'metadata/pytests/server-role.yaml',
-                    test: 'server-role'
+                    test: 'server-role',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "pytest::sudo-ipa-schema": {
                 new TeRun([
                     metadata: 'metadata/pytests/sudo-ipa-schema.yaml',
-                    test: 'sudo-ipa-schema'
+                    test: 'sudo-ipa-schema',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "pytest::trust_one_way": {
                 new TeRun([
                     metadata: 'metadata/pytests/trust_one_way.yaml',
-                    test: 'trust_one_way'
+                    test: 'trust_one_way',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "pytest::upn": {
                 new TeRun([
                     metadata: 'metadata/pytests/upn.yaml',
-                    test: 'upn'
+                    test: 'upn',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "pytest::vault": {
                 new TeRun([
                     metadata: 'metadata/pytests/vault.yaml',
-                    test: 'vault'
+                    test: 'vault',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ds-migration": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ds-migration.yaml",
-                    test: 'ds-migration'
+                    test: 'ds-migration',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ds-migration-func": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ds-migration-func.yaml",
-                    test: 'ds-migration-func'
+                    test: 'ds-migration-func',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-client-cert": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-client-cert.yaml",
-                    test: 'ipa-client-cert'
+                    test: 'ipa-client-cert',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::install-client-cli": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/install-client-cli.yaml",
-                    test: 'install-client-cli'
+                    test: 'install-client-cli',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-adtrust": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-adtrust.yaml",
-                    test: 'ipa-adtrust'
+                    test: 'ipa-adtrust',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-client-automount": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-client-automount.yaml",
-                    test: 'ipa-client-automount'
+                    test: 'ipa-client-automount',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-idrange-cli": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-idrange-cli.yaml",
-                    test: 'ipa-idrange-cli'
+                    test: 'ipa-idrange-cli',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-join": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-join.yaml",
-                    test: 'ipa-join'
+                    test: 'ipa-join',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-krblockout": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-krblockout.yaml",
-                    test: 'ipa-krblockout'
+                    test: 'ipa-krblockout',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-nis-integration": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-nis-integration.yaml",
-                    test: 'ipa-nis-integration'
+                    test: 'ipa-nis-integration',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-realmdomains-cli": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-realmdomains-cli.yaml",
-                    test: 'ipa-realmdomains-cli'
+                    test: 'ipa-realmdomains-cli',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-selinuxusermap-func": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-selinuxusermap-func.yaml",
-                    test: 'ipa-selinuxusermap-func'
+                    test: 'ipa-selinuxusermap-func',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-trust-cli": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-cli.yaml",
-                    test: 'ipa-trust-cli'
+                    test: 'ipa-trust-cli',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-trust-func-hbac": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-hbac.yaml",
-                    test: 'ipa-trust-func-hbac'
+                    test: 'ipa-trust-func-hbac',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-trust-func-httpkrb": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-httpkrb.yaml",
-                    test: 'ipa-trust-func-httpkrb'
+                    test: 'ipa-trust-func-httpkrb',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-trust-func-selinux-usermap": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-selinux-usermap.yaml",
-                    test: 'ipa-trust-func-selinux-usermap'
+                    test: 'ipa-trust-func-selinux-usermap',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-trust-func-automount": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-automount.yaml",
-                    test: 'ipa-trust-func-automount'
+                    test: 'ipa-trust-func-automount',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "bash::ipa-trust-func-sudo": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-sudo.yaml",
-                    test: 'ipa-trust-func-sudo'
+                    test: 'ipa-trust-func-sudo',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::automember": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/automember.yaml',
-                    test: 'upstream-automember'
+                    test: 'upstream-automember',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::backup_and_restore-TestBackupAndRestore": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestore.yaml',
-                    test: 'upstream-backup_and_restore-TestBackupAndRestore'
+                    test: 'upstream-backup_and_restore-TestBackupAndRestore',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::backup_and_restore-TestBackupAndRestoreDMPassword": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreDMPassword.yaml',
-                    test: 'upstream-backup_and_restore-TestBackupAndRestoreDMPassword'
+                    test: 'upstream-backup_and_restore-TestBackupAndRestoreDMPassword',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::backup_and_restore-TestBackupAndRestoreWithDNS": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNS.yaml',
-                    test: 'upstream-backup_and_restore-TestBackupAndRestoreWithDNS'
+                    test: 'upstream-backup_and_restore-TestBackupAndRestoreWithDNS',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::backup_and_restore-TestBackupAndRestoreWithDNSSEC": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNSSEC.yaml',
-                    test: 'upstream-backup_and_restore-TestBackupAndRestoreWithDNSSEC'
+                    test: 'upstream-backup_and_restore-TestBackupAndRestoreWithDNSSEC',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::backup_and_restore-TestBackupAndRestoreWithKRA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithKRA.yaml',
-                    test: 'upstream-backup_and_restore-TestBackupAndRestoreWithKRA'
+                    test: 'upstream-backup_and_restore-TestBackupAndRestoreWithKRA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::backup_and_restore-TestBackupAndRestoreWithReplica": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithReplica.yaml',
-                    test: 'upstream-backup_and_restore-TestBackupAndRestoreWithReplica'
+                    test: 'upstream-backup_and_restore-TestBackupAndRestoreWithReplica',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::backup_and_restore-TestBackupReinstallRestoreWithDNS": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNS.yaml',
-                    test: 'upstream-backup_and_restore-TestBackupReinstallRestoreWithDNS'
+                    test: 'upstream-backup_and_restore-TestBackupReinstallRestoreWithDNS',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::backup_and_restore-TestBackupReinstallRestoreWithDNSSEC": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNSSEC.yaml',
-                    test: 'upstream-backup_and_restore-TestBackupReinstallRestoreWithDNSSEC'
+                    test: 'upstream-backup_and_restore-TestBackupReinstallRestoreWithDNSSEC',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::backup_and_restore-TestBackupReinstallRestoreWithKRA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithKRA.yaml',
-                    test: 'upstream-backup_and_restore-TestBackupReinstallRestoreWithKRA'
+                    test: 'upstream-backup_and_restore-TestBackupReinstallRestoreWithKRA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::backup_and_restore-TestReplicainstallAfterRestore": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestReplicainstallAfterRestore.yaml',
-                    test: 'upstream-backup_and_restore-TestReplicainstallAfterRestore'
+                    test: 'upstream-backup_and_restore-TestReplicainstallAfterRestore',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::backup_and_restore-TestUserRootFilesownershipPermiss": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestUserRootFilesownershipPermiss.yaml',
-                    test: 'upstream-backup_and_restore-TestUserRootFilesownershipPermiss'
+                    test: 'upstream-backup_and_restore-TestUserRootFilesownershipPermiss',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::caless-TestCertinstall": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestCertinstall.yaml',
-                    test: 'upstream-caless-TestCertinstall'
+                    test: 'upstream-caless-TestCertinstall',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::caless-TestClientinstall": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestClientinstall.yaml',
-                    test: 'upstream-caless-TestClientinstall'
+                    test: 'upstream-caless-TestClientinstall',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::caless-TestIPACommands": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestIPACommands.yaml',
-                    test: 'upstream-caless-TestIPACommands'
+                    test: 'upstream-caless-TestIPACommands',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::caless-TestPKINIT": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestPKINIT.yaml',
-                    test: 'upstream-caless-TestPKINIT'
+                    test: 'upstream-caless-TestPKINIT',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::caless-TestReplicaCALessToCAFull": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestReplicaCALessToCAFull.yaml',
-                    test: 'upstream-caless-TestReplicaCALessToCAFull'
+                    test: 'upstream-caless-TestReplicaCALessToCAFull',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::caless-TestServerCALessToExternalCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestServerCALessToExternalCA.yaml',
-                    test: 'upstream-caless-TestServerCALessToExternalCA'
+                    test: 'upstream-caless-TestServerCALessToExternalCA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::caless-TestServerReplicaCALessToCAFull": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestServerReplicaCALessToCAFull.yaml',
-                    test: 'upstream-caless-TestServerReplicaCALessToCAFull'
+                    test: 'upstream-caless-TestServerReplicaCALessToCAFull',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::crlgen_manage": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/crlgen_manage.yaml',
-                    test: 'upstream-crlgen_manage'
+                    test: 'upstream-crlgen_manage',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::customized_ds_config_install": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/customized_ds_config_install.yaml',
-                    test: 'upstream-customized_ds_config_install'
+                    test: 'upstream-customized_ds_config_install',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::dns_locations": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/dns_locations.yaml',
-                    test: 'upstream-dns_locations'
+                    test: 'upstream-dns_locations',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::external_ca-TestExternalCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/external_ca-TestExternalCA.yaml',
-                    test: 'upstream-external_ca-TestExternalCA'
+                    test: 'upstream-external_ca-TestExternalCA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::external_ca-TestSelfExternalSelf": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/external_ca-TestSelfExternalSelf.yaml',
-                    test: 'upstream-external_ca-TestSelfExternalSelf'
+                    test: 'upstream-external_ca-TestSelfExternalSelf',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::external_ca-TestExternalCAinvalidCert": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/external_ca-TestExternalCAinvalidCert.yaml',
-                    test: 'upstream-external_ca-TestExternalCAinvalidCert'
+                    test: 'upstream-external_ca-TestExternalCAinvalidCert',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::external_ca-TestExternalCAdirsrvStop": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/external_ca-TestExternalCAdirsrvStop.yaml',
-                    test: 'upstream-external_ca-TestExternalCAdirsrvStop'
+                    test: 'upstream-external_ca-TestExternalCAdirsrvStop',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::external_ca-TestMultipleExternalCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/external_ca-TestMultipleExternalCA.yaml',
-                    test: 'upstream-external_ca-TestMultipleExternalCA'
+                    test: 'upstream-external_ca-TestMultipleExternalCA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::external_ca-TestExternalCAProfileScenarios": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/external_ca-TestExternalCAProfileScenarios.yaml',
-                    test: 'upstream-external_ca-TestExternalCAProfileScenarios'
+                    test: 'upstream-external_ca-TestExternalCAProfileScenarios',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::forced_client_reenrollment": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/forced_client_reenrollment.yaml',
-                    test: 'upstream-forced_client_reenrollment'
+                    test: 'upstream-forced_client_reenrollment',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::http_kdc_proxy": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/http_kdc_proxy.yaml',
-                    test: 'upstream-http_kdc_proxy'
+                    test: 'upstream-http_kdc_proxy',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::idviews": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/idviews.yaml',
-                    test: 'upstream-idviews'
+                    test: 'upstream-idviews',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::kerberos_flags": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/kerberos_flags.yaml',
-                    test: 'upstream-kerberos_flags'
+                    test: 'upstream-kerberos_flags',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::legacy_clients": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/legacy_clients.yaml',
-                    test: 'upstream-legacy_clients'
+                    test: 'upstream-legacy_clients',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::netgroup": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/netgroup.yaml',
-                    test: 'upstream-netgroup'
+                    test: 'upstream-netgroup',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::pkinit_manage": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/pkinit_manage.yaml',
-                    test: 'upstream-pkinit_manage'
+                    test: 'upstream-pkinit_manage',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replica_promotion-TestHiddenReplicaPromotion": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestHiddenReplicaPromotion.yaml',
-                    test: 'upstream-replica_promotion-TestHiddenReplicaPromotion'
+                    test: 'upstream-replica_promotion-TestHiddenReplicaPromotion',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replica_promotion-TestProhibitReplicaUninstallation": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestProhibitReplicaUninstallation.yaml',
-                    test: 'upstream-replica_promotion-TestProhibitReplicaUninstallation'
+                    test: 'upstream-replica_promotion-TestProhibitReplicaUninstallation',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replica_promotion-TestRenewalMaster": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestRenewalMaster.yaml',
-                    test: 'upstream-replica_promotion-TestRenewalMaster'
+                    test: 'upstream-replica_promotion-TestRenewalMaster',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replica_promotion-TestReplicainForwardZone": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestReplicainForwardZone.yaml',
-                    test: 'upstream-replica_promotion-TestReplicainForwardZone'
+                    test: 'upstream-replica_promotion-TestReplicainForwardZone',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replica_promotion-TestReplicainstallCustodia": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestReplicainstallCustodia.yaml',
-                    test: 'upstream-replica_promotion-TestReplicainstallCustodia'
+                    test: 'upstream-replica_promotion-TestReplicainstallCustodia',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replica_promotion-TestReplicainstallWithExistingEntry": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestReplicainstallWithExistingEntry.yaml',
-                    test: 'upstream-replica_promotion-TestReplicainstallWithExistingEntry'
+                    test: 'upstream-replica_promotion-TestReplicainstallWithExistingEntry',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replica_promotion-TestReplicaPromotionLevel1": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestReplicaPromotionLevel1.yaml',
-                    test: 'upstream-replica_promotion-TestReplicaPromotionLevel1'
+                    test: 'upstream-replica_promotion-TestReplicaPromotionLevel1',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replica_promotion-TestSubCAkeyReplication": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestSubCAkeyReplication.yaml',
-                    test: 'upstream-replica_promotion-TestSubCAkeyReplication'
+                    test: 'upstream-replica_promotion-TestSubCAkeyReplication',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replica_promotion-TestUnprivilegedUserPermissions": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestUnprivilegedUserPermissions.yaml',
-                    test: 'upstream-replica_promotion-TestUnprivilegedUserPermissions'
+                    test: 'upstream-replica_promotion-TestUnprivilegedUserPermissions',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replica_promotion-TestWrongClientDomain": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestWrongClientDomain.yaml',
-                    test: 'upstream-replica_promotion-TestWrongClientDomain'
+                    test: 'upstream-replica_promotion-TestWrongClientDomain',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replication_layouts-TestStarTopologyWithoutCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestStarTopologyWithoutCA.yaml',
-                    test: 'upstream-replication_layouts-TestStarTopologyWithoutCA'
+                    test: 'upstream-replication_layouts-TestStarTopologyWithoutCA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replication_layouts-TestCompleteTopologyWithCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCA.yaml',
-                    test: 'upstream-replication_layouts-TestCompleteTopologyWithCA'
+                    test: 'upstream-replication_layouts-TestCompleteTopologyWithCA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replication_layouts-TestCompleteTopologyWithCAKRA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCAKRA.yaml',
-                    test: 'upstream-replication_layouts-TestCompleteTopologyWithCAKRA'
+                    test: 'upstream-replication_layouts-TestCompleteTopologyWithCAKRA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replication_layouts-TestCompleteTopologyWithoutCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithoutCA.yaml',
-                    test: 'upstream-replication_layouts-TestCompleteTopologyWithoutCA'
+                    test: 'upstream-replication_layouts-TestCompleteTopologyWithoutCA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replication_layouts-TestLineTopologyWithCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestLineTopologyWithCA.yaml',
-                    test: 'upstream-replication_layouts-TestLineTopologyWithCA'
+                    test: 'upstream-replication_layouts-TestLineTopologyWithCA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replication_layouts-TestLineTopologyWithCAKRA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestLineTopologyWithCAKRA.yaml',
-                    test: 'upstream-replication_layouts-TestLineTopologyWithCAKRA'
+                    test: 'upstream-replication_layouts-TestLineTopologyWithCAKRA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replication_layouts-TestLineTopologyWithoutCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestLineTopologyWithoutCA.yaml',
-                    test: 'upstream-replication_layouts-TestLineTopologyWithoutCA'
+                    test: 'upstream-replication_layouts-TestLineTopologyWithoutCA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replication_layouts-TestStarTopologyWithCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestStarTopologyWithCA.yaml',
-                    test: 'upstream-replication_layouts-TestStarTopologyWithCA'
+                    test: 'upstream-replication_layouts-TestStarTopologyWithCA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::replication_layouts-TestStarTopologyWithCAKRA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestStarTopologyWithCAKRA.yaml',
-                    test: 'upstream-replication_layouts-TestStarTopologyWithCAKRA'
+                    test: 'upstream-replication_layouts-TestStarTopologyWithCAKRA',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::server_del": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/server_del.yaml',
-                    test: 'upstream-server_del'
+                    test: 'upstream-server_del',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::service_permissions": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/service_permissions.yaml',
-                    test: 'upstream-service_permissions'
+                    test: 'upstream-service_permissions',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::sudo": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/sudo.yaml',
-                    test: 'upstream-sudo'
+                    test: 'upstream-sudo',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::topology-TestCASpecificRUVs": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/topology-TestCASpecificRUVs.yaml',
-                    test: 'upstream-topology-TestCASpecificRUVs'
+                    test: 'upstream-topology-TestCASpecificRUVs',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::topology-TestTopologyOptions": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/topology-TestTopologyOptions.yaml',
-                    test: 'upstream-topology-TestTopologyOptions'
+                    test: 'upstream-topology-TestTopologyOptions',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::trust": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/trust.yaml',
-                    test: 'upstream-trust'
+                    test: 'upstream-trust',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::user_permissions": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/user_permissions.yaml',
-                    test: 'upstream-user_permissions'
+                    test: 'upstream-user_permissions',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::vault": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/vault.yaml',
-                    test: 'upstream-vault'
+                    test: 'upstream-vault',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::winsyncmigrate": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/winsyncmigrate.yaml',
-                    test: 'upstream-winsyncmigrate'
+                    test: 'upstream-winsyncmigrate',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             }
             )
