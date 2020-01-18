@@ -40,7 +40,7 @@ node {
                 new TeRun([
                     metadata: 'metadata/pytests/replica-install.yaml',
                     test: 'pytests-replica-install',
-                    email: 'ipa-and-samba-team-automation@redhat.com'
+                    email: 'ipa-and-samba-team-automation@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             }
