@@ -445,10 +445,10 @@ node {
                     email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
-            "upstream::http-kdc-proxy": {
+            "upstream::http_kdc_proxy": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/http-kdc-proxy.yaml',
-                    test: 'upstream-http-kdc-proxy',
+                    metadata: 'metadata/upstream/integration/http_kdc_proxy.yaml',
+                    test: 'upstream-http_kdc_proxy',
                     email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },

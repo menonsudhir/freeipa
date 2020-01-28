@@ -368,10 +368,10 @@ node {
                     email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
-            "upstream::pki-config-override": {
+            "upstream::pki_config_override": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/pki-config-override.yaml',
-                    test: 'upstream-pki-config-override',
+                    metadata: 'metadata/upstream/integration/pki_config_override.yaml',
+                    test: 'upstream-pki_config_override',
                     email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             }
