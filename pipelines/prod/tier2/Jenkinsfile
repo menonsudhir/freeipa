@@ -486,7 +486,7 @@ node {
             },
             "upstream::replica-promotion-TestHiddenReplicaPromotion": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replica-promotion-TestHiddenReplicaPromotion.yaml',
+                    metadata: 'metadata/upstream/integration/replica_promotion-TestHiddenReplicaPromotion.yaml',
                     test: 'upstream-replica-promotion-TestHiddenReplicaPromotion',
                     email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
