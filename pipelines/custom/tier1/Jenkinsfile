@@ -378,6 +378,13 @@ node {
                     test: 'upstream-pki_config_override',
                     email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
+            },
+            "upstream::otp": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/otp.yaml',
+                    test: 'upstream-otp',
+                    email: 'ipa-and-samba-team-automation@redhat.com'
+                ]).exec('ipa-slave')
             }
             )
         }
