@@ -362,11 +362,7 @@ def qe_use_class_setup(request, multihost):
         print()
 
     if hasattr(request.cls(), 'class_setup'):
-        try:
-            request.cls().class_setup(multihost)
-        except Exception as errval:
-            print(str(errval))
-            pytest.skip("class_setup_failed")
+        request.cls().class_setup(multihost)
     if hasattr(request.cls(), 'class_teardown'):
         request.addfinalizer(lambda: request.cls().class_teardown(multihost))
         request.addfinalizer(lambda: qe_newline())  # pylint: disable=unnecessary-lambda
