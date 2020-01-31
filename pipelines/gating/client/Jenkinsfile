@@ -54,14 +54,6 @@ node {
                     email: 'mvarun@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
-          },
-          "bash::hbac-func": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-hbac-func.yaml",
-                    test: 'hbac-func',
-                    email: 'smenon@redhat.com',
-                    message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
           }
           )
         }
