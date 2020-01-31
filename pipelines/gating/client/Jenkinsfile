@@ -17,6 +17,8 @@ env.CI_IRC = '#ipa'
 env.CI_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ARTIFACT_NAMESPACE = 'idm-ci.redhat-module'
 
+def IPATESTS_METADATA_PATH = 'https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.2'
+
 properties([
     [$class: 'CachetJobProperty', requiredResources: true, resources: ['openstack.psi.redhat.com', 'paas.psi.redhat.com']],
     parameters([
@@ -37,15 +39,31 @@ node {
   try {
         stage("tier-1") {
           parallel(
-          "pytest::functional_services": {
+          "pytest::client-install": {
                 new TeRun([
-                    metadata: 'metadata/pytests/functional_services.yaml',
-                    test: 'pytests-functional_services',
-                    email: 'ipa-and-samba-team-automation@redhat.com',
+                    metadata: "metadata/pytests/client_install.yaml",
+                    test: 'client-install',
+                    email: 'mpolovka@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
-            }
-            )
+          },
+          "bash::ssh-functional": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-ssh-functional.yaml",
+                    test: 'ssh-functional',
+                    email: 'mvarun@redhat.com',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+          },
+          "bash::hbac-func": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-hbac-func.yaml",
+                    test: 'hbac-func',
+                    email: 'smenon@redhat.com',
+                    message: "${params.CI_MESSAGE}"
+                ]).exec('ipa-slave')
+          }
+          )
         }
    } catch (e) {
        failed = true
