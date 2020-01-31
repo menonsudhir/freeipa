@@ -16,7 +16,8 @@ properties([
 ])
 
 node {
-        stage("tier-2") {
+    try {
+        stage("tier-2-pytests") {
           parallel(
             "pytest::external_trust": {
                 new TeRun([
@@ -115,7 +116,15 @@ node {
                     test: 'vault',
                     email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
-            },
+            }
+            )
+        }
+    } catch (Exception e) {
+        sh script: "echo TestSuiteFailed"
+    }
+    try {
+        stage("tier-2-bash") {
+          parallel(
             "bash::ds-migration": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ds-migration.yaml",
@@ -241,7 +250,15 @@ node {
                     test: 'ipa-trust-func-sudo',
                     email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
-            },
+            }
+            )
+        }
+    } catch (Exception e) {
+        sh script: "echo TestSuiteFailed"
+    }
+    try {
+        stage("tier-2-upstream") {
+          parallel(
             "upstream::automember": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/automember.yaml',
@@ -685,4 +702,7 @@ node {
             }
             )
         }
+    } catch (Exception e) {
+        sh script: "echo TestSuiteFailed"
+    }
 }
