@@ -26,10 +26,10 @@ node {
                     email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
-            "pytest::ipa-backup-restore": {
+            "pytest::ipa_backup_restore": {
                 new TeRun([
-                    metadata: 'metadata/pytests/ipa-backup-restore.yaml',
-                    test: 'ipa-backup-restore',
+                    metadata: 'metadata/pytests/ipa_backup_restore.yaml',
+                    test: 'ipa_backup_restore',
                     email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
             },
