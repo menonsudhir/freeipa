@@ -16,6 +16,10 @@ domains:
         group: ipaserver
         role: master
         os: rhel-8.2
+      - name: client.testrelm.test
+        group: ipaclient
+        role: client
+        os: rhel-8.2
   - name: ad.test
     type: AD
     hosts:
