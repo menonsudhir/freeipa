@@ -28,8 +28,11 @@ properties([
     booleanParam(name: 'NOTIFY_PACKAGER', defaultValue: false, description: 'Notify packager about this jenkins build.'),
     booleanParam(name: 'DEBUG', defaultValue: true, description: 'Will printout debug information.'),
     string(name: 'RECIPIENTS', defaultValue: '', description: 'Email recipients'),
+    booleanParam(name: 'BEAKER', defaultValue: false, description: 'True will cause Beaker provisioning.'),
     ]),
 ])
+
+env.BEAKER = "${params.BEAKER}"
 
 node {
   def g = new idmci.gating.gating()
