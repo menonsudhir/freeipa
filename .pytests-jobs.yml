@@ -314,3 +314,12 @@ ipa-pytests-server-install:
     changes:
     - metadata/pytests/server-install.yaml
     - src/server-install/*
+
+ipa-pytests-upgrade:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa_upgrade_missing_certmonger_ca.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa_upgrade_missing_certmonger_ca.yaml
+    - src/ipa_upgrade/bugzillas/bz1680039/*
