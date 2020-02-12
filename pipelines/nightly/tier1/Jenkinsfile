@@ -424,6 +424,12 @@ node {
                     test: 'upstream-otp',
                     email: 'ipa-and-samba-team-automation@redhat.com'
                 ]).exec('ipa-slave')
+            },
+            "upstream::membermanager": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/membermanager.yaml',
+                    test: 'upstream-membermanager',
+                ]).exec('ipa-slave')
             }
             )
         }
