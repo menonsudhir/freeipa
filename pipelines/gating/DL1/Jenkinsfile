@@ -43,7 +43,7 @@ node {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-host.yaml',
                     test: 'pytests-ipa-host',
-                    email: 'ipa-and-samba-team-automation@redhat.com',
+                    email: 'sumenon@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
@@ -51,7 +51,7 @@ node {
                 new TeRun([
                     metadata: 'metadata/pytests/subca.yaml',
                     test: 'ipa-subca',
-                    email: 'ipa-and-samba-team-automation@redhat.com',
+                    email: 'ssidhaye@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
@@ -59,7 +59,7 @@ node {
                 new TeRun([
                     metadata: 'metadata/pytests/external-ca.yaml',
                     test: 'ipa-external-ca',
-                    email: 'ipa-and-samba-team-automation@redhat.com',
+                    email: 'ssidhaye@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
@@ -67,7 +67,7 @@ node {
                 new TeRun([
                     metadata: 'metadata/pytests/otp.yaml',
                     test: 'otp',
-                    email: 'ipa-and-samba-team-automation@redhat.com',
+                    email: 'amore@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
@@ -75,7 +75,7 @@ node {
                 new TeRun([
                     metadata: 'metadata/pytests/vault.yaml',
                     test: 'vault',
-                    email: 'ipa-and-samba-team-automation@redhat.com',
+                    email: 'ssidhaye@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
@@ -83,7 +83,7 @@ node {
                 new TeRun([
                     metadata: 'metadata/pytests/replica-install.yaml',
                     test: 'ipa-replica-install',
-                    email: 'ipa-and-samba-team-automation@redhat.com',
+                    email: 'sumenon@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
@@ -91,7 +91,7 @@ node {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-replica-promotion.yaml',
                     test: 'ipa-replica-promotion',
-                    email: 'ipa-and-samba-team-automation@redhat.com',
+                    email: 'sumenon@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
@@ -99,7 +99,7 @@ node {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-krbtpolicy.yaml",
                     test: 'ipa-krbtpolicy',
-                    email: 'ipa-and-samba-team-automation@redhat.com',
+                    email: 'sorlov@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
@@ -107,14 +107,14 @@ node {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/krbtpolicy.yaml',
                     test: 'upstream-krbtpolicy',
-                    email: 'ipa-and-samba-team-automation@redhat.com',
+                    email: 'sorlov@redhat.com',
                 ]).exec('ipa-slave')
             },
             "bash::ssh-functional": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-ssh-functional.yaml",
                     test: 'ipa-ssh-functional',
-                    email: 'ipa-and-samba-team-automation@redhat.com',
+                    email: 'mvarun@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
@@ -122,7 +122,7 @@ node {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-user-cli-adduser.yaml",
                     test: 'ipa-user-cli-adduser',
-                    email: 'ipa-and-samba-team-automation@redhat.com',
+                    email: 'sumenon@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             },
@@ -130,7 +130,7 @@ node {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-user-cli-moduser.yaml",
                     test: 'ipa-user-cli-moduser',
-                    email: 'ipa-and-samba-team-automation@redhat.com',
+                    email: 'sumenon@redhat.com',
                     message: "${params.CI_MESSAGE}"
                 ]).exec('ipa-slave')
             }
