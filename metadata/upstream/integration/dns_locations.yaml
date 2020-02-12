@@ -1,3 +1,4 @@
+ssh_key_filename: ~/.ssh/id_rsa
 admin_id: admin
 admin_pw: Secret123
 dirman_id: '"cn=Directory Manager"'
@@ -41,10 +42,9 @@ phases:
       - playbook: prep/firewall.yaml
   - name: test
     steps:
-    - extra_vars:
-        test_suite: test_integration/test_dns_locations.py
-      playbook: test/test-upstream.yaml
+      - playbook: test/test-upstream.yaml
+        extra_vars:
+          test_suite: test_integration/test_dns_locations.py
   - name: teardown
     steps:
       - playbook: teardown/linchpin-destroy.yaml
-ssh_key_filename: ~/.ssh/id_rsa
