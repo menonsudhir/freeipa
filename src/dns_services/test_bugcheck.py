@@ -8,6 +8,7 @@ SetUp Requirements:
 """
 
 import pytest
+import textwrap
 from ipa_pytests.qe_install import setup_master
 from ipa_pytests.qe_install import uninstall_server
 
@@ -57,9 +58,12 @@ class TestBugCheck(object):
         else:
             pytest.xfail("DNSZone not found, BZ1211608 and BZ1207541 failed")
         print("Adding a non-standard record")
-        filedata = "update add test4.{} 10 IN TYPE65280 \# 4 0A000001 \nsend\nquit"\
-            .format(master.domain.name)
-        master.put_file_contents("/tmp/test4.txt", filedata)
+        data = r'''
+               update add test4.{} 10 IN TYPE65280 \# 4 0A000001
+               send
+               quit
+               '''.format(master.domain.name)
+        master.put_file_contents("/tmp/test4.txt", textwrap.dedent(data))
         check4 = master.run_command('nsupdate -g /tmp/test4.txt')
 
         if check4.returncode == 0:
