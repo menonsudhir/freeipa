@@ -39,4 +39,5 @@ phases:
           test_suite: test_integration/test_backup_and_restore.py::TestBackupAndRestoreWithDNSSEC
   - name: teardown
     steps:
+      - playbook: teardown/fetch-logs.yaml
       - playbook: teardown/linchpin-destroy.yaml

@@ -40,4 +40,5 @@ phases:
           test_suite: test_webui/test_dns.py
   - name: teardown
     steps:
+      - playbook: teardown/fetch-logs.yaml
       - playbook: teardown/linchpin-destroy.yaml

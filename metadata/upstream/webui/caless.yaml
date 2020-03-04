@@ -43,4 +43,5 @@ phases:
           keywords: ca_less
   - name: teardown
     steps:
+      - playbook: teardown/fetch-logs.yaml
       - playbook: teardown/linchpin-destroy.yaml

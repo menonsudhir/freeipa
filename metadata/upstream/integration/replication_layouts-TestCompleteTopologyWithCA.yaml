@@ -51,4 +51,5 @@ phases:
           test_suite: test_integration/test_replication_layouts.py::TestCompleteTopologyWithCA
   - name: teardown
     steps:
+      - playbook: teardown/fetch-logs.yaml
       - playbook: teardown/linchpin-destroy.yaml

@@ -39,4 +39,5 @@ phases:
           test_suite: test_integration/test_caless.py::TestCertInstall
   - name: teardown
     steps:
+      - playbook: teardown/fetch-logs.yaml
       - playbook: teardown/linchpin-destroy.yaml

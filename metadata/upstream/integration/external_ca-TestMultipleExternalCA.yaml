@@ -47,4 +47,5 @@ phases:
           test_suite: test_integration/test_external_ca.py::TestMultipleExternalCA
   - name: teardown
     steps:
+      - playbook: teardown/fetch-logs.yaml
       - playbook: teardown/linchpin-destroy.yaml
