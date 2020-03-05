@@ -116,6 +116,20 @@ phases:
                 gidNumber: 10247
                 loginShell: /bin/sh
                 gecos: TreeTest User
+      - playbook: prep/win-group-add.yaml
+        extra_vars:
+          target_host: root-dc.ad.test
+          ad_groups:
+            - name: testgroup
+              gidNumber: 10047
+              scope: global
+              members: ['testuser']
+      - playbook: prep/win-primary-group.yaml
+        extra_vars:
+          target_host: root-dc.ad.test
+          ad_groups:
+            - name: testgroup
+              members: ['testuser']
   - name: test
     steps:
       - playbook: test/test-upstream.yaml
