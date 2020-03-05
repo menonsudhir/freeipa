@@ -51,6 +51,12 @@ phases:
             users:
             - name: testuser
               password: Secret123
+      - playbook: prep/win-group-add.yaml
+        extra_vars:
+            ad_groups:
+            - name: group@group
+              scope: global
+
   - name: test
     steps:
       - playbook: test/test-upstream.yaml
