@@ -315,7 +315,7 @@ ipa-pytests-server-install:
     - metadata/pytests/server-install.yaml
     - src/server-install/*
 
-ipa-pytests-upgrade:
+ipa-pytests-upgrade-missing-ca:
   extends: .mr_template
   variables:
     METADATA_FILE_PATH: metadata/pytests/ipa_upgrade_missing_certmonger_ca.yaml
@@ -323,3 +323,12 @@ ipa-pytests-upgrade:
     changes:
     - metadata/pytests/ipa_upgrade_missing_certmonger_ca.yaml
     - src/ipa_upgrade/bugzillas/bz1680039/*
+
+ipa-pytests-upgrade-schema-compat-attribute:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa_upgrade_schema_compat_attribute.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa_upgrade_schema_compat_attribute.yaml
+    - src/ipa_upgrade/bugzillas/bz1803165/*
