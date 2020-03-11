@@ -57,9 +57,9 @@ class TestSudo(object):
         """
         IDM-IPA-TC: Sudo IPA Schema: Check defaults entry support
         """
-        client_sudo_user_allowed(multihost, tusr1, tusr2, tcmd1, exp_returncode=1, exp_output='no tty present')
+        client_sudo_user_allowed(multihost, tusr1, tusr2, tcmd1, exp_returncode=1, exp_output='a terminal is required to read the password')
         sudorule_add_permissive_options(multihost, tsudorule)
-        client_sudo_user_allowed(multihost, tusr1, tusr2, tcmd1, exp_returncode=1, exp_output='no tty present')
+        client_sudo_user_allowed(multihost, tusr1, tusr2, tcmd1, exp_returncode=1, exp_output='a terminal is required to read the password')
         sudorule_add_defaults(multihost)
         client_sudo_user_allowed(multihost, tusr1, tusr2, tcmd1)
         sudorule_del(multihost, tsudorule)
@@ -142,7 +142,7 @@ class TestSudo(object):
         cmd = ['ipa', 'sudorule-disable', 'defaults']
         multihost.master.qerun(cmd)
         sssd_cache_reset(multihost.client)
-        client_sudo_user_allowed(multihost, tusr1, tusr2, tcmd1, exp_returncode=1, exp_output='no tty present')
+        client_sudo_user_allowed(multihost, tusr1, tusr2, tcmd1, exp_returncode=1, exp_output='a terminal is required to read the password')
         sudorule_del_attr(multihost, 'host', tsudorule, '--hosts', tdumhost)
         cmd = ['ipa', 'sudorule-enable', 'defaults']
         multihost.master.qerun(cmd)
@@ -201,4 +201,3 @@ class TestSudo(object):
         DSE_LDIF_PATH = '/etc/dirsrv/slapd-' + multihost.realm.replace('.','-')
         cmd = ['mv', '-f', DSE_LDIF_PATH + '/dse.ldif.bak', DSE_LDIF_PATH + '/dse.ldif']
         multihost.master.qerun(cmd)
-
