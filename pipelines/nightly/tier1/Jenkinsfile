@@ -390,11 +390,18 @@ node {
                     email: 'myusuf@redhat.com'
                 ]).exec('ipa-slave')
             },
-             "upstream::commands": {
+            "upstream::commands": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/commands.yaml',
                     test: 'upstream-commands',
                     email: 'ksiddiqu@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "upstream::installation": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/installation.yaml',
+                    test: 'upstream-installation',
+                    email: 'mpolovka@redhat.com'
                 ]).exec('ipa-slave')
             },
             "upstream::krbtpolicy": {
