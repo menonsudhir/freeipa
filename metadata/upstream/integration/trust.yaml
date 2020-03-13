@@ -78,6 +78,7 @@ phases:
                 gidNumber: 10047
                 loginShell: /bin/sh
                 homeDirectory: /home/testuser
+                unixHomeDirectory: /home/testuser
                 gecos: Test User
             # A test user without posix attributes defined
             - name: nonposixuser
