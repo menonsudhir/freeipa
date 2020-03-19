@@ -544,6 +544,14 @@ upstream-trust:
     changes:
     - metadata/upstream/integration/trust.yaml
 
+upstream-sssd:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/sssd.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/sssd.yaml
+
 upstream-user_permissions:
   extends: .mr_template
   variables:

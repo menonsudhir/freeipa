@@ -680,6 +680,13 @@ node {
                     email: 'sorlov@redhat.com'
                 ]).exec('ipa-slave')
             },
+            "upstream::sssd": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/sssd.yaml',
+                    test: 'upstream-sssd',
+                    email: 'amore@redhat.com'
+                ]).exec('ipa-slave')
+            },
             "upstream::user_permissions": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/user_permissions.yaml',
