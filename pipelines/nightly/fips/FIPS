@@ -195,6 +195,13 @@ node {
                     test: 'pki-config-override',
                     email: 'ksiddiqu@redhat.com'
                 ]).exec('ipa-slave')
+            },
+            "upstream::smb": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/smb.yaml',
+                    test: 'upstream-smb',
+                    email: 'sorlov@redhat.com'
+                ]).exec('ipa-slave')
             }
             )
         }

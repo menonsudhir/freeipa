@@ -436,6 +436,13 @@ node {
                     metadata: 'metadata/upstream/integration/membermanager.yaml',
                     test: 'upstream-membermanager',
                 ]).exec('ipa-slave')
+            },
+            "upstream::smb": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/smb.yaml',
+                    test: 'upstream-smb',
+                    email: 'sorlov@redhat.com'
+                ]).exec('ipa-slave')
             }
             )
         }

@@ -703,3 +703,11 @@ upstream-uninstallation:
   only:
     changes:
     - metadata/upstream/integration/uninstallation.yaml
+
+upstream-smb:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/smb.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/smb.yaml
