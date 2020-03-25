@@ -323,14 +323,6 @@ node {
                     email: 'ssidhaye@redhat.com'
                 ]).exec('ipa-slave')
             },
-            "ipa-pytests:ca_cert_renewal": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ca_cert_renewal.yaml',
-                    test: 'ca_cert_renewal',
-                    email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
             "ipa-pytests:server-install": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/server-install.yaml',
