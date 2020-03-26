@@ -12,6 +12,14 @@ domains:
         group: ipaserver
         role: master
         os: rhel-8.2
+  - name: win.test
+    type: ad
+    hosts:
+      - name: ad.win.test
+        role: ad
+        group: ad_root
+        os: win-2016
+
 phases:
   - name: init
     steps:
@@ -19,6 +27,7 @@ phases:
   - name: provision
     steps:
       - playbook: provision/linchpin-up.yaml
+      - playbook: provision/win-config.yaml
       - playbook: provision/wait.yaml
   - name: prep
     steps:
@@ -29,11 +38,18 @@ phases:
       - playbook: prep/prepare-upstream.yaml
       - playbook: prep/firewall.yaml
       - playbook: prep/prepare-xmlrpc.yaml
+      - playbook: prep/win-domain-setup.yaml
+      - playbook: prep/ipa-adtrust-install.yaml
+      - command: echo Secret123 | ipa trust-add --type ad --admin Administrator --password win.test
+        host: master.testrelm.test
+
   - name: test
     steps:
       - playbook: test/test-xmlrpc.yaml
         extra_vars:
-          test_suite: -k 'not test_external_members and not test_trust_plugin' test_xmlrpc/
+          test_suite:
+              test_xmlrpc/test_trust_plugin.py
+              test_xmlrpc/test_external_members.py
   - name: teardown
     steps:
       - playbook: teardown/fetch-logs.yaml
