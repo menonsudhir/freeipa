@@ -20,7 +20,7 @@ env.ARTIFACT_NAMESPACE = 'idm-ci.redhat-module'
 def IPATESTS_METADATA_PATH = 'https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.2'
 
 properties([
-    [$class: 'CachetJobProperty', requiredResources: true, resources: ['openstack.psi.redhat.com', 'paas.psi.redhat.com']],
+    [$class: 'CachetJobProperty', requiredResources: true, resources: ['openstack.psi.redhat.com']],
     parameters([
     string(name: 'CI_MESSAGE', defaultValue: '', description: 'CI_MESSAGE'),
     string(name: 'MESSAGE_HEADERS', defaultValue: '', description: 'MESSAGE_HEADERS'),
