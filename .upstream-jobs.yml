@@ -719,3 +719,19 @@ upstream-smb:
   only:
     changes:
     - metadata/upstream/integration/smb.yaml
+
+upstream-xmlrpc:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/xmlrpc/xmlrpc-tests.yaml
+  only:
+    changes:
+    - metadata/upstream/xmlrpc/xmlrpc-tests.yaml
+
+upstream-xmlrpc-ad_trust:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/xmlrpc/xmlrpc-tests-ad_trust.yaml
+  only:
+    changes:
+    - metadata/upstream/xmlrpc/xmlrpc-tests-ad_trust.yaml
