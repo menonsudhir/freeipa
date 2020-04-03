@@ -443,6 +443,13 @@ node {
                     test: 'upstream-smb',
                     email: 'sorlov@redhat.com'
                 ]).exec('ipa-slave')
+            },
+            "upstream::xmlrpc": {
+                new TeRun([
+                    metadata: 'metadata/upstream/xmlrpc/xmlrpc-tests.yaml',
+                    test: 'upstream-xmlrpc',
+                    email: 'sorlov@redhat.com'
+                ]).exec('ipa-slave')
             }
             )
         }
