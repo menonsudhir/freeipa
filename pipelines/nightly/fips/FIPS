@@ -18,6 +18,12 @@ properties([
 
 node {
     try {
+        new ComposeID().exec('ipa-slave')
+    } catch (Exception e) {
+        sh script: "echo 'Display COMPOSE_ID unsuccessful'"
+        currentBuild.result = 'SUCCESS'
+    }
+    try {
       stage("pytests-tier1") {
           parallel(
         
