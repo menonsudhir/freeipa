@@ -27,6 +27,7 @@ domains:
         role: ad
         group: ad_root
         os: win-2016
+        network: IPv4
   - name: child.ad.test
     type: AD_SUBDOMAIN
     parent: ad.test
@@ -35,6 +36,7 @@ domains:
         role: ad_subdomain
         group: ad_subdomain
         os: win-2016
+        network: IPv4
   - name: adtree.test
     type: AD_TREEDOMAIN
     parent: ad.test
@@ -43,6 +45,7 @@ domains:
         role: ad_treedomain
         group: ad_treedomain
         os: win-2016
+        network: IPv4
 phases:
   - name: init
     steps:
