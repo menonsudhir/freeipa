@@ -10,7 +10,7 @@ env.ANSIBLE_GATHER_TIMEOUT = '60'
 // details of jenkins cron sytax: https://jenkins.io/doc/book/pipeline/syntax/#cron-syntax
 properties([
     [$class: 'CachetJobProperty', requiredResources: true, resources: ['openstack.psi.redhat.com']],
-    pipelineTriggers([cron('0 23 * * 4')]),
+    pipelineTriggers([cron('30 23 * * 4')]),
 ])
 
 node {

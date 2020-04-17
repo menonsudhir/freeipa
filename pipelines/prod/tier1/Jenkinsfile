@@ -12,7 +12,7 @@ def IPATESTS_METADATA_PATH = 'https://gitlab.cee.redhat.com/identity-management/
 // details of jenkins cron sytax: https://jenkins.io/doc/book/pipeline/syntax/#cron-syntax
 properties([
     [$class: 'CachetJobProperty', requiredResources: true, resources: ['openstack.psi.redhat.com']],
-    pipelineTriggers([cron('0 18 * * 4')]),
+    pipelineTriggers([cron('0 19 * * 4')]),
 ])
 
 node {

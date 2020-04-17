@@ -11,7 +11,7 @@ env.NIGHTLY = 'true'
 // details of jenkins cron sytax: https://jenkins.io/doc/book/pipeline/syntax/#cron-syntax
 properties([
     [$class: 'CachetJobProperty', requiredResources: true, resources: ['openstack.psi.redhat.com']],
-    pipelineTriggers([cron('0 23 * * 2,5')]),
+    pipelineTriggers([cron('30 23 * * 5')]),
 ])
 
 node {

@@ -23,246 +23,6 @@ node {
         currentBuild.result = 'SUCCESS'
     }
     try {
-        stage("tier-2-pytests") {
-          parallel(
-            "pytest::external_trust": {
-                new TeRun([
-                    metadata: 'metadata/pytests/external_trust.yaml',
-                    test: 'external_trust',
-                    email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "pytest::ipa_backup_restore": {
-                new TeRun([
-                    metadata: 'metadata/pytests/ipa_backup_restore.yaml',
-                    test: 'ipa_backup_restore',
-                    email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "pytest::ipa-idoverride": {
-                new TeRun([
-                    metadata: 'metadata/pytests/ipa-idoverride.yaml',
-                    test: 'ipa-idoverride',
-                    email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "pytest::ipa-nis-manage": {
-                new TeRun([
-                    metadata: 'metadata/pytests/ipa-nis-manage.yaml',
-                    test: 'ipa-nis-manage',
-                    email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "pytest::ipa-services": {
-                new TeRun([
-                    metadata: 'metadata/pytests/ipa-services.yaml',
-                    test: 'ipa-services',
-                    email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "pytest::ipa-sudo": {
-                new TeRun([
-                    metadata: 'metadata/pytests/ipa-sudo.yaml',
-                    test: 'ipa-sudo',
-                    email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "pytest::ipa-user": {
-                new TeRun([
-                    metadata: 'metadata/pytests/ipa-user.yaml',
-                    test: 'ipa-user',
-                    email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "pytest::kdcproxy": {
-                new TeRun([
-                    metadata: 'metadata/pytests/kdcproxy.yaml',
-                    test: 'kdcproxy',
-                    email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "pytest::replica-install": {
-                new TeRun([
-                    metadata: 'metadata/pytests/replica-install.yaml',
-                    test: 'replica-install',
-                    email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "pytest::server-role": {
-                new TeRun([
-                    metadata: 'metadata/pytests/server-role.yaml',
-                    test: 'server-role',
-                    email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "pytest::sudo-ipa-schema": {
-                new TeRun([
-                    metadata: 'metadata/pytests/sudo-ipa-schema.yaml',
-                    test: 'sudo-ipa-schema',
-                    email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "pytest::trust_one_way": {
-                new TeRun([
-                    metadata: 'metadata/pytests/trust_one_way.yaml',
-                    test: 'trust_one_way',
-                    email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "pytest::upn": {
-                new TeRun([
-                    metadata: 'metadata/pytests/upn.yaml',
-                    test: 'upn',
-                    email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "pytest::vault": {
-                new TeRun([
-                    metadata: 'metadata/pytests/vault.yaml',
-                    test: 'vault',
-                    email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
-            }
-            )
-        }
-    } catch (Exception e) {
-        sh script: "echo TestSuiteFailed"
-    }
-    try {
-        stage("tier-2-bash") {
-          parallel(
-            "bash::ds-migration": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ds-migration.yaml",
-                    test: 'ds-migration',
-                    email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ds-migration-func": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ds-migration-func.yaml",
-                    test: 'ds-migration-func',
-                    email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-client-cert": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-client-cert.yaml",
-                    test: 'ipa-client-cert',
-                    email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::install-client-cli": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/install-client-cli.yaml",
-                    test: 'install-client-cli',
-                    email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-adtrust": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-adtrust.yaml",
-                    test: 'ipa-adtrust',
-                    email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-client-automount": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-client-automount.yaml",
-                    test: 'ipa-client-automount',
-                    email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-idrange-cli": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-idrange-cli.yaml",
-                    test: 'ipa-idrange-cli',
-                    email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-join": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-join.yaml",
-                    test: 'ipa-join',
-                    email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-krblockout": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-krblockout.yaml",
-                    test: 'ipa-krblockout',
-                    email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-nis-integration": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-nis-integration.yaml",
-                    test: 'ipa-nis-integration',
-                    email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-realmdomains-cli": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-realmdomains-cli.yaml",
-                    test: 'ipa-realmdomains-cli',
-                    email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-selinuxusermap-func": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-selinuxusermap-func.yaml",
-                    test: 'ipa-selinuxusermap-func',
-                    email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-trust-cli": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-cli.yaml",
-                    test: 'ipa-trust-cli',
-                    email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-trust-func-hbac": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-hbac.yaml",
-                    test: 'ipa-trust-func-hbac',
-                    email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-trust-func-httpkrb": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-httpkrb.yaml",
-                    test: 'ipa-trust-func-httpkrb',
-                    email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-trust-func-selinux-usermap": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-selinux-usermap.yaml",
-                    test: 'ipa-trust-func-selinux-usermap',
-                    email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-trust-func-automount": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-automount.yaml",
-                    test: 'ipa-trust-func-automount',
-                    email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "bash::ipa-trust-func-sudo": {
-                new TeRun([
-                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-sudo.yaml",
-                    test: 'ipa-trust-func-sudo',
-                    email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            )
-        }
-    } catch (Exception e) {
-        sh script: "echo TestSuiteFailed"
-    }
-    try {
         stage("tier-2-upstream") {
           parallel(
             "upstream::automember": {
@@ -713,6 +473,246 @@ node {
                     email: 'sorlov@redhat.com'
                 ]).exec('ipa-slave')
             }
+            )
+        }
+    } catch (Exception e) {
+        sh script: "echo TestSuiteFailed"
+    }
+    try {
+        stage("tier-2-pytests") {
+          parallel(
+            "pytest::external_trust": {
+                new TeRun([
+                    metadata: 'metadata/pytests/external_trust.yaml',
+                    test: 'external_trust',
+                    email: 'ssidhaye@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "pytest::ipa_backup_restore": {
+                new TeRun([
+                    metadata: 'metadata/pytests/ipa_backup_restore.yaml',
+                    test: 'ipa_backup_restore',
+                    email: 'myusuf@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "pytest::ipa-idoverride": {
+                new TeRun([
+                    metadata: 'metadata/pytests/ipa-idoverride.yaml',
+                    test: 'ipa-idoverride',
+                    email: 'mvarun@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "pytest::ipa-nis-manage": {
+                new TeRun([
+                    metadata: 'metadata/pytests/ipa-nis-manage.yaml',
+                    test: 'ipa-nis-manage',
+                    email: 'ksiddiqu@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "pytest::ipa-services": {
+                new TeRun([
+                    metadata: 'metadata/pytests/ipa-services.yaml',
+                    test: 'ipa-services',
+                    email: 'amore@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "pytest::ipa-sudo": {
+                new TeRun([
+                    metadata: 'metadata/pytests/ipa-sudo.yaml',
+                    test: 'ipa-sudo',
+                    email: 'ssidhaye@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "pytest::ipa-user": {
+                new TeRun([
+                    metadata: 'metadata/pytests/ipa-user.yaml',
+                    test: 'ipa-user',
+                    email: 'mpolovka@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "pytest::kdcproxy": {
+                new TeRun([
+                    metadata: 'metadata/pytests/kdcproxy.yaml',
+                    test: 'kdcproxy',
+                    email: 'ksiddiqu@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "pytest::replica-install": {
+                new TeRun([
+                    metadata: 'metadata/pytests/replica-install.yaml',
+                    test: 'replica-install',
+                    email: 'sumenon@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "pytest::server-role": {
+                new TeRun([
+                    metadata: 'metadata/pytests/server-role.yaml',
+                    test: 'server-role',
+                    email: 'ssidhaye@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "pytest::sudo-ipa-schema": {
+                new TeRun([
+                    metadata: 'metadata/pytests/sudo-ipa-schema.yaml',
+                    test: 'sudo-ipa-schema',
+                    email: 'sumenon@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "pytest::trust_one_way": {
+                new TeRun([
+                    metadata: 'metadata/pytests/trust_one_way.yaml',
+                    test: 'trust_one_way',
+                    email: 'ksiddiqu@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "pytest::upn": {
+                new TeRun([
+                    metadata: 'metadata/pytests/upn.yaml',
+                    test: 'upn',
+                    email: 'mvarun@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "pytest::vault": {
+                new TeRun([
+                    metadata: 'metadata/pytests/vault.yaml',
+                    test: 'vault',
+                    email: 'ssidhaye@redhat.com'
+                ]).exec('ipa-slave')
+            }
+            )
+        }
+    } catch (Exception e) {
+        sh script: "echo TestSuiteFailed"
+    }
+    try {
+        stage("tier-2-bash") {
+          parallel(
+            "bash::ds-migration": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ds-migration.yaml",
+                    test: 'ds-migration',
+                    email: 'sumenon@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ds-migration-func": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ds-migration-func.yaml",
+                    test: 'ds-migration-func',
+                    email: 'sumenon@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-client-cert": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-client-cert.yaml",
+                    test: 'ipa-client-cert',
+                    email: 'mvarun@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::install-client-cli": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/install-client-cli.yaml",
+                    test: 'install-client-cli',
+                    email: 'mpolovka@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-adtrust": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-adtrust.yaml",
+                    test: 'ipa-adtrust',
+                    email: 'sorlov@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-client-automount": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-client-automount.yaml",
+                    test: 'ipa-client-automount',
+                    email: 'sumenon@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-idrange-cli": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-idrange-cli.yaml",
+                    test: 'ipa-idrange-cli',
+                    email: 'amore@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-join": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-join.yaml",
+                    test: 'ipa-join',
+                    email: 'sumenon@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-krblockout": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-krblockout.yaml",
+                    test: 'ipa-krblockout',
+                    email: 'sorlov@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-nis-integration": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-nis-integration.yaml",
+                    test: 'ipa-nis-integration',
+                    email: 'sorlov@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-realmdomains-cli": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-realmdomains-cli.yaml",
+                    test: 'ipa-realmdomains-cli',
+                    email: 'mvarun@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-selinuxusermap-func": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-selinuxusermap-func.yaml",
+                    test: 'ipa-selinuxusermap-func',
+                    email: 'myusuf@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-trust-cli": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-cli.yaml",
+                    test: 'ipa-trust-cli',
+                    email: 'mvarun@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-trust-func-hbac": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-hbac.yaml",
+                    test: 'ipa-trust-func-hbac',
+                    email: 'amore@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-trust-func-httpkrb": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-httpkrb.yaml",
+                    test: 'ipa-trust-func-httpkrb',
+                    email: 'amore@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-trust-func-selinux-usermap": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-selinux-usermap.yaml",
+                    test: 'ipa-trust-func-selinux-usermap',
+                    email: 'amore@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-trust-func-automount": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-automount.yaml",
+                    test: 'ipa-trust-func-automount',
+                    email: 'amore@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "bash::ipa-trust-func-sudo": {
+                new TeRun([
+                    metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-sudo.yaml",
+                    test: 'ipa-trust-func-sudo',
+                    email: 'amore@redhat.com'
+                ]).exec('ipa-slave')
+            },
             )
         }
     } catch (Exception e) {

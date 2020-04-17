@@ -13,7 +13,7 @@ env.FIPS = 'true'
 
 properties([
     [$class: 'CachetJobProperty', requiredResources: true, resources: ['openstack.psi.redhat.com']],
-    pipelineTriggers([cron('0 2 * * 6')]),
+    pipelineTriggers([cron('30 23 * * 3')]),
 ])
 
 node {
@@ -21,127 +21,6 @@ node {
         new ComposeID().exec('ipa-slave')
     } catch (Exception e) {
         sh script: "echo 'Display COMPOSE_ID unsuccessful'"
-        currentBuild.result = 'SUCCESS'
-    }
-    try {
-      stage("pytests-tier1") {
-          parallel(
-        
-            "ipa-pytests:client_install": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/client_install.yaml',
-                    test: 'client-install',
-                    email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:dns_services": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/dns_services.yaml',
-                    test: 'dns-services',
-                    email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:external-ca": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/external-ca.yaml',
-                    test: 'external-ca',
-                    email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:functional_services": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/functional_services.yaml',
-                    test: 'functional-services',
-                    email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:ipa-advise": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-advise.yaml',
-                    test: 'ipa-advise',
-                    email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:ipa-cert": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-cert.yaml',
-                    test: 'ipa-cert',
-                    email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:ipa-certprofile": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-certprofile.yaml',
-                    test: 'ipa-certprofile',
-                    email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:ipa-getcert": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-getcert.yaml',
-                    test: 'ipa-getcert',
-                    email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:ipa-hbac": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-hbac.yaml',
-                    test: 'ipa-hbac',
-                    email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:ipa-host": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-host.yaml',
-                    test: 'ipa-host',
-                    email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:ipa-rbac": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-rbac.yaml',
-                    test: 'ipa-rbac',
-                    email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:ipa-replica-promotion": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-replica-promotion.yaml',
-                    test: 'ipa-replica-promotion',
-                    email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:otp": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/otp.yaml',
-                    test: 'otp',
-                    email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:subca": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/subca.yaml',
-                    test: 'subca',
-                    email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
-            }
-            )
-        }
-    } catch (Exception e) {
-        sh script: "echo TestSuiteFailed"
         currentBuild.result = 'SUCCESS'
     }
     try {
@@ -202,149 +81,15 @@ node {
                     email: 'ksiddiqu@redhat.com'
                 ]).exec('ipa-slave')
             },
+
             "upstream::smb": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/smb.yaml',
                     test: 'upstream-smb',
                     email: 'sorlov@redhat.com'
                 ]).exec('ipa-slave')
-            }
-            )
-        }
-    } catch (Exception e) {
-        sh script: "echo TestSuiteFailed"
-        currentBuild.result = 'SUCCESS'
-    }
-    try {
-        stage("pytests-tier2") {
-          parallel(
-            "ipa-pytests:external-trust": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/external_trust.yaml',
-                    test: 'external-trust',
-                    email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
             },
-        
-            "ipa-pytests:ipa_backup_restore": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa_backup_restore.yaml',
-                    test: 'ipa_backup_restore',
-                    email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:ipa-idoverride": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-idoverride.yaml',
-                    test: 'ipa-idoverride',
-                    email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:ipa-nis-manage": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-nis-manage.yaml',
-                    test: 'ipa-nis-manage',
-                    email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:ipa-services": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-services.yaml',
-                    test: 'ipa-services',
-                    email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:ipa-sudo": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-sudo.yaml',
-                    test: 'ipa-sudo',
-                    email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:ipa-user": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-user.yaml',
-                    test: 'ipa-user',
-                    email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:kdcproxy": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/kdcproxy.yaml',
-                    test: 'kdcproxy',
-                    email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:replica-install": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/replica-install.yaml',
-                    test: 'replica-install',
-                    email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:server-role": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/server-role.yaml',
-                    test: 'server-role',
-                    email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:sudo-ipa-schema": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/sudo-ipa-schema.yaml',
-                    test: 'sudo-ipa-schema',
-                    email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:trust-one-way": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/trust-one-way.yaml',
-                    test: 'trust-one-way',
-                    email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:upn": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/upn.yaml',
-                    test: 'upn',
-                    email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
-            },
-        
-            "ipa-pytests:vault": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/vault.yaml',
-                    test: 'vault',
-                    email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
-            },
-            "ipa-pytests:server-install": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/server-install.yaml',
-                    test: 'server-install',
-                    email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
-            }
-            )
-        }
-    } catch (Exception e) {
-        sh script: "echo TestSuiteFailed"
-        currentBuild.result = 'SUCCESS'
-    }
-    try {
-        stage("upstream-tier2") {
-          parallel(
+
             "upstream:automember": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/upstream/integration/automember.yaml',
@@ -830,6 +575,245 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/upstream/integration/vault.yaml',
                     test: 'vault',
                     email: 'ssidhaye@redhat.com'
+                ]).exec('ipa-slave')
+            }
+            )
+        }
+    } catch (Exception e) {
+        sh script: "echo TestSuiteFailed"
+        currentBuild.result = 'SUCCESS'
+    }
+    try {
+        stage("pytests") {
+          parallel(
+            "ipa-pytests:client_install": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/client_install.yaml',
+                    test: 'client-install',
+                    email: 'mpolovka@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:dns_services": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/dns_services.yaml',
+                    test: 'dns-services',
+                    email: 'amore@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:external-ca": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/external-ca.yaml',
+                    test: 'external-ca',
+                    email: 'ssidhaye@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:functional_services": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/functional_services.yaml',
+                    test: 'functional-services',
+                    email: 'ksiddiqu@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa-advise": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-advise.yaml',
+                    test: 'ipa-advise',
+                    email: 'ksiddiqu@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa-cert": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-cert.yaml',
+                    test: 'ipa-cert',
+                    email: 'ssidhaye@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa-certprofile": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-certprofile.yaml',
+                    test: 'ipa-certprofile',
+                    email: 'ssidhaye@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa-getcert": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-getcert.yaml',
+                    test: 'ipa-getcert',
+                    email: 'myusuf@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa-hbac": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-hbac.yaml',
+                    test: 'ipa-hbac',
+                    email: 'sumenon@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa-host": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-host.yaml',
+                    test: 'ipa-host',
+                    email: 'sumenon@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa-rbac": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-rbac.yaml',
+                    test: 'ipa-rbac',
+                    email: 'ssidhaye@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa-replica-promotion": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-replica-promotion.yaml',
+                    test: 'ipa-replica-promotion',
+                    email: 'sumenon@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:otp": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/otp.yaml',
+                    test: 'otp',
+                    email: 'amore@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:subca": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/subca.yaml',
+                    test: 'subca',
+                    email: 'ssidhaye@redhat.com'
+                ]).exec('ipa-slave')
+            },
+
+            "ipa-pytests:external-trust": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/external_trust.yaml',
+                    test: 'external-trust',
+                    email: 'amore@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa_backup_restore": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa_backup_restore.yaml',
+                    test: 'ipa_backup_restore',
+                    email: 'myusuf@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa-idoverride": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-idoverride.yaml',
+                    test: 'ipa-idoverride',
+                    email: 'mvarun@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa-nis-manage": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-nis-manage.yaml',
+                    test: 'ipa-nis-manage',
+                    email: 'ksiddiqu@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa-services": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-services.yaml',
+                    test: 'ipa-services',
+                    email: 'amore@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa-sudo": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-sudo.yaml',
+                    test: 'ipa-sudo',
+                    email: 'ssidhaye@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:ipa-user": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/ipa-user.yaml',
+                    test: 'ipa-user',
+                    email: 'mpolovka@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:kdcproxy": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/kdcproxy.yaml',
+                    test: 'kdcproxy',
+                    email: 'ksiddiqu@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:replica-install": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/replica-install.yaml',
+                    test: 'replica-install',
+                    email: 'sumenon@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:server-role": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/server-role.yaml',
+                    test: 'server-role',
+                    email: 'ssidhaye@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:sudo-ipa-schema": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/sudo-ipa-schema.yaml',
+                    test: 'sudo-ipa-schema',
+                    email: 'sumenon@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:trust-one-way": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/trust-one-way.yaml',
+                    test: 'trust-one-way',
+                    email: 'ksiddiqu@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:upn": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/upn.yaml',
+                    test: 'upn',
+                    email: 'mvarun@redhat.com'
+                ]).exec('ipa-slave')
+            },
+        
+            "ipa-pytests:vault": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/vault.yaml',
+                    test: 'vault',
+                    email: 'ssidhaye@redhat.com'
+                ]).exec('ipa-slave')
+            },
+            "ipa-pytests:server-install": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.2/metadata/pytests/server-install.yaml',
+                    test: 'server-install',
+                    email: 'mpolovka@redhat.com'
                 ]).exec('ipa-slave')
             }
             )
