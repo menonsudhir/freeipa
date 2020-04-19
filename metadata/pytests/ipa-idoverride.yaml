@@ -5,7 +5,7 @@ domains:
       - name: master.testrealmido.test
         role: master
         group: ipaserver
-        os: rhel-8.2
+        os: rhel-8.3
   - name: win2016.test
     type: ad
     hosts:
@@ -31,7 +31,7 @@ phases:
       - playbook: init/ipa-pytests.yaml
         extra_vars:
           repo: https://gitlab.cee.redhat.com/identity-management/ipa-pytests.git
-          version: RHEL8.2
+          version: RHEL8.3
       - playbook: init/testrunner-dir.yaml
   - name: provision
     steps:

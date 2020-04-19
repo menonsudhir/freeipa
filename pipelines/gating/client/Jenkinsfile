@@ -5,7 +5,7 @@ env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.gi
 env.IDMCI_BRANCH = 'production'
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
-env.VERSION = 'RHEL8.2'
+env.VERSION = 'RHEL8.3'
 env.TYPE = 'client-stream.tier1'
 env.NIGHTLY = 'true'
 
@@ -17,7 +17,7 @@ env.CI_IRC = '#ipa'
 env.CI_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ARTIFACT_NAMESPACE = 'idm-ci.redhat-module'
 
-def IPATESTS_METADATA_PATH = 'https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.2'
+def IPATESTS_METADATA_PATH = 'https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3'
 
 properties([
     [$class: 'CachetJobProperty', requiredResources: true, resources: ['openstack.psi.redhat.com']],

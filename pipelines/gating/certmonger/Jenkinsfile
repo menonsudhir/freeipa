@@ -5,7 +5,7 @@ env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.gi
 env.IDMCI_BRANCH = 'production'
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
-env.VERSION = 'RHEL8.2'
+env.VERSION = 'RHEL8.3'
 env.TYPE = 'tier1'
 env.NIGHTLY = 'true'
 
