@@ -13,7 +13,7 @@ env.FIPS = 'true'
 
 properties([
     [$class: 'CachetJobProperty', requiredResources: true, resources: ['openstack.psi.redhat.com']],
-    pipelineTriggers([cron('30 23 * * 3')]),
+    pipelineTriggers([cron('0 23 * * 3')]),
 ])
 
 node {
