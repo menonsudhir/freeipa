@@ -15,6 +15,7 @@ image:
   script:
   - idm-ci/scripts/fork_updater.py --metadata-file $METADATA_FILE_PATH
   - idm-ci/scripts/te $METADATA_FILE_PATH
+  - idm-ci/scripts/upload-artifacts.sh -p QEW/$CI_PROJECT_PATH -r $CI_PIPELINE_ID -j $CI_JOB_NAME/$CI_JOB_ID
 
 .mr_backport_template: &mr_backport_definition
   tags:
