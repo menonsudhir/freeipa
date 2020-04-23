@@ -1,11 +1,10 @@
 @Library('idm-ci')
 import idmci.*
 
-env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.git'
-env.IDMCI_BRANCH = 'production'
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
 env.NIGHTLY = 'true'
+env.IDMCI_SLAVE = 'idm-ci-slave'
 
 // syntax: cron(<minute> <hour> <day of month> <month> <day of week>) timezone: UTC
 // details of jenkins cron sytax: https://jenkins.io/doc/book/pipeline/syntax/#cron-syntax
@@ -16,7 +15,7 @@ properties([
 
 node {
     try {
-        new ComposeID().exec('ipa-slave')
+        new ComposeID().exec(env.IDMCI_SLAVE)
     } catch (Exception e) {
         sh script: "echo 'Display COMPOSE_ID unsuccessful'"
         currentBuild.result = 'SUCCESS'
@@ -28,196 +27,196 @@ node {
                     metadata: 'metadata/upstream/webui/automember.yaml',
                     test: 'upstream-automember',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::automount": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/automount.yaml',
                     test: 'upstream-automount',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::caless": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/caless.yaml',
                     test: 'upstream-caless',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::cert": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/cert.yaml',
                     test: 'upstream-cert',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::config": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/config.yaml',
                     test: 'upstream-config',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::delegation": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/delegation.yaml',
                     test: 'upstream-delegation',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::dns": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/dns.yaml',
                     test: 'upstream-dns',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::group": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/group.yaml',
                     test: 'upstream-group',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::hbac": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/hbac.yaml',
                     test: 'upstream-hbac',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::hostgroup": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/hostgroup.yaml',
                     test: 'upstream-hostgroup',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::host": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/host.yaml',
                     test: 'upstream-host',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::idviews": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/idviews.yaml',
                     test: 'upstream-idviews',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::krbtpolicy": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/krbtpolicy.yaml',
                     test: 'upstream-krbtpolicy',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::loginscreen": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/loginscreen.yaml',
                     test: 'upstream-loginscreen',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::misc_cases": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/misc_cases.yaml',
                     test: 'upstream-misc_cases',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::navigation": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/navigation.yaml',
                     test: 'upstream-navigation',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::netgroup": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/netgroup.yaml',
                     test: 'upstream-netgroup',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::pwpolicy": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/pwpolicy.yaml',
                     test: 'upstream-pwpolicy',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::range": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/range.yaml',
                     test: 'upstream-range',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::rbac": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/rbac.yaml',
                     test: 'upstream-rbac',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::realmdomains": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/realmdomains.yaml',
                     test: 'upstream-realmdomains',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::selfservice": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/selfservice.yaml',
                     test: 'upstream-selfservice',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::selinuxusermap": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/selinuxusermap.yaml',
                     test: 'upstream-selinuxusermap',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::service": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/service.yaml',
                     test: 'upstream-service',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::sudo": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/sudo.yaml',
                     test: 'upstream-sudo',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::translation": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/translation.yaml',
                     test: 'upstream-translation',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::user": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/user.yaml',
                     test: 'upstream-user',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "webui::vault": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/vault.yaml',
                     test: 'upstream-vault',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             }
             )
         }
