@@ -9,7 +9,6 @@ env.IDMCI_SLAVE = 'idm-ci-slave'
 // syntax: cron(<minute> <hour> <day of month> <month> <day of week>) timezone: UTC
 // details of jenkins cron sytax: https://jenkins.io/doc/book/pipeline/syntax/#cron-syntax
 properties([
-    [$class: 'CachetJobProperty', requiredResources: true, resources: ['openstack.psi.redhat.com']],
     pipelineTriggers([cron('30 23 * * 5')]),
 ])
 

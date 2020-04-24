@@ -12,7 +12,6 @@ env.NIGHTLY = 'true'
 env.FIPS = 'true'
 
 properties([
-    [$class: 'CachetJobProperty', requiredResources: true, resources: ['openstack.psi.redhat.com']],
     pipelineTriggers([cron('0 23 * * 3')]),
 ])
 
