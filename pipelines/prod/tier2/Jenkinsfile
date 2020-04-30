@@ -1,10 +1,9 @@
 @Library('idm-ci')
 import idmci.*
 
-env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.git'
-env.IDMCI_BRANCH = 'production'
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
+env.IDMCI_SLAVE = 'idm-ci-slave'
 
 def IPATESTS_METADATA_PATH = 'https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3'
 
@@ -16,7 +15,7 @@ properties([
 
 node {
     try {
-        new ComposeID().exec('ipa-slave')
+        new ComposeID().exec(env.IDMCI_SLAVE)
     } catch (Exception e) {
         sh script: "echo 'Display COMPOSE_ID unsuccessful'"
         currentBuild.result = 'SUCCESS'
@@ -29,448 +28,448 @@ node {
                     metadata: 'metadata/upstream/integration/automember.yaml',
                     test: 'upstream-automember',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::backup_and_restore-TestBackupAndRestore": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestore.yaml',
                     test: 'upstream-backup_and_restore-TestBackupAndRestore',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::backup_and_restore-TestBackupAndRestoreDMPassword": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreDMPassword.yaml',
                     test: 'upstream-backup_and_restore-TestBackupAndRestoreDMPassword',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::backup_and_restore-TestBackupAndRestoreWithDNS": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNS.yaml',
                     test: 'upstream-backup_and_restore-TestBackupAndRestoreWithDNS',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::backup_and_restore-TestBackupAndRestoreWithDNSSEC": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNSSEC.yaml',
                     test: 'upstream-backup_and_restore-TestBackupAndRestoreWithDNSSEC',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::backup_and_restore-TestBackupAndRestoreWithKRA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithKRA.yaml',
                     test: 'upstream-backup_and_restore-TestBackupAndRestoreWithKRA',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::backup_and_restore-TestBackupAndRestoreWithReplica": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithReplica.yaml',
                     test: 'upstream-backup_and_restore-TestBackupAndRestoreWithReplica',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::backup_and_restore-TestBackupReinstallRestoreWithDNS": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNS.yaml',
                     test: 'upstream-backup_and_restore-TestBackupReinstallRestoreWithDNS',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::backup_and_restore-TestBackupReinstallRestoreWithDNSSEC": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNSSEC.yaml',
                     test: 'upstream-backup_and_restore-TestBackupReinstallRestoreWithDNSSEC',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::backup_and_restore-TestBackupReinstallRestoreWithKRA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithKRA.yaml',
                     test: 'upstream-backup_and_restore-TestBackupReinstallRestoreWithKRA',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::backup_and_restore-TestReplicainstallAfterRestore": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestReplicainstallAfterRestore.yaml',
                     test: 'upstream-backup_and_restore-TestReplicainstallAfterRestore',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::backup_and_restore-TestUserRootFilesownershipPermiss": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/backup_and_restore-TestUserRootFilesownershipPermiss.yaml',
                     test: 'upstream-backup_and_restore-TestUserRootFilesownershipPermiss',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::caless-TestCertinstall": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestCertinstall.yaml',
                     test: 'upstream-caless-TestCertinstall',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::caless-TestClientinstall": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestClientinstall.yaml',
                     test: 'upstream-caless-TestClientinstall',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::caless-TestIPACommands": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestIPACommands.yaml',
                     test: 'upstream-caless-TestIPACommands',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::caless-TestPKINIT": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestPKINIT.yaml',
                     test: 'upstream-caless-TestPKINIT',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::caless-TestReplicaCALessToCAFull": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestReplicaCALessToCAFull.yaml',
                     test: 'upstream-caless-TestReplicaCALessToCAFull',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::caless-TestServerCALessToExternalCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestServerCALessToExternalCA.yaml',
                     test: 'upstream-caless-TestServerCALessToExternalCA',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::caless-TestServerReplicaCALessToCAFull": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestServerReplicaCALessToCAFull.yaml',
                     test: 'upstream-caless-TestServerReplicaCALessToCAFull',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::crlgen_manage": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/crlgen_manage.yaml',
                     test: 'upstream-crlgen_manage',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::customized_ds_config_install": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/customized_ds_config_install.yaml',
                     test: 'upstream-customized_ds_config_install',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::dns_locations": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/dns_locations.yaml',
                     test: 'upstream-dns_locations',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::external_ca-TestExternalCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/external_ca-TestExternalCA.yaml',
                     test: 'upstream-external_ca-TestExternalCA',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::external_ca-TestSelfExternalSelf": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/external_ca-TestSelfExternalSelf.yaml',
                     test: 'upstream-external_ca-TestSelfExternalSelf',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::external_ca-TestExternalCAinvalidCert": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/external_ca-TestExternalCAinvalidCert.yaml',
                     test: 'upstream-external_ca-TestExternalCAinvalidCert',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::external_ca-TestExternalCAdirsrvStop": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/external_ca-TestExternalCAdirsrvStop.yaml',
                     test: 'upstream-external_ca-TestExternalCAdirsrvStop',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::external_ca-TestMultipleExternalCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/external_ca-TestMultipleExternalCA.yaml',
                     test: 'upstream-external_ca-TestMultipleExternalCA',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::external_ca-TestExternalCAProfileScenarios": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/external_ca-TestExternalCAProfileScenarios.yaml',
                     test: 'upstream-external_ca-TestExternalCAProfileScenarios',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::forced_client_reenrollment": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/forced_client_reenrollment.yaml',
                     test: 'upstream-forced_client_reenrollment',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::http_kdc_proxy": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/http_kdc_proxy.yaml',
                     test: 'upstream-http_kdc_proxy',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::idviews": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/idviews.yaml',
                     test: 'upstream-idviews',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::kerberos_flags": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/kerberos_flags.yaml',
                     test: 'upstream-kerberos_flags',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::legacy_clients": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/legacy_clients.yaml',
                     test: 'upstream-legacy_clients',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::netgroup": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/netgroup.yaml',
                     test: 'upstream-netgroup',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::pkinit_manage": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/pkinit_manage.yaml',
                     test: 'upstream-pkinit_manage',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replica_promotion-TestHiddenReplicaPromotion": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestHiddenReplicaPromotion.yaml',
                     test: 'upstream-replica_promotion-TestHiddenReplicaPromotion',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replica_promotion-TestProhibitReplicaUninstallation": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestProhibitReplicaUninstallation.yaml',
                     test: 'upstream-replica_promotion-TestProhibitReplicaUninstallation',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replica_promotion-TestRenewalMaster": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestRenewalMaster.yaml',
                     test: 'upstream-replica_promotion-TestRenewalMaster',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replica_promotion-TestReplicainForwardZone": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestReplicainForwardZone.yaml',
                     test: 'upstream-replica_promotion-TestReplicainForwardZone',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replica_promotion-TestReplicainstallCustodia": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestReplicainstallCustodia.yaml',
                     test: 'upstream-replica_promotion-TestReplicainstallCustodia',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replica_promotion-TestReplicainstallWithExistingEntry": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestReplicainstallWithExistingEntry.yaml',
                     test: 'upstream-replica_promotion-TestReplicainstallWithExistingEntry',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replica_promotion-TestReplicaPromotionLevel1": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestReplicaPromotionLevel1.yaml',
                     test: 'upstream-replica_promotion-TestReplicaPromotionLevel1',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replica_promotion-TestSubCAkeyReplication": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestSubCAkeyReplication.yaml',
                     test: 'upstream-replica_promotion-TestSubCAkeyReplication',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replica_promotion-TestUnprivilegedUserPermissions": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestUnprivilegedUserPermissions.yaml',
                     test: 'upstream-replica_promotion-TestUnprivilegedUserPermissions',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replica_promotion-TestWrongClientDomain": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replica_promotion-TestWrongClientDomain.yaml',
                     test: 'upstream-replica_promotion-TestWrongClientDomain',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replication_layouts-TestStarTopologyWithoutCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestStarTopologyWithoutCA.yaml',
                     test: 'upstream-replication_layouts-TestStarTopologyWithoutCA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replication_layouts-TestCompleteTopologyWithCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCA.yaml',
                     test: 'upstream-replication_layouts-TestCompleteTopologyWithCA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replication_layouts-TestCompleteTopologyWithCAKRA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCAKRA.yaml',
                     test: 'upstream-replication_layouts-TestCompleteTopologyWithCAKRA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replication_layouts-TestCompleteTopologyWithoutCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithoutCA.yaml',
                     test: 'upstream-replication_layouts-TestCompleteTopologyWithoutCA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replication_layouts-TestLineTopologyWithCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestLineTopologyWithCA.yaml',
                     test: 'upstream-replication_layouts-TestLineTopologyWithCA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replication_layouts-TestLineTopologyWithCAKRA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestLineTopologyWithCAKRA.yaml',
                     test: 'upstream-replication_layouts-TestLineTopologyWithCAKRA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replication_layouts-TestLineTopologyWithoutCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestLineTopologyWithoutCA.yaml',
                     test: 'upstream-replication_layouts-TestLineTopologyWithoutCA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replication_layouts-TestStarTopologyWithCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestStarTopologyWithCA.yaml',
                     test: 'upstream-replication_layouts-TestStarTopologyWithCA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::replication_layouts-TestStarTopologyWithCAKRA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestStarTopologyWithCAKRA.yaml',
                     test: 'upstream-replication_layouts-TestStarTopologyWithCAKRA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::server_del": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/server_del.yaml',
                     test: 'upstream-server_del',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::service_permissions": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/service_permissions.yaml',
                     test: 'upstream-service_permissions',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::sudo": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/sudo.yaml',
                     test: 'upstream-sudo',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::topology-TestCASpecificRUVs": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/topology-TestCASpecificRUVs.yaml',
                     test: 'upstream-topology-TestCASpecificRUVs',
                     email: 'ndehadra@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::topology-TestTopologyOptions": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/topology-TestTopologyOptions.yaml',
                     test: 'upstream-topology-TestTopologyOptions',
                     email: 'ndehadra@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::trust": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/trust.yaml',
                     test: 'upstream-trust',
                     email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::sssd": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/sssd.yaml',
                     test: 'upstream-sssd',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::user_permissions": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/user_permissions.yaml',
                     test: 'upstream-user_permissions',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::vault": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/vault.yaml',
                     test: 'upstream-vault',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::winsyncmigrate": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/winsyncmigrate.yaml',
                     test: 'upstream-winsyncmigrate',
                     email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             }
             )
         }
@@ -485,98 +484,98 @@ node {
                     metadata: 'metadata/pytests/external_trust.yaml',
                     test: 'external_trust',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::ipa_backup_restore": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa_backup_restore.yaml',
                     test: 'ipa_backup_restore',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::ipa-idoverride": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-idoverride.yaml',
                     test: 'ipa-idoverride',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::ipa-nis-manage": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-nis-manage.yaml',
                     test: 'ipa-nis-manage',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::ipa-services": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-services.yaml',
                     test: 'ipa-services',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::ipa-sudo": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-sudo.yaml',
                     test: 'ipa-sudo',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::ipa-user": {
                 new TeRun([
                     metadata: 'metadata/pytests/ipa-user.yaml',
                     test: 'ipa-user',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::kdcproxy": {
                 new TeRun([
                     metadata: 'metadata/pytests/kdcproxy.yaml',
                     test: 'kdcproxy',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::replica-install": {
                 new TeRun([
                     metadata: 'metadata/pytests/replica-install.yaml',
                     test: 'replica-install',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::server-role": {
                 new TeRun([
                     metadata: 'metadata/pytests/server-role.yaml',
                     test: 'server-role',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::sudo-ipa-schema": {
                 new TeRun([
                     metadata: 'metadata/pytests/sudo-ipa-schema.yaml',
                     test: 'sudo-ipa-schema',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::trust_one_way": {
                 new TeRun([
                     metadata: 'metadata/pytests/trust_one_way.yaml',
                     test: 'trust_one_way',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::upn": {
                 new TeRun([
                     metadata: 'metadata/pytests/upn.yaml',
                     test: 'upn',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::vault": {
                 new TeRun([
                     metadata: 'metadata/pytests/vault.yaml',
                     test: 'vault',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             }
             )
         }
@@ -591,126 +590,126 @@ node {
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ds-migration.yaml",
                     test: 'ds-migration',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ds-migration-func": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ds-migration-func.yaml",
                     test: 'ds-migration-func',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-client-cert": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-client-cert.yaml",
                     test: 'ipa-client-cert',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::install-client-cli": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/install-client-cli.yaml",
                     test: 'install-client-cli',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-adtrust": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-adtrust.yaml",
                     test: 'ipa-adtrust',
                     email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-client-automount": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-client-automount.yaml",
                     test: 'ipa-client-automount',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-idrange-cli": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-idrange-cli.yaml",
                     test: 'ipa-idrange-cli',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-join": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-join.yaml",
                     test: 'ipa-join',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-krblockout": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-krblockout.yaml",
                     test: 'ipa-krblockout',
                     email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-nis-integration": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-nis-integration.yaml",
                     test: 'ipa-nis-integration',
                     email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-realmdomains-cli": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-realmdomains-cli.yaml",
                     test: 'ipa-realmdomains-cli',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-selinuxusermap-func": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-selinuxusermap-func.yaml",
                     test: 'ipa-selinuxusermap-func',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-trust-cli": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-cli.yaml",
                     test: 'ipa-trust-cli',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-trust-func-hbac": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-hbac.yaml",
                     test: 'ipa-trust-func-hbac',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-trust-func-httpkrb": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-httpkrb.yaml",
                     test: 'ipa-trust-func-httpkrb',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-trust-func-selinux-usermap": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-selinux-usermap.yaml",
                     test: 'ipa-trust-func-selinux-usermap',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-trust-func-automount": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-automount.yaml",
                     test: 'ipa-trust-func-automount',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ipa-trust-func-sudo": {
                 new TeRun([
                     metadata: "${IPATESTS_METADATA_PATH}/metadata/ipa-trust-func-sudo.yaml",
                     test: 'ipa-trust-func-sudo',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             )
         }

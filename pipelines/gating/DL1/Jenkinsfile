@@ -1,13 +1,12 @@
 @Library('idm-ci')
 import idmci.*
 
-env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.git'
-env.IDMCI_BRANCH = 'production'
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
 env.VERSION = 'RHEL8.3'
 env.TYPE = 'tier1'
 env.NIGHTLY = 'true'
+env.IDMCI_SLAVE = 'idm-ci-slave'
 
 // Gating env vars
 env.CI_NAME = 'IdM IPA CI'
@@ -47,7 +46,7 @@ node {
                     test: 'pytests-ipa-host',
                     email: 'sumenon@redhat.com',
                     message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::subca": {
                 new TeRun([
@@ -55,7 +54,7 @@ node {
                     test: 'ipa-subca',
                     email: 'ssidhaye@redhat.com',
                     message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::external-ca": {
                 new TeRun([
@@ -63,7 +62,7 @@ node {
                     test: 'ipa-external-ca',
                     email: 'ssidhaye@redhat.com',
                     message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::otp": {
                 new TeRun([
@@ -71,7 +70,7 @@ node {
                     test: 'otp',
                     email: 'amore@redhat.com',
                     message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::vault": {
                 new TeRun([
@@ -79,7 +78,7 @@ node {
                     test: 'vault',
                     email: 'ssidhaye@redhat.com',
                     message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::replica-install": {
                 new TeRun([
@@ -87,7 +86,7 @@ node {
                     test: 'ipa-replica-install',
                     email: 'sumenon@redhat.com',
                     message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "pytest::replica-promotion": {
                 new TeRun([
@@ -95,7 +94,7 @@ node {
                     test: 'ipa-replica-promotion',
                     email: 'sumenon@redhat.com',
                     message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::krbtpolicy": {
                 new TeRun([
@@ -103,14 +102,14 @@ node {
                     test: 'ipa-krbtpolicy',
                     email: 'sorlov@redhat.com',
                     message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "upstream::krbtpolicy": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/krbtpolicy.yaml',
                     test: 'upstream-krbtpolicy',
                     email: 'sorlov@redhat.com',
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ssh-functional": {
                 new TeRun([
@@ -118,7 +117,7 @@ node {
                     test: 'ipa-ssh-functional',
                     email: 'mvarun@redhat.com',
                     message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::user-cli-adduser": {
                 new TeRun([
@@ -126,7 +125,7 @@ node {
                     test: 'ipa-user-cli-adduser',
                     email: 'sumenon@redhat.com',
                     message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "bash::user-cli-moduser": {
                 new TeRun([
@@ -134,7 +133,7 @@ node {
                     test: 'ipa-user-cli-moduser',
                     email: 'sumenon@redhat.com',
                     message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             }
             )
         }

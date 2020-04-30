@@ -1,13 +1,12 @@
 @Library('idm-ci')
 import idmci.*
 
-env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.git'
-env.IDMCI_BRANCH = 'production'
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
 env.VERSION = 'RHEL8.3'
 env.TYPE = 'tier1'
 env.NIGHTLY = 'true'
+env.IDMCI_SLAVE = 'idm-ci-slave'
 
 // Gating env vars
 env.CI_NAME = 'IdM IPA CI'
@@ -45,7 +44,7 @@ node {
                     test: 'pytests-replica-install',
                     email: 'sumenon@redhat.com',
                     message: "${params.CI_MESSAGE}"
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             }
             )
         }

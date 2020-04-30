@@ -2,14 +2,13 @@
 @Library("idm-ci@master")
 import idmci.*
 
-env.IDMCI_GITREPO = 'https://gitlab.cee.redhat.com/identity-management/idm-ci.git'
-env.IDMCI_BRANCH = 'production'
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.RHEL_VERSION = '8.3.0'
 env.BASE_IMAGE = 'nightly'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
 env.NIGHTLY = 'true'
 env.FIPS = 'true'
+env.IDMCI_SLAVE = 'idm-ci-slave'
 
 properties([
     pipelineTriggers([cron('0 23 * * 3')]),
@@ -17,7 +16,7 @@ properties([
 
 node {
     try {
-        new ComposeID().exec('ipa-slave')
+        new ComposeID().exec(env.IDMCI_SLAVE)
     } catch (Exception e) {
         sh script: "echo 'Display COMPOSE_ID unsuccessful'"
         currentBuild.result = 'SUCCESS'
@@ -30,7 +29,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/advise.yaml',
                     test: 'advise',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:authselect": {
@@ -38,7 +37,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/authselect.yaml',
                     test: 'authselect',
                     email: 'frenaud@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:caless::TestServerInstall": {
@@ -46,7 +45,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestServerInstall.yaml',
                     test: 'caless-TestServerInstall',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:caless::TestReplicaInstall": {
@@ -54,7 +53,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestReplicaInstall.yaml',
                     test: 'caless-TestReplicaInstall',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:commands": {
@@ -62,7 +61,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/commands.yaml',
                     test: 'commands',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:nfs": {
@@ -70,7 +69,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/nfs.yaml',
                     test: 'nfs',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:pki-config-override": {
@@ -78,7 +77,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/pki_config_override.yaml',
                     test: 'pki-config-override',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "upstream::smb": {
@@ -86,7 +85,7 @@ node {
                     metadata: 'metadata/upstream/integration/smb.yaml',
                     test: 'upstream-smb',
                     email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "upstream:automember": {
@@ -94,7 +93,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/automember.yaml',
                     test: 'automember',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:backup-and-restore::TestBackupAndRestore": {
@@ -102,7 +101,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupAndRestore.yaml',
                     test: 'backup-and-restore-TestBackupAndRestore',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:backup-and-restore::TestBackupAndRestoreDMPassword": {
@@ -110,7 +109,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreDMPassword.yaml',
                     test: 'backup-and-restore-TestBackupAndRestoreDMPassword',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:backup-and-restore::TestBackupAndRestoreWithDNS": {
@@ -118,7 +117,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNS.yaml',
                     test: 'backup-and-restore-TestBackupAndRestoreWithDNS',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:backup-and-restore::TestBackupAndRestoreWithDNSSEC": {
@@ -126,7 +125,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNSSEC.yaml',
                     test: 'backup-and-restore-TestBackupAndRestoreWithDNSSEC',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:backup-and-restore::TestBackupAndRestoreWithKRA": {
@@ -134,7 +133,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithKRA.yaml',
                     test: 'backup-and-restore-TestBackupAndRestoreWithKRA',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:backup-and-restore::TestBackupAndRestoreWithReplica": {
@@ -142,7 +141,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithReplica.yaml',
                     test: 'backup-and-restore-TestBackupAndRestoreWithReplica',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:backup-and-restore::TestBackupReinstallRestoreWithDNS": {
@@ -150,7 +149,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNS.yaml',
                     test: 'backup-and-restore-TestBackupReinstallRestoreWithDNS',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:backup-and-restore::TestBackupReinstallRestoreWithDNSSEC": {
@@ -158,7 +157,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNSSEC.yaml',
                     test: 'backup-and-restore-TestBackupReinstallRestoreWithDNSSEC',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:backup-and-restore::TestBackupReinstallRestoreWithKRA": {
@@ -166,7 +165,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithKRA.yaml',
                     test: 'backup-and-restore-TestBackupReinstallRestoreWithKRA',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:backup-and-restore::TestReplicainstallAfterRestore": {
@@ -174,7 +173,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestReplicainstallAfterRestore.yaml',
                     test: 'backup-and-restore-TestReplicainstallAfterRestore',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:backup-and-restore::TestUserRootFilesownershipPermiss": {
@@ -182,7 +181,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestUserRootFilesownershipPermiss.yaml',
                     test: 'backup-and-restore-TestUserRootFilesownershipPermiss',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:caless::TestCertinstall": {
@@ -190,7 +189,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestCertinstall.yaml',
                     test: 'caless-TestCertinstall',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:caless::TestClientinstall": {
@@ -198,7 +197,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestClientinstall.yaml',
                     test: 'caless-TestClientinstall',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:caless::TestIPACommands": {
@@ -206,7 +205,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestIPACommands.yaml',
                     test: 'caless-TestIPACommands',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:caless::TestPKINIT": {
@@ -214,7 +213,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestPKINIT.yaml',
                     test: 'caless-TestPKINIT',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:caless::TestReplicaCALessToCAFull": {
@@ -222,7 +221,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestReplicaCALessToCAFull.yaml',
                     test: 'caless-TestReplicaCALessToCAFull',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:caless::TestServerCALessToExternalCA": {
@@ -230,7 +229,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestServerCALessToExternalCA.yaml',
                     test: 'caless-TestServerCALessToExternalCA',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:caless::TestServerReplicaCALessToCAFull": {
@@ -238,7 +237,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestServerReplicaCALessToCAFull.yaml',
                     test: 'caless-TestServerReplicaCALessToCAFull',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:crlgen-manage": {
@@ -246,7 +245,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/crlgen_manage.yaml',
                     test: 'crlgen-manage',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:customized-ds-config-install": {
@@ -254,7 +253,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/customized_ds_config_install.yaml',
                     test: 'customized-ds-config-install',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:dns-locations": {
@@ -262,7 +261,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/dns_locations.yaml',
                     test: 'dns-locations',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:external-ca::TestExternalCA": {
@@ -270,7 +269,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/external_ca-TestExternalCA.yaml',
                     test: 'external-ca-TestExternalCA',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:external-ca::TestSelfExternalSelf": {
@@ -278,7 +277,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/external_ca-TestSelfExternalSelf.yaml',
                     test: 'external-ca-TestSelfExternalSelf',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:external-ca::TestExternalCAinvalidCert": {
@@ -286,7 +285,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/external_ca-TestExternalCAinvalidCert.yaml',
                     test: 'external-ca-TestExternalCAinvalidCert',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:external-ca::TestExternalCAdirsrvStop": {
@@ -294,7 +293,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/external_ca-TestExternalCAdirsrvStop.yaml',
                     test: 'external-ca-TestExternalCAdirsrvStop',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:external-ca::TestMultipleExternalCA": {
@@ -302,7 +301,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/external_ca-TestMultipleExternalCA.yaml',
                     test: 'external-ca-TestMultipleExternalCA',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:external-ca::TestExternalCAProfileScenarios": {
@@ -310,7 +309,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/external_ca-TestExternalCAProfileScenarios.yaml',
                     test: 'external-ca-TestExternalCAProfileScenarios',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:forced-client-reenrollment": {
@@ -318,7 +317,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/forced_client_reenrollment.yaml',
                     test: 'forced-client-reenrollment',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:http-kdc-proxy": {
@@ -326,7 +325,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/http_kdc_proxy.yaml',
                     test: 'http-kdc-proxy',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:idviews": {
@@ -334,7 +333,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/idviews.yaml',
                     test: 'idviews',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:kerberos-flags": {
@@ -342,7 +341,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/kerberos_flags.yaml',
                     test: 'kerberos-flags',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:netgroup": {
@@ -350,7 +349,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/netgroup.yaml',
                     test: 'netgroup',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:pkinit-manage": {
@@ -358,7 +357,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/pkinit_manage.yaml',
                     test: 'pkinit-manage',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replica-promotion::TestHiddenReplicaPromotion": {
@@ -366,7 +365,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestHiddenReplicaPromotion.yaml',
                     test: 'replica-promotion-TestHiddenReplicaPromotion',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replica-promotion::TestProhibitReplicaUninstallation": {
@@ -374,7 +373,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestProhibitReplicaUninstallation.yaml',
                     test: 'replica-promotion-TestProhibitReplicaUninstallation',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replica-promotion::TestRenewalMaster": {
@@ -382,7 +381,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestRenewalMaster.yaml',
                     test: 'replica-promotion-TestRenewalMaster',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replica-promotion::TestReplicainForwardZone": {
@@ -390,7 +389,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestReplicainForwardZone.yaml',
                     test: 'replica-promotion-TestReplicainForwardZone',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replica-promotion::TestReplicainstallCustodia": {
@@ -398,7 +397,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestReplicainstallCustodia.yaml',
                     test: 'replica-promotion-TestReplicainstallCustodia',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replica-promotion::TestReplicainstallWithExistingEntry": {
@@ -406,7 +405,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestReplicainstallWithExistingEntry.yaml',
                     test: 'replica-promotion-TestReplicainstallWithExistingEntry',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replica-promotion::TestReplicaPromotionLevel1": {
@@ -414,7 +413,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestReplicaPromotionLevel1.yaml',
                     test: 'replica-promotion-TestReplicaPromotionLevel1',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replica-promotion::TestSubCAkeyReplication": {
@@ -422,7 +421,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestSubCAkeyReplication.yaml',
                     test: 'replica-promotion-TestSubCAkeyReplication',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replica-promotion::TestUnprivilegedUserPermissions": {
@@ -430,7 +429,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestUnprivilegedUserPermissions.yaml',
                     test: 'replica-promotion-TestUnprivilegedUserPermissions',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replica-promotion::TestWrongClientDomain": {
@@ -438,7 +437,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestWrongClientDomain.yaml',
                     test: 'replica-promotion-TestWrongClientDomain',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replication-layouts::TestStarTopologyWithoutCA": {
@@ -446,7 +445,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestStarTopologyWithoutCA.yaml',
                     test: 'replication-layouts-TestStarTopologyWithoutCA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replication-layouts::TestCompleteTopologyWithCA": {
@@ -454,7 +453,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCA.yaml',
                     test: 'replication-layouts-TestCompleteTopologyWithCA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replication-layouts::TestCompleteTopologyWithCAKRA": {
@@ -462,7 +461,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCAKRA.yaml',
                     test: 'replication-layouts-TestCompleteTopologyWithCAKRA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replication-layouts::TestCompleteTopologyWithoutCA": {
@@ -470,7 +469,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithoutCA.yaml',
                     test: 'replication-layouts-TestCompleteTopologyWithoutCA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replication-layouts::TestLineTopologyWithCA": {
@@ -478,7 +477,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestLineTopologyWithCA.yaml',
                     test: 'replication-layouts-TestLineTopologyWithCA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replication-layouts::TestLineTopologyWithCAKRA": {
@@ -486,7 +485,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestLineTopologyWithCAKRA.yaml',
                     test: 'replication-layouts-TestLineTopologyWithCAKRA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replication-layouts::TestLineTopologyWithoutCA": {
@@ -494,7 +493,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestLineTopologyWithoutCA.yaml',
                     test: 'replication-layouts-TestLineTopologyWithoutCA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replication-layouts::TestStarTopologyWithCA": {
@@ -502,7 +501,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestStarTopologyWithCA.yaml',
                     test: 'replication-layouts-TestStarTopologyWithCA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:replication-layouts::TestStarTopologyWithCAKRA": {
@@ -510,7 +509,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestStarTopologyWithCAKRA.yaml',
                     test: 'replication-layouts-TestStarTopologyWithCAKRA',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:server-del": {
@@ -518,7 +517,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/server_del.yaml',
                     test: 'server-del',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:service-permissions": {
@@ -526,7 +525,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/service_permissions.yaml',
                     test: 'service-permissions',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:sudo": {
@@ -534,7 +533,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/sudo.yaml',
                     test: 'sudo',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:topology::TestCASpecificRUVs": {
@@ -542,7 +541,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/topology-TestCASpecificRUVs.yaml',
                     test: 'topology-TestCASpecificRUVs',
                     email: 'ndehadra@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:topology::TestTopologyOptions": {
@@ -550,7 +549,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/topology-TestTopologyOptions.yaml',
                     test: 'topology-TestTopologyOptions',
                     email: 'ndehadra@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:trust": {
@@ -558,7 +557,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/trust.yaml',
                     test: 'trust',
                     email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:user-permissions": {
@@ -566,7 +565,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/user_permissions.yaml',
                     test: 'user-permissions',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "upstream:vault": {
@@ -574,7 +573,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/vault.yaml',
                     test: 'vault',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             }
             )
         }
@@ -590,7 +589,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/client_install.yaml',
                     test: 'client-install',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:dns_services": {
@@ -598,7 +597,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/dns_services.yaml',
                     test: 'dns-services',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:external-ca": {
@@ -606,7 +605,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/external-ca.yaml',
                     test: 'external-ca',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:functional_services": {
@@ -614,7 +613,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/functional_services.yaml',
                     test: 'functional-services',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa-advise": {
@@ -622,7 +621,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-advise.yaml',
                     test: 'ipa-advise',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa-cert": {
@@ -630,7 +629,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-cert.yaml',
                     test: 'ipa-cert',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa-certprofile": {
@@ -638,7 +637,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-certprofile.yaml',
                     test: 'ipa-certprofile',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa-getcert": {
@@ -646,7 +645,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-getcert.yaml',
                     test: 'ipa-getcert',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa-hbac": {
@@ -654,7 +653,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-hbac.yaml',
                     test: 'ipa-hbac',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa-host": {
@@ -662,7 +661,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-host.yaml',
                     test: 'ipa-host',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa-rbac": {
@@ -670,7 +669,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-rbac.yaml',
                     test: 'ipa-rbac',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa-replica-promotion": {
@@ -678,7 +677,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-replica-promotion.yaml',
                     test: 'ipa-replica-promotion',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:otp": {
@@ -686,7 +685,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/otp.yaml',
                     test: 'otp',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:subca": {
@@ -694,7 +693,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/subca.yaml',
                     test: 'subca',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "ipa-pytests:external-trust": {
@@ -702,7 +701,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/external_trust.yaml',
                     test: 'external-trust',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa_backup_restore": {
@@ -710,7 +709,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa_backup_restore.yaml',
                     test: 'ipa_backup_restore',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa-idoverride": {
@@ -718,7 +717,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-idoverride.yaml',
                     test: 'ipa-idoverride',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa-nis-manage": {
@@ -726,7 +725,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-nis-manage.yaml',
                     test: 'ipa-nis-manage',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa-services": {
@@ -734,7 +733,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-services.yaml',
                     test: 'ipa-services',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa-sudo": {
@@ -742,7 +741,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-sudo.yaml',
                     test: 'ipa-sudo',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:ipa-user": {
@@ -750,7 +749,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-user.yaml',
                     test: 'ipa-user',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:kdcproxy": {
@@ -758,7 +757,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/kdcproxy.yaml',
                     test: 'kdcproxy',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:replica-install": {
@@ -766,7 +765,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/replica-install.yaml',
                     test: 'replica-install',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:server-role": {
@@ -774,7 +773,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/server-role.yaml',
                     test: 'server-role',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:sudo-ipa-schema": {
@@ -782,7 +781,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/sudo-ipa-schema.yaml',
                     test: 'sudo-ipa-schema',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:trust-one-way": {
@@ -790,7 +789,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/trust-one-way.yaml',
                     test: 'trust-one-way',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:upn": {
@@ -798,7 +797,7 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/upn.yaml',
                     test: 'upn',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
         
             "ipa-pytests:vault": {
@@ -806,14 +805,14 @@ node {
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/vault.yaml',
                     test: 'vault',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             "ipa-pytests:server-install": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/server-install.yaml',
                     test: 'server-install',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             }
             )
         }
@@ -829,7 +828,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-automember.yaml",
                     test: 'ipa-automember',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-automount": {
@@ -837,7 +836,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-automount.yaml",
                     test: 'ipa-automount',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-config": {
@@ -845,7 +844,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-config.yaml",
                     test: 'ipa-config',
                     email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::cert": {
@@ -853,7 +852,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-cert.yaml",
                     test: 'ipa-cert',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-ctl": {
@@ -861,7 +860,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-ctl.yaml",
                     test: 'ipa-ctl',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-default": {
@@ -869,7 +868,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-default.yaml",
                     test: 'ipa-default',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-delegation-cli": {
@@ -877,7 +876,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-delegation-cli.yaml",
                     test: 'ipa-delegation-cli',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::dns": {
@@ -885,7 +884,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-dns.yaml",
                     test: 'ipa-dns',
                     email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::getcert": {
@@ -893,7 +892,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-getcert.yaml",
                     test: 'ipa-getcert',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-get-rm-keytab": {
@@ -901,7 +900,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-get-rm-keytab.yaml",
                     test: 'ipa-get-rm-keytab',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-group-cli": {
@@ -909,7 +908,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-group-cli.yaml",
                     test: 'ipa-group-cli',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-hbac-cli": {
@@ -917,7 +916,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-hbac-cli.yaml",
                     test: 'ipa-hbac-cli',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-hbac-func": {
@@ -925,7 +924,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-hbac-func.yaml",
                     test: 'ipa-hbac-func',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-hbacsvc-cli": {
@@ -933,7 +932,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-hbacsvc-cli.yaml",
                     test: 'ipa-hbacsvc-cli',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-host-cli": {
@@ -941,7 +940,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-host-cli.yaml",
                     test: 'ipa-host-cli',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-hostgroup-cli": {
@@ -949,7 +948,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-hostgroup-cli.yaml",
                     test: 'ipa-hostgroup-cli',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-i18n": {
@@ -957,7 +956,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-i18n.yaml",
                     test: 'ipa-i18n',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::krbtpolicy": {
@@ -965,7 +964,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-krbtpolicy.yaml",
                     test: 'ipa-krbtpolicy',
                     email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-migration": {
@@ -973,7 +972,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-migration.yaml",
                     test: 'ipa-migration',
                     email: 'ndehadra@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-netgroup-cli": {
@@ -981,7 +980,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-netgroup-cli.yaml",
                     test: 'ipa-netgroup-cli',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::password": {
@@ -989,7 +988,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-password.yaml",
                     test: 'ipa-password',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-selfservice": {
@@ -997,7 +996,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-selfservice.yaml",
                     test: 'ipa-selfservice',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-selinuxusermap-cli": {
@@ -1005,7 +1004,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-selinuxusermap-cli.yaml",
                     test: 'ipa-selinuxusermap-cli',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-services": {
@@ -1013,7 +1012,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-services.yaml",
                     test: 'ipa-services',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ssh-functional": {
@@ -1021,7 +1020,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-ssh-functional.yaml",
                     test: 'ipa-ssh-functional',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             
             "bash::sudo": {
@@ -1029,7 +1028,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-sudo.yaml",
                     test: 'ipa-sudo',
                     email: 'ssidhaye@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::trust-functional-ssh": {
@@ -1037,7 +1036,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-trust-func-ssh.yaml",
                     test: 'ipa-trust-functional-ssh',
                     email: 'ksiddiqu@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::trust-functional-user": {
@@ -1045,7 +1044,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-trust-func-user.yaml",
                     test: 'ipa-trust-functional-user',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-upgrade_normal": {
@@ -1053,7 +1052,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-upgrade_normal.yaml",
                     test: 'ipa-upgrade_normal',
                     email: 'ndehadra@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-upgrade_bztests": {
@@ -1061,7 +1060,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-upgrade_bztests.yaml",
                     test: 'ipa-upgrade_bztests',
                     email: 'ndehadra@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-upgrade_parallel": {
@@ -1069,7 +1068,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-upgrade_parallel.yaml",
                     test: 'ipa-upgrade_parallel',
                     email: 'ndehadra@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-upgrade_reverse": {
@@ -1077,7 +1076,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-upgrade_reverse.yaml",
                     test: 'ipa-upgrade_reverse',
                     email: 'ndehadra@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             
             "bash::ipa-upgrade_dirsrvoff": {
@@ -1085,7 +1084,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-upgrade_dirsrvoff.yaml",
                     test: 'ipa-upgrade_dirsrvoff',
                     email: 'ndehadra@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::user-cli-adduser": {
@@ -1093,7 +1092,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-user-cli-adduser.yaml",
                     test: 'ipa-user-cli-adduser',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::user-cli-moduser": {
@@ -1101,7 +1100,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-user-cli-moduser.yaml",
                     test: 'ipa-user-cli-moduser',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ds-migration": {
@@ -1109,7 +1108,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ds-migration.yaml",
                     test: 'ds-migration',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ds-migration-func": {
@@ -1117,7 +1116,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ds-migration-func.yaml",
                     test: 'ds-migration-func',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-client-cert": {
@@ -1125,7 +1124,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-client-cert.yaml",
                     test: 'ipa-client-cert',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::install-client-cli": {
@@ -1133,7 +1132,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/install-client-cli.yaml",
                     test: 'install-client-cli',
                     email: 'mpolovka@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-adtrust": {
@@ -1141,7 +1140,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-adtrust.yaml",
                     test: 'ipa-adtrust',
                     email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-client-automount": {
@@ -1149,7 +1148,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-client-automount.yaml",
                     test: 'ipa-client-automount',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-idrange-cli": {
@@ -1157,7 +1156,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-idrange-cli.yaml",
                     test: 'ipa-idrange-cli',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-join": {
@@ -1165,7 +1164,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-join.yaml",
                     test: 'ipa-join',
                     email: 'sumenon@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-krblockout": {
@@ -1173,7 +1172,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-krblockout.yaml",
                     test: 'ipa-krblockout',
                     email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-nis-integration": {
@@ -1181,7 +1180,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-nis-integration.yaml",
                     test: 'ipa-nis-integration',
                     email: 'sorlov@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-realmdomains-cli": {
@@ -1189,7 +1188,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-realmdomains-cli.yaml",
                     test: 'ipa-realmdomains-cli',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-selinuxusermap-func": {
@@ -1197,7 +1196,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-selinuxusermap-func.yaml",
                     test: 'ipa-selinuxusermap-func',
                     email: 'myusuf@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-trust-cli": {
@@ -1205,7 +1204,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-trust-cli.yaml",
                     test: 'ipa-trust-cli',
                     email: 'mvarun@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-trust-func-hbac": {
@@ -1213,7 +1212,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-trust-func-hbac.yaml",
                     test: 'ipa-trust-func-hbac',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-trust-func-httpkrb": {
@@ -1221,7 +1220,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-trust-func-httpkrb.yaml",
                     test: 'ipa-trust-func-httpkrb',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-trust-func-selinux-usermap": {
@@ -1229,7 +1228,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-trust-func-selinux-usermap.yaml",
                     test: 'ipa-trust-func-selinux-usermap',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
 
             "bash::ipa-trust-func-automount": {
@@ -1237,7 +1236,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-trust-func-automount.yaml",
                     test: 'ipa-trust-func-automount',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             },
             
             "bash::ipa-trust-func-sudo": {
@@ -1245,7 +1244,7 @@ node {
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-trust-func-sudo.yaml",
                     test: 'ipa-trust-func-sudo',
                     email: 'amore@redhat.com'
-                ]).exec('ipa-slave')
+                ]).exec(env.IDMCI_SLAVE)
             }
             )
         }
