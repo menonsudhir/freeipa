@@ -39,6 +39,7 @@ phases:
       - playbook: prep/prepare-pytest.yaml
       - playbook: prep/firewall.yaml
       - playbook: prep/ipa-network.yaml
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - pytests: src/ipa-winsync-migrate

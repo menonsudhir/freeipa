@@ -33,6 +33,7 @@ phases:
       - playbook: prep/prepare-upstream.yaml
       - playbook: prep/ipa-server-install.yaml
       - playbook: prep/prepare-webui.yaml
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - playbook: test/test-webui.yaml

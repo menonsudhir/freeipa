@@ -25,6 +25,7 @@ phases:
       # Uncommenting the below will enable this test to run on non-atomic RHEL 7
       # - playbook: prep/redhat-base.yaml
       # - playbook: prep/install-docker.yaml
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       # Run only subset of test. Removing the /test_ipa... part will run all

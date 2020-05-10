@@ -35,6 +35,7 @@ phases:
       - playbook: prep/prepare-webui.yaml
         extra_vars:
           caless: true
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - playbook: test/test-webui.yaml

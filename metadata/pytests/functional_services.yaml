@@ -34,6 +34,7 @@ phases:
       - playbook: prep/func-svcs-copy-config.yaml
       - playbook: prep/firewall.yaml
       - playbook: prep/ipa-network.yaml
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - pytests: src/functional_services

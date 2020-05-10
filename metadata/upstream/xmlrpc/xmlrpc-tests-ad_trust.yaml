@@ -43,6 +43,7 @@ phases:
       - command: echo Secret123 | ipa trust-add --type ad --admin Administrator --password win.test
         host: master.testrelm.test
 
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - playbook: test/test-xmlrpc.yaml

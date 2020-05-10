@@ -34,6 +34,7 @@ phases:
       - playbook: prep/install-ipa-packages.yaml
       - playbook: prep/firewall.yaml
       - playbook: prep/ipa-network.yaml
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - pytests: ipatests/test_integration/test_external_ca.py::TestExternalCA::test_external_ca

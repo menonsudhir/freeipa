@@ -47,6 +47,7 @@ phases:
       - playbook: prep/firewall.yaml
       - playbook: prep/ipa-network.yaml
       - playbook: prep/win-domain-setup.yaml
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - pytests: src/ipa-idoverride

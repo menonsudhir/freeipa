@@ -9,6 +9,7 @@ env.ANSIBLE_GATHER_TIMEOUT = '60'
 env.NIGHTLY = 'true'
 env.FIPS = 'true'
 env.IDMCI_SLAVE = 'idm-ci-slave'
+env.ABRT_EMAIL= 'ipa-qe@redhat.com'
 
 properties([
     pipelineTriggers([cron('0 23 * * 3')]),

@@ -7,6 +7,7 @@ env.VERSION = 'RHEL8.3'
 env.TYPE = 'client-stream.tier1'
 env.NIGHTLY = 'true'
 env.IDMCI_SLAVE = 'idm-ci-slave'
+env.ABRT_EMAIL= 'ipa-qe@redhat.com'
 
 // Gating env vars
 env.CI_NAME = 'IdM IPA CI'

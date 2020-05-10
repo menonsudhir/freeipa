@@ -61,6 +61,7 @@ phases:
             - name: aduser1
               password: Secret123
           target_host: ad2.sub1.win2016.test
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - pytests: src/trust_one_way

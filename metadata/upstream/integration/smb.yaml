@@ -59,6 +59,7 @@ phases:
             users:
             - name: testuser
               password: Secret123
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - playbook: test/test-upstream.yaml

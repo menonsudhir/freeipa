@@ -133,6 +133,7 @@ phases:
           ad_groups:
             - name: testgroup
               members: ['testuser']
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - playbook: test/test-upstream.yaml

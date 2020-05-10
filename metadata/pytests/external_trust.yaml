@@ -73,6 +73,7 @@ phases:
             - name: etusgrp
               category: security
               scope: universal
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - pytests: src/external_trust

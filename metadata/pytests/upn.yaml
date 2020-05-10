@@ -50,6 +50,7 @@ phases:
         extra_vars:
           upn_suffixes:
             - testupnsuffix
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - pytests: src/upn

@@ -57,6 +57,7 @@ phases:
             - name: group@group
               scope: global
 
+      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - playbook: test/test-upstream.yaml
