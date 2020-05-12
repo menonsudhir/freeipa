@@ -95,7 +95,7 @@ def prepare_radiusd(multihost, user):
     time.sleep(10)
 
 
-def ssh_test(multihost, user, passwd=None):
+def ssh_test(multihost, user, passwd=None, timeout=False):
     """ ssh test """
     if passwd is None:
         multihost.client.run_command([
@@ -104,9 +104,12 @@ def ssh_test(multihost, user, passwd=None):
     else:
         list_cache = multihost.client.run_command(['klist'])
         print(list_cache.stdout_text)
-        cmd = multihost.client.run_command([
-            'ssh', '-vvv', user + '@' + multihost.master.hostname, 'hostname'
-        ], stdin_text=passwd, raiseonerr=False)
+        args = [
+            'ssh', '-o', 'StrictHostKeyChecking=no', '-vvv',
+            user + '@' + multihost.master.hostname, 'hostname']
+        if timeout:
+            args.extend(['-o', 'ConnectTimeout=60'])
+        cmd = multihost.client.run_command(args, stdin_text=passwd, raiseonerr=False)
         assert "Authentication succeeded (gssapi-with-mic)" in cmd.stderr_text
         assert "authmethod_is_enabled gssapi-with-mic" in cmd.stderr_text
 

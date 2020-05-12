@@ -1,5 +1,6 @@
 """ Authentication Indicators Test Suite """
 from ipa_pytests.otp import otp_lib as lib
+from ipa_pytests.shared.utils import sssd_cache_reset
 from ipa_pytests.shared.user_utils import mod_ipa_user
 from ipa_pytests.shared.service_utils import service_mod, service_show
 from ipa_pytests.shared.host_utils import host_mod
@@ -282,8 +283,7 @@ class TestAuthIndent(object):
             {'auth-ind=':''})
         multihost.master.run_command([
             'ipa', 'user-unlock', TESTUSER])
-        multihost.master.run_command([
-            'sss_cache', '-E'])
+        sssd_cache_reset(multihost.master)
         multihost.master.run_command([
             'ipactl', 'restart'])
         time.sleep(13)
@@ -291,7 +291,8 @@ class TestAuthIndent(object):
             TESTUSER, multihost.master.config.admin_pw)
         multihost.client.run_command(['klist'])
         time.sleep(5)
-        lib.ssh_test(multihost, TESTUSER, passwd=multihost.master.config.admin_pw)
+        lib.ssh_test(multihost, TESTUSER, passwd=multihost.master.config.admin_pw,
+                     timeout=True)
         krb_cache = lib.get_krb_cache(multihost, INFOUSER, multihost.client)
         password = multihost.master.config.admin_pw + lib.get_otp(
             multihost, OTP2)
@@ -302,7 +303,7 @@ class TestAuthIndent(object):
         print(cmd.stdout_text)
         print(cmd.stderr_text)
         time.sleep(5)
-        lib.ssh_test(multihost, TESTUSER, passwd=password)
+        lib.ssh_test(multihost, TESTUSER, passwd=password, timeout=True)
 
     def test014(self, multihost):
         """
@@ -327,7 +328,7 @@ class TestAuthIndent(object):
             'kinit', '-T', krb_cache, TESTUSER
             ], stdin_text=password)
         time.sleep(10)
-        lib.ssh_test(multihost, TESTUSER, passwd=password)
+        lib.ssh_test(multihost, TESTUSER, passwd=password, timeout=True)
 
     def test015(self, multihost):
         """
