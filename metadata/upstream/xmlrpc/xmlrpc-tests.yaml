@@ -28,8 +28,8 @@ phases:
       - playbook: prep/install-ipa-packages.yaml
       - playbook: prep/prepare-upstream.yaml
       - playbook: prep/firewall.yaml
-      - playbook: prep/prepare-xmlrpc.yaml
       - playbook: prep/config-abrt.yaml
+      - playbook: prep/prepare-xmlrpc.yaml
   - name: test
     steps:
       - playbook: test/test-xmlrpc.yaml

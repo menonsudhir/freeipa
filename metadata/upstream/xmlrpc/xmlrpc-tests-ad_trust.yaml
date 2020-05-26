@@ -37,13 +37,12 @@ phases:
       - playbook: prep/install-ipa-packages.yaml
       - playbook: prep/prepare-upstream.yaml
       - playbook: prep/firewall.yaml
+      - playbook: prep/config-abrt.yaml
       - playbook: prep/prepare-xmlrpc.yaml
       - playbook: prep/win-domain-setup.yaml
       - playbook: prep/ipa-adtrust-install.yaml
       - command: echo Secret123 | ipa trust-add --type ad --admin Administrator --password win.test
         host: master.testrelm.test
-
-      - playbook: prep/config-abrt.yaml
   - name: test
     steps:
       - playbook: test/test-xmlrpc.yaml
