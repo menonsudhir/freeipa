@@ -110,6 +110,7 @@ node {
                     metadata: 'metadata/upstream/integration/krbtpolicy.yaml',
                     test: 'upstream-krbtpolicy',
                     email: 'sorlov@redhat.com',
+                    message: "${params.CI_MESSAGE}"
                 ]).exec(env.IDMCI_SLAVE)
             },
             "bash::ssh-functional": {
