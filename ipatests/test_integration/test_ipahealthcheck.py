@@ -784,3 +784,74 @@ class TestIpaHealthCheckWithoutDNS(IntegrationTest):
                 check["kw"]["key"] in DEFAULT_PKI_KRA_CERTS
             )
         tasks.uninstall_master(self.master)
+
+
+class TestIpaHealthCheckWithADtrust(IntegrationTest):
+    """
+    Test for ipa-healthcheck tool for trust setup
+    between IPA and Active Directory
+    """
+    topology = "line"
+    num_ad_domains = 1
+
+    @classmethod
+    def install(cls, mh):
+        cls.ad = cls.ads[0]
+        tasks.install_adtrust(cls.master)
+        tasks.configure_dns_for_trust(cls.master, cls.ad)
+        tasks.establish_trust_with_ad(cls.master, cls.ad.domain.name)
+
+    def test_ipahealthcheck_trust_domainscheck(self):
+        """
+        This testcase checks when trust between IPA-AD is established,
+        IPATrustDomainsCheck displays result as SUCCESS and also
+        displays ADREALM as sssd/trust domains.
+        """
+        AD_REALM = self.ad.domain.name.upper()
+        returncode, data = run_healthcheck(
+            self.master, "ipahealthcheck.ipa.trust", "IPATrustDomainsCheck"
+        )
+        assert returncode == 0
+        for check in data:
+            if check["kw"]["key"] == "domain-list":
+                assert check["result"] == "SUCCESS"
+                assert (
+                    check["kw"]["sssd_domains"] == AD_REALM
+                    or check["kw"]["trust_domains"] == AD_REALM
+                )
+            elif check["kw"]["key"] == "domain-status":
+                assert check["result"] == "SUCCESS"
+                assert check["kw"]["domain"] == AD_REALM
+
+    def test_ipahealthcheck_trustcontoller_conf_check(self):
+        """
+        This testcase checks when trust between IPA-AD is established,
+        IPATrustControllerConfCheck displays result as SUCCESS and also
+        displays key value as 'net conf list'
+        """
+        returncode, data = run_healthcheck(
+            self.master,
+            "ipahealthcheck.ipa.trust",
+            "IPATrustControllerConfCheck",
+        )
+        assert returncode == 0
+        for check in data:
+            assert check["result"] == "SUCCESS"
+            assert check["kw"]["key"] == "net conf list"
+
+    def test_ipahealthcheck_sidgenpluginCheck(self):
+        """
+        This testcase checks when trust between IPA-AD is established,
+        IPAsidgenpluginCheck displays result as SUCCESS and also
+        displays key value as 'ipa-sidgen-task'
+        """
+        returncode, data = run_healthcheck(
+            self.master, "ipahealthcheck.ipa.trust", "IPAsidgenpluginCheck"
+        )
+        assert returncode == 0
+        for check in data:
+            assert check["result"] == "SUCCESS"
+            assert (
+                check["kw"]["key"] == "IPA SIDGEN"
+                or check["kw"]["key"] == "ipa-sidgen-task"
+            )
