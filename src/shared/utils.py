@@ -170,7 +170,7 @@ def create_noise_file():
 
 def disable_dnssec(host):
     """Disable's DNSSEC and restart named-pkcs11 service"""
-    namedcfg = '/etc/named.conf'
+    namedcfg = '/etc/named/ipa-options-ext.conf'
     namedtxt = host.get_file_contents(namedcfg)
     namedtxt = re.sub('dnssec-validation yes',
                       'dnssec-validation no',
