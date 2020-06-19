@@ -346,6 +346,13 @@ node {
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+            "upstream::replica_promotion-TestHiddenReplicaKRA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/replica_promotion-TestHiddenReplicaKRA',
+                    test: 'upstream-replica_promotion-TestHiddenReplicaKRA',
+                    email: 'sumenon@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
             "upstream::replication_layouts-TestStarTopologyWithoutCA": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/replication_layouts-TestStarTopologyWithoutCA.yaml',

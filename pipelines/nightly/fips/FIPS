@@ -448,6 +448,13 @@ node {
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+            "upstream::replica_promotion-TestHiddenReplicaKRA": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestHiddenReplicaKRA.yaml',
+                    test: 'replica_promotion-TestHiddenReplicaKRA',
+                    email: 'sumenon@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
         
             "upstream:replication-layouts::TestStarTopologyWithoutCA": {
                 new TeRun([
