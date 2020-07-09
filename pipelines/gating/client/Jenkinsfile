@@ -28,6 +28,7 @@ properties([
     booleanParam(name: 'DEBUG', defaultValue: true, description: 'Will printout debug information.'),
     string(name: 'RECIPIENTS', defaultValue: '', description: 'Email recipients'),
     booleanParam(name: 'BEAKER', defaultValue: false, description: 'True will cause Beaker provisioning.'),
+    booleanParam(name: 'PERMISSIVE', defaultValue: false, description: 'True will cause to set selinux to permissive mode and no UMB messages will be published'),
     ]),
 ])
 
