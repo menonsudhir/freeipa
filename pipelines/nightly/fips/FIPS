@@ -184,6 +184,14 @@ node {
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+
+            "upstream::backup_and_restore-TestBackupRoles": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupRoles.yaml',
+                    test: 'upstream-backup_and_restore-TestBackupRoles',
+                    email: 'myusuf@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
         
             "upstream:caless::TestCertinstall": {
                 new TeRun([

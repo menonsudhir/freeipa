@@ -109,6 +109,13 @@ node {
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+            "upstream::backup_and_restore-TestBackupRoles": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/backup_and_restore-TestBackupRoles.yaml',
+                    test: 'upstream-backup_and_restore-TestBackupRoles',
+                    email: 'myusuf@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
             "upstream::caless-TestCertinstall": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/caless-TestCertinstall.yaml',
