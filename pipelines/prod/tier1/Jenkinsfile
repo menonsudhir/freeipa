@@ -476,6 +476,13 @@ node {
                     test: 'upstream-dns',
                     email: 'amore@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
+            },
+            "upstream::epn": {
+                new TeRun([
+                    metadata: 'metadata/upstream/installation/epn.yaml',
+                    test: 'upstream-epn',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
             }
             )
         }
