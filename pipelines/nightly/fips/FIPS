@@ -32,7 +32,13 @@ node {
                     email: 'ksiddiqu@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
-        
+            "upstream::adtrust_install": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/adtrust_install.yaml',
+                    test: 'upstream-adtrust_install',
+                    email: 'sorlov@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
             "upstream:authselect": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/authselect.yaml',

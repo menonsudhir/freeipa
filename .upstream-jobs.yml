@@ -720,6 +720,14 @@ upstream-smb:
     changes:
     - metadata/upstream/integration/smb.yaml
 
+upstream-adtrust_install:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/adtrust_install.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/adtrust_install.yaml
+
 upstream-xmlrpc:
   extends: .mr_template
   variables:
