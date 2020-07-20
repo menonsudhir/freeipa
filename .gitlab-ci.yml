@@ -12,9 +12,15 @@ image:
     untracked: true
     when: always
     expire_in: 1 week
-  script:
+  before_script:
+  - git clone -b production --depth=1 https://gitlab.cee.redhat.com/identity-management/idm-ci.git
+  - pip3 install ./idm-ci
   - idm-ci/scripts/fork_updater.py --metadata-file $METADATA_FILE_PATH
-  - idm-ci/scripts/te $METADATA_FILE_PATH
+  - cp $METADATA_FILE_PATH /tmp/metadata.yaml
+  script:
+  - idm-ci/scripts/te /tmp/metadata.yaml --upto test
+  after_script:
+  - idm-ci/scripts/te /tmp/metadata.yaml --phase teardown
   - idm-ci/scripts/upload-artifacts.sh -p QEW/$CI_PROJECT_PATH -r $CI_PIPELINE_ID -j $CI_JOB_NAME/$CI_JOB_ID
 
 .mr_backport_template: &mr_backport_definition
@@ -23,12 +29,11 @@ image:
   only:
   - /^RHEL*/
 
-before_script:
-- git clone -b production --depth=1 https://gitlab.cee.redhat.com/identity-management/idm-ci.git
-- pip3 install ./idm-ci
-
 backport-mr:
   <<: *mr_backport_definition
+  before_script:
+  - git clone -b production --depth=1 https://gitlab.cee.redhat.com/identity-management/idm-ci.git
+  - pip3 install ./idm-ci
   script:
   - python3 idm-ci/scripts/backport_mr.py
 
