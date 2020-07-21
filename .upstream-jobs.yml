@@ -728,6 +728,22 @@ upstream-adtrust_install:
     changes:
     - metadata/upstream/integration/adtrust_install.yaml
 
+upstream-healthcheck:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/healthcheck.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/healthcheck.yaml
+
+upstream-cert:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/cert.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/cert.yaml
+
 upstream-xmlrpc:
   extends: .mr_template
   variables:

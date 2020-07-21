@@ -596,7 +596,24 @@ node {
                     test: 'vault',
                     email: 'ssidhaye@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::healthcheck": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/healthcheck.yaml',
+                    test: 'upstream-healthcheck',
+                    email: 'sumenon@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::cert": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/cert.yaml',
+                    test: 'upstream-cert',
+                    email: 'myusuf@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
             }
+
             )
         }
     } catch (Exception e) {

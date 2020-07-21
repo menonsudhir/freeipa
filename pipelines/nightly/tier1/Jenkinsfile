@@ -367,6 +367,20 @@ node {
                     email: 'ssidhaye@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+            "upstream::healthcheck": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/healthcheck.yaml',
+                    test: 'upstream-healthcheck',
+                    email: 'sumenon@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+            "upstream::cert": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/cert.yaml',
+                    test: 'upstream-cert',
+                    email: 'myusuf@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
             "upstream::adtrust_install": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/adtrust_install.yaml',
