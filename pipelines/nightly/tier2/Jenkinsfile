@@ -349,7 +349,7 @@ node {
             },
             "upstream::replica_promotion-TestHiddenReplicaKRA": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/replica_promotion-TestHiddenReplicaKRA',
+                    metadata: 'metadata/upstream/integration/replica_promotion-TestHiddenReplicaKRA.yaml',
                     test: 'upstream-replica_promotion-TestHiddenReplicaKRA',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
