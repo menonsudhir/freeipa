@@ -119,8 +119,11 @@ class TestCertProfileImport(object):
         profile_desc = '%s_desc' % profile_name
         profile_file = '{}{}.xml'.format(multihost.tempdir, profile_name)
         multihost.master.kinit_as_admin()
-        multihost.master.qerun(['pki', '-d', NSSDB,
-                                'cert-request-profile-show', profile_name, '--output', profile_file])
+        nssdb = '{}/testnssdb'.format(multihost.tempdir)
+        multihost.master.qerun(['pki', '-d', nssdb, '-c', 'SECret.123', 'client-init', '--force'])
+        multihost.master.qerun(['pki', '-d', nssdb, '-c', 'SECret.123', '--ignore-cert-status',
+                                'UNTRUSTED_ISSUER', 'cert-request-profile-show',
+                                profile_name, '--output', profile_file])
         data = {'host': multihost.master,
                 'store': 'True',
                 'testprofile_1': '',
