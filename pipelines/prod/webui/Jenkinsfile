@@ -203,6 +203,13 @@ node {
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+            "webui::trust": {
+                new TeRun([
+                    metadata: 'metadata/upstream/webui/trust.yaml',
+                    test: 'upstream-trust',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
             "webui::user": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/user.yaml',
