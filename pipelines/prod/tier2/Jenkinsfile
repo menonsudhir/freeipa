@@ -255,13 +255,6 @@ node {
                     email: 'amore@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
-            "upstream::legacy_clients": {
-                new TeRun([
-                    metadata: 'metadata/upstream/integration/legacy_clients.yaml',
-                    test: 'upstream-legacy_clients',
-                    email: 'mpolovka@redhat.com'
-                ]).exec(env.IDMCI_SLAVE)
-            },
             "upstream::netgroup": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/netgroup.yaml',
