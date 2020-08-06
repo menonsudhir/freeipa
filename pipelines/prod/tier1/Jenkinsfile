@@ -469,6 +469,13 @@ node {
                     test: 'upstream-xmlrpc',
                     email: 'sorlov@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
+            },
+            "upstream::dns": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/dns.yaml',
+                    test: 'upstream-dns',
+                    email: 'amore@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
             }
             )
         }
