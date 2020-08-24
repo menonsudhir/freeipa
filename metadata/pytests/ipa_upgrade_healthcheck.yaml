@@ -1,0 +1,43 @@
+domains:
+  - name: testrealm.test
+    type: ipa
+    hosts:
+      - name: master.testrealm.test
+        role: master
+        group: ipaserver
+        os: rhel-8.1
+      - name: replica.testrealm.test
+        role: replica
+        group: ipaserver
+        os: rhel-8.1
+phases:
+  - name: init
+    steps:
+      - playbook: init/ipa-pytests.yaml
+        extra_vars:
+          repo: https://gitlab.cee.redhat.com/identity-management/ipa-pytests.git
+          version: RHEL8.3
+      - playbook: init/testrunner-dir.yaml
+  - name: provision
+    steps:
+      - playbook: provision/linchpin-up.yaml
+      - playbook: provision/wait.yaml
+  - name: prep
+    steps:
+      - playbook: prep/redhat-base.yaml
+      - playbook: prep/repos.yaml
+      - playbook: prep/install-ipa-packages.yaml
+      - playbook: prep/prepare-pytest.yaml
+      - playbook: prep/firewall.yaml
+      - playbook: prep/ipa-network.yaml
+      - playbook: prep/config-abrt.yaml
+  - name: test
+    steps:
+      - pytests: src/ipa_upgrade/bugzillas/bz1852244
+        git: ../ipa-pytests
+
+  - name: teardown
+    steps:
+      - playbook: teardown/fetch-logs.yaml
+      - playbook: teardown/linchpin-destroy.yaml
+

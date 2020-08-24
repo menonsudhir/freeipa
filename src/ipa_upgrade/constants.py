@@ -22,6 +22,10 @@ repo_urls = {
     #"7.6.b": ["http://download-node-02.eng.bos.redhat.com/rel-eng/updates/RHEL-7.6/RHEL-7.6-Update-1.10/compose/Server/x86_64/os/"],
     "7.6.b": ["http://download.eng.bos.redhat.com/rhel-7/rel-eng/updates/RHEL-7/RHEL-7.6-updates-20190122.0/compose/Server/x86_64/os/"],
     "7.6.c": ["http://download-node-02.eng.bos.redhat.com/rel-eng/repos/rhel-7.6-z-candidate/x86_64/"],
-    "8.2.app": ["http://download.eng.bos.redhat.com/nightly/rhel-8/RHEL-8/latest-RHEL-8.2/compose/AppStream/x86_64/os/"],
-    "8.2.base": ["http://download.eng.bos.redhat.com/nightly/rhel-8/RHEL-8/latest-RHEL-8.2/compose/BaseOS/x86_64/os/"]
+    "8.1.base": ["http://download.eng.bos.redhat.com/rel-eng/latest-RHEL-8.1/compose/BaseOS/x86_64/os/"],
+    "8.1.app": ["http://download.eng.bos.redhat.com/rel-eng/latest-RHEL-8.1/compose/AppStream/x86_64/os/"],
+    "8.2.base": ["http://download.eng.pnq.redhat.com/released/RHEL-8/8.2.0/BaseOS/x86_64/os/"],
+    "8.2.app": ["http://download.eng.pnq.redhat.com/released/RHEL-8/8.2.0/AppStream/x86_64/os/"],
+    "8.3.base": ["http://download.eng.bos.redhat.com/nightly/rhel-8/RHEL-8/latest-RHEL-8.3/compose/BaseOS/x86_64/os/"],
+    "8.3.app": ["http://download.eng.bos.redhat.com/nightly/rhel-8/RHEL-8/latest-RHEL-8.3/compose/AppStream/x86_64/os/"],
 }

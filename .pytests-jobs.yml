@@ -332,3 +332,12 @@ ipa-pytests-upgrade-schema-compat-attribute:
     changes:
     - metadata/pytests/ipa_upgrade_schema_compat_attribute.yaml
     - src/ipa_upgrade/bugzillas/bz1803165/*
+
+ipa-pytests-upgrade-healthcheck:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/pytests/ipa_upgrade_healthcheck.yaml
+  only:
+    changes:
+    - metadata/pytests/ipa_upgrade_healthcheck.yaml
+    - src/ipa_upgrade/bugzillas/bz1852244/*
