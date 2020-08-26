@@ -480,7 +480,7 @@ node {
             },
             "upstream::epn": {
                 new TeRun([
-                    metadata: 'metadata/upstream/installation/epn.yaml',
+                    metadata: 'metadata/upstream/integration/epn.yaml',
                     test: 'upstream-epn',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)

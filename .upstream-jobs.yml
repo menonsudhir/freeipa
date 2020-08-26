@@ -759,3 +759,11 @@ upstream-xmlrpc-ad_trust:
   only:
     changes:
     - metadata/upstream/xmlrpc/xmlrpc-tests-ad_trust.yaml
+
+upstream-epn:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/epn.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/epn.yaml
