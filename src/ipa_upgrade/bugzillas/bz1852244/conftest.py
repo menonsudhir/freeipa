@@ -29,8 +29,8 @@ def setup_session(request, multihost):
 
     def teardown_session():
         """ define fixture for session level teardown """
-        # uninstall_server(multihost.master)
-        # uninstall_server(multihost.master)
+        uninstall_server(multihost.master, force=True)
+        uninstall_server(multihost.replica, force=True)
 
     request.addfinalizer(teardown_session)
 

@@ -367,6 +367,13 @@ node {
                     email: 'ssidhaye@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+            "pytest::ipa-upgrade-healthcheck": {
+                new TeRun([
+                    metadata: 'metadata/pytests/ipa_upgrade_healthcheck.yaml',
+                    test: 'ipa-upgrade-healthcheck',
+                    email: 'ssidhaye@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
             "upstream::healthcheck": {
                 new TeRun([
                     metadata: 'metadata/upstream/integration/healthcheck.yaml',
