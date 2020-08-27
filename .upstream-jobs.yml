@@ -584,117 +584,117 @@ upstream-dnssec:
     changes:
     - metadata/upstream/integration/dnssec.yaml
 
-upstream-installation-TestinstallMaster:
+upstream-installation-TestInstallMaster:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallMaster.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallMaster.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallMaster.yaml
+    - metadata/upstream/integration/installation-TestInstallMaster.yaml
 
-upstream-installation-TestinstallMasterDNS:
+upstream-installation-TestInstallMasterDNS:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallMasterDNS.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallMasterDNS.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallMasterDNS.yaml
+    - metadata/upstream/integration/installation-TestInstallMasterDNS.yaml
 
-upstream-installation-TestinstallMasterKRA:
+upstream-installation-TestInstallMasterKRA:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallMasterKRA.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallMasterKRA.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallMasterKRA.yaml
+    - metadata/upstream/integration/installation-TestInstallMasterKRA.yaml
 
-upstream-installation-TestinstallMasterReservediPasForwarder:
+upstream-installation-TestInstallMasterReservediPasForwarder:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallMasterReservediPasForwarder.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallMasterReservediPasForwarder.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallMasterReservediPasForwarder.yaml
+    - metadata/upstream/integration/installation-TestInstallMasterReservediPasForwarder.yaml
 
-upstream-installation-TestinstallWithCA1:
+upstream-installation-TestInstallWithCA1:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA1.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallWithCA1.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallWithCA1.yaml
+    - metadata/upstream/integration/installation-TestInstallWithCA1.yaml
 
-upstream-installation-TestinstallWithCA2:
+upstream-installation-TestInstallWithCA2:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA2.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallWithCA2.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallWithCA2.yaml
+    - metadata/upstream/integration/installation-TestInstallWithCA2.yaml
 
-upstream-installation-TestinstallWithCA_DNS1:
+upstream-installation-TestInstallWithCA_DNS1:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_DNS1.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallWithCA_DNS1.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallWithCA_DNS1.yaml
+    - metadata/upstream/integration/installation-TestInstallWithCA_DNS1.yaml
 
-upstream-installation-TestinstallWithCA_DNS2:
+upstream-installation-TestInstallWithCA_DNS2:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_DNS2.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallWithCA_DNS2.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallWithCA_DNS2.yaml
+    - metadata/upstream/integration/installation-TestInstallWithCA_DNS2.yaml
 
-upstream-installation-TestinstallWithCA_DNS3:
+upstream-installation-TestInstallWithCA_DNS3:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_DNS3.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallWithCA_DNS3.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallWithCA_DNS3.yaml
+    - metadata/upstream/integration/installation-TestInstallWithCA_DNS3.yaml
 
-upstream-installation-TestinstallWithCA_DNS4:
+upstream-installation-TestInstallWithCA_DNS4:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_DNS4.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallWithCA_DNS4.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallWithCA_DNS4.yaml
+    - metadata/upstream/integration/installation-TestInstallWithCA_DNS4.yaml
 
-upstream-installation-TestinstallWithCA_KRA1:
+upstream-installation-TestInstallWithCA_KRA1:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_KRA1.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallWithCA_KRA1.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallWithCA_KRA1.yaml
+    - metadata/upstream/integration/installation-TestInstallWithCA_KRA1.yaml
 
-upstream-installation-TestinstallWithCA_KRA2:
+upstream-installation-TestInstallWithCA_KRA2:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_KRA2.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallWithCA_KRA2.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallWithCA_KRA2.yaml
+    - metadata/upstream/integration/installation-TestInstallWithCA_KRA2.yaml
 
-upstream-installation-TestinstallWithCA_KRA_DNS1:
+upstream-installation-TestInstallWithCA_KRA_DNS1:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_KRA_DNS1.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallWithCA_KRA_DNS1.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallWithCA_KRA_DNS1.yaml
+    - metadata/upstream/integration/installation-TestInstallWithCA_KRA_DNS1.yaml
 
-upstream-installation-TestinstallWithCA_KRA_DNS2:
+upstream-installation-TestInstallWithCA_KRA_DNS2:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestinstallWithCA_KRA_DNS2.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/installation-TestInstallWithCA_KRA_DNS2.yaml
   only:
     changes:
-    - metadata/upstream/integration/installation-TestinstallWithCA_KRA_DNS2.yaml
+    - metadata/upstream/integration/installation-TestInstallWithCA_KRA_DNS2.yaml
 
 upstream-installation-TestInstallReplicaAgainstSpecificServer:
   extends: .mr_template

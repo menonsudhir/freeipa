@@ -25,7 +25,7 @@ node {
     try {
         stage("upstream") {
           parallel(
-            "upstream:advise": {
+            "upstream::advise": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/advise.yaml',
                     test: 'advise',
@@ -39,7 +39,7 @@ node {
                     email: 'sorlov@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
-            "upstream:authselect": {
+            "upstream::authselect": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/authselect.yaml',
                     test: 'authselect',
@@ -47,7 +47,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:caless::TestServerInstall": {
+            "upstream::caless-TestServerInstall": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestServerInstall.yaml',
                     test: 'caless-TestServerInstall',
@@ -55,7 +55,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:caless::TestReplicaInstall": {
+            "upstream::caless-TestReplicaInstall": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestReplicaInstall.yaml',
                     test: 'caless-TestReplicaInstall',
@@ -63,7 +63,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:commands": {
+            "upstream::commands": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/commands.yaml',
                     test: 'commands',
@@ -71,7 +71,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:nfs": {
+            "upstream::nfs": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/nfs.yaml',
                     test: 'nfs',
@@ -79,7 +79,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:pki-config-override": {
+            "upstream::pki-config-override": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/pki_config_override.yaml',
                     test: 'pki-config-override',
@@ -103,7 +103,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
 
-            "upstream:automember": {
+            "upstream::automember": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/automember.yaml',
                     test: 'automember',
@@ -111,90 +111,90 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:backup-and-restore::TestBackupAndRestore": {
+            "upstream::backup_and_restore-TestBackupAndRestore": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupAndRestore.yaml',
-                    test: 'backup-and-restore-TestBackupAndRestore',
+                    test: 'backup_and_restore-TestBackupAndRestore',
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:backup-and-restore::TestBackupAndRestoreDMPassword": {
+            "upstream::backup_and_restore-TestBackupAndRestoreDMPassword": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreDMPassword.yaml',
-                    test: 'backup-and-restore-TestBackupAndRestoreDMPassword',
+                    test: 'backup_and_restore-TestBackupAndRestoreDMPassword',
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:backup-and-restore::TestBackupAndRestoreWithDNS": {
+            "upstream::backup_and_restore-TestBackupAndRestoreWithDNS": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNS.yaml',
-                    test: 'backup-and-restore-TestBackupAndRestoreWithDNS',
+                    test: 'backup_and_restore-TestBackupAndRestoreWithDNS',
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:backup-and-restore::TestBackupAndRestoreWithDNSSEC": {
+            "upstream::backup_and_restore::TestBackupAndRestoreWithDNSSEC": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithDNSSEC.yaml',
-                    test: 'backup-and-restore-TestBackupAndRestoreWithDNSSEC',
+                    test: 'backup_and_restore-TestBackupAndRestoreWithDNSSEC',
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:backup-and-restore::TestBackupAndRestoreWithKRA": {
+            "upstream::backup_and_restore::TestBackupAndRestoreWithKRA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithKRA.yaml',
-                    test: 'backup-and-restore-TestBackupAndRestoreWithKRA',
+                    test: 'backup_and_restore-TestBackupAndRestoreWithKRA',
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:backup-and-restore::TestBackupAndRestoreWithReplica": {
+            "upstream::backup_and_restore::TestBackupAndRestoreWithReplica": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupAndRestoreWithReplica.yaml',
-                    test: 'backup-and-restore-TestBackupAndRestoreWithReplica',
+                    test: 'backup_and_restore-TestBackupAndRestoreWithReplica',
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:backup-and-restore::TestBackupReinstallRestoreWithDNS": {
+            "upstream::backup_and_restore::TestBackupReinstallRestoreWithDNS": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNS.yaml',
-                    test: 'backup-and-restore-TestBackupReinstallRestoreWithDNS',
+                    test: 'backup_and_restore-TestBackupReinstallRestoreWithDNS',
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:backup-and-restore::TestBackupReinstallRestoreWithDNSSEC": {
+            "upstream::backup_and_restore::TestBackupReinstallRestoreWithDNSSEC": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithDNSSEC.yaml',
-                    test: 'backup-and-restore-TestBackupReinstallRestoreWithDNSSEC',
+                    test: 'backup_and_restore-TestBackupReinstallRestoreWithDNSSEC',
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:backup-and-restore::TestBackupReinstallRestoreWithKRA": {
+            "upstream::backup_and_restore::TestBackupReinstallRestoreWithKRA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestBackupReinstallRestoreWithKRA.yaml',
-                    test: 'backup-and-restore-TestBackupReinstallRestoreWithKRA',
+                    test: 'backup_and_restore-TestBackupReinstallRestoreWithKRA',
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:backup-and-restore::TestReplicainstallAfterRestore": {
+            "upstream::backup_and_restore::TestReplicainstallAfterRestore": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestReplicainstallAfterRestore.yaml',
-                    test: 'backup-and-restore-TestReplicainstallAfterRestore',
+                    test: 'backup_and_restore-TestReplicainstallAfterRestore',
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:backup-and-restore::TestUserRootFilesownershipPermiss": {
+            "upstream::backup_and_restore::TestUserRootFilesownershipPermiss": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/backup_and_restore-TestUserRootFilesownershipPermiss.yaml',
-                    test: 'backup-and-restore-TestUserRootFilesownershipPermiss',
+                    test: 'backup_and_restore-TestUserRootFilesownershipPermiss',
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
@@ -207,7 +207,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:caless::TestCertinstall": {
+            "upstream::caless-TestCertinstall": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestCertinstall.yaml',
                     test: 'caless-TestCertinstall',
@@ -215,7 +215,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:caless::TestClientinstall": {
+            "upstream::caless-TestClientinstall": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestClientinstall.yaml',
                     test: 'caless-TestClientinstall',
@@ -223,7 +223,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:caless::TestIPACommands": {
+            "upstream::caless-TestIPACommands": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestIPACommands.yaml',
                     test: 'caless-TestIPACommands',
@@ -231,7 +231,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:caless::TestPKINIT": {
+            "upstream::caless-TestPKINIT": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestPKINIT.yaml',
                     test: 'caless-TestPKINIT',
@@ -239,7 +239,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:caless::TestReplicaCALessToCAFull": {
+            "upstream::caless-TestReplicaCALessToCAFull": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestReplicaCALessToCAFull.yaml',
                     test: 'caless-TestReplicaCALessToCAFull',
@@ -247,7 +247,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:caless::TestServerCALessToExternalCA": {
+            "upstream::caless-TestServerCALessToExternalCA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestServerCALessToExternalCA.yaml',
                     test: 'caless-TestServerCALessToExternalCA',
@@ -255,7 +255,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:caless::TestServerReplicaCALessToCAFull": {
+            "upstream::caless-TestServerReplicaCALessToCAFull": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/caless-TestServerReplicaCALessToCAFull.yaml',
                     test: 'caless-TestServerReplicaCALessToCAFull',
@@ -263,23 +263,23 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:crlgen-manage": {
+            "upstream::crlgen_manage": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/crlgen_manage.yaml',
-                    test: 'crlgen-manage',
+                    test: 'crlgen_manage',
                     email: 'ssidhaye@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:customized-ds-config-install": {
+            "upstream::customized_ds_config_install": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/customized_ds_config_install.yaml',
-                    test: 'customized-ds-config-install',
+                    test: 'customized_ds_config_install',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:dns-locations": {
+            "upstream::dns-locations": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/dns_locations.yaml',
                     test: 'dns-locations',
@@ -287,71 +287,71 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:external-ca::TestExternalCA": {
+            "upstream::external_ca::TestExternalCA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/external_ca-TestExternalCA.yaml',
-                    test: 'external-ca-TestExternalCA',
+                    test: 'external_ca-TestExternalCA',
                     email: 'ssidhaye@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:external-ca::TestSelfExternalSelf": {
+            "upstream::external_ca::TestSelfExternalSelf": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/external_ca-TestSelfExternalSelf.yaml',
-                    test: 'external-ca-TestSelfExternalSelf',
+                    test: 'external_ca-TestSelfExternalSelf',
                     email: 'ssidhaye@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:external-ca::TestExternalCAinvalidCert": {
+            "upstream::external_ca::TestExternalCAinvalidCert": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/external_ca-TestExternalCAinvalidCert.yaml',
-                    test: 'external-ca-TestExternalCAinvalidCert',
+                    test: 'external_ca-TestExternalCAinvalidCert',
                     email: 'ssidhaye@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:external-ca::TestExternalCAdirsrvStop": {
+            "upstream::external_ca::TestExternalCAdirsrvStop": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/external_ca-TestExternalCAdirsrvStop.yaml',
-                    test: 'external-ca-TestExternalCAdirsrvStop',
+                    test: 'external_ca-TestExternalCAdirsrvStop',
                     email: 'ssidhaye@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:external-ca::TestMultipleExternalCA": {
+            "upstream::external_ca::TestMultipleExternalCA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/external_ca-TestMultipleExternalCA.yaml',
-                    test: 'external-ca-TestMultipleExternalCA',
+                    test: 'external_ca-TestMultipleExternalCA',
                     email: 'ssidhaye@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:external-ca::TestExternalCAProfileScenarios": {
+            "upstream::external_ca::TestExternalCAProfileScenarios": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/external_ca-TestExternalCAProfileScenarios.yaml',
-                    test: 'external-ca-TestExternalCAProfileScenarios',
+                    test: 'external_ca-TestExternalCAProfileScenarios',
                     email: 'ssidhaye@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:forced-client-reenrollment": {
+            "upstream::forced_client_reenrollment": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/forced_client_reenrollment.yaml',
-                    test: 'forced-client-reenrollment',
+                    test: 'forced_client_reenrollment',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:http-kdc-proxy": {
+            "upstream::http_kdc_proxy": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/http_kdc_proxy.yaml',
-                    test: 'http-kdc-proxy',
+                    test: 'http_kdc_proxy',
                     email: 'ksiddiqu@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:idviews": {
+            "upstream::idviews": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/idviews.yaml',
                     test: 'idviews',
@@ -359,15 +359,15 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:kerberos-flags": {
+            "upstream::kerberos_flags": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/kerberos_flags.yaml',
-                    test: 'kerberos-flags',
+                    test: 'kerberos_flags',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:netgroup": {
+            "upstream::netgroup": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/netgroup.yaml',
                     test: 'netgroup',
@@ -375,90 +375,90 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:pkinit-manage": {
+            "upstream::pkinit_manage": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/pkinit_manage.yaml',
-                    test: 'pkinit-manage',
+                    test: 'pkinit_manage',
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replica-promotion::TestHiddenReplicaPromotion": {
+            "upstream::replica_promotion-TestHiddenReplicaPromotion": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestHiddenReplicaPromotion.yaml',
-                    test: 'replica-promotion-TestHiddenReplicaPromotion',
+                    test: 'replica_promotion-TestHiddenReplicaPromotion',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replica-promotion::TestProhibitReplicaUninstallation": {
+            "upstream::replica_promotion-TestProhibitReplicaUninstallation": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestProhibitReplicaUninstallation.yaml',
-                    test: 'replica-promotion-TestProhibitReplicaUninstallation',
+                    test: 'replica_promotion-TestProhibitReplicaUninstallation',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replica-promotion::TestRenewalMaster": {
+            "upstream::replica_promotion-TestRenewalMaster": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestRenewalMaster.yaml',
-                    test: 'replica-promotion-TestRenewalMaster',
+                    test: 'replica_promotion-TestRenewalMaster',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replica-promotion::TestReplicainForwardZone": {
+            "upstream::replica_promotion-TestReplicainForwardZone": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestReplicainForwardZone.yaml',
-                    test: 'replica-promotion-TestReplicainForwardZone',
+                    test: 'replica_promotion-TestReplicainForwardZone',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replica-promotion::TestReplicainstallCustodia": {
+            "upstream::replica_promotion-TestReplicainstallCustodia": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestReplicainstallCustodia.yaml',
-                    test: 'replica-promotion-TestReplicainstallCustodia',
+                    test: 'replica_promotion-TestReplicainstallCustodia',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replica-promotion::TestReplicainstallWithExistingEntry": {
+            "upstream::replica_promotion-TestReplicainstallWithExistingEntry": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestReplicainstallWithExistingEntry.yaml',
-                    test: 'replica-promotion-TestReplicainstallWithExistingEntry',
+                    test: 'replica_promotion-TestReplicainstallWithExistingEntry',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replica-promotion::TestReplicaPromotionLevel1": {
+            "upstream::replica_promotion-TestReplicaPromotionLevel1": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestReplicaPromotionLevel1.yaml',
-                    test: 'replica-promotion-TestReplicaPromotionLevel1',
+                    test: 'replica_promotion-TestReplicaPromotionLevel1',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replica-promotion::TestSubCAkeyReplication": {
+            "upstream::replica_promotion-TestSubCAkeyReplication": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestSubCAkeyReplication.yaml',
-                    test: 'replica-promotion-TestSubCAkeyReplication',
+                    test: 'replica_promotion-TestSubCAkeyReplication',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replica-promotion::TestUnprivilegedUserPermissions": {
+            "upstream::replica_promotion-TestUnprivilegedUserPermissions": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestUnprivilegedUserPermissions.yaml',
-                    test: 'replica-promotion-TestUnprivilegedUserPermissions',
+                    test: 'replica_promotion-TestUnprivilegedUserPermissions',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replica-promotion::TestWrongClientDomain": {
+            "upstream::replica_promotion-TestWrongClientDomain": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replica_promotion-TestWrongClientDomain.yaml',
-                    test: 'replica-promotion-TestWrongClientDomain',
+                    test: 'replica_promotion-TestWrongClientDomain',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
@@ -470,95 +470,95 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replication-layouts::TestStarTopologyWithoutCA": {
+            "upstream::replication_layouts-TestStarTopologyWithoutCA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestStarTopologyWithoutCA.yaml',
-                    test: 'replication-layouts-TestStarTopologyWithoutCA',
+                    test: 'replication_layouts-TestStarTopologyWithoutCA',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replication-layouts::TestCompleteTopologyWithCA": {
+            "upstream::replication_layouts-TestCompleteTopologyWithCA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCA.yaml',
-                    test: 'replication-layouts-TestCompleteTopologyWithCA',
+                    test: 'replication_layouts-TestCompleteTopologyWithCA',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replication-layouts::TestCompleteTopologyWithCAKRA": {
+            "upstream::replication_layouts-TestCompleteTopologyWithCAKRA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithCAKRA.yaml',
-                    test: 'replication-layouts-TestCompleteTopologyWithCAKRA',
+                    test: 'replication_layouts-TestCompleteTopologyWithCAKRA',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replication-layouts::TestCompleteTopologyWithoutCA": {
+            "upstream::replication_layouts-TestCompleteTopologyWithoutCA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestCompleteTopologyWithoutCA.yaml',
-                    test: 'replication-layouts-TestCompleteTopologyWithoutCA',
+                    test: 'replication_layouts-TestCompleteTopologyWithoutCA',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replication-layouts::TestLineTopologyWithCA": {
+            "upstream::replication_layouts-TestLineTopologyWithCA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestLineTopologyWithCA.yaml',
-                    test: 'replication-layouts-TestLineTopologyWithCA',
+                    test: 'replication_layouts-TestLineTopologyWithCA',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replication-layouts::TestLineTopologyWithCAKRA": {
+            "upstream::replication_layouts-TestLineTopologyWithCAKRA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestLineTopologyWithCAKRA.yaml',
-                    test: 'replication-layouts-TestLineTopologyWithCAKRA',
+                    test: 'replication_layouts-TestLineTopologyWithCAKRA',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replication-layouts::TestLineTopologyWithoutCA": {
+            "upstream::replication_layouts-TestLineTopologyWithoutCA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestLineTopologyWithoutCA.yaml',
-                    test: 'replication-layouts-TestLineTopologyWithoutCA',
+                    test: 'replication_layouts-TestLineTopologyWithoutCA',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replication-layouts::TestStarTopologyWithCA": {
+            "upstream::replication_layouts-TestStarTopologyWithCA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestStarTopologyWithCA.yaml',
-                    test: 'replication-layouts-TestStarTopologyWithCA',
+                    test: 'replication_layouts-TestStarTopologyWithCA',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:replication-layouts::TestStarTopologyWithCAKRA": {
+            "upstream::replication_layouts-TestStarTopologyWithCAKRA": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/replication_layouts-TestStarTopologyWithCAKRA.yaml',
-                    test: 'replication-layouts-TestStarTopologyWithCAKRA',
+                    test: 'replication_layouts-TestStarTopologyWithCAKRA',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:server-del": {
+            "upstream::server_del": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/server_del.yaml',
-                    test: 'server-del',
+                    test: 'server_del',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:service-permissions": {
+            "upstream::service_permissions": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/service_permissions.yaml',
-                    test: 'service-permissions',
+                    test: 'service_permissions',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:sudo": {
+            "upstream::sudo": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/sudo.yaml',
                     test: 'sudo',
@@ -566,7 +566,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:topology::TestCASpecificRUVs": {
+            "upstream::topology-TestCASpecificRUVs": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/topology-TestCASpecificRUVs.yaml',
                     test: 'topology-TestCASpecificRUVs',
@@ -574,7 +574,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:topology::TestTopologyOptions": {
+            "upstream::topology-TestTopologyOptions": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/topology-TestTopologyOptions.yaml',
                     test: 'topology-TestTopologyOptions',
@@ -582,7 +582,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:trust": {
+            "upstream::trust": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/trust.yaml',
                     test: 'trust',
@@ -590,7 +590,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:user-permissions": {
+            "upstream::user-permissions": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/user_permissions.yaml',
                     test: 'user-permissions',
@@ -598,7 +598,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream:vault": {
+            "upstream::vault": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/vault.yaml',
                     test: 'vault',
@@ -620,8 +620,135 @@ node {
                     test: 'upstream-cert',
                     email: 'myusuf@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
-            }
+            },
 
+            "upstream::dnssec": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/dnssec.yaml',
+                    test: 'dnssec',
+                    email: 'sorlov@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallMaster": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallMaster.yaml',
+                    test: 'installation-TestInstallMaster',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallMasterDNS": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallMasterDNS.yaml',
+                    test: 'installation-TestInstallMasterDNS',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallMasterKRA": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallMasterKRA.yaml',
+                    test: 'installation-TestInstallMasterKRA',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallWithCA1": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallWithCA1.yaml',
+                    test: 'installation-TestInstallWithCA1',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallWithCA2": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallWithCA2.yaml',
+                    test: 'installation-TestInstallWithCA2',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallWithCA_DNS1": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallWithCA_DNS1.yaml',
+                    test: 'installation-TestInstallWithCA_DNS1',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallWithCA_DNS2": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallWithCA_DNS2.yaml',
+                    test: 'installation-TestInstallWithCA_DNS2',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallWithCA_DNS3": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallWithCA_DNS3.yaml',
+                    test: 'installation-TestInstallWithCA_DNS3',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallWithCA_DNS4": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallWithCA_DNS4.yaml',
+                    test: 'installation-TestInstallWithCA_DNS4',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallWithCA_KRA1": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallWithCA_KRA1.yaml',
+                    test: 'installation-TestInstallWithCA_KRA1',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallWithCA_KRA2": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallWithCA_KRA2.yaml',
+                    test: 'installation-TestInstallWithCA_KRA2',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallWithCA_KRA_DNS1": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallWithCA_KRA_DNS1.yaml',
+                    test: 'installation-TestInstallWithCA_KRA_DNS1',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallWithCA_KRA_DNS2": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallWithCA_KRA_DNS2.yaml',
+                    test: 'installation-TestInstallWithCA_KRA_DNS2',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::installation-TestInstallReplicaAgainstSpecificServer": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/installation-TestInstallReplicaAgainstSpecificServer.yaml',
+                    test: 'installation-TestInstallReplicaAgainstSpecificServer',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "upstream::uninstallation": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/uninstallation.yaml',
+                    test: 'uninstallation',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            }
             )
         }
     } catch (Exception e) {
@@ -631,7 +758,7 @@ node {
     try {
         stage("pytests") {
           parallel(
-            "ipa-pytests:client_install": {
+            "pytest::client_install": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/client_install.yaml',
                     test: 'client-install',
@@ -639,7 +766,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:dns_services": {
+            "pytest::dns_services": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/dns_services.yaml',
                     test: 'dns-services',
@@ -647,15 +774,15 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:external-ca": {
+            "pytest::external_ca": {
                 new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/external-ca.yaml',
-                    test: 'external-ca',
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/external_ca.yaml',
+                    test: 'external_ca',
                     email: 'ssidhaye@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:functional_services": {
+            "pytest::functional_services": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/functional_services.yaml',
                     test: 'functional-services',
@@ -663,7 +790,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa-advise": {
+            "pytest::ipa-advise": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-advise.yaml',
                     test: 'ipa-advise',
@@ -671,7 +798,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa-cert": {
+            "pytest::ipa-cert": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-cert.yaml',
                     test: 'ipa-cert',
@@ -679,7 +806,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa-certprofile": {
+            "pytest::ipa-certprofile": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-certprofile.yaml',
                     test: 'ipa-certprofile',
@@ -687,7 +814,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa-getcert": {
+            "pytest::ipa-getcert": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-getcert.yaml',
                     test: 'ipa-getcert',
@@ -695,7 +822,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa-hbac": {
+            "pytest::ipa-hbac": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-hbac.yaml',
                     test: 'ipa-hbac',
@@ -703,7 +830,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa-host": {
+            "pytest::ipa-host": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-host.yaml',
                     test: 'ipa-host',
@@ -711,7 +838,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa-rbac": {
+            "pytest::ipa-rbac": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-rbac.yaml',
                     test: 'ipa-rbac',
@@ -719,15 +846,15 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa-replica-promotion": {
+            "pytest::ipa-replica_promotion": {
                 new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-replica-promotion.yaml',
-                    test: 'ipa-replica-promotion',
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-replica_promotion.yaml',
+                    test: 'ipa-replica_promotion',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:otp": {
+            "pytest::otp": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/otp.yaml',
                     test: 'otp',
@@ -735,7 +862,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:subca": {
+            "pytest::subca": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/subca.yaml',
                     test: 'subca',
@@ -743,7 +870,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
 
-            "ipa-pytests:external-trust": {
+            "pytest::external_trust": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/external_trust.yaml',
                     test: 'external-trust',
@@ -751,7 +878,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa_backup_restore": {
+            "pytest::ipa_backup_restore": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa_backup_restore.yaml',
                     test: 'ipa_backup_restore',
@@ -759,7 +886,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa-idoverride": {
+            "pytest::ipa-idoverride": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-idoverride.yaml',
                     test: 'ipa-idoverride',
@@ -767,7 +894,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa-nis-manage": {
+            "pytest::ipa-nis-manage": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-nis-manage.yaml',
                     test: 'ipa-nis-manage',
@@ -775,7 +902,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa-services": {
+            "pytest::ipa-services": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-services.yaml',
                     test: 'ipa-services',
@@ -783,7 +910,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa-sudo": {
+            "pytest::ipa-sudo": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-sudo.yaml',
                     test: 'ipa-sudo',
@@ -791,7 +918,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:ipa-user": {
+            "pytest::ipa-user": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-user.yaml',
                     test: 'ipa-user',
@@ -799,7 +926,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:kdcproxy": {
+            "pytest::kdcproxy": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/kdcproxy.yaml',
                     test: 'kdcproxy',
@@ -807,7 +934,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:replica-install": {
+            "pytest::replica-install": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/replica-install.yaml',
                     test: 'replica-install',
@@ -815,7 +942,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:server-role": {
+            "pytest::server-role": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/server-role.yaml',
                     test: 'server-role',
@@ -823,7 +950,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:sudo-ipa-schema": {
+            "pytest::sudo-ipa-schema": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/sudo-ipa-schema.yaml',
                     test: 'sudo-ipa-schema',
@@ -831,7 +958,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:trust-one-way": {
+            "pytest::trust-one-way": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/trust-one-way.yaml',
                     test: 'trust-one-way',
@@ -839,7 +966,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:upn": {
+            "pytest::upn": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/upn.yaml',
                     test: 'upn',
@@ -847,14 +974,47 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "ipa-pytests:vault": {
+            "pytest::vault": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/vault.yaml',
                     test: 'vault',
                     email: 'ssidhaye@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
-            "ipa-pytests:server-install": {
+
+            "pytest::server-install": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/server-install.yaml',
+                    test: 'server-install',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "pytest::ca_cert_renewal": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ca_cert_renewal.yaml',
+                    test: 'ca_cert_renewal',
+                    email: 'myusuf@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "pytest::ipv6": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipv6.yaml',
+                    test: 'ipv6',
+                    email: 'amore@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "pytest::performance-tests": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/performance-tests.yaml',
+                    test: 'performance-tests',
+                    email: 'ksiddiqu@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "pytest::server-install": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/server-install.yaml',
                     test: 'server-install',
@@ -1292,7 +1452,23 @@ node {
                     test: 'ipa-trust-func-sudo',
                     email: 'amore@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
-            }
+            },
+
+            "bash::ds-migration-performance": {
+                new TeRun([
+                    metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ds-migration-performance.yaml",
+                    test: 'ds-migration-performance',
+                    email: 'sumenon@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+
+            "bash::install-server-cli": {
+                new TeRun([
+                    metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/install-server-cli.yaml",
+                    test: 'install-server-cli',
+                    email: 'mpolovka@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            }            
             )
         }
     } catch (Exception e) {
