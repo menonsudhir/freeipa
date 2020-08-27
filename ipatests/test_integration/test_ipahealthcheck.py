@@ -102,7 +102,7 @@ metaservices_checks = [
 ipafiles_checks = ["IPAFileNSSDBCheck", "IPAFileCheck", "TomcatFileCheck"]
 dogtag_checks = ["DogtagCertsConfigCheck", "DogtagCertsConnectivityCheck"]
 iparoles_checks = ["IPACRLManagerCheck", "IPARenewalMasterCheck"]
-replication_checks = ["ReplicationCheck"]
+replication_checks = ["ReplicationConflictCheck"]
 ruv_checks = ["RUVCheck"]
 dna_checks = ["IPADNARangeCheck"]
 idns_checks = ["IPADNSSystemRecordsCheck"]
@@ -661,7 +661,7 @@ class TestIpaHealthCheck(IntegrationTest):
         Ensure that healthcheck reports when IPA certs are revoked.
         """
         error_msg = (
-            "Certificate tracked by {key} is revoked {revocation_reason}"
+            "Certificate is revoked, unspecified"
         )
 
         result = self.master.run_command(
@@ -737,7 +737,7 @@ class TestIpaHealthCheck(IntegrationTest):
         """
         returncode, output = run_healthcheck(
             self.master,
-            "ipahealthcheck.meta",
+            "ipahealthcheck.meta.services",
             output_type="human",
             failures_only=True)
         assert returncode == 1
@@ -1275,7 +1275,7 @@ class TestIpaHealthCheckFileCheck(IntegrationTest):
         )
         assert returncode == 1
         for check in data:
-            assert check["result"] == "ERROR"
+            assert check["result"] == "WARNING"
             assert check["kw"]["path"] in self.nssdb_testfiles
             assert check["kw"]["type"] == 'mode'
             assert check["kw"]["expected"] == '0600'
@@ -1306,7 +1306,7 @@ class TestIpaHealthCheckFileCheck(IntegrationTest):
             assert check["kw"]["got"] == '0640'
             assert (
                 check["kw"]["msg"]
-                == "Permissions of %s are too permissive: "
+                == "Permissions of %s are "
                    "0640 and should be 0600"
                 % check["kw"]["path"]
             )
@@ -1368,7 +1368,7 @@ class TestIpaHealthCheckFileCheck(IntegrationTest):
         )
         assert returncode == 1
         for check in data:
-            assert check["result"] == "ERROR"
+            assert check["result"] == "WARNING"
             assert check["kw"]["key"] == \
                 '_var_lib_pki_pki-tomcat_conf_ca_CS.cfg_mode'
             assert check["kw"]["type"] == 'mode'
@@ -1400,7 +1400,7 @@ class TestIpaHealthCheckFileCheck(IntegrationTest):
             assert check["kw"]["got"] == '0666'
             assert (
                 check["kw"]["msg"]
-                == "Permissions of %s are too permissive: "
+                == "Permissions of %s are "
                    "0666 and should be 0660"
                 % check["kw"]["path"]
             )
