@@ -16,6 +16,18 @@ domains:
         group: ipaserver
         role: master
         os: rhel-8.3
+      - name: replica1.testrelm.test
+        group: ipaserver
+        role: replica
+        os: rhel-8.3
+      - name: replica2.testrelm.test
+        group: ipaserver
+        role: replica
+        os: rhel-8.3
+      - name: replica3.testrelm.test
+        group: ipaserver
+        role: replica
+        os: rhel-8.3
 phases:
   - name: init
     steps:
@@ -37,7 +49,7 @@ phases:
     steps:
       - playbook: test/test-upstream.yaml
         extra_vars:
-          test_suite: test_integration/test_installation.py::TestInstallWithCA_KRA1_DNS2
+          test_suite: test_integration/test_installation.py::TestInstallWithCA_KRA_DNS2
   - name: teardown
     steps:
       - playbook: teardown/fetch-logs.yaml
