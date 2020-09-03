@@ -41,7 +41,7 @@ phases:
     steps:
       - playbook: test/test-upstream.yaml
         extra_vars:
-          test_suite: test_integration/test_installation.py::TestInstallWithCA_KRA1_DNS1
+          test_suite: test_integration/test_installation.py::TestInstallWithCA_KRA_DNS1
   - name: teardown
     steps:
       - playbook: teardown/fetch-logs.yaml
