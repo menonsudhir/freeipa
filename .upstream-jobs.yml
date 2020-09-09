@@ -767,3 +767,12 @@ upstream-epn:
   only:
     changes:
     - metadata/upstream/integration/epn.yaml
+
+upstream-webui-trust:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/webui/trust.yaml
+  only:
+    changes:
+    - metadata/upstream/webui/trust.yaml
+
