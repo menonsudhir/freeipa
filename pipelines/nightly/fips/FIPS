@@ -87,13 +87,14 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
 
-            "upstream::smb": {
-                new TeRun([
-                    metadata: 'metadata/upstream/integration/smb.yaml',
-                    test: 'upstream-smb',
-                    email: 'sorlov@redhat.com'
-                ]).exec(env.IDMCI_SLAVE)
-            },
+# Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
+#            "upstream::smb": {
+#                new TeRun([
+#                    metadata: 'metadata/upstream/integration/smb.yaml',
+#                    test: 'upstream-smb',
+#                    email: 'sorlov@redhat.com'
+#                ]).exec(env.IDMCI_SLAVE)
+#            },
 
             "upstream::xmlrpc": {
                 new TeRun([
@@ -582,13 +583,14 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-            "upstream::trust": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/trust.yaml',
-                    test: 'trust',
-                    email: 'sorlov@redhat.com'
-                ]).exec(env.IDMCI_SLAVE)
-            },
+# Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
+#            "upstream::trust": {
+#                new TeRun([
+#                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/trust.yaml',
+#                    test: 'trust',
+#                    email: 'sorlov@redhat.com'
+#                ]).exec(env.IDMCI_SLAVE)
+#            },
         
             "upstream::user-permissions": {
                 new TeRun([
