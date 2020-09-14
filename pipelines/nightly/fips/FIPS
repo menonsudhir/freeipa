@@ -1012,14 +1012,6 @@ node {
                     test: 'performance-tests',
                     email: 'ksiddiqu@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
-            },
-
-            "pytest::server-install": {
-                new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/server-install.yaml',
-                    test: 'server-install',
-                    email: 'mpolovka@redhat.com'
-                ]).exec(env.IDMCI_SLAVE)
             }
             )
         }
