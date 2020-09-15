@@ -206,7 +206,7 @@ node {
             "webui::trust": {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/trust.yaml',
-                    test: 'upstream-trust',
+                    test: 'webui-trust',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
@@ -221,13 +221,6 @@ node {
                 new TeRun([
                     metadata: 'metadata/upstream/webui/vault.yaml',
                     test: 'webui-vault',
-                    email: 'mpolovka@redhat.com'
-                ]).exec(env.IDMCI_SLAVE)
-            },
-            "webui::trust": {
-                new TeRun([
-                    metadata: 'metadata/upstream/webui/trust.yaml',
-                    test: 'webui-trust',
                     email: 'mpolovka@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             }
