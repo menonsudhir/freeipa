@@ -3,7 +3,7 @@ IPA Lightweight Sub CA helper class
 """
 
 
-def ca_add(host, subca):
+def ca_add(host, subca, raiseonerr=False):
     """
     Helper function to add Sub CA
     """
@@ -21,7 +21,7 @@ def ca_add(host, subca):
                                             subca_desc,
                                             subca_cname,
                                             subca_realm)
-    return local_run_cmd(host, cmd)
+    return local_run_cmd(host, cmd, raiseonerr=raiseonerr)
 
 def ca_find(host, subca):
     """

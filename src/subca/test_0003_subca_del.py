@@ -3,6 +3,7 @@ Testsuite for IPA Lightweight Sub CA - ca-del
 """
 from ipa_pytests.shared.ca_utils import ca_add, ca_find, ca_del
 from ipa_pytests.subca.lib import check_ca_find_output, check_ca_add_output, check_ca_del_output
+import time
 
 
 class TestSubCADel(object):
@@ -164,13 +165,16 @@ class TestSubCADel(object):
         multihost.master.kinit_as_admin()
         subca_prefix = "test_0006_subca_"
         subca_list = []
+        time.sleep(60)
         for i in range(1, 20):
             subca = {}
             subca['name'] = "{0}{1}".format(subca_prefix, i)
             subca['realm'] = multihost.realm
-
             subca_list.append(subca['name'])
-            cmd = ca_add(multihost.master, subca)
+
+            cmd = ca_add(multihost.master, subca, raiseonerr=True)
+            check_ca_add_output(subca, cmd[1])
+            time.sleep(1)
 
         # Delete all Sub CA
         subca = {}
@@ -220,13 +224,16 @@ class TestSubCADel(object):
         multihost.replica.kinit_as_admin()
         subca_prefix = "test_0008_subca_"
         subca_list = []
+        time.sleep(60)
         for i in range(1, 20):
             subca = {}
             subca['name'] = "{0}{1}".format(subca_prefix, i)
             subca['realm'] = multihost.realm
             subca_list.append(subca['name'])
 
-            cmd = ca_add(multihost.replica, subca)
+            cmd = ca_add(multihost.replica, subca, raiseonerr=True)
+            check_ca_add_output(subca, cmd[1])
+            time.sleep(1)
 
         subca = {}
         subca['name'] = " ".join(subca_list)
