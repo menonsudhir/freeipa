@@ -32,6 +32,8 @@ node {
                     email: 'ksiddiqu@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+
+/* Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
             "upstream::adtrust_install": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/adtrust_install.yaml',
@@ -39,6 +41,8 @@ node {
                     email: 'sorlov@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+*/
+
             "upstream::authselect": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/authselect.yaml',
@@ -87,14 +91,15 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
 
-# Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
-#            "upstream::smb": {
-#                new TeRun([
-#                    metadata: 'metadata/upstream/integration/smb.yaml',
-#                    test: 'upstream-smb',
-#                    email: 'sorlov@redhat.com'
-#                ]).exec(env.IDMCI_SLAVE)
-#            },
+/* Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
+            "upstream::smb": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/smb.yaml',
+                    test: 'upstream-smb',
+                    email: 'sorlov@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+*/
 
             "upstream::xmlrpc": {
                 new TeRun([
@@ -352,6 +357,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
+/* Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
             "upstream::idviews": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/idviews.yaml',
@@ -359,7 +365,8 @@ node {
                     email: 'mvarun@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
-        
+*/
+
             "upstream::kerberos_flags": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/kerberos_flags.yaml',
@@ -583,14 +590,15 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
-# Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
-#            "upstream::trust": {
-#                new TeRun([
-#                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/trust.yaml',
-#                    test: 'trust',
-#                    email: 'sorlov@redhat.com'
-#                ]).exec(env.IDMCI_SLAVE)
-#            },
+/* Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
+            "upstream::trust": {
+                new TeRun([
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/upstream/integration/trust.yaml',
+                    test: 'trust',
+                    email: 'sorlov@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+*/
         
             "upstream::user-permissions": {
                 new TeRun([
@@ -872,6 +880,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
 
+/* Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
             "pytest::external_trust": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/external_trust.yaml',
@@ -879,6 +888,7 @@ node {
                     email: 'amore@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+*/
         
             "pytest::ipa_backup_restore": {
                 new TeRun([
@@ -888,6 +898,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
+/* Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
             "pytest::ipa-idoverride": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/ipa-idoverride.yaml',
@@ -895,6 +906,7 @@ node {
                     email: 'mvarun@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+*/
         
             "pytest::ipa-nis-manage": {
                 new TeRun([
@@ -960,6 +972,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
         
+/* Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
             "pytest::trust-one-way": {
                 new TeRun([
                     metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/raw/RHEL8.3/metadata/pytests/trust-one-way.yaml',
@@ -975,6 +988,7 @@ node {
                     email: 'mvarun@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+*/
         
             "pytest::vault": {
                 new TeRun([
@@ -1232,6 +1246,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
 
+/* Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
             "bash::trust-functional-ssh": {
                 new TeRun([
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-trust-func-ssh.yaml",
@@ -1287,6 +1302,7 @@ node {
                     email: 'ndehadra@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+*/
 
             "bash::user-cli-adduser": {
                 new TeRun([
@@ -1336,6 +1352,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
 
+/* Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
             "bash::ipa-adtrust": {
                 new TeRun([
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-adtrust.yaml",
@@ -1343,6 +1360,7 @@ node {
                     email: 'sorlov@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+*/
 
             "bash::ipa-client-automount": {
                 new TeRun([
@@ -1352,6 +1370,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
 
+/* Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
             "bash::ipa-idrange-cli": {
                 new TeRun([
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-idrange-cli.yaml",
@@ -1359,6 +1378,7 @@ node {
                     email: 'amore@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+*/
 
             "bash::ipa-join": {
                 new TeRun([
@@ -1384,6 +1404,7 @@ node {
                 ]).exec(env.IDMCI_SLAVE)
             },
 
+/* Temporary disabled due to https://bugzilla.redhat.com/show_bug.cgi?id=1860129
             "bash::ipa-realmdomains-cli": {
                 new TeRun([
                     metadata: "https://gitlab.cee.redhat.com/identity-management/ipa-tests/raw/RHEL8.3/metadata/ipa-realmdomains-cli.yaml",
@@ -1447,6 +1468,7 @@ node {
                     email: 'amore@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
+*/
 
             "bash::ds-migration-performance": {
                 new TeRun([
