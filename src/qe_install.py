@@ -5,18 +5,19 @@ This provides the necessary functions to setup IPA Servers and Clients.
 """
 
 from __future__ import print_function
-import pytest
-import time
-import re
+
 import os
+import re
+import time
+import warnings
+
+import pytest
 from ipa_pytests.shared import paths
-from ipa_pytests.shared.utils import service_control, backup_resolv_conf, restore_resolv_conf
+from ipa_pytests.shared.dns_utils import dns_record_add
+from ipa_pytests.shared.log_utils import backup_logs
 from ipa_pytests.shared.rpm_utils import list_rpms, dnf_module_install
 from ipa_pytests.shared.utils import get_domain_level, ipa_version_gte
-from ipa_pytests.shared.log_utils import backup_logs
-from ipa_pytests.shared.dns_utils import dns_record_add
-from ipa_pytests.shared.qe_certutils import certutil
-from ipa_pytests.shared.utils import run_pk12util
+from ipa_pytests.shared.utils import service_control, backup_resolv_conf, restore_resolv_conf
 
 
 def disable_firewall(host):
@@ -177,10 +178,11 @@ def setup_master(master, **kwargs):
 
     domain_level = os.getenv('DOMAIN_LEVEL', master.config.domain_level)
 
-    if int(domain_level) in range(0, 10):
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1613879
+    if int(domain_level) in range(1, 10):
         runcmd.append('--domain-level={}'.format(domain_level))
     else:
-        print("Invalid domain level setting it to default 1")
+        warnings.warn("Invalid domain level setting it to default 1")
         runcmd.append('--domain-level=1')
 
     print("Installing IPA Server on machine [%s]" % master.hostname)
