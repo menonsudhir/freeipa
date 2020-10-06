@@ -1,6 +1,8 @@
 """
 Testsuite for IPA Lightweight Sub CA - ca-del
 """
+import pytest
+
 from ipa_pytests.shared.ca_utils import ca_add, ca_find, ca_del
 from ipa_pytests.subca.lib import check_ca_find_output, check_ca_add_output, check_ca_del_output
 import time
@@ -211,6 +213,9 @@ class TestSubCADel(object):
         if cmd[0] == 0:
             check_ca_del_output(subca, cmd[1])
 
+    # Expected failure due to
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1881999
+    @pytest.mark.xfail
     def test_0008_subca_del_multiple_subca_replica(self, multihost):
         """
         :Title: IDM-IPA-TC: ipa ca delete multiple Sub CAs from Replica
