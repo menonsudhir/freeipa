@@ -213,9 +213,7 @@ class TestSubCADel(object):
         if cmd[0] == 0:
             check_ca_del_output(subca, cmd[1])
 
-    # Expected failure due to
-    # https://bugzilla.redhat.com/show_bug.cgi?id=1881999
-    @pytest.mark.xfail
+    @pytest.mark.xfail(reason='expected failure due to BZ1881999')
     def test_0008_subca_del_multiple_subca_replica(self, multihost):
         """
         :Title: IDM-IPA-TC: ipa ca delete multiple Sub CAs from Replica
