@@ -11,7 +11,7 @@ domains:
       - name: master.testrelm.test
         group: ipaserver
         role: master
-        os: rhel-8.3
+        os: rhel-8.4
 phases:
   - name: init
     steps:

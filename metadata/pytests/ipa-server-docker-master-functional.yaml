@@ -12,7 +12,7 @@ phases:
       - playbook: init/ipa-pytests.yaml
         extra_vars:
           repo: https://gitlab.cee.redhat.com/identity-management/ipa-pytests.git
-          version: RHEL8.3
+          version: RHEL8.4
       - playbook: init/testrunner-dir.yaml
   - name: provision
     steps:

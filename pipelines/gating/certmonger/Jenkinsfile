@@ -3,7 +3,7 @@ import idmci.*
 
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
-env.VERSION = 'RHEL8.3'
+env.VERSION = 'RHEL8.4'
 env.TYPE = 'tier1'
 env.NIGHTLY = 'true'
 env.IDMCI_SLAVE = 'idm-ci-slave'

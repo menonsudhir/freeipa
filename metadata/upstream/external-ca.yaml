@@ -5,15 +5,15 @@ domains:
       - name: master.testrealm.test
         role: master
         group: ipaserver
-        os: rhel-8.3
+        os: rhel-8.4
       - name: replica.testrealm.test
         role: replica
         group: ipaserver
-        os: rhel-8.3
+        os: rhel-8.4
       - name: client.testrealm.test
         role: client
         group: ipaclient
-        os: rhel-8.3
+        os: rhel-8.4
 phases:
   - name: init
     steps:

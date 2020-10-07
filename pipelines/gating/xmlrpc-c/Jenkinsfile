@@ -3,7 +3,7 @@ import idmci.*
 
 env.IPA_EMAIL = 'ipa-and-samba-team-automation@redhat.com'
 env.ANSIBLE_GATHER_TIMEOUT = '60'
-env.VERSION = 'RHEL8.3'
+env.VERSION = 'RHEL8.4'
 env.TYPE = 'tier1'
 env.NIGHTLY = 'true'
 env.IDMCI_SLAVE = 'idm-ci-slave'
@@ -42,7 +42,7 @@ node {
           parallel(
           "pytest::replica-install": {
                 new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/-/raw/RHEL8.3/metadata/pytests/replica-install.yaml',
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/-/raw/RHEL8.4/metadata/pytests/replica-install.yaml',
                     test: 'pytests-replica-install',
                     email: 'sumenon@redhat.com',
                     message: "${params.CI_MESSAGE}"
@@ -50,7 +50,7 @@ node {
             },
           "pytest::client-install": {
                 new TeRun([
-                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/-/raw/RHEL8.3/metadata/pytests/client_install.yaml',
+                    metadata: 'https://gitlab.cee.redhat.com/identity-management/ipa-pytests/-/raw/RHEL8.4/metadata/pytests/client_install.yaml',
                     test: 'pytests-client-install',
                     email: 'mpolovka@redhat.com',
                     message: "${params.CI_MESSAGE}"
