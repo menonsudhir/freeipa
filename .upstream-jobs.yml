@@ -728,13 +728,37 @@ upstream-adtrust_install:
     changes:
     - metadata/upstream/integration/adtrust_install.yaml
 
-upstream-healthcheck:
+upstream-ipahealthcheck:
   extends: .mr_template
   variables:
-    METADATA_FILE_PATH: metadata/upstream/integration/healthcheck.yaml
+    METADATA_FILE_PATH: metadata/upstream/integration/ipahealthcheck.yaml
   only:
     changes:
-    - metadata/upstream/integration/healthcheck.yaml
+    - metadata/upstream/integration/ipahealthcheck.yaml
+
+upstream-ipahealthcheck-TestIpaHealthCheckWithExternalCA:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/ipahealthcheck-TestIpaHealthCheckWithExternalCA.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/ipahealthcheck-TestIpaHealthCheckWithExternalCA.yaml
+
+upstream-ipahealthcheck-TestIpaHealthCheckWithADtrust:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/ipahealthcheck-TestIpaHealthCheckWithADtrust.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/ipahealthcheck-TestIpaHealthCheckWithADtrust.yaml
+
+upstream-ipahealthcheck-TestIpaHealthCLI:
+  extends: .mr_template
+  variables:
+    METADATA_FILE_PATH: metadata/upstream/integration/ipahealthcheck-TestIpaHealthCLI.yaml
+  only:
+    changes:
+    - metadata/upstream/integration/ipahealthcheck-TestIpaHealthCLI.yaml
 
 upstream-cert:
   extends: .mr_template

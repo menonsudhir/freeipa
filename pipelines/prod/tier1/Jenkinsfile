@@ -373,10 +373,31 @@ node {
                     email: 'ssidhaye@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
-            "upstream::healthcheck": {
+            "upstream::ipahealthcheck": {
                 new TeRun([
-                    metadata: 'metadata/upstream/integration/healthcheck.yaml',
-                    test: 'upstream-healthcheck',
+                    metadata: 'metadata/upstream/integration/ipahealthcheck.yaml',
+                    test: 'upstream-ipahealthcheck',
+                    email: 'sumenon@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+            "upstream::ipahealthcheck-TestIpaHealthCheckWithExternalCA": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/ipahealthcheck-TestIpaHealthCheckWithExternalCA.yaml',
+                    test: 'upstream-ipahealthcheck-TestIpaHealthCheckWithExternalCA',
+                    email: 'sumenon@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+            "upstream::ipahealthcheck-TestIpaHealthCheckWithADtrust": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/ipahealthcheck-TestIpaHealthCheckWithADtrust.yaml',
+                    test: 'upstream-ipahealthcheck-TestIpaHealthCheckWithADtrust',
+                    email: 'sumenon@redhat.com'
+                ]).exec(env.IDMCI_SLAVE)
+            },
+            "upstream::ipahealthcheck-TestIpaHealthCLI": {
+                new TeRun([
+                    metadata: 'metadata/upstream/integration/ipahealthcheck-TestIpaHealthCLI.yaml',
+                    test: 'upstream-ipahealthcheck-TestIpaHealthCLI',
                     email: 'sumenon@redhat.com'
                 ]).exec(env.IDMCI_SLAVE)
             },
