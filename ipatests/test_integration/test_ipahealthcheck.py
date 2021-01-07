@@ -151,6 +151,7 @@ TOMCAT_CONFIG_FILES = (
     paths.CA_CS_CFG_PATH,
 )
 
+skip_test_ds_enc = osinfo.id in ['rhel', ]
 
 def run_healthcheck(host, source=None, check=None, output_type="json",
                     failures_only=False):
@@ -1034,6 +1035,7 @@ class TestIpaHealthCheck(IntegrationTest):
         )
         self.master.run_command(cmd)
 
+    @pytest.mark.skipif(skip_test_ds_enc, reason='bz1905390')
     def test_ipahealthcheck_ds_encryption(self, modify_tls):
         """
         This testcase modifies the default TLS version of
