@@ -39,6 +39,8 @@ HEALTHCHECK_LOG_ROTATE_CONF = "/etc/logrotate.d/ipahealthcheck"
 HEALTHCHECK_LOG_DIR = "/var/log/ipa/healthcheck"
 HEALTHCHECK_OUTPUT_FILE = "/tmp/output.json"
 HEALTHCHECK_PKG = ["*ipa-healthcheck"]
+SOS_CMD = "/usr/sbin/sos"
+SOS_PKG = ["sos"]
 
 IPA_CA = "ipa_ca.crt"
 ROOT_CA = "root_ca.crt"
@@ -234,6 +236,8 @@ class TestIpaHealthCheck(IntegrationTest):
 
     @classmethod
     def install(cls, mh):
+        if not cls.master.transport.file_exists(SOS_CMD):
+            tasks.install_packages(cls.master, SOS_PKG)
         tasks.install_master(cls.master, setup_dns=True)
         tasks.install_replica(cls.master, cls.replicas[0], setup_dns=True)
 
@@ -1156,6 +1160,41 @@ class TestIpaHealthCheck(IntegrationTest):
                 assert check["result"] == "CRITICAL"
                 assert "cn=config" in check["kw"]["items"]
                 assert error_msg in check["kw"]["msg"]
+
+    @pytest.fixture
+    def create_logfile(self):
+        """
+        This fixture creates an empty healthcheck.log file when
+        it is not present in /var/log/ipa/healthcheck/ directory so that
+        sosreport command collects the log file in the report generated
+        by the dry run and then deletes the file once the test is finished.
+        """
+        if not self.master.transport.file_exists(HEALTHCHECK_LOG):
+            self.master.run_command(["touch", HEALTHCHECK_LOG])
+        yield
+        self.master.run_command(["rm", HEALTHCHECK_LOG])
+
+    def test_sosreport_includes_healthcheck(self, create_logfile):
+        """
+        This testcase checks that sosreport command
+        when run on IPA system with healthcheck installed
+        collects healthcheck.log file
+        """
+        caseid = "123456"
+        msg = "[plugin:ipa] collecting path '{}'".format(HEALTHCHECK_LOG)
+        cmd = self.master.run_command(
+            [
+                "sosreport",
+                "-o",
+                "ipa",
+                "--case-id",
+                caseid,
+                "--batch",
+                "-v",
+                "--build",
+            ]
+        )
+        assert msg in cmd.stdout_text
 
     @pytest.fixture
     def expire_cert_critical(self):
