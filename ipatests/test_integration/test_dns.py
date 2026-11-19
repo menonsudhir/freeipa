@@ -9,8 +9,11 @@ import pytest
 import time
 import dns.exception
 import dns.resolver
+from ipaplatform.paths import paths
+from ipaplatform.services import knownservices
 from ipapython.dn import DN
 from ipapython.dnsutil import DNSResolver
+from ipapython.ipaldap import realm_to_serverid
 from ipatests.pytest_ipa.integration import tasks, skip_if_fips
 from ipatests.test_integration.base import IntegrationTest
 
@@ -2833,3 +2836,580 @@ class TestDNSMisc(IntegrationTest):
 
         finally:
             tasks.del_dns_zone(self.master, test_zone, raiseonerr=False)
+
+
+# =============================================================================
+# bind-dyndb-ldap plugin paths not covered by TestDNS*/TestDNSSEC
+# Covers SyncRepl, IXFR/journal, GSS-TSIG writeback, LDAP outage catch-up,
+# wildcards, zone disable/enable, and parent/child coexistence.
+# =============================================================================
+DYNDB_TEST_ZONE = "dyndb-ldap.test."
+DYNDB_EMAIL = "hostmaster.dyndb-ldap.test"
+DYNDB_SYNC_TIMEOUT = 120
+
+
+class TestBindDyndbLdap(IntegrationTest):
+    """bind-dyndb-ldap scenarios for FreeIPA integrated DNS.
+
+    Requires master + replica both with DNS so SyncRepl can be validated
+    across IPA LDAP replication without restarting named.
+    """
+
+    num_replicas = 1
+    topology = "star"
+    num_clients = 0
+
+    @classmethod
+    def install(cls, mh):
+        tasks.install_master(cls.master, setup_dns=True)
+        tasks.install_replica(cls.master, cls.replicas[0], setup_dns=True)
+        tasks.kinit_admin(cls.master)
+        tasks.add_dns_zone(
+            cls.master,
+            DYNDB_TEST_ZONE,
+            skip_overlap_check=True,
+            dynamic_update=True,
+            admin_email=DYNDB_EMAIL,
+            ttl=5,
+        )
+        tasks.mod_dns_zone(cls.master, DYNDB_TEST_ZONE, "--allow-transfer=any;")
+        tasks.resolve_record(
+            cls.master.ip, DYNDB_TEST_ZONE, "SOA", timeout=DYNDB_SYNC_TIMEOUT
+        )
+        tasks.resolve_record(
+            cls.replicas[0].ip, DYNDB_TEST_ZONE, "SOA",
+            timeout=DYNDB_SYNC_TIMEOUT
+        )
+
+    @classmethod
+    def uninstall(cls, mh):
+        tasks.kinit_admin(cls.master)
+        tasks.del_dns_zone(cls.master, DYNDB_TEST_ZONE, raiseonerr=False)
+        super(TestBindDyndbLdap, cls).uninstall(mh)
+
+    def test_syncrepl_record_add_mod_del_on_replica_named(self):
+        """LDAP changes on master appear on replica named without restart.
+
+        Covers SyncRepl (RFC 4533) used by bind-dyndb-ldap instead of the
+        removed psearch/zone_refresh options.
+        """
+        tasks.kinit_admin(self.master)
+        replica = self.replicas[0]
+        name = "sync-host"
+        fqdn = "%s.%s" % (name, DYNDB_TEST_ZONE.rstrip("."))
+        ip1 = "192.0.2.10"
+        ip2 = "192.0.2.11"
+        named_svc = knownservices.named.systemd_name
+        pid_before = replica.run_command(
+            ["systemctl", "-p", "MainPID", "--value", "show", named_svc]
+        ).stdout_text.strip()
+
+        try:
+            tasks.add_dns_record(self.master, DYNDB_TEST_ZONE, name, "a", [ip1])
+            tasks.run_repeatedly(
+                self.master,
+                ["dig", "+short", "@%s" % self.master.ip, fqdn, "A"],
+                test=lambda out: ip1 in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+            tasks.run_repeatedly(
+                replica,
+                ["dig", "+short", "@%s" % replica.ip, fqdn, "A"],
+                test=lambda out: ip1 in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+
+            tasks.mod_dns_record(
+                self.master,
+                DYNDB_TEST_ZONE,
+                name,
+                "--a-rec=%s" % ip1,
+                "--a-ip-address=%s" % ip2,
+            )
+            tasks.run_repeatedly(
+                self.master,
+                ["dig", "+short", "@%s" % self.master.ip, fqdn, "A"],
+                test=lambda out: ip2 in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+            tasks.run_repeatedly(
+                replica,
+                ["dig", "+short", "@%s" % replica.ip, fqdn, "A"],
+                test=lambda out: ip2 in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+
+            tasks.del_dns_record(
+                self.master, DYNDB_TEST_ZONE, name, del_all=True
+            )
+            tasks.run_repeatedly(
+                self.master,
+                ["dig", "@%s" % self.master.ip, fqdn, "A"],
+                assert_zero_rc=False,
+                test=lambda out: "NXDOMAIN" in out or "SERVFAIL" in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+            tasks.run_repeatedly(
+                replica,
+                ["dig", "@%s" % replica.ip, fqdn, "A"],
+                assert_zero_rc=False,
+                test=lambda out: "NXDOMAIN" in out or "SERVFAIL" in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+        finally:
+            tasks.del_dns_record(
+                self.master, DYNDB_TEST_ZONE, name, del_all=True,
+                raiseonerr=False
+            )
+
+        pid_after = replica.run_command(
+            ["systemctl", "-p", "MainPID", "--value", "show", named_svc]
+        ).stdout_text.strip()
+        assert pid_after == pid_before, (
+            "replica named restarted during SyncRepl propagation"
+        )
+
+    def test_zone_journal_and_ixfr(self):
+        """bind-dyndb-ldap maintains a journal and serves IXFR after updates."""
+        tasks.kinit_admin(self.master)
+        name = "ixfr-host"
+        fqdn = "%s.%s" % (name, DYNDB_TEST_ZONE.rstrip("."))
+        ip = "192.0.2.20"
+        zone_dir = "%s%s" % (
+            paths.BIND_LDAP_DNS_ZONE_WORKDIR,
+            DYNDB_TEST_ZONE.rstrip("."),
+        )
+
+        try:
+            old_serial = tasks.resolve_record(
+                self.master.ip, DYNDB_TEST_ZONE, "SOA"
+            )[0].serial
+
+            tasks.add_dns_record(
+                self.master, DYNDB_TEST_ZONE, name, "a", [ip]
+            )
+            tasks.run_repeatedly(
+                self.master,
+                ["dig", "+short", "@%s" % self.master.ip, fqdn, "A"],
+                test=lambda out: ip in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+            new_serial = tasks.resolve_record(
+                self.master.ip, DYNDB_TEST_ZONE, "SOA"
+            )[0].serial
+            assert new_serial > old_serial, (
+                "SOA serial did not increase after update "
+                "(%s -> %s)" % (old_serial, new_serial)
+            )
+
+            result = self.master.run_command(
+                ["bash", "-c",
+                 "ls -1 %s/*.jnl 2>/dev/null | head -5" % zone_dir],
+                raiseonerr=False,
+            )
+            assert result.returncode == 0 and result.stdout_text.strip(), (
+                "expected bind-dyndb-ldap journal under %s" % zone_dir
+            )
+
+            ixfr = self.master.run_command([
+                "dig",
+                "+norecurse",
+                "@%s" % self.master.ip,
+                DYNDB_TEST_ZONE,
+                "IXFR=%s" % old_serial,
+            ])
+            out = ixfr.stdout_text
+            assert "status: NOERROR" in out, out
+            assert "status: REFUSED" not in out, out
+            assert "status: SERVFAIL" not in out, out
+            # Incremental response should include the updated A owner.
+            assert fqdn in out or name in out, out
+        finally:
+            tasks.del_dns_record(
+                self.master, DYNDB_TEST_ZONE, name, del_all=True,
+                raiseonerr=False
+            )
+
+    def test_gss_tsig_nsupdate_writeback_to_ldap(self):
+        """GSS-TSIG nsupdate is written back to LDAP and visible on replica.
+
+        Exercises the dynamic-update → LDAP writeback path in bind-dyndb-ldap
+        with the default krb5-self style host principal.
+        """
+        tasks.kinit_admin(self.master)
+        replica = self.replicas[0]
+        realm = self.master.domain.realm
+        hostname = "gss-host.%s" % DYNDB_TEST_ZONE.rstrip(".")
+        ip = "192.0.2.30"
+        keytab = "/tmp/dyndb-gss.keytab"
+        nsupdate_file = "/tmp/dyndb-gss.nsupdate"
+        named_svc = knownservices.named.systemd_name
+        pid_before = replica.run_command(
+            ["systemctl", "-p", "MainPID", "--value", "show", named_svc]
+        ).stdout_text.strip()
+
+        try:
+            self.master.run_command(
+                ["ipa", "host-add", hostname, "--force"],
+                raiseonerr=False,
+            )
+            self.master.run_command([
+                "ipa-getkeytab",
+                "-s",
+                self.master.hostname,
+                "-p",
+                "host/%s@%s" % (hostname, realm),
+                "-k",
+                keytab,
+            ])
+
+            old_serial = tasks.resolve_record(
+                self.master.ip, DYNDB_TEST_ZONE, "SOA"
+            )[0].serial
+            nsupdate_content = (
+                "server %s\n"
+                "zone %s\n"
+                "update delete %s. A\n"
+                "update add %s. 60 IN A %s\n"
+                "send\n"
+                % (self.master.hostname, DYNDB_TEST_ZONE, hostname, hostname,
+                   ip)
+            )
+            self.master.put_file_contents(nsupdate_file, nsupdate_content)
+            self.master.run_command(
+                ["kinit", "-k", "-t", keytab, "host/%s" % hostname]
+            )
+            result = self.master.run_command(
+                ["nsupdate", "-g", "-v", nsupdate_file]
+            )
+            assert result.returncode == 0
+
+            tasks.run_repeatedly(
+                self.master,
+                ["dig", "+short", "@%s" % self.master.ip, hostname, "A"],
+                test=lambda out: ip in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+            tasks.run_repeatedly(
+                replica,
+                ["dig", "+short", "@%s" % replica.ip, hostname, "A"],
+                test=lambda out: ip in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+
+            new_serial = tasks.resolve_record(
+                self.master.ip, DYNDB_TEST_ZONE, "SOA"
+            )[0].serial
+            assert new_serial >= old_serial
+
+            tasks.kinit_admin(self.master)
+            show = tasks.show_dns_record(
+                self.master, DYNDB_TEST_ZONE, "gss-host"
+            )
+            assert ip in show.stdout_text
+        finally:
+            tasks.kinit_admin(self.master)
+            self.master.run_command(
+                ["ipa", "host-del", hostname, "--updatedns"],
+                raiseonerr=False,
+            )
+            tasks.del_dns_record(
+                self.master,
+                DYNDB_TEST_ZONE,
+                "gss-host",
+                del_all=True,
+                raiseonerr=False,
+            )
+            self.master.run_command(
+                ["rm", "-f", keytab, nsupdate_file], raiseonerr=False
+            )
+
+        pid_after = replica.run_command(
+            ["systemctl", "-p", "MainPID", "--value", "show", named_svc]
+        ).stdout_text.strip()
+        assert pid_after == pid_before, (
+            "replica named restarted during GSS-TSIG writeback sync"
+        )
+
+    def test_ldap_outage_catchup_without_named_restart(self):
+        """Replica named catches up after local DS outage without restart.
+
+        Stops dirsrv on the replica while named keeps running, applies DNS
+        changes on the master, then restores DS and verifies SyncRepl catch-up.
+        """
+        tasks.kinit_admin(self.master)
+        replica = self.replicas[0]
+        name = "catchup-host"
+        fqdn = "%s.%s" % (name, DYNDB_TEST_ZONE.rstrip("."))
+        ip_before = "192.0.2.40"
+        ip_after = "192.0.2.41"
+        named_svc = knownservices.named.systemd_name
+        pid_before = replica.run_command(
+            ["systemctl", "-p", "MainPID", "--value", "show", named_svc]
+        ).stdout_text.strip()
+
+        try:
+            tasks.add_dns_record(
+                self.master, DYNDB_TEST_ZONE, name, "a", [ip_before]
+            )
+            tasks.run_repeatedly(
+                self.master,
+                ["dig", "+short", "@%s" % self.master.ip, fqdn, "A"],
+                test=lambda out: ip_before in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+            tasks.run_repeatedly(
+                replica,
+                ["dig", "+short", "@%s" % replica.ip, fqdn, "A"],
+                test=lambda out: ip_before in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+
+            tasks.service_control_dirsrv(replica, "stop")
+            try:
+                # Cached answer should still work while LDAP is down.
+                ans = tasks.resolve_record(
+                    replica.ip, fqdn, "A", retry=False
+                )
+                assert any(ip_before in str(rr) for rr in ans)
+
+                tasks.mod_dns_record(
+                    self.master,
+                    DYNDB_TEST_ZONE,
+                    name,
+                    "--a-rec=%s" % ip_before,
+                    "--a-ip-address=%s" % ip_after,
+                )
+                tasks.run_repeatedly(
+                    self.master,
+                    ["dig", "+short", "@%s" % self.master.ip, fqdn, "A"],
+                    test=lambda out: ip_after in out,
+                    timeout=DYNDB_SYNC_TIMEOUT,
+                )
+
+                # Replica named may still serve the old RRset from memory.
+                still_old = tasks.resolve_record(
+                    replica.ip, fqdn, "A", retry=False
+                )
+                assert any(ip_before in str(rr) for rr in still_old)
+            finally:
+                tasks.service_control_dirsrv(replica, "start")
+
+            tasks.run_repeatedly(
+                replica,
+                ["dig", "+short", "@%s" % replica.ip, fqdn, "A"],
+                test=lambda out: ip_after in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+        finally:
+            instance = realm_to_serverid(replica.domain.realm)
+            if not tasks.host_service_active(replica, "dirsrv@%s" % instance):
+                tasks.service_control_dirsrv(replica, "start")
+            tasks.kinit_admin(self.master)
+            tasks.del_dns_record(
+                self.master, DYNDB_TEST_ZONE, name, del_all=True,
+                raiseonerr=False
+            )
+
+        pid_after = replica.run_command(
+            ["systemctl", "-p", "MainPID", "--value", "show", named_svc]
+        ).stdout_text.strip()
+        assert pid_after == pid_before, (
+            "replica named restarted during LDAP outage catch-up"
+        )
+        assert tasks.host_service_active(replica, named_svc)
+
+    def test_wildcard_record_served_by_named(self):
+        """Wildcard RRs from LDAP are answered by bind-dyndb-ldap RBT DB.
+
+        xmlrpc covers API/dns_resolve for wildcards; this checks the named
+        query path on master and replica without restart.
+        """
+        tasks.kinit_admin(self.master)
+        replica = self.replicas[0]
+        wildcard = "*.wild"
+        ip = "192.0.2.50"
+        match1 = "a.wild.%s" % DYNDB_TEST_ZONE.rstrip(".")
+        match2 = "b.wild.%s" % DYNDB_TEST_ZONE.rstrip(".")
+
+        try:
+            tasks.add_dns_record(
+                self.master, DYNDB_TEST_ZONE, wildcard, "a", [ip]
+            )
+            for host, nameserver, query in (
+                (self.master, self.master.ip, match1),
+                (self.master, self.master.ip, match2),
+                (replica, replica.ip, match1),
+                (replica, replica.ip, match2),
+            ):
+                tasks.run_repeatedly(
+                    host,
+                    ["dig", "+short", "@%s" % nameserver, query, "A"],
+                    test=lambda out, expected=ip: expected in out,
+                    timeout=DYNDB_SYNC_TIMEOUT,
+                )
+        finally:
+            tasks.del_dns_record(
+                self.master, DYNDB_TEST_ZONE, wildcard, del_all=True,
+                raiseonerr=False
+            )
+
+    def test_zone_disable_enable_affects_named_answers(self):
+        """idnsZoneActive toggles zone load in named (not only IPA CLI state).
+
+        Existing TestDNSMisc only asserts Active zone via IPA; this verifies
+        dig behavior on master and SyncRepl unload/load on the replica.
+        """
+        tasks.kinit_admin(self.master)
+        replica = self.replicas[0]
+        zone = "disable-dyndb.test."
+        name = "host"
+        fqdn = "%s.%s" % (name, zone.rstrip("."))
+        ip = "192.0.2.60"
+
+        try:
+            tasks.add_dns_zone(
+                self.master,
+                zone,
+                skip_overlap_check=True,
+                admin_email="hostmaster.disable-dyndb.test",
+                ttl=5,
+            )
+            tasks.add_dns_record(self.master, zone, name, "a", [ip])
+            tasks.run_repeatedly(
+                self.master,
+                ["dig", "+short", "@%s" % self.master.ip, fqdn, "A"],
+                test=lambda out: ip in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+            tasks.run_repeatedly(
+                replica,
+                ["dig", "+short", "@%s" % replica.ip, fqdn, "A"],
+                test=lambda out: ip in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+
+            self.master.run_command(["ipa", "dnszone-disable", zone])
+            for host, nameserver in (
+                (self.master, self.master.ip),
+                (replica, replica.ip),
+            ):
+                tasks.run_repeatedly(
+                    host,
+                    ["dig", "@%s" % nameserver, fqdn, "A"],
+                    assert_zero_rc=False,
+                    test=lambda out: (
+                        "NXDOMAIN" in out
+                        or "SERVFAIL" in out
+                        or "REFUSED" in out
+                    ),
+                    timeout=DYNDB_SYNC_TIMEOUT,
+                )
+
+            self.master.run_command(["ipa", "dnszone-enable", zone])
+            tasks.run_repeatedly(
+                self.master,
+                ["dig", "+short", "@%s" % self.master.ip, fqdn, "A"],
+                test=lambda out: ip in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+            tasks.run_repeatedly(
+                replica,
+                ["dig", "+short", "@%s" % replica.ip, fqdn, "A"],
+                test=lambda out: ip in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+        finally:
+            tasks.del_dns_zone(self.master, zone, raiseonerr=False)
+
+    def test_parent_and_child_zone_coexistence(self):
+        """Parent and child master zones on the same servers stay consistent.
+
+        bind-dyndb-ldap historically corrupted child-zone data when a parent
+        zone was also hosted locally; verify both zones answer independently.
+        """
+        tasks.kinit_admin(self.master)
+        replica = self.replicas[0]
+        parent = "parent-dyndb.test."
+        child = "child.parent-dyndb.test."
+        parent_host = "p-host.%s" % parent.rstrip(".")
+        child_host = "c-host.%s" % child.rstrip(".")
+        parent_ip = "192.0.2.70"
+        child_ip = "192.0.2.71"
+
+        try:
+            tasks.add_dns_zone(
+                self.master,
+                parent,
+                skip_overlap_check=True,
+                admin_email="hostmaster.parent-dyndb.test",
+                ttl=5,
+            )
+            tasks.add_dns_zone(
+                self.master,
+                child,
+                skip_overlap_check=True,
+                admin_email="hostmaster.child.parent-dyndb.test",
+                ttl=5,
+            )
+            tasks.add_dns_record(
+                self.master, parent, "p-host", "a", [parent_ip]
+            )
+            tasks.add_dns_record(
+                self.master, child, "c-host", "a", [child_ip]
+            )
+
+            for host, nameserver in (
+                (self.master, self.master.ip),
+                (replica, replica.ip),
+            ):
+                tasks.run_repeatedly(
+                    host,
+                    ["dig", "+short", "@%s" % nameserver, parent_host, "A"],
+                    test=lambda out, expected=parent_ip: expected in out,
+                    timeout=DYNDB_SYNC_TIMEOUT,
+                )
+                tasks.run_repeatedly(
+                    host,
+                    ["dig", "+short", "@%s" % nameserver, child_host, "A"],
+                    test=lambda out, expected=child_ip: expected in out,
+                    timeout=DYNDB_SYNC_TIMEOUT,
+                )
+                ans = tasks.resolve_record(nameserver, child_host, "A")
+                assert [rr.address for rr in ans] == [child_ip]
+
+            new_parent_ip = "192.0.2.72"
+            tasks.mod_dns_record(
+                self.master,
+                parent,
+                "p-host",
+                "--a-rec=%s" % parent_ip,
+                "--a-ip-address=%s" % new_parent_ip,
+            )
+            tasks.run_repeatedly(
+                self.master,
+                ["dig", "+short", "@%s" % self.master.ip, parent_host, "A"],
+                test=lambda out: new_parent_ip in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+            tasks.run_repeatedly(
+                replica,
+                ["dig", "+short", "@%s" % replica.ip, parent_host, "A"],
+                test=lambda out: new_parent_ip in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+            tasks.run_repeatedly(
+                self.master,
+                ["dig", "+short", "@%s" % self.master.ip, child_host, "A"],
+                test=lambda out: child_ip in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+            tasks.run_repeatedly(
+                replica,
+                ["dig", "+short", "@%s" % replica.ip, child_host, "A"],
+                test=lambda out: child_ip in out,
+                timeout=DYNDB_SYNC_TIMEOUT,
+            )
+        finally:
+            tasks.del_dns_zone(self.master, child, raiseonerr=False)
+            tasks.del_dns_zone(self.master, parent, raiseonerr=False)
